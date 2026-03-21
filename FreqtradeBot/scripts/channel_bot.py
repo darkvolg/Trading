@@ -19,8 +19,10 @@ logging.basicConfig(
 )
 logger = logging.getLogger(__name__)
 
-DB_PATH = os.getenv("FT_DB_PATH", "/opt/freqtrade/tradesv3.dryrun.sqlite")
-CONFIG_PATH = os.getenv("FT_CONFIG_PATH", "/opt/freqtrade/config.json")
+FT_HOME = os.environ.get("FT_HOME", os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
+
+DB_PATH = os.getenv("FT_DB_PATH", os.path.join(FT_HOME, "tradesv3.dryrun.sqlite"))
+CONFIG_PATH = os.getenv("FT_CONFIG_PATH", os.path.join(FT_HOME, "config.json"))
 
 
 def get_credentials() -> tuple[str, str]:
