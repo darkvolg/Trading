@@ -387,7 +387,7 @@ class TrendRiderStrategy(IStrategy):
         informative = []
         for pair in pairs:
             informative.append((pair, "4h"))
-            informative.append((pair, "15m"))
+
             informative.append((pair, "1d"))
         # BTC as market sentiment
         informative.append(("BTC/USDT:USDT", "1h"))
@@ -504,20 +504,6 @@ class TrendRiderStrategy(IStrategy):
                 dataframe['adx_4h'] = 0
                 dataframe['is_bull_4h'] = 0
 
-            # 15m data for entry precision
-            df_15m = self.dp.get_pair_dataframe(pair=metadata['pair'], timeframe='15m')
-            if len(df_15m) > 0:
-                df_15m['rsi_15m'] = ta.RSI(df_15m, timeperiod=14)
-                df_15m['ema_fast_15m'] = ta.EMA(df_15m, timeperiod=9)
-                dataframe = merge_informative_pair(
-                    dataframe,
-                    df_15m[['date', 'rsi_15m', 'ema_fast_15m']],
-                    self.timeframe, '15m', ffill=True
-                )
-            else:
-                dataframe['rsi_15m_15m'] = 50
-                dataframe['ema_fast_15m_15m'] = 0
-
             # Daily data for macro trend
             df_1d = self.dp.get_pair_dataframe(pair=metadata['pair'], timeframe='1d')
             if len(df_1d) > 0:
@@ -555,15 +541,13 @@ class TrendRiderStrategy(IStrategy):
             dataframe['adx_4h'] = dataframe['adx']
             dataframe['btc_is_bull_1h'] = 1
             dataframe['btc_rsi_1h'] = 50
-            dataframe['rsi_15m_15m'] = 50
-            dataframe['ema_fast_15m_15m'] = 0
             dataframe['ema_200_1d_1d'] = 0
 
         # Ensure columns exist (safety for backtesting edge cases)
         for col, default in [
             ('is_bull_4h', 1), ('rsi_14_4h', 50), ('adx_4h', 20),
             ('btc_is_bull_1h', 1), ('btc_rsi_1h', 50),
-            ('rsi_15m_15m', 50), ('ema_fast_15m_15m', 0),
+
             ('ema_200_1d_1d', 0),
         ]:
             if col not in dataframe.columns:
@@ -614,7 +598,7 @@ class TrendRiderStrategy(IStrategy):
             dataframe["btc_rsi_1h"] > 35,
             dataframe["fng_value"] >= 25,      # Not extreme fear
             dataframe["fng_value"] <= 85,      # Not extreme greed
-            dataframe["rsi_15m_15m"] < 70,     # 15m not overbought
+            dataframe[rsi] < 70,                 # Not overbought
         ]
         # Add daily EMA200 filter only if column has valid data
         if 'ema_200_1d_1d' in dataframe.columns:
@@ -641,7 +625,7 @@ class TrendRiderStrategy(IStrategy):
             dataframe["btc_rsi_1h"] > 35,
             dataframe["fng_value"] >= 25,
             dataframe["fng_value"] <= 85,
-            dataframe["rsi_15m_15m"] < 70,
+            dataframe[rsi] < 70,
         ]
         # Block entries when funding is extreme (live only)
         if self.dp and self.dp.runmode.value in ('live', 'dry_run'):
