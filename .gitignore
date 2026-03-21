@@ -12,6 +12,10 @@ __pycache__/
 # Environment
 .env
 
+# Google service account credentials
+*.gserviceaccount.json
+glossy-infinity-*.json
+
 # Downloaded candle data (large)
 FreqtradeBot/user_data/data/
 
