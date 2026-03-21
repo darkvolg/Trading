@@ -14,8 +14,8 @@
     },
     "trailing": {
       "trailing_stop": true,
-      "trailing_stop_positive": 0.02,
-      "trailing_stop_positive_offset": 0.025,
+      "trailing_stop_positive": 0.03,
+      "trailing_stop_positive_offset": 0.05,
       "trailing_only_offset_is_reached": true
     },
     "max_open_trades": {
