@@ -48,7 +48,7 @@ class TrendRiderStrategy(IStrategy):
 
     # --- Stoploss: WIDE for crypto volatility ---
     stoploss = -0.06           # 6% default (ATR-based custom stoploss overrides)
-    use_custom_stoploss = True  # Dynamic ATR-based stoploss
+    use_custom_stoploss = False
 
     # --- Trailing Stop: WIDE ---
     trailing_stop = True
@@ -60,8 +60,8 @@ class TrendRiderStrategy(IStrategy):
     timeframe = "1h"
     startup_candle_count = 210
     process_only_new_candles = True
-    can_short = True
-    position_adjustment_enable = True
+    can_short = False
+    position_adjustment_enable = False
 
     # --- Protections (moved from config.json for Freqtrade 2026.2+) ---
     protections = [
@@ -600,7 +600,7 @@ class TrendRiderStrategy(IStrategy):
             dataframe["fng_value"] <= 85,      # Not extreme greed
             dataframe[rsi] < 70,                 # Not overbought
         ]
-        # Add daily EMA200 filter only if column has valid data
+        # Daily EMA200 filter — helps filter bad entries
         if 'ema_200_1d_1d' in dataframe.columns:
             conditions_pullback.append(dataframe["close"] > dataframe["ema_200_1d_1d"])
         # Block entries when funding is extreme (live only)
