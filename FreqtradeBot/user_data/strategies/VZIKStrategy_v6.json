@@ -1,0 +1,41 @@
+{
+  "strategy_name": "VZIKStrategy_v6",
+  "params": {
+    "roi": {
+      "0": 0.1,
+      "120": 0.06,
+      "360": 0.04,
+      "720": 0.025,
+      "1440": 0.015,
+      "2880": 0.01
+    },
+    "stoploss": {
+      "stoploss": -0.06
+    },
+    "trailing": {
+      "trailing_stop": true,
+      "trailing_stop_positive": 0.03,
+      "trailing_stop_positive_offset": 0.05,
+      "trailing_only_offset_is_reached": true
+    },
+    "max_open_trades": {
+      "max_open_trades": 3
+    },
+    "buy": {
+      "adx_threshold": 27,
+      "ema_fast": 9,
+      "ema_slow": 16,
+      "leverage_long": 3,
+      "rsi_bounce": 33,
+      "rsi_period": 16,
+      "rsi_pullback_high": 58,
+      "rsi_pullback_low": 36,
+      "volume_factor": 1.014
+    },
+    "sell": {
+      "rsi_exit": 81
+    }
+  },
+  "ft_stratparam_v": 1,
+  "export_time": "2026-03-21 11:50:29.654851+00:00"
+}

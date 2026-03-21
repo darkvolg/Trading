@@ -1,0 +1,23 @@
+# Sensitive config (contains API keys and tokens)
+FreqtradeBot/config.json
+
+# Database files
+FreqtradeBot/tradesv3.*.sqlite*
+
+# Python cache
+FreqtradeBot/user_data/strategies/__pycache__/
+__pycache__/
+*.pyc
+
+# Environment
+.env
+
+# Downloaded candle data (large)
+FreqtradeBot/user_data/data/
+
+# Hyperopt lock
+FreqtradeBot/user_data/hyperopt.lock
+
+# Misc
+unnamed.jpg
+trading_bot_v3.docx
