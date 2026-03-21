@@ -43,8 +43,8 @@ class TrendRiderStrategy(IStrategy):
 
     # --- Trailing Stop: WIDE ---
     trailing_stop = True
-    trailing_stop_positive = 0.02        # 2% trail (fix #3: was 3%)
-    trailing_stop_positive_offset = 0.025 # Activate after +2.5% (fix #2: was 5%)
+    trailing_stop_positive = 0.03        # 3% trail
+    trailing_stop_positive_offset = 0.05 # Activate after +5%
     trailing_only_offset_is_reached = True
 
     # --- General ---
@@ -173,7 +173,6 @@ class TrendRiderStrategy(IStrategy):
         # Price pulls back to EMA21 support in strong uptrend, then bounces
         conditions_pullback = [
             dataframe["is_bull"] == 1,
-            dataframe["is_bear"] == 0,                            # fix #1: block bear entries
             dataframe["pullback_to_ema"] == 1,
             dataframe[rsi] > self.rsi_pullback_low.value,
             dataframe[rsi] < self.rsi_pullback_high.value,
@@ -191,17 +190,13 @@ class TrendRiderStrategy(IStrategy):
         # === LONG 2: EMA50 Support Bounce ===
         # Deeper pullback to EMA50 in uptrend — stronger support
         conditions_ema50 = [
-            dataframe["enter_long"] == 0,                          # fix #11: don't overwrite
             dataframe["is_bull"] == 1,
-            dataframe["is_bear"] == 0,                             # fix #1: block bear entries
             dataframe["ema50_bounce"] == 1,
             dataframe[rsi] > 30,
             dataframe[rsi] < 50,
             dataframe["adx"] > 20,
             dataframe["volume_ratio"] > 1.0,
-            # fix #7: 2-candle MACD confirmation
-            (dataframe["macdhist"] > dataframe["macdhist"].shift(1)) &
-            (dataframe["macdhist"].shift(1) > dataframe["macdhist"].shift(2)),
+            dataframe["macdhist"] > dataframe["macdhist"].shift(1),
             dataframe["volume"] > 0,
         ]
         dataframe.loc[
@@ -212,8 +207,6 @@ class TrendRiderStrategy(IStrategy):
         # === LONG 3: RSI Oversold Bounce ===
         # RSI crosses 30 from below in bull/neutral market
         conditions_rsi = [
-            dataframe["enter_long"] == 0,                          # fix #11: don't overwrite
-            dataframe["is_bear"] == 0,                             # fix #1: block bear entries
             dataframe["close"] > dataframe["ema_200"],
             dataframe[rsi].shift(1) < self.rsi_bounce.value,
             dataframe[rsi] > self.rsi_bounce.value,
@@ -235,9 +228,8 @@ class TrendRiderStrategy(IStrategy):
         ema_fast = f"ema_{self.ema_fast.value}"
         ema_slow = f"ema_{self.ema_slow.value}"
 
-        # EXIT 1: RSI very overbought (fix #10: only during bull)
+        # EXIT 1: RSI very overbought
         dataframe.loc[
-            (dataframe["is_bull"] == 1) &
             (dataframe[rsi] > self.rsi_exit.value) &
             (dataframe["volume"] > 0),
             ["exit_long", "exit_tag"]
