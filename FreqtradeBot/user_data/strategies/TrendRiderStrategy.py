@@ -262,8 +262,7 @@ class TrendRiderStrategy(IStrategy):
             dataframe["plus_di"] > dataframe["minus_di"],         # Bullish DI
             dataframe["obv"] > dataframe["obv_ema"],
             dataframe["volume"] > 0,
-            dataframe["btc_is_bull_1h"] == 1,   # BTC must be bullish
-            dataframe["is_bull_4h_4h"] == 1,    # 4h trend must confirm
+            dataframe["btc_rsi_1h"] > 35,       # BTC not oversold (soft filter)
         ]
         dataframe.loc[
             reduce(lambda x, y: x & y, conditions_pullback),
@@ -281,8 +280,7 @@ class TrendRiderStrategy(IStrategy):
             dataframe["volume_ratio"] > 1.0,
             dataframe["macdhist"] > dataframe["macdhist"].shift(1),
             dataframe["volume"] > 0,
-            dataframe["btc_is_bull_1h"] == 1,   # BTC must be bullish
-            dataframe["is_bull_4h_4h"] == 1,    # 4h trend must confirm
+            dataframe["btc_rsi_1h"] > 35,       # BTC not oversold (soft filter)
         ]
         dataframe.loc[
             reduce(lambda x, y: x & y, conditions_ema50),
@@ -300,7 +298,7 @@ class TrendRiderStrategy(IStrategy):
             dataframe["volume_ratio"] > 0.8,
             dataframe["obv"] > dataframe["obv_ema"],
             dataframe["volume"] > 0,
-            dataframe["btc_is_bull_1h"] == 1,   # BTC must be bullish
+            dataframe["btc_rsi_1h"] > 35,       # BTC not oversold (soft filter)
         ]
         dataframe.loc[
             reduce(lambda x, y: x & y, conditions_rsi),
