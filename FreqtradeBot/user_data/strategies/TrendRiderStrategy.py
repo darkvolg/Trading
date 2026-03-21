@@ -75,6 +75,22 @@ class TrendRiderStrategy(IStrategy):
         }
     ]
 
+    # --- HyperOpt Results (applied from optimization session 2026-03-21) ---
+    buy_params = {
+        "ema_fast": 9,
+        "ema_slow": 16,
+        "rsi_period": 16,
+        "rsi_pullback_low": 40,
+        "rsi_pullback_high": 58,
+        "rsi_bounce": 30,
+        "adx_threshold": 27,
+        "volume_factor": 1.014,
+    }
+
+    sell_params = {
+        "rsi_exit": 81,
+    }
+
     # --- HyperOpt Parameters ---
     ema_fast = IntParameter(5, 15, default=9, space="buy")
     ema_slow = IntParameter(15, 30, default=21, space="buy")
