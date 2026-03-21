@@ -1,5 +1,5 @@
 {
-  "strategy_name": "VZIKStrategy_v6",
+  "strategy_name": "TrendRiderStrategy",
   "params": {
     "roi": {
       "0": 0.1,

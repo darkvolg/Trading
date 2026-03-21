@@ -1,5 +1,5 @@
 """
-VZIKStrategy v6.1 — "Trend Rider"
+TrendRiderStrategy — "Trend Rider"
 
 Philosophy: Ride established uptrends with WIDE stoploss.
 Key insight: crypto swings 2-4% per hour. Stoploss must be >= 5-6%.
@@ -14,19 +14,17 @@ Rules:
 - LONG only (shorts failed in v5)
 - Bear market = no trading
 - WIDE stoploss (6%) to survive normal volatility
-- WIDE trailing (3% trail after 5% profit)
+- WIDE trailing (2% trail after 2.5% profit)
 - FEW high-quality entries (quality > quantity)
 """
 
 import talib.abstract as ta
 from freqtrade.strategy import IStrategy, IntParameter, DecimalParameter
-from freqtrade.persistence import Trade
 from pandas import DataFrame
-from datetime import datetime
 from functools import reduce
 
 
-class VZIKStrategy_v6(IStrategy):
+class TrendRiderStrategy(IStrategy):
     INTERFACE_VERSION = 3
 
     # --- ROI: Wide, let winners run ---
@@ -45,8 +43,8 @@ class VZIKStrategy_v6(IStrategy):
 
     # --- Trailing Stop: WIDE ---
     trailing_stop = True
-    trailing_stop_positive = 0.03        # 3% trail (v4: 1%)
-    trailing_stop_positive_offset = 0.05  # Activate after +5% (v4: 2.5%)
+    trailing_stop_positive = 0.02        # 2% trail (fix #3: was 3%)
+    trailing_stop_positive_offset = 0.025 # Activate after +2.5% (fix #2: was 5%)
     trailing_only_offset_is_reached = True
 
     # --- General ---
@@ -65,12 +63,14 @@ class VZIKStrategy_v6(IStrategy):
     rsi_exit = IntParameter(72, 85, default=78, space="sell")
     adx_threshold = IntParameter(20, 35, default=25, space="buy")
     volume_factor = DecimalParameter(1.0, 2.5, default=1.3, space="buy")
-    leverage_long = IntParameter(2, 5, default=3, space="buy")
 
-    def leverage(self, pair: str, current_time: datetime, current_rate: float,
+    # --- Leverage: fixed, not optimized (fix #9) ---
+    leverage_value = 3
+
+    def leverage(self, pair: str, current_time, current_rate: float,
                  proposed_leverage: float, max_leverage: float, entry_tag: str,
                  side: str, **kwargs) -> float:
-        return min(float(self.leverage_long.value), max_leverage)
+        return min(float(self.leverage_value), max_leverage)
 
     def informative_pairs(self):
         return []
@@ -82,7 +82,7 @@ class VZIKStrategy_v6(IStrategy):
         dataframe["ema_50"] = ta.EMA(dataframe, timeperiod=50)
         dataframe["ema_200"] = ta.EMA(dataframe, timeperiod=200)
 
-        # RSI
+        # RSI (all periods for hyperopt range 10-20)
         for period in range(10, 21):
             dataframe[f"rsi_{period}"] = ta.RSI(dataframe, timeperiod=period)
 
@@ -103,12 +103,9 @@ class VZIKStrategy_v6(IStrategy):
         dataframe["bb_middle"] = bb["middleband"]
         dataframe["bb_lower"] = bb["lowerband"]
 
-        # ATR
-        dataframe["atr"] = ta.ATR(dataframe, timeperiod=14)
-
-        # Volume
+        # Volume (fix #4: epsilon guard against division by zero)
         dataframe["volume_ema"] = ta.EMA(dataframe["volume"], timeperiod=20)
-        dataframe["volume_ratio"] = dataframe["volume"] / dataframe["volume_ema"]
+        dataframe["volume_ratio"] = dataframe["volume"] / (dataframe["volume_ema"] + 1e-10)
 
         # OBV
         dataframe["obv"] = ta.OBV(dataframe)
@@ -154,12 +151,13 @@ class VZIKStrategy_v6(IStrategy):
         # Price pulls back to EMA21 support in strong uptrend, then bounces
         conditions_pullback = [
             dataframe["is_bull"] == 1,
+            dataframe["is_bear"] == 0,                            # fix #1: block bear entries
             dataframe["pullback_to_ema"] == 1,
             dataframe[rsi] > self.rsi_pullback_low.value,
             dataframe[rsi] < self.rsi_pullback_high.value,
             dataframe["adx"] > self.adx_threshold.value,
             dataframe["volume_ratio"] > self.volume_factor.value,
-            dataframe["plus_di"] > dataframe["minus_di"],     # Bullish DI
+            dataframe["plus_di"] > dataframe["minus_di"],         # Bullish DI
             dataframe["obv"] > dataframe["obv_ema"],
             dataframe["volume"] > 0,
         ]
@@ -171,13 +169,17 @@ class VZIKStrategy_v6(IStrategy):
         # === LONG 2: EMA50 Support Bounce ===
         # Deeper pullback to EMA50 in uptrend — stronger support
         conditions_ema50 = [
+            dataframe["enter_long"] == 0,                          # fix #11: don't overwrite
             dataframe["is_bull"] == 1,
+            dataframe["is_bear"] == 0,                             # fix #1: block bear entries
             dataframe["ema50_bounce"] == 1,
             dataframe[rsi] > 30,
             dataframe[rsi] < 50,
             dataframe["adx"] > 20,
             dataframe["volume_ratio"] > 1.0,
-            dataframe["macdhist"] > dataframe["macdhist"].shift(1),  # MACD turning up
+            # fix #7: 2-candle MACD confirmation
+            (dataframe["macdhist"] > dataframe["macdhist"].shift(1)) &
+            (dataframe["macdhist"].shift(1) > dataframe["macdhist"].shift(2)),
             dataframe["volume"] > 0,
         ]
         dataframe.loc[
@@ -188,11 +190,13 @@ class VZIKStrategy_v6(IStrategy):
         # === LONG 3: RSI Oversold Bounce ===
         # RSI crosses 30 from below in bull/neutral market
         conditions_rsi = [
+            dataframe["enter_long"] == 0,                          # fix #11: don't overwrite
+            dataframe["is_bear"] == 0,                             # fix #1: block bear entries
             dataframe["close"] > dataframe["ema_200"],
             dataframe[rsi].shift(1) < self.rsi_bounce.value,
             dataframe[rsi] > self.rsi_bounce.value,
             dataframe["close"] > dataframe["bb_lower"],
-            dataframe["close"] > dataframe["open"],          # Bullish candle
+            dataframe["close"] > dataframe["open"],                # Bullish candle
             dataframe["volume_ratio"] > 0.8,
             dataframe["obv"] > dataframe["obv_ema"],
             dataframe["volume"] > 0,
@@ -209,8 +213,9 @@ class VZIKStrategy_v6(IStrategy):
         ema_fast = f"ema_{self.ema_fast.value}"
         ema_slow = f"ema_{self.ema_slow.value}"
 
-        # EXIT 1: RSI very overbought
+        # EXIT 1: RSI very overbought (fix #10: only during bull)
         dataframe.loc[
+            (dataframe["is_bull"] == 1) &
             (dataframe[rsi] > self.rsi_exit.value) &
             (dataframe["volume"] > 0),
             ["exit_long", "exit_tag"]

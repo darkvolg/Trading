@@ -19,5 +19,5 @@ FreqtradeBot/user_data/data/
 FreqtradeBot/user_data/hyperopt.lock
 
 # Misc
-unnamed.jpg
-trading_bot_v3.docx
+*.jpg
+*.docx

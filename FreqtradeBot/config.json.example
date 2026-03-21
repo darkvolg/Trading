@@ -3,12 +3,32 @@
     "margin_mode": "isolated",
     "max_open_trades": 3,
     "stake_currency": "USDT",
-    "stake_amount": "unlimited",
+    "stake_amount": 50,
     "tradable_balance_ratio": 0.99,
     "fiat_display_currency": "USD",
     "dry_run": true,
-    "dry_run_wallet": 200,
-    "cancel_open_orders_on_exit": false,
+    "dry_run_wallet": 500,
+    "cancel_open_orders_on_exit": true,
+    "protections": [
+        {
+            "method": "CooldownPeriod",
+            "stop_duration": 20
+        },
+        {
+            "method": "StoplossGuard",
+            "lookback_period": 720,
+            "trade_limit": 3,
+            "stop_duration": 60,
+            "only_per_pair": false
+        },
+        {
+            "method": "MaxDrawdown",
+            "lookback_period": 1440,
+            "max_allowed_drawdown": 0.10,
+            "stop_duration": 300,
+            "trade_limit": 5
+        }
+    ],
     "timeframe": "1h",
     "exchange": {
         "name": "bybit",
@@ -88,7 +108,7 @@
         "username": "YOUR_USERNAME_HERE",
         "password": "YOUR_PASSWORD_HERE"
     },
-    "bot_name": "VZIK_CryptoBot",
+    "bot_name": "TrendRider_CryptoBot",
     "initial_state": "running",
     "force_entry_enable": false,
     "internals": {
