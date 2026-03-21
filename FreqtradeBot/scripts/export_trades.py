@@ -14,10 +14,12 @@ import sqlite3
 from datetime import datetime, timezone
 from pathlib import Path
 
-DB_PATH = "/opt/freqtrade/tradesv3.dryrun.sqlite"
-CSV_PATH = "/opt/freqtrade/trades_history.csv"
-JSON_PATH = "/opt/freqtrade/trades_summary.json"
-CONFIG_PATH = "/opt/freqtrade/config.json"
+FT_HOME = os.environ.get("FT_HOME", os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
+
+DB_PATH = os.getenv("FT_DB_PATH", os.path.join(FT_HOME, "tradesv3.dryrun.sqlite"))
+CSV_PATH = os.getenv("FT_CSV_PATH", os.path.join(FT_HOME, "trades_history.csv"))
+JSON_PATH = os.getenv("FT_JSON_PATH", os.path.join(FT_HOME, "trades_summary.json"))
+CONFIG_PATH = os.getenv("FT_CONFIG_PATH", os.path.join(FT_HOME, "config.json"))
 
 CSV_COLUMNS = [
     "Date (open)", "Date (close)", "Pair", "Side", "Entry Price",

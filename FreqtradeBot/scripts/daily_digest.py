@@ -1,7 +1,7 @@
 #!/usr/bin/env python3
 """
 Daily Morning Digest — sends market overview to Telegram.
-Run via cron: 0 8 * * * /usr/bin/python3 /opt/freqtrade/scripts/daily_digest.py
+Run via cron: 0 8 * * * /usr/bin/python3 /path/to/scripts/daily_digest.py
 """
 
 import json
@@ -17,10 +17,12 @@ import talib
 # ---------------------------------------------------------------------------
 # Config
 # ---------------------------------------------------------------------------
+FT_HOME = os.environ.get("FT_HOME", os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
+
 PAIRS = ["BTC/USDT", "ETH/USDT", "SOL/USDT"]
 TIMEFRAME = "1h"
 CANDLE_LIMIT = 210  # enough for EMA200 + warm-up
-CONFIG_PATH = "/opt/freqtrade/config.json"
+CONFIG_PATH = os.getenv("FT_CONFIG_PATH", os.path.join(FT_HOME, "config.json"))
 
 
 def get_telegram_config() -> tuple[str, str]:
