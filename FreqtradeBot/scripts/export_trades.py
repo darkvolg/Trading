@@ -26,8 +26,8 @@ CSV_COLUMNS = [
 
 QUERY = """
 SELECT pair, open_date, close_date, open_rate, close_rate,
-       profit_ratio, profit_abs, trade_duration, exit_reason,
-       leverage, stake_amount
+       close_profit AS profit_ratio, close_profit_abs AS profit_abs,
+       exit_reason, leverage, stake_amount
 FROM trades
 WHERE is_open = 0
 ORDER BY close_date ASC
@@ -48,6 +48,22 @@ def fmt_dt(val: str | None) -> str:
     return val.replace(" ", "T")[:19]
 
 
+def calc_duration(open_date: str, close_date: str) -> str:
+    """Calculate trade duration from open/close dates."""
+    if not open_date or not close_date:
+        return "0h"
+    try:
+        fmt = "%Y-%m-%d %H:%M:%S"
+        od = datetime.strptime(open_date[:19], fmt)
+        cd = datetime.strptime(close_date[:19], fmt)
+        hours = (cd - od).total_seconds() / 3600
+        if hours < 1:
+            return f"{int(hours * 60)}m"
+        return f"{hours:.1f}h"
+    except (ValueError, TypeError):
+        return "N/A"
+
+
 def write_csv(trades: list[dict], path: str) -> None:
     with open(path, "w", newline="", encoding="utf-8") as f:
         w = csv.writer(f)
@@ -64,7 +80,7 @@ def write_csv(trades: list[dict], path: str) -> None:
                 f'{t["close_rate"]:.6f}',
                 f'{(t["profit_ratio"] or 0) * 100:.2f}',
                 f'{t["profit_abs"] or 0:.2f}',
-                f'{(t["trade_duration"] or 0) / 60:.1f}h',
+                calc_duration(t["open_date"], t["close_date"]),
                 t["exit_reason"] or "",
                 f'{leverage:.0f}x',
             ])
@@ -80,7 +96,15 @@ def build_summary(trades: list[dict]) -> dict:
 
     profits = [(t["profit_ratio"] or 0) * 100 for t in trades]
     profits_abs = [t["profit_abs"] or 0 for t in trades]
-    durations = [(t["trade_duration"] or 0) / 60 for t in trades]
+    durations = []
+    for t in trades:
+        try:
+            fmt = "%Y-%m-%d %H:%M:%S"
+            od = datetime.strptime(str(t["open_date"])[:19], fmt)
+            cd = datetime.strptime(str(t["close_date"])[:19], fmt)
+            durations.append((cd - od).total_seconds() / 3600)
+        except (ValueError, TypeError):
+            durations.append(0)
     wins = sum(1 for p in profits if p > 0)
 
     best = max(trades, key=lambda t: t["profit_ratio"] or 0)

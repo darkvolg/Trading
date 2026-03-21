@@ -110,7 +110,8 @@ def _query_stats() -> str:
     cur.execute(
         """
         SELECT id, pair, open_date, close_date, open_rate, close_rate,
-               profit_abs, profit_ratio, stake_amount, is_open
+               close_profit_abs AS profit_abs, close_profit AS profit_ratio,
+               stake_amount, is_open
         FROM trades
         WHERE open_date >= ?
         ORDER BY open_date DESC
