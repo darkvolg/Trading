@@ -1025,7 +1025,7 @@ class TrendRiderStrategy(IStrategy):
         market_ctx = self._market_context(last)
 
         # --- REJECT WEAK SIGNALS ---
-        if conf_numeric <= 3:
+        if conf_numeric <= 5:
             logger.info(f"Rejecting weak signal for {pair}: confidence {conf_numeric}/10")
             return False
 
