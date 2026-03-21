@@ -19,7 +19,8 @@ Rules:
 """
 
 import talib.abstract as ta
-from freqtrade.strategy import IStrategy, IntParameter, DecimalParameter
+from datetime import datetime
+from freqtrade.strategy import IStrategy, IntParameter, DecimalParameter, merge_informative_pair
 from pandas import DataFrame
 from functools import reduce
 
@@ -111,7 +112,14 @@ class TrendRiderStrategy(IStrategy):
         return min(float(self.leverage_value), max_leverage)
 
     def informative_pairs(self):
-        return []
+        pairs = self.dp.current_whitelist() if self.dp else []
+        informative = []
+        for pair in pairs:
+            informative.append((pair, "4h"))
+        # BTC as market sentiment
+        informative.append(("BTC/USDT:USDT", "1h"))
+        informative.append(("BTC/USDT:USDT", "4h"))
+        return informative
 
     def populate_indicators(self, dataframe: DataFrame, metadata: dict) -> DataFrame:
         # EMAs (all periods for hyperopt ranges)
@@ -178,6 +186,63 @@ class TrendRiderStrategy(IStrategy):
             (dataframe["close"] > dataframe["open"])
         ).astype(int)
 
+        # --- 4h Multi-Timeframe confirmation ---
+        if self.dp:
+            # 4h data for current pair
+            df_4h = self.dp.get_pair_dataframe(pair=metadata['pair'], timeframe='4h')
+            if len(df_4h) > 0:
+                df_4h['ema_50_4h'] = ta.EMA(df_4h, timeperiod=50)
+                df_4h['ema_200_4h'] = ta.EMA(df_4h, timeperiod=200)
+                df_4h['rsi_14_4h'] = ta.RSI(df_4h, timeperiod=14)
+                df_4h['adx_4h'] = ta.ADX(df_4h, timeperiod=14)
+                df_4h['is_bull_4h'] = (
+                    (df_4h['close'] > df_4h['ema_200_4h']) &
+                    (df_4h['ema_50_4h'] > df_4h['ema_200_4h'])
+                ).astype(int)
+                # Merge 4h data into 1h using merge_informative_pair
+                dataframe = merge_informative_pair(
+                    dataframe,
+                    df_4h[['date', 'ema_50_4h', 'ema_200_4h', 'rsi_14_4h', 'adx_4h', 'is_bull_4h']],
+                    self.timeframe, '4h', ffill=True
+                )
+            else:
+                dataframe['ema_50_4h_4h'] = 0
+                dataframe['ema_200_4h_4h'] = 0
+                dataframe['rsi_14_4h_4h'] = 50
+                dataframe['adx_4h_4h'] = 0
+                dataframe['is_bull_4h_4h'] = 0
+
+            # BTC market sentiment
+            df_btc = self.dp.get_pair_dataframe(pair='BTC/USDT:USDT', timeframe='1h')
+            if len(df_btc) > 0:
+                df_btc['btc_ema_200'] = ta.EMA(df_btc, timeperiod=200)
+                df_btc['btc_ema_50'] = ta.EMA(df_btc, timeperiod=50)
+                df_btc['btc_rsi'] = ta.RSI(df_btc, timeperiod=14)
+                df_btc['btc_is_bull'] = (
+                    (df_btc['close'] > df_btc['btc_ema_200']) &
+                    (df_btc['btc_ema_50'] > df_btc['btc_ema_200'])
+                ).astype(int)
+                dataframe = merge_informative_pair(
+                    dataframe,
+                    df_btc[['date', 'btc_ema_200', 'btc_ema_50', 'btc_rsi', 'btc_is_bull']],
+                    self.timeframe, '1h', ffill=True
+                )
+            else:
+                dataframe['btc_is_bull_1h'] = 1
+                dataframe['btc_rsi_1h'] = 50
+        else:
+            # Safety fallback when dp is not available
+            dataframe['is_bull_4h_4h'] = dataframe['is_bull']
+            dataframe['rsi_14_4h_4h'] = dataframe['rsi_14'] if 'rsi_14' in dataframe.columns else 50
+            dataframe['adx_4h_4h'] = dataframe['adx']
+            dataframe['btc_is_bull_1h'] = 1
+            dataframe['btc_rsi_1h'] = 50
+
+        # Ensure columns exist (safety for backtesting edge cases)
+        for col, default in [('is_bull_4h_4h', 1), ('rsi_14_4h_4h', 50), ('adx_4h_4h', 20), ('btc_is_bull_1h', 1), ('btc_rsi_1h', 50)]:
+            if col not in dataframe.columns:
+                dataframe[col] = default
+
         return dataframe
 
     def populate_entry_trend(self, dataframe: DataFrame, metadata: dict) -> DataFrame:
@@ -197,6 +262,8 @@ class TrendRiderStrategy(IStrategy):
             dataframe["plus_di"] > dataframe["minus_di"],         # Bullish DI
             dataframe["obv"] > dataframe["obv_ema"],
             dataframe["volume"] > 0,
+            dataframe["btc_is_bull_1h"] == 1,   # BTC must be bullish
+            dataframe["is_bull_4h_4h"] == 1,    # 4h trend must confirm
         ]
         dataframe.loc[
             reduce(lambda x, y: x & y, conditions_pullback),
@@ -214,6 +281,8 @@ class TrendRiderStrategy(IStrategy):
             dataframe["volume_ratio"] > 1.0,
             dataframe["macdhist"] > dataframe["macdhist"].shift(1),
             dataframe["volume"] > 0,
+            dataframe["btc_is_bull_1h"] == 1,   # BTC must be bullish
+            dataframe["is_bull_4h_4h"] == 1,    # 4h trend must confirm
         ]
         dataframe.loc[
             reduce(lambda x, y: x & y, conditions_ema50),
@@ -231,6 +300,7 @@ class TrendRiderStrategy(IStrategy):
             dataframe["volume_ratio"] > 0.8,
             dataframe["obv"] > dataframe["obv_ema"],
             dataframe["volume"] > 0,
+            dataframe["btc_is_bull_1h"] == 1,   # BTC must be bullish
         ]
         dataframe.loc[
             reduce(lambda x, y: x & y, conditions_rsi),
@@ -270,3 +340,108 @@ class TrendRiderStrategy(IStrategy):
         ] = (1, "trend_broken")
 
         return dataframe
+
+    def confirm_trade_entry(self, pair: str, order_type: str, amount: float, rate: float,
+                           time_in_force: str, current_time: datetime, entry_tag: str | None,
+                           side: str, **kwargs) -> bool:
+        # Calculate levels
+        sl_price = rate * (1 + self.stoploss)  # stoploss is negative
+        tp1_price = rate * 1.03   # +3%
+        tp2_price = rate * 1.05   # +5% (trailing activates)
+        tp3_price = rate * 1.10   # +10% (ROI target)
+        leverage = self.leverage_value
+        stake = self.stake_amount if hasattr(self, 'stake_amount') else 50
+
+        # Entry reason mapping
+        reasons = {
+            "trend_pullback": "Откат к EMA16 в сильном тренде, отскок с подтверждением объёма",
+            "ema50_bounce": "Глубокий откат к EMA50, отскок с растущим MACD",
+            "rsi_bounce": "RSI перепродан, отскок от нижней Боллинджера в бычьем рынке",
+        }
+        reason = reasons.get(entry_tag, entry_tag or "Signal")
+
+        # Get current indicators for context
+        dataframe, _ = self.dp.get_analyzed_dataframe(pair, self.timeframe)
+        if len(dataframe) > 0:
+            last = dataframe.iloc[-1]
+            rsi_key = f"rsi_{self.rsi_period.value}"
+            rsi_val = last.get(rsi_key, 0)
+            adx_val = last.get("adx", 0)
+            vol_ratio = last.get("volume_ratio", 0)
+        else:
+            rsi_val = adx_val = vol_ratio = 0
+
+        msg = (
+            f"*TRENDRIDER SIGNAL*\n"
+            f"{'='*25}\n"
+            f"*{pair}* | *LONG* | {leverage}x\n"
+            f"{'='*25}\n\n"
+            f"*Entry:* `{rate:.2f}` USDT\n"
+            f"*Stop Loss:* `{sl_price:.2f}` ({self.stoploss*100:+.1f}%)\n\n"
+            f"*Targets:*\n"
+            f"  TP1: `{tp1_price:.2f}` (+3%) — 40%\n"
+            f"  TP2: `{tp2_price:.2f}` (+5%) — 35%\n"
+            f"  TP3: `{tp3_price:.2f}` (+10%) — 25%\n\n"
+            f"*Индикаторы:*\n"
+            f"  RSI: {rsi_val:.1f} | ADX: {adx_val:.1f} | Vol: {vol_ratio:.2f}x\n\n"
+            f"*Причина:* {reason}\n"
+            f"{'='*25}\n"
+            f"_TrendRider Algo | Bybit Futures_"
+        )
+
+        self.dp.send_msg(msg, always_send=True)
+        return True
+
+    def confirm_trade_exit(self, pair: str, trade, order_type: str, amount: float,
+                          rate: float, time_in_force: str, exit_reason: str,
+                          current_time: datetime, **kwargs) -> bool:
+        # Calculate results
+        profit_pct = ((rate - trade.open_rate) / trade.open_rate) * 100 * trade.leverage
+        duration_hours = (current_time - trade.open_date_utc).total_seconds() / 3600
+
+        # Exit reason mapping
+        exit_reasons = {
+            "roi": "ROI target reached",
+            "stop_loss": "Stop Loss hit",
+            "trailing_stop_loss": "Trailing Stop",
+            "exit_signal": "Exit signal",
+            "rsi_overbought": "RSI overbought (>81)",
+            "ema_bearish_cross": "EMA bearish crossover",
+            "trend_broken": "Trend broken (below EMA200)",
+            "force_exit": "Force exit",
+        }
+        reason_text = exit_reasons.get(exit_reason, exit_reason)
+
+        # Result emoji
+        if profit_pct > 0:
+            emoji = "+" if profit_pct < 3 else "++"
+            result_line = f"+{profit_pct:.2f}%"
+        else:
+            emoji = "-"
+            result_line = f"{profit_pct:.2f}%"
+
+        # Duration formatting
+        if duration_hours < 1:
+            dur_str = f"{int(duration_hours * 60)}m"
+        elif duration_hours < 24:
+            dur_str = f"{duration_hours:.1f}h"
+        else:
+            dur_str = f"{duration_hours/24:.1f}d"
+
+        msg = (
+            f"*TRADE CLOSED* {'✅' if profit_pct > 0 else '❌'}\n"
+            f"{'='*25}\n"
+            f"*{pair}* | LONG | {trade.leverage}x\n"
+            f"{'='*25}\n\n"
+            f"*Entry:* `{trade.open_rate:.2f}`\n"
+            f"*Exit:* `{rate:.2f}`\n"
+            f"*Result:* *{result_line}*\n"
+            f"*Duration:* {dur_str}\n"
+            f"*Reason:* {reason_text}\n"
+            f"*Max price:* `{trade.max_rate:.2f}`\n"
+            f"{'='*25}\n"
+            f"_TrendRider Algo | Bybit Futures_"
+        )
+
+        self.dp.send_msg(msg, always_send=True)
+        return True
