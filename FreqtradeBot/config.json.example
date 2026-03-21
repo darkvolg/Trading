@@ -9,26 +9,6 @@
     "dry_run": true,
     "dry_run_wallet": 500,
     "cancel_open_orders_on_exit": true,
-    "protections": [
-        {
-            "method": "CooldownPeriod",
-            "stop_duration": 20
-        },
-        {
-            "method": "StoplossGuard",
-            "lookback_period": 720,
-            "trade_limit": 3,
-            "stop_duration": 60,
-            "only_per_pair": false
-        },
-        {
-            "method": "MaxDrawdown",
-            "lookback_period": 1440,
-            "max_allowed_drawdown": 0.10,
-            "stop_duration": 300,
-            "trade_limit": 5
-        }
-    ],
     "timeframe": "1h",
     "exchange": {
         "name": "bybit",

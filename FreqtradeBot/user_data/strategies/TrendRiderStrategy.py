@@ -53,6 +53,28 @@ class TrendRiderStrategy(IStrategy):
     process_only_new_candles = True
     can_short = False
 
+    # --- Protections (moved from config.json for Freqtrade 2026.2+) ---
+    protections = [
+        {
+            "method": "CooldownPeriod",
+            "stop_duration": 20
+        },
+        {
+            "method": "StoplossGuard",
+            "lookback_period": 720,
+            "trade_limit": 3,
+            "stop_duration": 60,
+            "only_per_pair": False
+        },
+        {
+            "method": "MaxDrawdown",
+            "lookback_period": 1440,
+            "max_allowed_drawdown": 0.10,
+            "stop_duration": 300,
+            "trade_limit": 5
+        }
+    ]
+
     # --- HyperOpt Parameters ---
     ema_fast = IntParameter(5, 15, default=9, space="buy")
     ema_slow = IntParameter(15, 30, default=21, space="buy")
