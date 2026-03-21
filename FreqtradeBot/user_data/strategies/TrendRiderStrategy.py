@@ -19,10 +19,13 @@ Rules:
 """
 
 import talib.abstract as ta
-from datetime import datetime
+from datetime import datetime, timedelta, timezone
 from freqtrade.strategy import IStrategy, IntParameter, DecimalParameter, merge_informative_pair
 from pandas import DataFrame
 from functools import reduce
+import logging
+
+logger = logging.getLogger(__name__)
 
 
 class TrendRiderStrategy(IStrategy):
@@ -106,10 +109,79 @@ class TrendRiderStrategy(IStrategy):
     # --- Leverage: fixed, not optimized (fix #9) ---
     leverage_value = 3
 
+    def __init__(self, config: dict) -> None:
+        super().__init__(config)
+        self._last_alert: dict = {}  # {pair: datetime} — cooldown for price alerts
+
     def leverage(self, pair: str, current_time, current_rate: float,
                  proposed_leverage: float, max_leverage: float, entry_tag: str,
                  side: str, **kwargs) -> float:
         return min(float(self.leverage_value), max_leverage)
+
+    # --- Price Alert: notify when price approaches entry zone ---
+    def bot_loop_start(self, current_time, **kwargs) -> None:
+        if not self.dp:
+            return
+        for pair in self.dp.current_whitelist():
+            # Cooldown: max 1 alert per pair per 4 hours
+            last_alert = self._last_alert.get(pair)
+            if last_alert and (current_time - last_alert).total_seconds() < 14400:
+                continue
+
+            dataframe, _ = self.dp.get_analyzed_dataframe(pair, self.timeframe)
+            if len(dataframe) < 2:
+                continue
+            last = dataframe.iloc[-1]
+
+            close = last.get('close', 0)
+            if close <= 0:
+                continue
+
+            ema_slow_key = f"ema_{self.ema_slow.value}"
+            ema_slow_val = last.get(ema_slow_key, 0)
+            ema_50_val = last.get('ema_50', 0)
+            is_bull = last.get('is_bull', 0)
+
+            if not is_bull or ema_slow_val <= 0:
+                continue
+
+            # Check proximity to EMA support (within 1.5%)
+            dist_ema = (close - ema_slow_val) / ema_slow_val * 100
+            dist_ema50 = (close - ema_50_val) / ema_50_val * 100 if ema_50_val > 0 else 999
+
+            zone = None
+            zone_price = 0
+            zone_name = ""
+
+            if 0 < dist_ema < 1.5:
+                zone = "ema_slow"
+                zone_price = ema_slow_val
+                zone_name = f"EMA{self.ema_slow.value}"
+            elif 0 < dist_ema50 < 1.5:
+                zone = "ema50"
+                zone_price = ema_50_val
+                zone_name = "EMA50"
+
+            if zone:
+                rsi_key = f"rsi_{self.rsi_period.value}"
+                rsi_val = last.get(rsi_key, 50)
+                adx_val = last.get('adx', 0)
+                vol_ratio = last.get('volume_ratio', 0)
+
+                dist = (close - zone_price) / zone_price * 100
+
+                msg = (
+                    f"*PRICE ALERT*\n"
+                    f"{'='*28}\n"
+                    f"*{pair}* approaching entry zone\n\n"
+                    f"*Price:* `{close:.2f}` USDT\n"
+                    f"*{zone_name}:* `{zone_price:.2f}` ({dist:.1f}% above)\n\n"
+                    f"*RSI:* {rsi_val:.1f} | *ADX:* {adx_val:.1f} | *Vol:* {vol_ratio:.2f}x\n"
+                    f"{'='*28}\n"
+                    f"_Watch for entry signal_"
+                )
+                self.dp.send_msg(msg, always_send=True)
+                self._last_alert[pair] = current_time
 
     def informative_pairs(self):
         pairs = self.dp.current_whitelist() if self.dp else []
@@ -339,6 +411,90 @@ class TrendRiderStrategy(IStrategy):
 
         return dataframe
 
+    def _calc_confidence(self, last: dict) -> tuple:
+        """Calculate signal confidence based on indicator alignment."""
+        score = 0
+        details = []
+        rsi_key = f"rsi_{self.rsi_period.value}"
+        rsi_val = last.get(rsi_key, 50)
+
+        # RSI in healthy zone (not overbought)
+        if 35 < rsi_val < 60:
+            score += 1
+            details.append("RSI healthy")
+
+        # Strong trend (ADX)
+        adx_val = last.get('adx', 0)
+        if adx_val > 30:
+            score += 2
+            details.append("Strong trend")
+        elif adx_val > self.adx_threshold.value:
+            score += 1
+            details.append("Moderate trend")
+
+        # Volume confirmation
+        vol_ratio = last.get('volume_ratio', 0)
+        if vol_ratio > 1.5:
+            score += 2
+            details.append("High volume")
+        elif vol_ratio > 1.0:
+            score += 1
+            details.append("Normal volume")
+
+        # MACD positive momentum
+        if last.get('macdhist', 0) > 0:
+            score += 1
+            details.append("MACD positive")
+
+        # OBV rising
+        if last.get('obv', 0) > last.get('obv_ema', 0):
+            score += 1
+            details.append("OBV rising")
+
+        # BTC healthy
+        btc_rsi = last.get('btc_rsi_1h', 50)
+        if btc_rsi > 50:
+            score += 1
+            details.append("BTC healthy")
+
+        # 4h trend alignment
+        if last.get('is_bull_4h_4h', 0) == 1:
+            score += 1
+            details.append("4H trend aligned")
+
+        # Map to level (max ~10 points)
+        if score >= 7:
+            level = "STRONG"
+            bar = "|||||||||| 9/10"
+        elif score >= 5:
+            level = "GOOD"
+            bar = "||||||||-- 7/10"
+        elif score >= 3:
+            level = "MEDIUM"
+            bar = "||||||---- 5/10"
+        else:
+            level = "WEAK"
+            bar = "|||------- 3/10"
+
+        return level, bar, details
+
+    def _market_context(self, last: dict) -> str:
+        """Generate market context string."""
+        btc_rsi = last.get('btc_rsi_1h', 50)
+        btc_bull = last.get('btc_is_bull_1h', 0)
+        bull_4h = last.get('is_bull_4h_4h', 0)
+
+        if btc_bull and btc_rsi > 55:
+            btc_status = "Bullish"
+        elif btc_rsi > 40:
+            btc_status = "Neutral"
+        else:
+            btc_status = "Bearish"
+
+        tf_4h = "Uptrend" if bull_4h else "Downtrend"
+
+        return f"BTC: {btc_status} (RSI {btc_rsi:.0f}) | 4H: {tf_4h}"
+
     def confirm_trade_entry(self, pair: str, order_type: str, amount: float, rate: float,
                            time_in_force: str, current_time: datetime, entry_tag: str | None,
                            side: str, **kwargs) -> bool:
@@ -348,11 +504,15 @@ class TrendRiderStrategy(IStrategy):
         tp2_price = rate * 1.05   # +5% (trailing activates)
         tp3_price = rate * 1.10   # +10% (ROI target)
         leverage = self.leverage_value
-        stake = self.stake_amount if hasattr(self, 'stake_amount') else 50
+
+        # Risk/reward ratio
+        risk = abs(rate - sl_price)
+        reward = tp2_price - rate
+        rr_ratio = reward / risk if risk > 0 else 0
 
         # Entry reason mapping
         reasons = {
-            "trend_pullback": "Откат к EMA16 в сильном тренде, отскок с подтверждением объёма",
+            "trend_pullback": "Откат к EMA16 в восходящем тренде, отскок с подтверждением объёма",
             "ema50_bounce": "Глубокий откат к EMA50, отскок с растущим MACD",
             "rsi_bounce": "RSI перепродан, отскок от нижней Боллинджера в бычьем рынке",
         }
@@ -366,25 +526,37 @@ class TrendRiderStrategy(IStrategy):
             rsi_val = last.get(rsi_key, 0)
             adx_val = last.get("adx", 0)
             vol_ratio = last.get("volume_ratio", 0)
+            macd_hist = last.get("macdhist", 0)
         else:
-            rsi_val = adx_val = vol_ratio = 0
+            rsi_val = adx_val = vol_ratio = macd_hist = 0
+            last = {}
+
+        # Confidence & market context
+        conf_level, conf_bar, conf_details = self._calc_confidence(last)
+        market_ctx = self._market_context(last)
 
         msg = (
             f"*TRENDRIDER SIGNAL*\n"
-            f"{'='*25}\n"
+            f"{'='*28}\n"
             f"*{pair}* | *LONG* | {leverage}x\n"
-            f"{'='*25}\n\n"
+            f"{'='*28}\n\n"
             f"*Entry:* `{rate:.2f}` USDT\n"
             f"*Stop Loss:* `{sl_price:.2f}` ({self.stoploss*100:+.1f}%)\n\n"
             f"*Targets:*\n"
-            f"  TP1: `{tp1_price:.2f}` (+3%) — 40%\n"
-            f"  TP2: `{tp2_price:.2f}` (+5%) — 35%\n"
-            f"  TP3: `{tp3_price:.2f}` (+10%) — 25%\n\n"
-            f"*Индикаторы:*\n"
-            f"  RSI: {rsi_val:.1f} | ADX: {adx_val:.1f} | Vol: {vol_ratio:.2f}x\n\n"
-            f"*Причина:* {reason}\n"
-            f"{'='*25}\n"
-            f"_TrendRider Algo | Bybit Futures_"
+            f"  TP1: `{tp1_price:.2f}` (+3%)\n"
+            f"  TP2: `{tp2_price:.2f}` (+5%)\n"
+            f"  TP3: `{tp3_price:.2f}` (+10%)\n"
+            f"  R:R = 1:{rr_ratio:.1f}\n\n"
+            f"*Confidence:* {conf_level}\n"
+            f"  [{conf_bar}]\n"
+            f"  {', '.join(conf_details)}\n\n"
+            f"*Indicators:*\n"
+            f"  RSI: {rsi_val:.1f} | ADX: {adx_val:.1f}\n"
+            f"  Volume: {vol_ratio:.2f}x | MACD: {'+'  if macd_hist > 0 else '-'}\n\n"
+            f"*Market:* {market_ctx}\n\n"
+            f"*Why:* {reason}\n"
+            f"{'='*28}\n"
+            f"_TrendRider Algo | @TrendRiderSignals_"
         )
 
         self.dp.send_msg(msg, always_send=True)
