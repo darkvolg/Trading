@@ -14,8 +14,8 @@
     },
     "trailing": {
       "trailing_stop": true,
-      "trailing_stop_positive": 0.03,
-      "trailing_stop_positive_offset": 0.05,
+      "trailing_stop_positive": 0.02,
+      "trailing_stop_positive_offset": 0.025,
       "trailing_only_offset_is_reached": true
     },
     "max_open_trades": {
@@ -25,7 +25,6 @@
       "adx_threshold": 27,
       "ema_fast": 9,
       "ema_slow": 16,
-      "leverage_long": 3,
       "rsi_bounce": 33,
       "rsi_period": 16,
       "rsi_pullback_high": 58,
