@@ -861,6 +861,85 @@ class TrendRiderStrategy(IStrategy):
 
         return None
 
+    # --- Detailed Why (Phase 6.1) ---
+    def _build_detailed_reason(self, entry_tag: str, last: dict, rate: float) -> str:
+        """Build a 2-3 sentence reason with concrete indicator levels."""
+        rsi_key = f"rsi_{self.rsi_period.value}"
+        rsi_val = last.get(rsi_key, 0)
+        adx_val = last.get('adx', 0)
+        ema_fast = last.get(f'ema_{self.ema_fast.value}', 0)
+        ema_slow = last.get(f'ema_{self.ema_slow.value}', 0)
+        ema_50 = last.get('ema_50', 0)
+        ema_200 = last.get('ema_200', 0)
+        macd_hist = last.get('macdhist', 0)
+        bb_lower = last.get('bb_lower', 0)
+        bb_upper = last.get('bb_upper', 0)
+        vol_ratio = last.get('volume_ratio', 0)
+
+        parts = []
+
+        if entry_tag == "trend_pullback":
+            parts.append(
+                f"Price pulled back to EMA{self.ema_fast.value} ({ema_fast:.1f}) "
+                f"in an uptrend — EMA{self.ema_fast.value} > EMA{self.ema_slow.value} ({ema_slow:.1f})."
+            )
+            parts.append(
+                f"RSI at {rsi_val:.0f} (healthy zone), ADX {adx_val:.0f} confirms trend strength."
+            )
+            if vol_ratio > 1.0:
+                parts.append(f"Volume {vol_ratio:.1f}x average supports the bounce.")
+
+        elif entry_tag == "ema50_bounce":
+            parts.append(
+                f"Deep pullback to EMA50 ({ema_50:.1f}), price holding above key support."
+            )
+            parts.append(
+                f"MACD histogram {'positive' if macd_hist > 0 else 'recovering'} "
+                f"({macd_hist:.4f}), RSI {rsi_val:.0f} — room to run."
+            )
+            if adx_val > 20:
+                parts.append(f"ADX {adx_val:.0f} — trend intact despite the pullback.")
+
+        elif entry_tag == "rsi_bounce":
+            parts.append(
+                f"RSI oversold at {rsi_val:.0f}, bouncing off BB lower ({bb_lower:.1f})."
+            )
+            parts.append(
+                f"Price above EMA200 ({ema_200:.1f}) — bullish structure intact."
+            )
+            if vol_ratio > 1.0:
+                parts.append(f"Volume spike {vol_ratio:.1f}x signals buyer interest.")
+
+        elif entry_tag == "short_pullback":
+            parts.append(
+                f"Price rejected at EMA{self.ema_fast.value} ({ema_fast:.1f}) "
+                f"in a downtrend — EMA{self.ema_fast.value} < EMA{self.ema_slow.value} ({ema_slow:.1f})."
+            )
+            parts.append(
+                f"RSI at {rsi_val:.0f}, ADX {adx_val:.0f} confirms bearish momentum."
+            )
+
+        elif entry_tag == "short_ema50_rejection":
+            parts.append(
+                f"Rejection at EMA50 ({ema_50:.1f}) from below — key resistance holds."
+            )
+            parts.append(
+                f"MACD histogram negative ({macd_hist:.4f}), RSI {rsi_val:.0f} — bearish pressure."
+            )
+
+        elif entry_tag == "short_rsi_overbought":
+            parts.append(
+                f"RSI overbought at {rsi_val:.0f}, reversing from BB upper ({bb_upper:.1f})."
+            )
+            parts.append(
+                f"Price below EMA200 ({ema_200:.1f}) — bearish structure intact."
+            )
+
+        else:
+            return entry_tag or "Signal"
+
+        return " ".join(parts)
+
     # --- Improved Confidence Scoring ---
     def _calc_confidence(self, last: dict) -> tuple:
         """Calculate signal confidence based on weighted indicator alignment.
@@ -1034,16 +1113,8 @@ class TrendRiderStrategy(IStrategy):
         reward = abs(tp2_price - rate)
         rr_ratio = reward / risk if risk > 0 else 0
 
-        # Entry reason mapping
-        reasons = {
-            "trend_pullback": "Откат к EMA16 в восходящем тренде, отскок с подтверждением объёма",
-            "ema50_bounce": "Глубокий откат к EMA50, отскок с растущим MACD",
-            "rsi_bounce": "RSI перепродан, отскок от нижней Боллинджера в бычьем рынке",
-            "short_pullback": "Откат к EMA16 в нисходящем тренде, отбой с подтверждением объёма",
-            "short_ema50_rejection": "Отбой от EMA50 сверху, падающий MACD",
-            "short_rsi_overbought": "RSI перекуплен, разворот от верхней Боллинджера в медвежьем рынке",
-        }
-        reason = reasons.get(entry_tag, entry_tag or "Signal")
+        # Entry reason — dynamic with concrete levels
+        reason = self._build_detailed_reason(entry_tag, last, rate)
 
         setup_names = {
             "trend_pullback": "Trend Pullback",
