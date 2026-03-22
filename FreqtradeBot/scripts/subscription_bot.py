@@ -44,7 +44,12 @@ REFERRAL_BONUS_DAYS = 7
 
 
 def get_token() -> str:
-    """Return Telegram bot token from env or Freqtrade config."""
+    """Return Telegram bot token for subscription bot (TrendRider Hub)."""
+    token = os.getenv("SUB_BOT_TOKEN")
+    if token:
+        return token
+
+    # Fallback: TG_TOKEN env or config.json
     token = os.getenv("TG_TOKEN")
     if token:
         return token
@@ -57,7 +62,7 @@ def get_token() -> str:
         logger.warning("Cannot read config: %s", exc)
 
     if not token:
-        raise RuntimeError("TG_TOKEN is not set and not found in config.json")
+        raise RuntimeError("SUB_BOT_TOKEN is not set and not found in config.json")
     return token
 
 
