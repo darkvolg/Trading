@@ -952,23 +952,22 @@ class TrendRiderStrategy(IStrategy):
             score += 1
             details.append("Healthy funding")
 
-        # Map to level (max ~15 points)
-        if score >= 11:
+        # Smooth mapping to 1-10 (max possible score ~17.5)
+        MAX_SCORE = 17.5
+        numeric = max(1, min(10, round(score * 10 / MAX_SCORE)))
+
+        # Level label from smooth score
+        if numeric >= 8:
             level = "STRONG"
-            bar = "|||||||||| 9/10"
-            numeric = 9
-        elif score >= 8:
+        elif numeric >= 6:
             level = "GOOD"
-            bar = "||||||||-- 7/10"
-            numeric = 7
-        elif score >= 5:
+        elif numeric >= 4:
             level = "MEDIUM"
-            bar = "||||||---- 5/10"
-            numeric = 5
         else:
             level = "WEAK"
-            bar = "|||------- 3/10"
-            numeric = 3
+
+        # Dynamic bar: filled + empty blocks
+        bar = "|" * numeric + "-" * (10 - numeric) + f" {numeric}/10"
 
         return level, bar, details, numeric
 
@@ -995,6 +994,20 @@ class TrendRiderStrategy(IStrategy):
             parts.append(f"Fund: {funding_pct:+.3f}%")
 
         return " | ".join(parts)
+
+    def _get_market_regime(self, last: dict) -> str:
+        """Detect market regime from ADX + EMA200 slope."""
+        adx_val = last.get('adx', 0)
+        ema_200 = last.get('ema_200', 0)
+        close = last.get('close', 0)
+        is_bull = last.get('is_bull', 0)
+
+        if adx_val < 20:
+            return "Ranging"
+        elif is_bull and close > ema_200:
+            return "Trending Bull"
+        else:
+            return "Trending Bear"
 
     def confirm_trade_entry(self, pair: str, order_type: str, amount: float, rate: float,
                            time_in_force: str, current_time: datetime, entry_tag: str | None,
@@ -1055,14 +1068,25 @@ class TrendRiderStrategy(IStrategy):
             rsi_val = adx_val = vol_ratio = macd_hist = 0
             last = {}
 
-        # Confidence & market context
+        # Confidence, market context, regime
         conf_level, conf_bar, conf_details, conf_numeric = self._calc_confidence(last)
         market_ctx = self._market_context(last)
+        regime = self._get_market_regime(last)
+
+        # Portfolio heat — count open trades
+        open_trades = 0
+        max_trades = self.config.get('max_open_trades', 4)
+        try:
+            from freqtrade.persistence import Trade
+            open_trades = Trade.get_count_open_trades()
+        except Exception:
+            pass
+        heat_str = f"{open_trades}/{max_trades} positions open"
 
         # Estimated hold time based on ROI table and confidence
-        if conf_numeric >= 9:
+        if conf_numeric >= 8:
             est_hold = "2-6h"
-        elif conf_numeric >= 7:
+        elif conf_numeric >= 6:
             est_hold = "6-24h"
         else:
             est_hold = "24-48h"
@@ -1078,7 +1102,7 @@ class TrendRiderStrategy(IStrategy):
             inv_label = "EMA200" if invalidation == ema_200 else "BB Lower"
 
         # --- REJECT WEAK SIGNALS ---
-        if conf_numeric <= 5:
+        if conf_numeric <= 4:
             logger.info(f"Rejecting weak signal for {pair}: confidence {conf_numeric}/10")
             return False
 
@@ -1103,10 +1127,12 @@ class TrendRiderStrategy(IStrategy):
             f"  TP2: `{tp2_price:.2f}` (+5%) — close 40%\n"
             f"  TP3: `{tp3_price:.2f}` (+10%) — close 30%\n"
             f"  R:R = 1:{rr_ratio:.1f}\n\n"
-            f"*Trailing:* SL → Entry after TP1\n\n"
+            f"*Trailing:* SL -> Entry after TP1\n\n"
             f"*Confidence:* {conf_level} ({conf_numeric}/10)\n"
             f"  [{conf_bar}]\n"
             f"  {', '.join(conf_details)}\n\n"
+            f"*Regime:* {regime}\n"
+            f"*Portfolio:* {heat_str}\n"
             f"*Est. Hold:* {est_hold}\n"
             f"*Invalidation:* `{invalidation:.2f}` ({inv_label})\n\n"
             f"*Indicators:*\n"
