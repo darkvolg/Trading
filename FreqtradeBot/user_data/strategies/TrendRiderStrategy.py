@@ -154,6 +154,15 @@ class TrendRiderStrategy(IStrategy):
             conn.execute(
                 "INSERT OR IGNORE INTO signal_counter (id, count) VALUES (1, 0)"
             )
+            conn.execute(
+                "CREATE TABLE IF NOT EXISTS signal_queue ("
+                "id INTEGER PRIMARY KEY AUTOINCREMENT, "
+                "signal_num INTEGER, pair TEXT, side TEXT, leverage INTEGER, "
+                "setup_name TEXT, entry_low REAL, entry_high REAL, "
+                "sl_price REAL, sl_pct REAL, "
+                "tp1 REAL, tp2 REAL, tp3 REAL, rr_ratio REAL, "
+                "regime TEXT, created_at TEXT, sent_free INTEGER DEFAULT 0)"
+            )
             conn.commit()
             conn.close()
         except Exception as e:
@@ -1245,6 +1254,25 @@ class TrendRiderStrategy(IStrategy):
             f"Stop: Breakeven - Trigger: Target (1)"
         )
         self.dp.send_msg(cornix_msg, always_send=True)
+
+        # --- Queue signal for delayed free channel ---
+        try:
+            conn = sqlite3.connect(self._alerts_db_path)
+            conn.execute(
+                "INSERT INTO signal_queue "
+                "(signal_num, pair, side, leverage, setup_name, "
+                "entry_low, entry_high, sl_price, sl_pct, "
+                "tp1, tp2, tp3, rr_ratio, regime, created_at) "
+                "VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)",
+                (signal_num, pair, side_str, leverage, setup_name,
+                 entry_low, entry_high, sl_price, self.stoploss * 100,
+                 tp1_price, tp2_price, tp3_price, rr_ratio,
+                 regime, datetime.now().isoformat())
+            )
+            conn.commit()
+            conn.close()
+        except Exception as e:
+            logger.warning(f"Failed to queue signal for free channel: {e}")
 
         return True
 
