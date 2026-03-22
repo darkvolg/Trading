@@ -1,34 +1,23 @@
 """
-TrendRiderStrategy — "Trend Rider" v2.0
+TrendRider Public v2.0 — Strat Ninja Edition
 
 Philosophy: Ride established trends with WIDE stoploss.
 Key insight: crypto swings 2-4% per hour. Stoploss must be >= 5-6%.
 
-v2.0 additions:
-- SHORT strategy (mirrored LONG logic)
-- DCA (Dollar Cost Averaging) for losing positions
-- Dynamic ATR-based stoploss
-- Partial Take Profit (TP1/TP2/TP3 via adjust_trade_position)
-- Improved confidence scoring with weighted factors
-- Cornix-compatible signal format
-- Reject weak signals (confidence < 5)
-- Multi-timeframe 15m + Daily confirmation
-- Fear & Greed Index integration
-- Persistent price alerts (SQLite)
+Public version:
+- No external API calls (FNG, Bybit funding/OI)
+- No SQLite price alerts
+- No Cornix formatting
+- Leverage 1x (spot-safe)
+- All TA-Lib indicators and confidence scoring preserved
 """
 
-import json
-import os
-import sqlite3
-import time
 import talib.abstract as ta
-from datetime import datetime, timedelta, timezone
+from datetime import datetime
 from freqtrade.strategy import IStrategy, IntParameter, DecimalParameter, merge_informative_pair
 from pandas import DataFrame
 from functools import reduce
-from pathlib import Path
 import logging
-import requests
 
 logger = logging.getLogger(__name__)
 
@@ -112,282 +101,19 @@ class TrendRiderStrategy(IStrategy):
     adx_threshold = IntParameter(20, 35, default=25, space="buy")
     volume_factor = DecimalParameter(1.0, 2.5, default=1.3, space="buy")
 
-    # --- Leverage: fixed, not optimized (fix #9) ---
-    leverage_value = 3
-
-    # --- FNG cache ---
-    _fng_cache_file = None
-    _fng_cache_ttl = 14400  # 4 hours
-
-    def __init__(self, config: dict) -> None:
-        super().__init__(config)
-        # SQLite-based persistent price alerts
-        self._alerts_db_path = self._get_alerts_db_path(config)
-        self._init_alerts_db()
-        # FNG cache file path
-        data_dir = config.get('user_data_dir', Path('.'))
-        if isinstance(data_dir, str):
-            data_dir = Path(data_dir)
-        self._fng_cache_file = str(data_dir / 'fng_cache.json')
-        # On-chain data cache: {pair: {'rate': float, 'oi_change': float, 'ts': float}}
-        self._funding_cache = {}
-
-    def _get_alerts_db_path(self, config: dict) -> str:
-        """Get path for price alerts SQLite DB."""
-        data_dir = config.get('user_data_dir', Path('.'))
-        if isinstance(data_dir, str):
-            data_dir = Path(data_dir)
-        return str(data_dir / 'price_alerts.db')
-
-    def _init_alerts_db(self):
-        """Initialize SQLite DB for persistent price alerts."""
-        try:
-            conn = sqlite3.connect(self._alerts_db_path)
-            conn.execute(
-                "CREATE TABLE IF NOT EXISTS price_alerts "
-                "(pair TEXT PRIMARY KEY, last_alert_time TEXT)"
-            )
-            conn.commit()
-            conn.close()
-        except Exception as e:
-            logger.warning(f"Failed to init alerts DB: {e}")
-
-    def _get_last_alert(self, pair: str):
-        """Get last alert time from SQLite."""
-        try:
-            conn = sqlite3.connect(self._alerts_db_path)
-            cursor = conn.execute(
-                "SELECT last_alert_time FROM price_alerts WHERE pair = ?", (pair,)
-            )
-            row = cursor.fetchone()
-            conn.close()
-            if row and row[0]:
-                return datetime.fromisoformat(row[0])
-            return None
-        except Exception:
-            return None
-
-    def _set_last_alert(self, pair: str, alert_time: datetime):
-        """Save last alert time to SQLite."""
-        try:
-            conn = sqlite3.connect(self._alerts_db_path)
-            conn.execute(
-                "INSERT OR REPLACE INTO price_alerts (pair, last_alert_time) VALUES (?, ?)",
-                (pair, alert_time.isoformat())
-            )
-            conn.commit()
-            conn.close()
-        except Exception as e:
-            logger.warning(f"Failed to save alert: {e}")
-
-    # --- Fear & Greed Index ---
-    def _get_fng_data(self) -> dict:
-        """Fetch Fear & Greed Index with 4h file-based cache."""
-        # Check cache
-        if self._fng_cache_file and os.path.exists(self._fng_cache_file):
-            try:
-                with open(self._fng_cache_file, 'r') as f:
-                    cached = json.load(f)
-                cached_time = datetime.fromisoformat(cached.get('timestamp', '2000-01-01'))
-                if (datetime.now() - cached_time).total_seconds() < self._fng_cache_ttl:
-                    return cached.get('data', {})
-            except Exception:
-                pass
-
-        # Fetch fresh data
-        try:
-            resp = requests.get(
-                'https://api.alternative.me/fng/?limit=60&format=json',
-                timeout=10
-            )
-            resp.raise_for_status()
-            raw = resp.json()
-            data_list = raw.get('data', [])
-            # Build dict: date_str -> fng_value
-            fng_map = {}
-            for item in data_list:
-                ts = int(item.get('timestamp', 0))
-                val = int(item.get('value', 50))
-                date_str = datetime.utcfromtimestamp(ts).strftime('%Y-%m-%d')
-                fng_map[date_str] = val
-
-            # Save cache
-            if self._fng_cache_file:
-                try:
-                    with open(self._fng_cache_file, 'w') as f:
-                        json.dump({
-                            'timestamp': datetime.now().isoformat(),
-                            'data': fng_map
-                        }, f)
-                except Exception:
-                    pass
-            return fng_map
-        except Exception as e:
-            logger.warning(f"FNG fetch failed: {e}")
-            return {}
-
-    # --- On-chain data: Funding Rate & Open Interest (Bybit v5) ---
-    def _pair_to_bybit_symbol(self, pair: str) -> str:
-        """Convert Freqtrade pair format to Bybit symbol. E.g. 'BTC/USDT:USDT' -> 'BTCUSDT'."""
-        return pair.replace('/USDT:USDT', 'USDT').replace('/', '')
-
-    def _fetch_funding_rate(self, pair: str) -> float:
-        """Fetch latest funding rate from Bybit v5 API with 5-min cache."""
-        cached = self._funding_cache.get(pair, {})
-        if cached and (time.time() - cached.get('ts', 0)) < 300:
-            return cached.get('rate', 0.0)
-
-        symbol = self._pair_to_bybit_symbol(pair)
-        try:
-            resp = requests.get(
-                'https://api.bybit.com/v5/market/funding/history',
-                params={'category': 'linear', 'symbol': symbol, 'limit': 1},
-                timeout=10
-            )
-            resp.raise_for_status()
-            data = resp.json()
-            result_list = data.get('result', {}).get('list', [])
-            if result_list:
-                rate = float(result_list[0].get('fundingRate', 0))
-            else:
-                rate = 0.0
-        except Exception as e:
-            logger.warning(f"Funding rate fetch failed for {pair}: {e}")
-            rate = cached.get('rate', 0.0)
-
-        # Update cache (preserve oi_change if already fetched)
-        existing = self._funding_cache.get(pair, {})
-        self._funding_cache[pair] = {
-            'rate': rate,
-            'oi_change': existing.get('oi_change', 0.0),
-            'ts': time.time(),
-        }
-        return rate
-
-    def _fetch_open_interest(self, pair: str) -> float:
-        """Fetch open interest change ratio from Bybit v5 API with 5-min cache."""
-        cached = self._funding_cache.get(pair, {})
-        if cached and (time.time() - cached.get('ts', 0)) < 300:
-            return cached.get('oi_change', 0.0)
-
-        symbol = self._pair_to_bybit_symbol(pair)
-        try:
-            resp = requests.get(
-                'https://api.bybit.com/v5/market/open-interest',
-                params={'category': 'linear', 'symbol': symbol, 'intervalTime': '1h', 'limit': 2},
-                timeout=10
-            )
-            resp.raise_for_status()
-            data = resp.json()
-            result_list = data.get('result', {}).get('list', [])
-            if len(result_list) >= 2:
-                current_oi = float(result_list[0].get('openInterest', 0))
-                previous_oi = float(result_list[1].get('openInterest', 0))
-                if previous_oi > 0:
-                    oi_change = (current_oi / previous_oi) - 1
-                else:
-                    oi_change = 0.0
-            else:
-                oi_change = 0.0
-        except Exception as e:
-            logger.warning(f"Open interest fetch failed for {pair}: {e}")
-            oi_change = cached.get('oi_change', 0.0)
-
-        # Update cache (preserve rate if already fetched)
-        existing = self._funding_cache.get(pair, {})
-        self._funding_cache[pair] = {
-            'rate': existing.get('rate', 0.0),
-            'oi_change': oi_change,
-            'ts': time.time(),
-        }
-        return oi_change
+    # --- Leverage: 1x for Strat Ninja (spot-safe) ---
+    leverage_value = 1
 
     def leverage(self, pair: str, current_time, current_rate: float,
                  proposed_leverage: float, max_leverage: float, entry_tag: str,
                  side: str, **kwargs) -> float:
-        return min(float(self.leverage_value), max_leverage)
-
-    # --- Price Alert: notify when price approaches entry zone ---
-    def bot_loop_start(self, current_time, **kwargs) -> None:
-        if not self.dp:
-            return
-
-        # Fetch funding rates & open interest for all pairs (live/dry_run only)
-        if self.dp.runmode.value in ('live', 'dry_run'):
-            for pair in self.dp.current_whitelist():
-                try:
-                    self._fetch_funding_rate(pair)
-                    self._fetch_open_interest(pair)
-                except Exception as e:
-                    logger.warning(f"On-chain data fetch failed for {pair}: {e}")
-
-        for pair in self.dp.current_whitelist():
-            # Cooldown: max 1 alert per pair per 4 hours (persistent via SQLite)
-            last_alert = self._get_last_alert(pair)
-            if last_alert and (current_time - last_alert).total_seconds() < 14400:
-                continue
-
-            dataframe, _ = self.dp.get_analyzed_dataframe(pair, self.timeframe)
-            if len(dataframe) < 2:
-                continue
-            last = dataframe.iloc[-1]
-
-            close = last.get('close', 0)
-            if close <= 0:
-                continue
-
-            ema_slow_key = f"ema_{self.ema_slow.value}"
-            ema_slow_val = last.get(ema_slow_key, 0)
-            ema_50_val = last.get('ema_50', 0)
-            is_bull = last.get('is_bull', 0)
-
-            if not is_bull or ema_slow_val <= 0:
-                continue
-
-            # Check proximity to EMA support (within 1.5%)
-            dist_ema = (close - ema_slow_val) / ema_slow_val * 100
-            dist_ema50 = (close - ema_50_val) / ema_50_val * 100 if ema_50_val > 0 else 999
-
-            zone = None
-            zone_price = 0
-            zone_name = ""
-
-            if 0 < dist_ema < 1.5:
-                zone = "ema_slow"
-                zone_price = ema_slow_val
-                zone_name = f"EMA{self.ema_slow.value}"
-            elif 0 < dist_ema50 < 1.5:
-                zone = "ema50"
-                zone_price = ema_50_val
-                zone_name = "EMA50"
-
-            if zone:
-                rsi_key = f"rsi_{self.rsi_period.value}"
-                rsi_val = last.get(rsi_key, 50)
-                adx_val = last.get('adx', 0)
-                vol_ratio = last.get('volume_ratio', 0)
-
-                dist = (close - zone_price) / zone_price * 100
-
-                msg = (
-                    f"*PRICE ALERT*\n"
-                    f"{'='*28}\n"
-                    f"*{pair}* approaching entry zone\n\n"
-                    f"*Price:* `{close:.2f}` USDT\n"
-                    f"*{zone_name}:* `{zone_price:.2f}` ({dist:.1f}% above)\n\n"
-                    f"*RSI:* {rsi_val:.1f} | *ADX:* {adx_val:.1f} | *Vol:* {vol_ratio:.2f}x\n"
-                    f"{'='*28}\n"
-                    f"_Watch for entry signal_"
-                )
-                self.dp.send_msg(msg, always_send=True)
-                self._set_last_alert(pair, current_time)
+        return 1
 
     def informative_pairs(self):
         pairs = self.dp.current_whitelist() if self.dp else []
         informative = []
         for pair in pairs:
             informative.append((pair, "4h"))
-
             informative.append((pair, "1d"))
         # BTC as market sentiment
         informative.append(("BTC/USDT:USDT", "1h"))
@@ -548,33 +274,18 @@ class TrendRiderStrategy(IStrategy):
         for col, default in [
             ('is_bull_4h', 1), ('rsi_14_4h', 50), ('adx_4h', 20),
             ('btc_is_bull_1h', 1), ('btc_rsi_1h', 50),
-
             ('ema_200_1d_1d', 0),
         ]:
             if col not in dataframe.columns:
                 dataframe[col] = default
 
-        # --- Fear & Greed Index ---
-        fng_map = self._get_fng_data()
-        if fng_map:
-            dataframe['fng_value'] = dataframe['date'].apply(
-                lambda d: fng_map.get(d.strftime('%Y-%m-%d'), 50)
-            )
-        else:
-            dataframe['fng_value'] = 50
+        # --- Fear & Greed Index: static neutral (no API) ---
+        dataframe['fng_value'] = 50
 
-        # --- On-chain: Funding rate & OI (live/dry_run only) ---
+        # --- On-chain: static defaults (no API) ---
         dataframe['funding_rate'] = 0.0
         dataframe['funding_extreme'] = 0
         dataframe['oi_change'] = 0.0
-
-        if self.dp and self.dp.runmode.value in ('live', 'dry_run'):
-            pair = metadata.get('pair', '')
-            funding = self._funding_cache.get(pair, {}).get('rate', 0.0)
-            oi_change = self._funding_cache.get(pair, {}).get('oi_change', 0.0)
-            dataframe.loc[dataframe.index[-1], 'funding_rate'] = funding
-            dataframe.loc[dataframe.index[-1], 'funding_extreme'] = 1 if abs(funding) > 0.0003 else 0
-            dataframe.loc[dataframe.index[-1], 'oi_change'] = oi_change
 
         return dataframe
 
@@ -604,9 +315,6 @@ class TrendRiderStrategy(IStrategy):
         # Daily EMA200 filter — helps filter bad entries
         if 'ema_200_1d_1d' in dataframe.columns:
             conditions_pullback.append(dataframe["close"] > dataframe["ema_200_1d_1d"])
-        # Block entries when funding is extreme (live only)
-        if self.dp and self.dp.runmode.value in ('live', 'dry_run'):
-            conditions_pullback.append(dataframe['funding_extreme'] == 0)
 
         dataframe.loc[
             reduce(lambda x, y: x & y, conditions_pullback),
@@ -628,9 +336,6 @@ class TrendRiderStrategy(IStrategy):
             dataframe["fng_value"] <= 85,
             dataframe[rsi] < 70,
         ]
-        # Block entries when funding is extreme (live only)
-        if self.dp and self.dp.runmode.value in ('live', 'dry_run'):
-            conditions_ema50.append(dataframe['funding_extreme'] == 0)
         dataframe.loc[
             reduce(lambda x, y: x & y, conditions_ema50),
             ["enter_long", "enter_tag"]
@@ -650,9 +355,6 @@ class TrendRiderStrategy(IStrategy):
             dataframe["fng_value"] >= 25,
             dataframe["fng_value"] <= 85,
         ]
-        # Block entries when funding is extreme (live only)
-        if self.dp and self.dp.runmode.value in ('live', 'dry_run'):
-            conditions_rsi.append(dataframe['funding_extreme'] == 0)
         dataframe.loc[
             reduce(lambda x, y: x & y, conditions_rsi),
             ["enter_long", "enter_tag"]
@@ -674,9 +376,6 @@ class TrendRiderStrategy(IStrategy):
             dataframe["fng_value"] >= 15,
             dataframe["fng_value"] <= 75,
         ]
-        # For shorts: block when funding < -0.0003 (too many shorts already)
-        if self.dp and self.dp.runmode.value in ('live', 'dry_run'):
-            conditions_short_pullback.append(dataframe['funding_rate'] > -0.0003)
         dataframe.loc[
             reduce(lambda x, y: x & y, conditions_short_pullback),
             ["enter_short", "enter_tag"]
@@ -695,9 +394,6 @@ class TrendRiderStrategy(IStrategy):
             dataframe["fng_value"] >= 15,
             dataframe["fng_value"] <= 75,
         ]
-        # For shorts: block when funding < -0.0003 (too many shorts already)
-        if self.dp and self.dp.runmode.value in ('live', 'dry_run'):
-            conditions_short_ema50.append(dataframe['funding_rate'] > -0.0003)
         dataframe.loc[
             reduce(lambda x, y: x & y, conditions_short_ema50),
             ["enter_short", "enter_tag"]
@@ -714,9 +410,6 @@ class TrendRiderStrategy(IStrategy):
             dataframe["fng_value"] >= 15,
             dataframe["fng_value"] <= 75,
         ]
-        # For shorts: block when funding < -0.0003 (too many shorts already)
-        if self.dp and self.dp.runmode.value in ('live', 'dry_run'):
-            conditions_short_rsi.append(dataframe['funding_rate'] > -0.0003)
         dataframe.loc[
             reduce(lambda x, y: x & y, conditions_short_rsi),
             ["enter_short", "enter_tag"]
@@ -875,16 +568,15 @@ class TrendRiderStrategy(IStrategy):
             score += 1.5
             details.append("Normal volume")
 
-        # MACD positive histogram: +1.5, bonus +0.5 if rising
+        # MACD positive histogram AND rising: +1.5 both, +1.0 positive only
         macd_hist = last.get('macdhist', 0)
         macd_hist_prev = last.get('macdhist_prev', 0)
-        if macd_hist > 0:
+        if macd_hist > 0 and macd_hist > macd_hist_prev:
             score += 1.5
-            if macd_hist > macd_hist_prev:
-                score += 0.5
-                details.append("MACD positive+rising")
-            else:
-                details.append("MACD positive")
+            details.append("MACD positive+rising")
+        elif macd_hist > 0:
+            score += 1.0
+            details.append("MACD positive")
 
         # OBV rising AND above EMA: +1.5
         if last.get('obv', 0) > last.get('obv_ema', 0):
@@ -969,11 +661,6 @@ class TrendRiderStrategy(IStrategy):
 
         parts = [f"BTC: {btc_status} (RSI {btc_rsi:.0f})", f"4H: {tf_4h}"]
 
-        funding = last.get('funding_rate', 0)
-        if funding != 0:
-            funding_pct = funding * 100
-            parts.append(f"Fund: {funding_pct:+.3f}%")
-
         return " | ".join(parts)
 
     def confirm_trade_entry(self, pair: str, order_type: str, amount: float, rate: float,
@@ -1003,12 +690,12 @@ class TrendRiderStrategy(IStrategy):
 
         # Entry reason mapping
         reasons = {
-            "trend_pullback": "Откат к EMA16 в восходящем тренде, отскок с подтверждением объёма",
-            "ema50_bounce": "Глубокий откат к EMA50, отскок с растущим MACD",
-            "rsi_bounce": "RSI перепродан, отскок от нижней Боллинджера в бычьем рынке",
-            "short_pullback": "Откат к EMA16 в нисходящем тренде, отбой с подтверждением объёма",
-            "short_ema50_rejection": "Отбой от EMA50 сверху, падающий MACD",
-            "short_rsi_overbought": "RSI перекуплен, разворот от верхней Боллинджера в медвежьем рынке",
+            "trend_pullback": "Pullback to EMA in uptrend, bounce with volume confirmation",
+            "ema50_bounce": "Deep pullback to EMA50, bounce with rising MACD",
+            "rsi_bounce": "RSI oversold, bounce from lower Bollinger in bull market",
+            "short_pullback": "Pullback to EMA in downtrend, rejection with volume confirmation",
+            "short_ema50_rejection": "Rejection from EMA50 above, falling MACD",
+            "short_rsi_overbought": "RSI overbought, reversal from upper Bollinger in bear market",
         }
         reason = reasons.get(entry_tag, entry_tag or "Signal")
 
@@ -1029,24 +716,6 @@ class TrendRiderStrategy(IStrategy):
         conf_level, conf_bar, conf_details, conf_numeric = self._calc_confidence(last)
         market_ctx = self._market_context(last)
 
-        # Estimated hold time based on ROI table and confidence
-        if conf_numeric >= 9:
-            est_hold = "2-6h"
-        elif conf_numeric >= 7:
-            est_hold = "6-24h"
-        else:
-            est_hold = "24-48h"
-
-        # Invalidation level — key support/resistance where signal breaks
-        ema_200 = last.get('ema_200', 0)
-        bb_lower = last.get('bb_lower', 0)
-        if is_short:
-            invalidation = last.get('bb_upper', rate * 1.04)
-            inv_label = "BB Upper"
-        else:
-            invalidation = max(ema_200, bb_lower) if ema_200 > 0 else sl_price
-            inv_label = "EMA200" if invalidation == ema_200 else "BB Lower"
-
         # --- REJECT WEAK SIGNALS ---
         if conf_numeric <= 5:
             logger.info(f"Rejecting weak signal for {pair}: confidence {conf_numeric}/10")
@@ -1065,54 +734,18 @@ class TrendRiderStrategy(IStrategy):
             f"  TP2: `{tp2_price:.2f}` (+5%)\n"
             f"  TP3: `{tp3_price:.2f}` (+10%)\n"
             f"  R:R = 1:{rr_ratio:.1f}\n\n"
-            f"*Confidence:* {conf_level} ({conf_numeric}/10)\n"
+            f"*Confidence:* {conf_level}\n"
             f"  [{conf_bar}]\n"
             f"  {', '.join(conf_details)}\n\n"
-            f"*Est. Hold:* {est_hold}\n"
-            f"*Invalidation:* `{invalidation:.2f}` ({inv_label})\n\n"
             f"*Indicators:*\n"
             f"  RSI: {rsi_val:.1f} | ADX: {adx_val:.1f}\n"
             f"  Volume: {vol_ratio:.2f}x | MACD: {'+'  if macd_hist > 0 else '-'}\n\n"
             f"*Market:* {market_ctx}\n\n"
             f"*Why:* {reason}\n"
             f"{'='*28}\n"
-            f"_TrendRider Algo | @TrendRiderSignals_"
+            f"_TrendRider Algo_"
         )
         self.dp.send_msg(msg, always_send=True)
-
-        # --- Cornix-Compatible Format ---
-        pair_clean = pair.replace('/USDT:USDT', '').replace('/', '')
-        signal_type = "Regular (Short)" if is_short else "Regular (Long)"
-
-        if is_short:
-            entry_low = rate * 0.998
-            entry_high = rate * 1.002
-            cornix_tp1 = rate * 0.97
-            cornix_tp2 = rate * 0.95
-            cornix_tp3 = rate * 0.90
-        else:
-            entry_low = rate * 0.998
-            entry_high = rate * 1.002
-            cornix_tp1 = rate * 1.03
-            cornix_tp2 = rate * 1.05
-            cornix_tp3 = rate * 1.10
-
-        cornix_msg = (
-            f"#{pair_clean}\n\n"
-            f"Exchanges: Bybit USDT\n"
-            f"Signal Type: {signal_type}\n"
-            f"Leverage: Isolated ({leverage}X)\n\n"
-            f"Entry Zone: {entry_low:.2f} - {entry_high:.2f}\n\n"
-            f"Take-Profit Targets:\n"
-            f"1) {cornix_tp1:.2f}\n"
-            f"2) {cornix_tp2:.2f}\n"
-            f"3) {cornix_tp3:.2f}\n\n"
-            f"Stop Targets:\n"
-            f"1) {sl_price:.2f}\n\n"
-            f"Trailing Configuration:\n"
-            f"Stop: Breakeven - Trigger: Target (1)"
-        )
-        self.dp.send_msg(cornix_msg, always_send=True)
 
         return True
 
@@ -1146,7 +779,7 @@ class TrendRiderStrategy(IStrategy):
         }
         reason_text = exit_reasons.get(exit_reason, exit_reason)
 
-        # Result emoji
+        # Result line
         if profit_pct > 0:
             result_line = f"+{profit_pct:.2f}%"
         else:
@@ -1172,7 +805,7 @@ class TrendRiderStrategy(IStrategy):
             f"*Reason:* {reason_text}\n"
             f"*Max price:* `{trade.max_rate:.2f}`\n"
             f"{'='*25}\n"
-            f"_TrendRider Algo | Bybit Futures_"
+            f"_TrendRider Algo_"
         )
 
         self.dp.send_msg(msg, always_send=True)
