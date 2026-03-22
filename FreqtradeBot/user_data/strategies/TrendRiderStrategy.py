@@ -147,6 +147,13 @@ class TrendRiderStrategy(IStrategy):
                 "CREATE TABLE IF NOT EXISTS price_alerts "
                 "(pair TEXT PRIMARY KEY, last_alert_time TEXT)"
             )
+            conn.execute(
+                "CREATE TABLE IF NOT EXISTS signal_counter "
+                "(id INTEGER PRIMARY KEY CHECK (id = 1), count INTEGER DEFAULT 0)"
+            )
+            conn.execute(
+                "INSERT OR IGNORE INTO signal_counter (id, count) VALUES (1, 0)"
+            )
             conn.commit()
             conn.close()
         except Exception as e:
@@ -179,6 +186,19 @@ class TrendRiderStrategy(IStrategy):
             conn.close()
         except Exception as e:
             logger.warning(f"Failed to save alert: {e}")
+
+    def _next_signal_number(self) -> int:
+        """Increment and return next signal number."""
+        try:
+            conn = sqlite3.connect(self._alerts_db_path)
+            conn.execute("UPDATE signal_counter SET count = count + 1 WHERE id = 1")
+            cursor = conn.execute("SELECT count FROM signal_counter WHERE id = 1")
+            num = cursor.fetchone()[0]
+            conn.commit()
+            conn.close()
+            return num
+        except Exception:
+            return 0
 
     # --- Fear & Greed Index ---
     def _get_fng_data(self) -> dict:
@@ -1012,6 +1032,16 @@ class TrendRiderStrategy(IStrategy):
         }
         reason = reasons.get(entry_tag, entry_tag or "Signal")
 
+        setup_names = {
+            "trend_pullback": "Trend Pullback",
+            "ema50_bounce": "EMA50 Bounce",
+            "rsi_bounce": "RSI Oversold Bounce",
+            "short_pullback": "Short Pullback",
+            "short_ema50_rejection": "EMA50 Rejection",
+            "short_rsi_overbought": "RSI Overbought",
+        }
+        setup_name = setup_names.get(entry_tag, "Signal")
+
         # Get current indicators for context
         dataframe, _ = self.dp.get_analyzed_dataframe(pair, self.timeframe)
         if len(dataframe) > 0:
@@ -1052,19 +1082,28 @@ class TrendRiderStrategy(IStrategy):
             logger.info(f"Rejecting weak signal for {pair}: confidence {conf_numeric}/10")
             return False
 
+        # Entry zone (±0.3%)
+        entry_low = rate * 0.997
+        entry_high = rate * 1.003
+
+        # Signal number
+        signal_num = self._next_signal_number()
+
         # --- Main Telegram Signal ---
         msg = (
-            f"*TRENDRIDER SIGNAL*\n"
+            f"*TRENDRIDER SIGNAL #{signal_num:03d}*\n"
             f"{'='*28}\n"
             f"*{pair}* | *{side_str}* | {leverage}x\n"
+            f"*Setup:* {setup_name}\n"
             f"{'='*28}\n\n"
-            f"*Entry:* `{rate:.2f}` USDT\n"
+            f"*Entry Zone:* `{entry_low:.2f}` - `{entry_high:.2f}` USDT\n"
             f"*Stop Loss:* `{sl_price:.2f}` ({self.stoploss*100:+.1f}%)\n\n"
             f"*Targets:*\n"
-            f"  TP1: `{tp1_price:.2f}` (+3%)\n"
-            f"  TP2: `{tp2_price:.2f}` (+5%)\n"
-            f"  TP3: `{tp3_price:.2f}` (+10%)\n"
+            f"  TP1: `{tp1_price:.2f}` (+3%) — close 30%\n"
+            f"  TP2: `{tp2_price:.2f}` (+5%) — close 40%\n"
+            f"  TP3: `{tp3_price:.2f}` (+10%) — close 30%\n"
             f"  R:R = 1:{rr_ratio:.1f}\n\n"
+            f"*Trailing:* SL → Entry after TP1\n\n"
             f"*Confidence:* {conf_level} ({conf_numeric}/10)\n"
             f"  [{conf_bar}]\n"
             f"  {', '.join(conf_details)}\n\n"
@@ -1085,14 +1124,10 @@ class TrendRiderStrategy(IStrategy):
         signal_type = "Regular (Short)" if is_short else "Regular (Long)"
 
         if is_short:
-            entry_low = rate * 0.998
-            entry_high = rate * 1.002
             cornix_tp1 = rate * 0.97
             cornix_tp2 = rate * 0.95
             cornix_tp3 = rate * 0.90
         else:
-            entry_low = rate * 0.998
-            entry_high = rate * 1.002
             cornix_tp1 = rate * 1.03
             cornix_tp2 = rate * 1.05
             cornix_tp3 = rate * 1.10
@@ -1115,6 +1150,35 @@ class TrendRiderStrategy(IStrategy):
         self.dp.send_msg(cornix_msg, always_send=True)
 
         return True
+
+    def _get_running_stats(self) -> str:
+        """Get running stats for last 30 days from trade history."""
+        try:
+            from freqtrade.persistence import Trade
+            trades = Trade.get_trades_proxy(is_open=False)
+
+            # Filter last 30 days
+            cutoff = datetime.utcnow() - timedelta(days=30)
+            recent = [t for t in trades if t.close_date and t.close_date >= cutoff]
+
+            if not recent:
+                return "No trades in last 30 days"
+
+            wins = sum(1 for t in recent if t.profit_ratio and t.profit_ratio > 0)
+            losses = len(recent) - wins
+            win_rate = (wins / len(recent)) * 100 if recent else 0
+            avg_profit = sum(t.profit_ratio * 100 for t in recent if t.profit_ratio) / len(recent)
+            total_profit = sum(t.profit_ratio * 100 for t in recent if t.profit_ratio)
+
+            return (
+                f"*Last 30 days:* {wins}W/{losses}L "
+                f"({win_rate:.0f}% WR) | "
+                f"Avg {avg_profit:+.2f}% | "
+                f"Total {total_profit:+.1f}%"
+            )
+        except Exception as e:
+            logger.warning(f"Failed to get running stats: {e}")
+            return ""
 
     def confirm_trade_exit(self, pair: str, trade, order_type: str, amount: float,
                           rate: float, time_in_force: str, exit_reason: str,
@@ -1160,19 +1224,70 @@ class TrendRiderStrategy(IStrategy):
         else:
             dur_str = f"{duration_hours/24:.1f}d"
 
+        # R:R achieved (actual profit vs stoploss risk)
+        risk_pct = abs(self.stoploss * 100)  # 6%
+        reward_pct = abs(profit_pct / trade.leverage) if trade.leverage else abs(profit_pct)
+        rr_achieved = reward_pct / risk_pct if risk_pct > 0 else 0
+
+        # Max drawdown during trade
+        if trade.is_short:
+            max_dd = ((trade.max_rate - trade.open_rate) / trade.open_rate) * 100
+        else:
+            max_dd = ((trade.open_rate - trade.min_rate) / trade.open_rate) * 100 if trade.min_rate else 0
+
+        # What worked / what didn't
+        if profit_pct > 5:
+            review = "Strong momentum carried to TP2+"
+        elif profit_pct > 3:
+            review = "Clean setup, hit TP1 target"
+        elif profit_pct > 0:
+            review = "Modest gain, trailing stop secured profit"
+        elif exit_reason == "stop_loss":
+            review = "Setup invalidated, SL protected capital"
+        elif exit_reason == "trailing_stop_loss":
+            review = "Gave back gains after reversal"
+        else:
+            review = "Market conditions changed"
+
+        # Confidence at entry (reconstruct from enter_tag)
+        enter_tag = getattr(trade, 'enter_tag', '') or ''
+        setup_names = {
+            "trend_pullback": "Trend Pullback",
+            "ema50_bounce": "EMA50 Bounce",
+            "rsi_bounce": "RSI Oversold Bounce",
+            "short_pullback": "Short Pullback",
+            "short_ema50_rejection": "EMA50 Rejection",
+            "short_rsi_overbought": "RSI Overbought",
+        }
+        setup_name = setup_names.get(enter_tag, enter_tag or "—")
+
+        # Running stats
+        stats_line = self._get_running_stats()
+
         msg = (
             f"*TRADE CLOSED* {'WIN' if profit_pct > 0 else 'LOSS'}\n"
-            f"{'='*25}\n"
+            f"{'='*28}\n"
             f"*{pair}* | {side_str} | {trade.leverage}x\n"
-            f"{'='*25}\n\n"
+            f"*Setup:* {setup_name}\n"
+            f"{'='*28}\n\n"
             f"*Entry:* `{trade.open_rate:.2f}`\n"
             f"*Exit:* `{rate:.2f}`\n"
             f"*Result:* *{result_line}*\n"
+            f"*R:R:* 1:{rr_achieved:.1f} achieved\n"
             f"*Duration:* {dur_str}\n"
-            f"*Reason:* {reason_text}\n"
+            f"*Reason:* {reason_text}\n\n"
             f"*Max price:* `{trade.max_rate:.2f}`\n"
-            f"{'='*25}\n"
-            f"_TrendRider Algo | Bybit Futures_"
+            f"*Max DD:* {max_dd:.1f}%\n\n"
+            f"*Review:* {review}\n\n"
+        )
+
+        if stats_line:
+            msg += f"{stats_line}\n\n"
+
+        msg += (
+            f"{'='*28}\n"
+            f"[Full Trade History](https://docs.google.com/spreadsheets/d/1ZWRJ0PcBSk910MZv426PrleriBnInykr3OebWXJPm-g)\n"
+            f"_TrendRider Algo | @TrendRiderSignals_"
         )
 
         self.dp.send_msg(msg, always_send=True)
