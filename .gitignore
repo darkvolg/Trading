@@ -25,3 +25,12 @@ FreqtradeBot/user_data/hyperopt.lock
 # Misc
 *.jpg
 *.docx
+
+# Generated card images
+FreqtradeBot/scripts/signal_*.png
+FreqtradeBot/user_data/strategy_card_*.png
+
+# Landing page
+landing/node_modules/
+landing/.next/
+landing/out/

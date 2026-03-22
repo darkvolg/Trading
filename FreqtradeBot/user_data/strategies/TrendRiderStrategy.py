@@ -112,7 +112,7 @@ class TrendRiderStrategy(IStrategy):
     adx_threshold = IntParameter(20, 35, default=25, space="buy")
     volume_factor = DecimalParameter(1.0, 2.5, default=1.3, space="buy")
 
-    # --- Leverage: fixed, not optimized (fix #9) ---
+    # --- Leverage: fixed 3x (adaptive tested, worse results) ---
     leverage_value = 3
 
     # --- FNG cache ---
@@ -451,6 +451,9 @@ class TrendRiderStrategy(IStrategy):
         dataframe["bb_upper"] = bb["upperband"]
         dataframe["bb_middle"] = bb["middleband"]
         dataframe["bb_lower"] = bb["lowerband"]
+        # BB width for volatility regime (Phase 8.5)
+        dataframe["bb_width"] = (dataframe["bb_upper"] - dataframe["bb_lower"]) / (dataframe["bb_middle"] + 1e-10)
+        dataframe["bb_width_sma"] = ta.SMA(dataframe["bb_width"], timeperiod=50)
 
         # Volume (fix #4: epsilon guard against division by zero)
         dataframe["volume_ema"] = ta.EMA(dataframe["volume"], timeperiod=20)
@@ -1084,18 +1087,23 @@ class TrendRiderStrategy(IStrategy):
         return " | ".join(parts)
 
     def _get_market_regime(self, last: dict) -> str:
-        """Detect market regime from ADX + EMA200 slope."""
+        """Detect market regime from ADX + EMA200 + BB width (Phase 8.5)."""
         adx_val = last.get('adx', 0)
         ema_200 = last.get('ema_200', 0)
         close = last.get('close', 0)
         is_bull = last.get('is_bull', 0)
+        bb_width = last.get('bb_width', 0)
+        bb_width_sma = last.get('bb_width_sma', 0)
+
+        # Volatility state
+        high_vol = bb_width > bb_width_sma * 1.5 if bb_width_sma > 0 else False
 
         if adx_val < 20:
-            return "Ranging"
+            return "Ranging (High Vol)" if high_vol else "Ranging"
         elif is_bull and close > ema_200:
             return "Trending Bull"
         else:
-            return "Trending Bear"
+            return "Trending Bear (High Vol)" if high_vol else "Trending Bear"
 
     def confirm_trade_entry(self, pair: str, order_type: str, amount: float, rate: float,
                            time_in_force: str, current_time: datetime, entry_tag: str | None,
@@ -1181,9 +1189,12 @@ class TrendRiderStrategy(IStrategy):
             invalidation = max(ema_200, bb_lower) if ema_200 > 0 else sl_price
             inv_label = "EMA200" if invalidation == ema_200 else "BB Lower"
 
-        # --- REJECT WEAK SIGNALS ---
-        if conf_numeric <= 4:
-            logger.info(f"Rejecting weak signal for {pair}: confidence {conf_numeric}/10")
+        # --- REJECT WEAK SIGNALS (Phase 8.5: regime-aware threshold) ---
+        min_conf = 5  # default
+        if "Bear" in regime:
+            min_conf = 6  # stricter in bear markets
+        if conf_numeric < min_conf:
+            logger.info(f"Rejecting signal for {pair}: confidence {conf_numeric}/10 < {min_conf} (regime: {regime})")
             return False
 
         # Entry zone (±0.3%)

@@ -19,22 +19,22 @@
       "trailing_only_offset_is_reached": true
     },
     "max_open_trades": {
-      "max_open_trades": 3
+      "max_open_trades": 4
     },
     "buy": {
-      "adx_threshold": 27,
-      "ema_fast": 9,
-      "ema_slow": 16,
-      "rsi_bounce": 33,
-      "rsi_period": 16,
+      "adx_threshold": 23,
+      "ema_fast": 5,
+      "ema_slow": 22,
+      "rsi_bounce": 28,
+      "rsi_period": 15,
       "rsi_pullback_high": 58,
-      "rsi_pullback_low": 36,
-      "volume_factor": 1.014
+      "rsi_pullback_low": 32,
+      "volume_factor": 1.165
     },
     "sell": {
-      "rsi_exit": 81
+      "rsi_exit": 79
     }
   },
   "ft_stratparam_v": 1,
-  "export_time": "2026-03-21 11:50:29.654851+00:00"
+  "export_time": "2026-03-22 12:07:07.267118+00:00"
 }
