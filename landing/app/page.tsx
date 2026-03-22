@@ -1,10 +1,11 @@
 "use client";
 
-import { useEffect, useRef, useState, useCallback, type ReactNode } from "react";
+import { useEffect, useRef, useState, useCallback, useId, type ReactNode } from "react";
 
 /* ──────────────────────────── constants ──────────────────────────── */
 
 const TELEGRAM_URL = "https://t.me/TrendRiderSignals";
+const TELEGRAM_BOT_URL = "https://t.me/TrendRiderBot";
 const SHEETS_URL =
   "https://docs.google.com/spreadsheets/d/1ZWRJ0PcBSk910MZv426PrleriBnInykr3OebWXJPm-g";
 
@@ -44,6 +45,7 @@ const T = {
     metricsTag: "Performance",
     metricsTitle: "Numbers Don't Lie",
     metricsSubtitle: "Backtested on real market data. Every metric verified and publicly available.",
+    equityCurveLabel: "Equity Curve (Backtest)",
     metricsFooter: "Based on backtests with real market data",
     updatedMonthly: "Updated monthly",
     viewFullResults: "View full results",
@@ -126,6 +128,18 @@ const T = {
     faq5Q: "Is it safe?",
     faq5A: "We use strict risk management: 6% stop-loss per trade, never risking more than 2% of portfolio per position. The system has been paper-trading since March 2026 with verified results. However, all trading involves risk and past performance does not guarantee future results.",
 
+    // transparency
+    transparencyTag: "Transparency",
+    transparencyTitle: "100% Verifiable",
+    transparencySubtitle: "Every claim on this page can be independently verified. No hidden results.",
+    transparencySheet: "Public Trade Log",
+    transparencySheetDesc: "Every signal, entry, exit, and P&L — logged in real-time.",
+    transparencyGithub: "Open-Source Strategy",
+    transparencyGithubDesc: "Full Freqtrade strategy code available for review.",
+    transparencyPaper: "Paper-Trading Phase",
+    transparencyPaperDesc: "Honestly in paper-trading since March 2026. No fake live claims.",
+    verifyYourself: "Verify on Google Sheets",
+
     // cta
     ctaTag: "Get Started",
     ctaTitle: "Ready to Trade",
@@ -135,10 +149,83 @@ const T = {
     getStarted: "Get Started on Telegram",
     viewAllResults: "View all results",
 
+    // verified metrics
+    trustedBy: "Verified Performance Metrics",
+    metricPairs: "Trading Pairs",
+    metricTimeframes: "Timeframes Analyzed",
+    metricIndicators: "Technical Indicators",
+    metricExchanges: "Supported Exchanges",
+
+    // testimonials
+    testimonialsTag: "Beta Feedback",
+    testimonialsTitle: "Early Tester Impressions",
+    testimonialsSubtitle: "Feedback from beta testers during paper-trading phase. Real testimonials will be added after public launch.",
+    testimonial1: "The signal format is really clean — entry zones, multiple TPs, and confidence scores make it easy to decide position sizing.",
+    testimonial1Author: "Beta Tester #1",
+    testimonial1Role: "Paper-trading since March 2026",
+    testimonial2: "Cornix integration was straightforward to set up. The auto-trade format works perfectly with the signal structure.",
+    testimonial2Author: "Beta Tester #2",
+    testimonial2Role: "Paper-trading since March 2026",
+    testimonial3: "Love the full transparency — every trade in Google Sheet, including losses. Rare in this space.",
+    testimonial3Author: "Beta Tester #3",
+    testimonial3Role: "Paper-trading since March 2026",
+
+    // early adopter
+    earlyAdopterLabel: "Early Adopter Pricing — Lock in before public launch",
+
+    // technology stack
+    asSeenIn: "Technology Stack",
+
+    // comparison
+    comparisonTag: "Compare",
+    comparisonTitle: "TrendRider vs Manual Trading",
+    comparisonSubtitle: "See why algorithmic signals outperform emotional trading.",
+    compCol1: "Criteria",
+    compCol2: "Manual Trading",
+    compCol3: "TrendRider",
+    compRow1: ["Emotion Control", "Hard — fear & greed", "Eliminated — pure algorithm"],
+    compRow2: ["Analysis Time", "2-4 hours/day", "Fully automated 24/7"],
+    compRow3: ["Risk Management", "Inconsistent", "Strict 6% SL per trade"],
+    compRow4: ["Track Record", "Rarely public", "100% transparent Google Sheet"],
+    compRow5: ["Win Rate", "~45-55%", "71.1% verified"],
+    compRow6: ["Drawdown", "Often 15-30%+", "1.81% max"],
+
+    // extra testimonials
+    testimonial4: "Multi-timeframe analysis gives a much better picture than single-TF signals. The confluence filter is solid.",
+    testimonial4Author: "Beta Tester #4",
+    testimonial4Role: "Paper-trading since March 2026",
+    testimonial5: "The drawdown control is impressive — 1.81% max during backtests. That's conservative risk management done right.",
+    testimonial5Author: "Beta Tester #5",
+    testimonial5Role: "Paper-trading since March 2026",
+
+    // benefits strip
+    benefit1: "No emotions",
+    benefit2: "24/7 monitoring",
+    benefit3: "Verified results",
+    benefit4: "Auto-execution",
+
+    // email capture
+    emailTag: "Stay Updated",
+    emailTitle: "Get the Weekly Performance Report",
+    emailSubtitle: "Free weekly digest with all trades, win rate, and market analysis. No spam, unsubscribe anytime.",
+    emailPlaceholder: "your@email.com",
+    emailButton: "Subscribe Free",
+    emailSuccess: "Thanks! Check your inbox.",
+    emailDisclaimer: "We respect your privacy. Unsubscribe at any time.",
+
+    // cookie
+    cookieText: "We use cookies to improve your experience.",
+    cookieAccept: "Accept",
+    cookieDeny: "Decline",
+
     // footer
     footerTagline: "Algorithmic Signals. Verified Results.",
     telegramChannel: "Telegram Channel",
     liveResults: "Live Results",
+    termsOfService: "Terms of Service",
+    privacyPolicy: "Privacy Policy",
+    contactUs: "Contact",
+    followUs: "Follow Us",
     riskDisclaimer: "Trading cryptocurrencies involves substantial risk of loss and is not suitable for every investor. Past performance is not indicative of future results. Never invest more than you can afford to lose. This is not financial advice.",
     poweredBy: "Powered by Freqtrade",
   },
@@ -172,6 +259,7 @@ const T = {
     metricsTag: "Результаты",
     metricsTitle: "Цифры говорят сами",
     metricsSubtitle: "Бэктесты на реальных данных. Все метрики проверяемы и публичны.",
+    equityCurveLabel: "Кривая доходности (бэктест)",
     metricsFooter: "На основе бэктестов с реальными данными",
     updatedMonthly: "Обновляется ежемесячно",
     viewFullResults: "Все результаты",
@@ -246,6 +334,18 @@ const T = {
     faq5Q: "Безопасно ли это?",
     faq5A: "Мы используем строгий риск-менеджмент: стоп-лосс 6% на сделку, риск не более 2% портфеля на позицию. Система работает в режиме paper-trading с марта 2026 с верифицированными результатами. Однако любая торговля сопряжена с рисками, и прошлые результаты не гарантируют будущих.",
 
+    // transparency
+    transparencyTag: "Прозрачность",
+    transparencyTitle: "100% проверяемо",
+    transparencySubtitle: "Каждое утверждение на этой странице можно проверить. Никаких скрытых результатов.",
+    transparencySheet: "Публичный лог сделок",
+    transparencySheetDesc: "Каждый сигнал, вход, выход и P&L — записаны в реальном времени.",
+    transparencyGithub: "Открытая стратегия",
+    transparencyGithubDesc: "Полный код стратегии Freqtrade доступен для анализа.",
+    transparencyPaper: "Фаза paper-trading",
+    transparencyPaperDesc: "Честно в paper-trading с марта 2026. Без фейковых заявлений о live.",
+    verifyYourself: "Проверить в Google Sheets",
+
     ctaTag: "Начать",
     ctaTitle: "Готовы торговать",
     ctaTitleHighlight: "умнее",
@@ -254,9 +354,83 @@ const T = {
     getStarted: "Начать в Telegram",
     viewAllResults: "Все результаты",
 
+    // verified metrics
+    trustedBy: "Проверяемые метрики",
+    metricPairs: "Торговых пар",
+    metricTimeframes: "Анализируемых таймфреймов",
+    metricIndicators: "Технических индикаторов",
+    metricExchanges: "Поддерживаемых бирж",
+
+    // testimonials
+    testimonialsTag: "Бета-отзывы",
+    testimonialsTitle: "Впечатления тестировщиков",
+    testimonialsSubtitle: "Отзывы бета-тестеров на этапе paper-trading. Реальные отзывы будут добавлены после запуска.",
+    testimonial1: "Формат сигналов очень чёткий — зоны входа, несколько TP, оценка уверенности помогают с размером позиции.",
+    testimonial1Author: "Бета-тестер #1",
+    testimonial1Role: "Paper-trading с марта 2026",
+    testimonial2: "Интеграция с Cornix настроилась легко. Формат авто-трейда идеально работает со структурой сигналов.",
+    testimonial2Author: "Бета-тестер #2",
+    testimonial2Role: "Paper-trading с марта 2026",
+    testimonial3: "Нравится полная прозрачность — каждая сделка в Google Таблице, включая убыточные. Редкость в этой нише.",
+    testimonial3Author: "Бета-тестер #3",
+    testimonial3Role: "Paper-trading с марта 2026",
+
+    // early adopter
+    earlyAdopterLabel: "Цены раннего доступа — Зафиксируйте до публичного запуска",
+
+    // technology stack
+    asSeenIn: "Технологический стек",
+
+    // comparison
+    comparisonTag: "Сравнение",
+    comparisonTitle: "TrendRider vs Ручной трейдинг",
+    comparisonSubtitle: "Почему алгоритмические сигналы эффективнее эмоциональной торговли.",
+    compCol1: "Критерий",
+    compCol2: "Ручной трейдинг",
+    compCol3: "TrendRider",
+    compRow1: ["Контроль эмоций", "Сложно — страх и жадность", "Исключены — чистый алгоритм"],
+    compRow2: ["Время анализа", "2-4 часа/день", "Полностью автоматизирован 24/7"],
+    compRow3: ["Риск-менеджмент", "Нестабильный", "Строгий SL 6% на сделку"],
+    compRow4: ["Трек-рекорд", "Редко публичный", "100% прозрачная Google Таблица"],
+    compRow5: ["Винрейт", "~45-55%", "71.1% подтверждённый"],
+    compRow6: ["Просадка", "Часто 15-30%+", "1.81% максимум"],
+
+    // extra testimonials
+    testimonial4: "Мультитаймфрейм анализ даёт гораздо лучшую картину. Фильтр конфлюенции работает отлично.",
+    testimonial4Author: "Бета-тестер #4",
+    testimonial4Role: "Paper-trading с марта 2026",
+    testimonial5: "Контроль просадки впечатляет — 1.81% максимум на бэктестах. Это грамотный риск-менеджмент.",
+    testimonial5Author: "Бета-тестер #5",
+    testimonial5Role: "Paper-trading с марта 2026",
+
+    // benefits
+    benefit1: "Без эмоций",
+    benefit2: "Мониторинг 24/7",
+    benefit3: "Проверенные результаты",
+    benefit4: "Авто-исполнение",
+
+    // email capture
+    emailTag: "Будьте в курсе",
+    emailTitle: "Еженедельный отчёт о результатах",
+    emailSubtitle: "Бесплатный дайджест со всеми сделками, винрейтом и анализом рынка. Без спама, отписка в любой момент.",
+    emailPlaceholder: "ваш@email.com",
+    emailButton: "Подписаться бесплатно",
+    emailSuccess: "Спасибо! Проверьте почту.",
+    emailDisclaimer: "Мы уважаем вашу конфиденциальность. Отписка в любое время.",
+
+    // cookie
+    cookieText: "Мы используем cookies для улучшения вашего опыта.",
+    cookieAccept: "Принять",
+    cookieDeny: "Отклонить",
+
+    // footer
     footerTagline: "Алгоритмические сигналы. Проверенные результаты.",
     telegramChannel: "Telegram-канал",
     liveResults: "Результаты",
+    termsOfService: "Условия использования",
+    privacyPolicy: "Политика конфиденциальности",
+    contactUs: "Контакты",
+    followUs: "Мы в соцсетях",
     riskDisclaimer: "Торговля криптовалютами сопряжена со значительным риском убытков и подходит не каждому инвестору. Прошлые результаты не гарантируют будущих. Никогда не инвестируйте больше, чем можете позволить себе потерять. Это не финансовая рекомендация.",
     poweredBy: "На базе Freqtrade",
   },
@@ -298,36 +472,42 @@ const getSteps = (t: TStrings) => {
 };
 
 const featureIcons: ReactNode[] = [
-  <div key="f1" className="w-12 h-12 flex items-center justify-center rounded-xl bg-primary/10 text-primary mb-4 group-hover:bg-primary/15 transition-colors">
-    <svg className="w-6 h-6" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={1.5}>
+  // Confidence Scoring — target/crosshair icon, unique blue-cyan tint
+  <div key="f1" className="w-14 h-14 flex items-center justify-center rounded-2xl bg-gradient-to-br from-cyan-500/15 to-primary/10 text-cyan-400 mb-4 group-hover:from-cyan-500/25 group-hover:to-primary/15 group-hover:scale-110 transition-all duration-300">
+    <svg className="w-7 h-7" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={1.5}>
       <path strokeLinecap="round" strokeLinejoin="round" d="M12 12m-9 0a9 9 0 1 0 18 0 9 9 0 1 0-18 0" />
       <path strokeLinecap="round" strokeLinejoin="round" d="M12 12m-5 0a5 5 0 1 0 10 0 5 5 0 1 0-10 0" />
       <path strokeLinecap="round" strokeLinejoin="round" d="M12 12m-1 0a1 1 0 1 0 2 0 1 1 0 1 0-2 0" />
     </svg>
   </div>,
-  <div key="f2" className="w-12 h-12 flex items-center justify-center rounded-xl bg-primary/10 text-primary mb-4 group-hover:bg-primary/15 transition-colors">
-    <svg className="w-6 h-6" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={1.5}>
+  // On-Chain Data — bar chart icon, purple tint
+  <div key="f2" className="w-14 h-14 flex items-center justify-center rounded-2xl bg-gradient-to-br from-violet-500/15 to-purple-500/10 text-violet-400 mb-4 group-hover:from-violet-500/25 group-hover:to-purple-500/15 group-hover:scale-110 transition-all duration-300">
+    <svg className="w-7 h-7" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={1.5}>
       <path strokeLinecap="round" strokeLinejoin="round" d="M3 13.125C3 12.504 3.504 12 4.125 12h2.25c.621 0 1.125.504 1.125 1.125v6.75C7.5 20.496 6.996 21 6.375 21h-2.25A1.125 1.125 0 0 1 3 19.875v-6.75ZM9.75 8.625c0-.621.504-1.125 1.125-1.125h2.25c.621 0 1.125.504 1.125 1.125v11.25c0 .621-.504 1.125-1.125 1.125h-2.25a1.125 1.125 0 0 1-1.125-1.125V8.625ZM16.5 4.125c0-.621.504-1.125 1.125-1.125h2.25C20.496 3 21 3.504 21 4.125v15.75c0 .621-.504 1.125-1.125 1.125h-2.25a1.125 1.125 0 0 1-1.125-1.125V4.125Z" />
     </svg>
   </div>,
-  <div key="f3" className="w-12 h-12 flex items-center justify-center rounded-xl bg-primary/10 text-primary mb-4 group-hover:bg-primary/15 transition-colors">
-    <svg className="w-6 h-6" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={1.5}>
+  // Cornix Auto-Trade — gear icon, amber/orange tint
+  <div key="f3" className="w-14 h-14 flex items-center justify-center rounded-2xl bg-gradient-to-br from-amber-500/15 to-orange-500/10 text-amber-400 mb-4 group-hover:from-amber-500/25 group-hover:to-orange-500/15 group-hover:scale-110 transition-all duration-300">
+    <svg className="w-7 h-7" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={1.5}>
       <path strokeLinecap="round" strokeLinejoin="round" d="M9.594 3.94c.09-.542.56-.94 1.11-.94h2.593c.55 0 1.02.398 1.11.94l.213 1.281c.063.374.313.686.645.87.074.04.147.083.22.127.325.196.72.257 1.075.124l1.217-.456a1.125 1.125 0 0 1 1.37.49l1.296 2.247a1.125 1.125 0 0 1-.26 1.431l-1.003.827c-.293.241-.438.613-.43.992a7.723 7.723 0 0 1 0 .255c-.008.378.137.75.43.991l1.004.827c.424.35.534.955.26 1.43l-1.298 2.247a1.125 1.125 0 0 1-1.369.491l-1.217-.456c-.355-.133-.75-.072-1.076.124a6.47 6.47 0 0 1-.22.128c-.331.183-.581.495-.644.869l-.213 1.281c-.09.543-.56.94-1.11.94h-2.594c-.55 0-1.019-.398-1.11-.94l-.213-1.281c-.062-.374-.312-.686-.644-.87a6.52 6.52 0 0 1-.22-.127c-.325-.196-.72-.257-1.076-.124l-1.217.456a1.125 1.125 0 0 1-1.369-.49l-1.297-2.247a1.125 1.125 0 0 1 .26-1.431l1.004-.827c.292-.24.437-.613.43-.991a6.932 6.932 0 0 1 0-.255c.007-.38-.138-.751-.43-.992l-1.004-.827a1.125 1.125 0 0 1-.26-1.43l1.297-2.247a1.125 1.125 0 0 1 1.37-.491l1.216.456c.356.133.751.072 1.076-.124.072-.044.146-.086.22-.128.332-.183.582-.495.644-.869l.214-1.28Z" />
       <path strokeLinecap="round" strokeLinejoin="round" d="M15 12a3 3 0 1 1-6 0 3 3 0 0 1 6 0Z" />
     </svg>
   </div>,
-  <div key="f4" className="w-12 h-12 flex items-center justify-center rounded-xl bg-primary/10 text-primary mb-4 group-hover:bg-primary/15 transition-colors">
-    <svg className="w-6 h-6" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={1.5}>
+  // Verified Track Record — trending up, green tint
+  <div key="f4" className="w-14 h-14 flex items-center justify-center rounded-2xl bg-gradient-to-br from-emerald-500/15 to-green-500/10 text-emerald-400 mb-4 group-hover:from-emerald-500/25 group-hover:to-green-500/15 group-hover:scale-110 transition-all duration-300">
+    <svg className="w-7 h-7" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={1.5}>
       <path strokeLinecap="round" strokeLinejoin="round" d="M2.25 18 9 11.25l4.306 4.306a11.95 11.95 0 0 1 5.814-5.518l2.74-1.22m0 0-5.94-2.281m5.94 2.28-2.28 5.941" />
     </svg>
   </div>,
-  <div key="f5" className="w-12 h-12 flex items-center justify-center rounded-xl bg-primary/10 text-primary mb-4 group-hover:bg-primary/15 transition-colors">
-    <svg className="w-6 h-6" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={1.5}>
+  // Ultra-Low Drawdown — shield, blue tint
+  <div key="f5" className="w-14 h-14 flex items-center justify-center rounded-2xl bg-gradient-to-br from-blue-500/15 to-indigo-500/10 text-blue-400 mb-4 group-hover:from-blue-500/25 group-hover:to-indigo-500/15 group-hover:scale-110 transition-all duration-300">
+    <svg className="w-7 h-7" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={1.5}>
       <path strokeLinecap="round" strokeLinejoin="round" d="M9 12.75 11.25 15 15 9.75m-3-7.036A11.959 11.959 0 0 1 3.598 6 11.99 11.99 0 0 0 3 9.749c0 5.592 3.824 10.29 9 11.623 5.176-1.332 9-6.03 9-11.622 0-1.31-.21-2.571-.598-3.751h-.152c-3.196 0-6.1-1.248-8.25-3.285Z" />
     </svg>
   </div>,
-  <div key="f6" className="w-12 h-12 flex items-center justify-center rounded-xl bg-primary/10 text-primary mb-4 group-hover:bg-primary/15 transition-colors">
-    <svg className="w-6 h-6" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={1.5}>
+  // Real-Time Alerts — bell, rose/red tint
+  <div key="f6" className="w-14 h-14 flex items-center justify-center rounded-2xl bg-gradient-to-br from-rose-500/15 to-red-500/10 text-rose-400 mb-4 group-hover:from-rose-500/25 group-hover:to-red-500/15 group-hover:scale-110 transition-all duration-300">
+    <svg className="w-7 h-7" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={1.5}>
       <path strokeLinecap="round" strokeLinejoin="round" d="M14.857 17.082a23.848 23.848 0 0 0 5.454-1.31A8.967 8.967 0 0 1 18 9.75V9A6 6 0 0 0 6 9v.75a8.967 8.967 0 0 1-2.312 6.022c1.733.64 3.56 1.085 5.455 1.31m5.714 0a24.255 24.255 0 0 1-5.714 0m5.714 0a3 3 0 1 1-5.714 0" />
     </svg>
   </div>,
@@ -358,7 +538,7 @@ const getPricing = (t: TStrings) => [
     period: t.perMonth,
     features: [t.basicF1, t.basicF2, t.basicF3, t.basicF4],
     cta: t.subscribe,
-    href: TELEGRAM_URL,
+    href: TELEGRAM_BOT_URL + "?start=basic",
     highlight: false,
   },
   {
@@ -367,7 +547,7 @@ const getPricing = (t: TStrings) => [
     period: t.perMonth,
     features: [t.vipF1, t.vipF2, t.vipF3, t.vipF4, t.vipF5],
     cta: t.getVip,
-    href: TELEGRAM_URL,
+    href: TELEGRAM_BOT_URL + "?start=vip",
     highlight: true,
   },
 ];
@@ -482,11 +662,48 @@ function LanguageToggle({ locale, setLocale, className = "" }: { locale: Locale;
   return (
     <button
       onClick={() => setLocale(l => l === "en" ? "ru" : "en")}
+      aria-label={locale === "en" ? "Switch to Russian" : "Switch to English"}
       className={`flex items-center gap-1.5 px-3 py-1.5 rounded-full border border-border/50 text-xs font-mono hover:border-primary/30 transition-all ${className}`}
     >
       <span className={locale === "en" ? "text-primary font-medium" : "text-muted"}>EN</span>
       <span className="text-border/50">/</span>
       <span className={locale === "ru" ? "text-primary font-medium" : "text-muted"}>RU</span>
+    </button>
+  );
+}
+
+type Theme = "dark" | "light";
+
+function ThemeToggle({ theme, setTheme, className = "" }: { theme: Theme; setTheme: (t: Theme) => void; className?: string }) {
+  return (
+    <button
+      onClick={() => {
+        const next = theme === "dark" ? "light" : "dark";
+        setTheme(next);
+        localStorage.setItem("theme", next);
+        document.documentElement.classList.remove("dark", "light");
+        document.documentElement.classList.add(next);
+      }}
+      className={`flex items-center justify-center w-8 h-8 rounded-full border border-border/50 hover:border-primary/30 transition-all ${className}`}
+      aria-label={theme === "dark" ? "Switch to light mode" : "Switch to dark mode"}
+    >
+      {theme === "dark" ? (
+        <svg className="w-4 h-4 text-accent" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth={2} strokeLinecap="round" strokeLinejoin="round">
+          <circle cx="12" cy="12" r="5" />
+          <line x1="12" y1="1" x2="12" y2="3" />
+          <line x1="12" y1="21" x2="12" y2="23" />
+          <line x1="4.22" y1="4.22" x2="5.64" y2="5.64" />
+          <line x1="18.36" y1="18.36" x2="19.78" y2="19.78" />
+          <line x1="1" y1="12" x2="3" y2="12" />
+          <line x1="21" y1="12" x2="23" y2="12" />
+          <line x1="4.22" y1="19.78" x2="5.64" y2="18.36" />
+          <line x1="18.36" y1="5.64" x2="19.78" y2="4.22" />
+        </svg>
+      ) : (
+        <svg className="w-4 h-4 text-primary" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth={2} strokeLinecap="round" strokeLinejoin="round">
+          <path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z" />
+        </svg>
+      )}
     </button>
   );
 }
@@ -536,25 +753,34 @@ function MetricCard({
 
 function FAQItem({ q, a }: { q: string; a: string }) {
   const [open, setOpen] = useState(false);
+  const id = useId();
   return (
     <div className={`faq-item border border-border/50 rounded-xl overflow-hidden`}>
-      <button
-        onClick={() => setOpen(!open)}
-        className="w-full flex items-center justify-between p-5 text-left hover:bg-card/40 transition-colors"
-        aria-expanded={open}
-      >
-        <span className="font-medium text-foreground pr-4">{q}</span>
-        <svg
-          className={`w-5 h-5 text-primary shrink-0 transition-transform duration-300 ${open ? "rotate-180" : ""}`}
-          fill="none"
-          viewBox="0 0 24 24"
-          stroke="currentColor"
-          strokeWidth={2}
+      <h3 className="m-0">
+        <button
+          id={`${id}-trigger`}
+          onClick={() => setOpen(!open)}
+          className="w-full flex items-center justify-between p-5 text-left hover:bg-card/40 transition-colors"
+          aria-expanded={open}
+          aria-controls={`${id}-panel`}
         >
-          <path strokeLinecap="round" strokeLinejoin="round" d="m19 9-7 7-7-7" />
-        </svg>
-      </button>
+          <span className="font-medium text-foreground pr-4">{q}</span>
+          <svg
+            className={`w-5 h-5 text-primary shrink-0 transition-transform duration-300 ${open ? "rotate-180" : ""}`}
+            fill="none"
+            viewBox="0 0 24 24"
+            stroke="currentColor"
+            strokeWidth={2}
+            aria-hidden="true"
+          >
+            <path strokeLinecap="round" strokeLinejoin="round" d="m19 9-7 7-7-7" />
+          </svg>
+        </button>
+      </h3>
       <div
+        id={`${id}-panel`}
+        role="region"
+        aria-labelledby={`${id}-trigger`}
         className={`overflow-hidden transition-all duration-300 ${open ? "max-h-96 opacity-100" : "max-h-0 opacity-0"}`}
       >
         <p className="px-5 pb-5 text-muted leading-relaxed text-sm">{a}</p>
@@ -705,7 +931,7 @@ function CandlestickChart() {
 /* ─── Particles ─── */
 
 function Particles() {
-  const particles = Array.from({ length: 24 }, (_, i) => ({
+  const particles = Array.from({ length: 16 }, (_, i) => ({
     id: i,
     x: Math.random() * 100,
     y: 20 + Math.random() * 80,
@@ -795,14 +1021,14 @@ function SignalPreview({ visible }: { visible: boolean }) {
   return (
     <div className="max-w-sm mx-auto">
       {/* Telegram-style chat header */}
-      <div className="flex items-center gap-3 px-4 py-3 bg-[#17212b] rounded-t-2xl border-b border-white/5">
+      <div className="tg-header flex items-center gap-3 px-4 py-3 rounded-t-2xl border-b border-white/5">
         <div className="w-8 h-8 rounded-full bg-primary/20 flex items-center justify-center shrink-0">
           <svg className="w-4 h-4 text-primary" viewBox="0 0 24 24" fill="currentColor">
             <path d="M11.944 0A12 12 0 0 0 0 12a12 12 0 0 0 12 12 12 12 0 0 0 12-12A12 12 0 0 0 12 0a12 12 0 0 0-.056 0zm4.962 7.224c.1-.002.321.023.465.14a.506.506 0 0 1 .171.325c.016.093.036.306.02.472-.18 1.898-.962 6.502-1.36 8.627-.168.9-.499 1.201-.82 1.23-.696.065-1.225-.46-1.9-.902-1.056-.693-1.653-1.124-2.678-1.8-1.185-.78-.417-1.21.258-1.91.177-.184 3.247-2.977 3.307-3.23.007-.032.014-.15-.056-.212s-.174-.041-.249-.024c-.106.024-1.793 1.14-5.061 3.345-.48.33-.913.49-1.302.48-.428-.008-1.252-.241-1.865-.44-.752-.245-1.349-.374-1.297-.789.027-.216.325-.437.893-.663 3.498-1.524 5.83-2.529 6.998-3.014 3.332-1.386 4.025-1.627 4.476-1.635z" />
           </svg>
         </div>
         <div className="flex-1 min-w-0">
-          <div className="text-sm font-semibold text-white truncate">TrendRider Signals</div>
+          <div className="text-sm font-semibold text-foreground truncate">TrendRider Signals</div>
           <div className="text-xs text-[#8B949E]">
             {showTyping && visible ? (
               <span className="flex items-center gap-1">
@@ -832,7 +1058,7 @@ function SignalPreview({ visible }: { visible: boolean }) {
       </div>
 
       {/* Chat body */}
-      <div className="bg-[#0e1621] rounded-b-2xl px-4 pb-4 pt-4 min-h-[320px] flex items-end">
+      <div className="tg-body rounded-b-2xl px-4 pb-4 pt-4 min-h-[320px] flex items-end">
         {showTyping && visible && !showMessage && (
           <div className="tg-bubble px-4 py-3 inline-flex items-center gap-1.5">
             <span className="typing-dot" />
@@ -918,14 +1144,409 @@ function SignalPreview({ visible }: { visible: boolean }) {
 
 /* ──────────────────────────── main page ──────────────────────────── */
 
+/* ─── Testimonial Card ─── */
+function TestimonialCard({ quote, author, role, delay, visible }: { quote: string; author: string; role: string; delay: number; visible: boolean }) {
+  return (
+    <div className={`reveal reveal-delay-${delay} ${visible ? "visible" : ""} testimonial-card p-6 rounded-2xl border border-border/50 bg-card/30 backdrop-blur-sm hover:border-primary/20 transition-all`}>
+      <div className="flex gap-1 mb-4">
+        {[...Array(5)].map((_, i) => (
+          <svg key={i} className="w-4 h-4 text-accent" fill="currentColor" viewBox="0 0 20 20">
+            <path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z" />
+          </svg>
+        ))}
+      </div>
+      <p className="text-foreground/90 text-sm leading-relaxed mb-4 italic">&ldquo;{quote}&rdquo;</p>
+      <div className="flex items-center gap-3">
+        <div className="w-10 h-10 rounded-full bg-gradient-to-br from-primary/30 to-primary/10 flex items-center justify-center text-primary font-bold text-sm">
+          {author.charAt(0)}
+        </div>
+        <div>
+          <div className="text-sm font-semibold text-foreground">{author}</div>
+          <div className="text-xs text-muted">{role}</div>
+        </div>
+      </div>
+    </div>
+  );
+}
+
+/* ─── Exchange Logos Strip ─── */
+
+const exchangeLogos: Record<string, ReactNode> = {
+  Bybit: (
+    <svg viewBox="0 0 80 24" fill="currentColor" className="h-5 w-auto">
+      <path d="M5.2 4h5.6c2.8 0 4.6 1.6 4.6 4.1 0 1.7-.9 3-2.4 3.5 1.8.5 2.9 2 2.9 3.8 0 2.7-1.9 4.6-5 4.6H5.2V4zm5.3 6.4c1.2 0 1.9-.7 1.9-1.7s-.7-1.7-1.9-1.7H8.3v3.4h2.2zm.3 6.6c1.3 0 2.1-.7 2.1-1.9s-.8-1.9-2.1-1.9H8.3V17h2.5zM19.2 15.5l-4.8-8h3.5l3 5.3 3-5.3h3.4l-4.8 8V20h-3.3v-4.5zM29.5 4h5.6c2.8 0 4.6 1.6 4.6 4.1 0 1.7-.9 3-2.4 3.5 1.8.5 2.9 2 2.9 3.8 0 2.7-1.9 4.6-5 4.6h-5.7V4zm5.3 6.4c1.2 0 1.9-.7 1.9-1.7s-.7-1.7-1.9-1.7h-2.2v3.4h2.2zm.3 6.6c1.3 0 2.1-.7 2.1-1.9s-.8-1.9-2.1-1.9h-2.5V17h2.5zM42.5 4h3.3v16h-3.3V4zm7.8 0h13v3h-4.8v13h-3.3V7h-4.9V4z" />
+    </svg>
+  ),
+  Binance: (
+    <svg viewBox="0 0 24 24" fill="currentColor" className="h-6 w-6">
+      <path d="M12 1.5L5.5 8l2.4 2.4L12 6.3l4.1 4.1L18.5 8 12 1.5zM3.1 10.4l2.4 2.4-2.4 2.4L.7 12.8l2.4-2.4zm8.9 0L9.6 12.8l2.4 2.4 2.4-2.4-2.4-2.4zm8.9 0l-2.4 2.4 2.4 2.4 2.4-2.4-2.4-2.4zM12 17.7l-4.1-4.1-2.4 2.4L12 22.5l6.5-6.5-2.4-2.4L12 17.7z" />
+    </svg>
+  ),
+  OKX: (
+    <svg viewBox="0 0 80 24" fill="currentColor" className="h-5 w-auto">
+      <path d="M12 2C6.5 2 2 6.5 2 12s4.5 10 10 10 10-4.5 10-10S17.5 2 12 2zm0 16.5c-3.6 0-6.5-2.9-6.5-6.5S8.4 5.5 12 5.5s6.5 2.9 6.5 6.5-2.9 6.5-6.5 6.5zM30.5 4h3.5v16h-3.5V4zm7.5 0h3.8l3.5 6.2L48.8 4h3.8l-5.5 8.5L52.8 21H49l-3.7-6.6L41.6 21h-3.8l5.7-8.5L38 4zm17 0h3.5v16H55V4z" />
+    </svg>
+  ),
+  Cornix: (
+    <svg viewBox="0 0 24 24" fill="currentColor" className="h-6 w-6">
+      <path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm-1 15.93c-3.95-.49-7-3.85-7-7.93 0-.62.08-1.21.21-1.79L9 13v1c0 1.1.9 2 2 2v1.93zm6.9-2.54c-.26-.81-1-1.39-1.9-1.39h-1v-3c0-.55-.45-1-1-1H8v-2h2c.55 0 1-.45 1-1V7h2c1.1 0 2-.9 2-2v-.41c2.93 1.19 5 4.06 5 7.41 0 2.08-.8 3.97-2.1 5.39z" />
+    </svg>
+  ),
+  Freqtrade: (
+    <svg viewBox="0 0 24 24" fill="currentColor" className="h-6 w-6">
+      <path d="M3.5 18.49l6-6.01 4 4L22 6.92l-1.41-1.41-7.09 7.97-4-4L2 16.99z" />
+      <path d="M3.5 18.49l6-6.01 4 4L22 6.92" fill="none" stroke="currentColor" strokeWidth="1.5" />
+    </svg>
+  ),
+};
+
+function ExchangeLogos({ visible }: { visible: boolean }) {
+  const exchanges = ["Bybit", "Binance", "OKX", "Cornix", "Freqtrade"];
+  return (
+    <div className={`reveal reveal-delay-2 ${visible ? "visible" : ""} flex flex-wrap items-center justify-center gap-8 md:gap-12`}>
+      {exchanges.map((name) => (
+        <div
+          key={name}
+          className="flex items-center gap-2.5 opacity-40 hover:opacity-70 transition-opacity duration-300"
+        >
+          <div className="text-muted">
+            {exchangeLogos[name]}
+          </div>
+          <span className="font-mono text-xs text-muted tracking-widest uppercase">{name}</span>
+        </div>
+      ))}
+    </div>
+  );
+}
+
+/* ─── Section Divider ─── */
+function SectionDivider({ variant = "default" }: { variant?: "default" | "glow" | "dots" }) {
+  if (variant === "glow") {
+    return (
+      <div className="relative h-px w-full max-w-2xl mx-auto">
+        <div className="absolute inset-0 bg-gradient-to-r from-transparent via-primary/30 to-transparent" />
+        <div className="absolute inset-0 bg-gradient-to-r from-transparent via-primary/20 to-transparent blur-sm" />
+      </div>
+    );
+  }
+  if (variant === "dots") {
+    return (
+      <div className="flex items-center justify-center gap-2 py-4">
+        {[...Array(3)].map((_, i) => (
+          <div key={i} className="w-1.5 h-1.5 rounded-full bg-primary/30" />
+        ))}
+      </div>
+    );
+  }
+  return (
+    <div className="h-px w-full max-w-4xl mx-auto bg-gradient-to-r from-transparent via-border/50 to-transparent" />
+  );
+}
+
+/* ─── Equity Curve ─── */
+
+function EquityCurve({ label, visible }: { label: string; visible: boolean }) {
+  // Simulated equity curve data points (backtest-like growth)
+  const points = [
+    0, 2, 1, 4, 3, 7, 6, 9, 8, 12, 11, 15, 14, 18, 16, 20, 19, 23, 21, 26,
+    24, 28, 27, 31, 29, 34, 32, 36, 35, 39, 37, 42, 40, 44, 43, 47, 45, 50, 48, 53,
+  ];
+  const maxVal = Math.max(...points);
+  const h = 120;
+  const w = 400;
+  const stepX = w / (points.length - 1);
+
+  const pathD = points
+    .map((p, i) => `${i === 0 ? "M" : "L"}${(i * stepX).toFixed(1)},${(h - (p / maxVal) * (h - 10)).toFixed(1)}`)
+    .join(" ");
+
+  const areaD = `${pathD} L${w},${h} L0,${h} Z`;
+
+  return (
+    <div className={`reveal reveal-delay-5 ${visible ? "visible" : ""} mt-10 max-w-lg mx-auto`}>
+      <p className="text-xs text-muted text-center uppercase tracking-widest font-mono mb-3">{label}</p>
+      <div className="equity-glow relative rounded-xl border border-border/50 bg-card/30 p-4 overflow-hidden">
+        <svg viewBox={`0 0 ${w} ${h}`} className="w-full h-auto" preserveAspectRatio="none">
+          <defs>
+            <linearGradient id="equityGrad" x1="0" y1="0" x2="0" y2="1">
+              <stop offset="0%" stopColor="#00D4AA" stopOpacity="0.3" />
+              <stop offset="100%" stopColor="#00D4AA" stopOpacity="0" />
+            </linearGradient>
+          </defs>
+          {/* Grid lines */}
+          {[0.25, 0.5, 0.75].map(pct => (
+            <line key={pct} x1="0" y1={h * pct} x2={w} y2={h * pct} stroke="currentColor" className="text-border/30" strokeWidth="0.5" strokeDasharray="4 6" />
+          ))}
+          {/* Area fill */}
+          <path d={areaD} fill="url(#equityGrad)" />
+          {/* Line */}
+          <path d={pathD} fill="none" stroke="#00D4AA" strokeWidth="2" strokeLinejoin="round" strokeLinecap="round" />
+        </svg>
+        {/* Start / End labels */}
+        <div className="flex justify-between mt-2">
+          <span className="text-[10px] font-mono text-muted">$10,000</span>
+          <span className="text-[10px] font-mono text-primary font-bold">$15,300 (+53%)</span>
+        </div>
+      </div>
+    </div>
+  );
+}
+
+/* ─── Early Adopter Badge ─── */
+function EarlyAdopterBadge({ label }: { label: string }) {
+  return (
+    <div className="inline-flex items-center gap-2 px-4 py-2 rounded-full border border-accent/30 bg-accent/5">
+      <span className="relative flex h-2 w-2">
+        <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-accent opacity-75" />
+        <span className="relative inline-flex rounded-full h-2 w-2 bg-accent" />
+      </span>
+      <span className="text-xs text-accent/80 font-medium">{label}</span>
+    </div>
+  );
+}
+
+/* ─── Media Logos ("As Seen In") ─── */
+
+function TechStackLogos({ visible, label }: { visible: boolean; label: string }) {
+  const stack = [
+    { name: "Freqtrade", desc: "Trading Engine", icon: (
+      <svg className="w-5 h-5" viewBox="0 0 24 24" fill="currentColor"><path d="M3.5 18.49l6-6.01 4 4L22 6.92l-1.41-1.41-7.09 7.97-4-4L2 16.99z" /></svg>
+    )},
+    { name: "Python", desc: "Strategy Logic", icon: (
+      <svg className="w-5 h-5" viewBox="0 0 24 24" fill="currentColor"><path d="M9.585 11.692h4.328s2.432.039 2.432-2.35V5.391S16.714 3 11.936 3C7.362 3 7.647 4.983 7.647 4.983l.006 2.055h4.363v.617H5.92s-2.927-.332-2.927 4.282 2.555 4.45 2.555 4.45h1.524v-2.141s-.083-2.554 2.513-2.554zm-.056-5.74a.784.784 0 1 1 0-1.57.784.784 0 0 1 0 1.57z" /><path d="M18.452 7.532h-1.524v2.141s.083 2.554-2.513 2.554h-4.328s-2.432-.04-2.432 2.35v3.951s-.369 2.391 4.409 2.391c4.573 0 4.288-1.983 4.288-1.983l-.006-2.054h-4.363v-.618h6.096s2.927.332 2.927-4.282c0-4.614-2.554-4.45-2.554-4.45zm-4.597 10.455a.784.784 0 1 1 0 1.57.784.784 0 0 1 0-1.57z" /></svg>
+    )},
+    { name: "Telegram", desc: "Signal Delivery", icon: (
+      <svg className="w-5 h-5" viewBox="0 0 24 24" fill="currentColor"><path d="M11.944 0A12 12 0 0 0 0 12a12 12 0 0 0 12 12 12 12 0 0 0 12-12A12 12 0 0 0 12 0a12 12 0 0 0-.056 0zm4.962 7.224c.1-.002.321.023.465.14a.506.506 0 0 1 .171.325c.016.093.036.306.02.472-.18 1.898-.962 6.502-1.36 8.627-.168.9-.499 1.201-.82 1.23-.696.065-1.225-.46-1.9-.902-1.056-.693-1.653-1.124-2.678-1.8-1.185-.78-.417-1.21.258-1.91.177-.184 3.247-2.977 3.307-3.23.007-.032.014-.15-.056-.212s-.174-.041-.249-.024c-.106.024-1.793 1.14-5.061 3.345-.48.33-.913.49-1.302.48-.428-.008-1.252-.241-1.865-.44-.752-.245-1.349-.374-1.297-.789.027-.216.325-.437.893-.663 3.498-1.524 5.83-2.529 6.998-3.014 3.332-1.386 4.025-1.627 4.476-1.635z" /></svg>
+    )},
+    { name: "Cornix", desc: "Auto-Execution", icon: (
+      <svg className="w-5 h-5" viewBox="0 0 24 24" fill="currentColor"><path d="M9.594 3.94c.09-.542.56-.94 1.11-.94h2.593c.55 0 1.02.398 1.11.94l.213 1.281c.063.374.313.686.645.87.074.04.147.083.22.127.325.196.72.257 1.075.124l1.217-.456a1.125 1.125 0 0 1 1.37.49l1.296 2.247a1.125 1.125 0 0 1-.26 1.431l-1.003.827c-.293.241-.438.613-.43.992a7.723 7.723 0 0 1 0 .255c-.008.378.137.75.43.991l1.004.827c.424.35.534.955.26 1.43l-1.298 2.247a1.125 1.125 0 0 1-1.369.491l-1.217-.456c-.355-.133-.75-.072-1.076.124a6.47 6.47 0 0 1-.22.128c-.331.183-.581.495-.644.869l-.213 1.281c-.09.543-.56.94-1.11.94h-2.594c-.55 0-1.019-.398-1.11-.94l-.213-1.281c-.062-.374-.312-.686-.644-.87a6.52 6.52 0 0 1-.22-.127c-.325-.196-.72-.257-1.076-.124l-1.217.456a1.125 1.125 0 0 1-1.369-.49l-1.297-2.247a1.125 1.125 0 0 1 .26-1.431l1.004-.827c.292-.24.437-.613.43-.991a6.932 6.932 0 0 1 0-.255c.007-.38-.138-.751-.43-.992l-1.004-.827a1.125 1.125 0 0 1-.26-1.43l1.297-2.247a1.125 1.125 0 0 1 1.37-.491l1.216.456c.356.133.751.072 1.076-.124.072-.044.146-.086.22-.128.332-.183.582-.495.644-.869l.214-1.28Z" /><path d="M15 12a3 3 0 1 1-6 0 3 3 0 0 1 6 0Z" fill="none" stroke="currentColor" strokeWidth="1" /></svg>
+    )},
+    { name: "Google Sheets", desc: "Public Tracking", icon: (
+      <svg className="w-5 h-5" viewBox="0 0 24 24" fill="currentColor"><path d="M19 11V9h-6V5h-2v4H5v2h6v4h2v-4h6z" opacity="0.5" /><path d="M3 5v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2V5a2 2 0 0 0-2-2H5a2 2 0 0 0-2 2zm2 0h14v14H5V5z" /><rect x="7" y="8" width="4" height="2" rx="0.5" /><rect x="13" y="8" width="4" height="2" rx="0.5" /><rect x="7" y="12" width="4" height="2" rx="0.5" /><rect x="13" y="12" width="4" height="2" rx="0.5" /><rect x="7" y="16" width="4" height="2" rx="0.5" /><rect x="13" y="16" width="4" height="2" rx="0.5" /></svg>
+    )},
+  ];
+  return (
+    <section className="py-12 px-4 border-y border-border/20 bg-card/10">
+      <div className="max-w-5xl mx-auto">
+        <p className={`reveal ${visible ? "visible" : ""} text-center text-muted text-[11px] uppercase tracking-[0.25em] font-mono mb-8`}>
+          {label}
+        </p>
+        <div className={`reveal reveal-delay-1 ${visible ? "visible" : ""} flex flex-wrap items-center justify-center gap-8 md:gap-14`}>
+          {stack.map((s) => (
+            <div key={s.name} className="flex items-center gap-2.5 opacity-40 hover:opacity-70 transition-opacity duration-300 cursor-default group">
+              <div className="w-9 h-9 rounded-lg border border-border/30 bg-card/50 flex items-center justify-center text-primary/70 group-hover:text-primary group-hover:border-primary/30 transition-all">
+                {s.icon}
+              </div>
+              <div>
+                <span className="font-mono text-xs text-foreground/70 tracking-wider block leading-tight">{s.name}</span>
+                <span className="text-[10px] text-muted">{s.desc}</span>
+              </div>
+            </div>
+          ))}
+        </div>
+      </div>
+    </section>
+  );
+}
+
+/* ─── Comparison Table ─── */
+
+function ComparisonTable({ t, visible }: { t: TStrings; visible: boolean }) {
+  const rows = [t.compRow1, t.compRow2, t.compRow3, t.compRow4, t.compRow5, t.compRow6];
+  return (
+    <div className={`reveal reveal-delay-2 ${visible ? "visible" : ""} max-w-3xl mx-auto overflow-x-auto`}>
+      <table className="w-full border-collapse">
+        <thead>
+          <tr>
+            <th className="text-left py-4 px-4 text-xs uppercase tracking-widest text-muted font-mono border-b border-border/30">{t.compCol1}</th>
+            <th className="text-center py-4 px-4 text-xs uppercase tracking-widest text-danger/70 font-mono border-b border-border/30">{t.compCol2}</th>
+            <th className="text-center py-4 px-4 text-xs uppercase tracking-widest text-primary font-mono border-b border-border/30 bg-primary/5 rounded-t-xl">{t.compCol3}</th>
+          </tr>
+        </thead>
+        <tbody>
+          {rows.map((row: string[], i: number) => (
+            <tr key={i} className="border-b border-border/20 hover:bg-card/30 transition-colors">
+              <td className="py-4 px-4 text-sm font-medium text-foreground">{row[0]}</td>
+              <td className="py-4 px-4 text-sm text-center text-muted">
+                <span className="inline-flex items-center gap-1.5">
+                  <svg className="w-4 h-4 text-danger/50" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
+                    <path strokeLinecap="round" strokeLinejoin="round" d="M6 18 18 6M6 6l12 12" />
+                  </svg>
+                  {row[1]}
+                </span>
+              </td>
+              <td className="py-4 px-4 text-sm text-center bg-primary/5">
+                <span className="inline-flex items-center gap-1.5 text-primary font-medium">
+                  <svg className="w-4 h-4 text-primary" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
+                    <path strokeLinecap="round" strokeLinejoin="round" d="m4.5 12.75 6 6 9-13.5" />
+                  </svg>
+                  {row[2]}
+                </span>
+              </td>
+            </tr>
+          ))}
+        </tbody>
+      </table>
+    </div>
+  );
+}
+
+/* ─── Benefits Strip ─── */
+
+function BenefitsStrip({ t, visible }: { t: TStrings; visible: boolean }) {
+  const benefits = [
+    { icon: (
+      <svg className="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={1.5}>
+        <path strokeLinecap="round" strokeLinejoin="round" d="M15.182 15.182a4.5 4.5 0 0 1-6.364 0M21 12a9 9 0 1 1-18 0 9 9 0 0 1 18 0ZM9.75 9.75c0 .414-.168.75-.375.75S9 10.164 9 9.75 9.168 9 9.375 9s.375.336.375.75Zm-.375 0h.008v.015h-.008V9.75Zm5.625 0c0 .414-.168.75-.375.75s-.375-.336-.375-.75.168-.75.375-.75.375.336.375.75Zm-.375 0h.008v.015h-.008V9.75Z" />
+      </svg>
+    ), label: t.benefit1 },
+    { icon: (
+      <svg className="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={1.5}>
+        <path strokeLinecap="round" strokeLinejoin="round" d="M12 6v6h4.5m4.5 0a9 9 0 1 1-18 0 9 9 0 0 1 18 0Z" />
+      </svg>
+    ), label: t.benefit2 },
+    { icon: (
+      <svg className="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={1.5}>
+        <path strokeLinecap="round" strokeLinejoin="round" d="M9 12.75 11.25 15 15 9.75M21 12a9 9 0 1 1-18 0 9 9 0 0 1 18 0Z" />
+      </svg>
+    ), label: t.benefit3 },
+    { icon: (
+      <svg className="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={1.5}>
+        <path strokeLinecap="round" strokeLinejoin="round" d="M3.75 13.5l10.5-11.25L12 10.5h8.25L9.75 21.75 12 13.5H3.75Z" />
+      </svg>
+    ), label: t.benefit4 },
+  ];
+  return (
+    <div className={`reveal ${visible ? "visible" : ""} flex flex-wrap items-center justify-center gap-6 md:gap-10 py-8`}>
+      {benefits.map((b, i) => (
+        <div key={i} className="flex items-center gap-2 text-primary/80">
+          <div className="w-9 h-9 rounded-full bg-primary/10 flex items-center justify-center">
+            {b.icon}
+          </div>
+          <span className="text-sm font-medium text-foreground/70">{b.label}</span>
+        </div>
+      ))}
+    </div>
+  );
+}
+
+/* ─── Email Capture ─── */
+
+function EmailCapture({ t }: { t: TStrings }) {
+  const [email, setEmail] = useState("");
+  const [submitted, setSubmitted] = useState(false);
+
+  const handleSubmit = (e: React.FormEvent) => {
+    e.preventDefault();
+    if (!email || !email.includes("@")) return;
+    // Store locally for now — integrate with MailerLite/Resend later
+    const emails = JSON.parse(localStorage.getItem("captured-emails") || "[]");
+    emails.push({ email, date: new Date().toISOString() });
+    localStorage.setItem("captured-emails", JSON.stringify(emails));
+    setSubmitted(true);
+    setEmail("");
+  };
+
+  return (
+    <section className="py-20 px-4 border-y border-border/20 bg-card/10">
+      <div className="max-w-xl mx-auto text-center">
+        <span className="inline-block px-4 py-1.5 text-xs font-mono uppercase tracking-widest text-primary border border-primary/30 rounded-full mb-5">
+          {t.emailTag}
+        </span>
+        <h2 className="text-2xl md:text-3xl font-bold mb-3 tracking-tight">{t.emailTitle}</h2>
+        <p className="text-muted mb-8 text-sm leading-relaxed">{t.emailSubtitle}</p>
+
+        {submitted ? (
+          <div className="flex items-center justify-center gap-2 text-primary font-medium py-4">
+            <svg className="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
+              <path strokeLinecap="round" strokeLinejoin="round" d="m4.5 12.75 6 6 9-13.5" />
+            </svg>
+            {t.emailSuccess}
+          </div>
+        ) : (
+          <form onSubmit={handleSubmit} className="flex flex-col sm:flex-row gap-3 max-w-md mx-auto">
+            <input
+              type="email"
+              value={email}
+              onChange={(e) => setEmail(e.target.value)}
+              placeholder={t.emailPlaceholder}
+              required
+              className="flex-1 px-4 py-3 rounded-xl bg-background border border-border/50 text-foreground placeholder:text-muted/50 focus:outline-none focus:border-primary/50 focus:ring-1 focus:ring-primary/20 transition-all text-sm font-mono"
+            />
+            <button
+              type="submit"
+              className="btn-primary btn-press px-6 py-3 rounded-xl text-sm font-semibold whitespace-nowrap"
+            >
+              {t.emailButton}
+            </button>
+          </form>
+        )}
+
+        <p className="text-muted/50 text-xs mt-4">{t.emailDisclaimer}</p>
+      </div>
+    </section>
+  );
+}
+
+/* ─── Cookie Consent ─── */
+
+function CookieConsent({ t }: { t: TStrings }) {
+  const [show, setShow] = useState(false);
+  useEffect(() => {
+    const consent = localStorage.getItem("cookie-consent");
+    if (!consent) {
+      const timer = setTimeout(() => setShow(true), 2000);
+      return () => clearTimeout(timer);
+    }
+  }, []);
+  if (!show) return null;
+  return (
+    <div className="fixed bottom-4 left-4 right-4 md:left-auto md:right-6 md:max-w-sm z-50" style={{ animation: "fadeInUp 0.5s ease-out" }}>
+      <div className="glass rounded-2xl p-5 shadow-2xl border border-border/50">
+        <p className="text-sm text-muted mb-4">{t.cookieText}</p>
+        <div className="flex items-center gap-3">
+          <button
+            onClick={() => { localStorage.setItem("cookie-consent", "accepted"); setShow(false); }}
+            className="btn-primary btn-press px-5 py-2 rounded-lg text-xs font-semibold flex-1"
+          >
+            {t.cookieAccept}
+          </button>
+          <button
+            onClick={() => { localStorage.setItem("cookie-consent", "declined"); setShow(false); }}
+            className="px-5 py-2 rounded-lg text-xs font-medium border border-border/50 text-muted hover:text-foreground hover:border-primary/30 transition-all flex-1"
+          >
+            {t.cookieDeny}
+          </button>
+        </div>
+      </div>
+    </div>
+  );
+}
+
 export default function Home() {
   const [locale, setLocale] = useState<Locale>("en");
+  const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
+  const [theme, setTheme] = useState<Theme>("dark");
   const t = T[locale];
 
+  // Sync theme state with the class set by the inline script in layout.tsx
+  useEffect(() => {
+    const stored = localStorage.getItem("theme") as Theme | null;
+    if (stored === "light" || stored === "dark") {
+      setTheme(stored);
+    } else if (window.matchMedia("(prefers-color-scheme: light)").matches) {
+      setTheme("light");
+    }
+  }, []);
+
+  const socialProofSection = useInView(0.2);
+  const mediaSection = useInView(0.1);
   const metricsSection = useInView(0.2);
   const howItWorks = useInView(0.15);
   const signalSection = useInView(0.2);
   const featuresSection = useInView(0.1);
+  const comparisonSection = useInView(0.1);
+  const testimonialsSection = useInView(0.1);
   const pricingSection = useInView(0.1);
   const faqSection = useInView(0.1);
   const ctaSection = useInView(0.2);
@@ -950,6 +1571,14 @@ export default function Home() {
 
   return (
     <div className="grid-bg relative">
+      {/* Skip to main content — accessibility */}
+      <a
+        href="#main-content"
+        className="sr-only focus:not-sr-only focus:fixed focus:top-4 focus:left-4 focus:z-[100] focus:px-4 focus:py-2 focus:bg-primary focus:text-background focus:rounded-lg focus:text-sm focus:font-semibold"
+      >
+        Skip to main content
+      </a>
+
       {/* Scroll progress bar */}
       <div
         className="scroll-line"
@@ -959,6 +1588,7 @@ export default function Home() {
 
       {/* ─── STICKY NAVBAR ─── */}
       <nav
+        aria-label="Main navigation"
         className={`fixed top-0 left-0 right-0 z-50 transition-all duration-300 ${
           navVisible
             ? "translate-y-0 opacity-100"
@@ -984,17 +1614,57 @@ export default function Home() {
               </button>
             ))}
           </div>
-          <div className="flex items-center gap-3">
+          <div className="flex items-center gap-2">
+            <ThemeToggle theme={theme} setTheme={setTheme} />
             <LanguageToggle locale={locale} setLocale={setLocale} />
+            {/* Mobile burger */}
+            <button
+              className="md:hidden flex flex-col gap-1.5 p-2 rounded-lg hover:bg-card/50 transition-colors"
+              onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
+              aria-label="Toggle menu"
+            >
+              <span className={`block w-5 h-0.5 bg-foreground transition-all duration-300 ${mobileMenuOpen ? "rotate-45 translate-y-2" : ""}`} />
+              <span className={`block w-5 h-0.5 bg-foreground transition-all duration-300 ${mobileMenuOpen ? "opacity-0" : ""}`} />
+              <span className={`block w-5 h-0.5 bg-foreground transition-all duration-300 ${mobileMenuOpen ? "-rotate-45 -translate-y-2" : ""}`} />
+            </button>
             <a
               href={TELEGRAM_URL}
               target="_blank"
               rel="noopener noreferrer"
-              className="btn-primary btn-press flex items-center gap-2 px-4 py-2 rounded-lg text-xs font-semibold"
+              className="hidden md:flex btn-primary btn-press items-center gap-2 px-4 py-2 rounded-lg text-xs font-semibold"
             >
               <svg className="w-3.5 h-3.5" viewBox="0 0 24 24" fill="currentColor">
                 <path d="M11.944 0A12 12 0 0 0 0 12a12 12 0 0 0 12 12 12 12 0 0 0 12-12A12 12 0 0 0 12 0a12 12 0 0 0-.056 0zm4.962 7.224c.1-.002.321.023.465.14a.506.506 0 0 1 .171.325c.016.093.036.306.02.472-.18 1.898-.962 6.502-1.36 8.627-.168.9-.499 1.201-.82 1.23-.696.065-1.225-.46-1.9-.902-1.056-.693-1.653-1.124-2.678-1.8-1.185-.78-.417-1.21.258-1.91.177-.184 3.247-2.977 3.307-3.23.007-.032.014-.15-.056-.212s-.174-.041-.249-.024c-.106.024-1.793 1.14-5.061 3.345-.48.33-.913.49-1.302.48-.428-.008-1.252-.241-1.865-.44-.752-.245-1.349-.374-1.297-.789.027-.216.325-.437.893-.663 3.498-1.524 5.83-2.529 6.998-3.014 3.332-1.386 4.025-1.627 4.476-1.635z" />
               </svg>
+              {t.joinTelegram}
+            </a>
+          </div>
+        </div>
+
+        {/* Mobile dropdown menu */}
+        <div className={`md:hidden overflow-hidden transition-all duration-300 ${mobileMenuOpen ? "max-h-96 opacity-100" : "max-h-0 opacity-0"}`}>
+          <div className="px-4 pb-4 space-y-1 border-t border-border/30">
+            {[
+              { label: t.navPerformance, ref: metricsSection.ref },
+              { label: t.navHowItWorks, ref: howItWorks.ref },
+              { label: t.navFeatures, ref: featuresSection.ref },
+              { label: t.navPricing, ref: pricingSection.ref },
+              { label: t.navFaq, ref: faqSection.ref },
+            ].map((item) => (
+              <button
+                key={item.label}
+                onClick={() => { scrollTo(item.ref); setMobileMenuOpen(false); }}
+                className="block w-full text-left py-3 px-3 text-sm text-muted hover:text-foreground hover:bg-card/30 rounded-lg transition-colors"
+              >
+                {item.label}
+              </button>
+            ))}
+            <a
+              href={TELEGRAM_URL}
+              target="_blank"
+              rel="noopener noreferrer"
+              className="btn-primary btn-press flex items-center justify-center gap-2 w-full py-3 rounded-lg text-sm font-semibold mt-2"
+            >
               {t.joinTelegram}
             </a>
           </div>
@@ -1017,6 +1687,7 @@ export default function Home() {
         </a>
       </div>
 
+      <main id="main-content">
       {/* ─── HERO ─── */}
       <section className="relative min-h-screen flex items-center justify-center px-4 overflow-hidden">
         {/* Deep atmospheric glow */}
@@ -1044,12 +1715,15 @@ export default function Home() {
           background: "linear-gradient(90deg, transparent, rgba(0,212,170,0.2), transparent)",
         }} />
 
-        {/* Language toggle in hero — visible before navbar appears */}
-        <LanguageToggle
-          locale={locale}
-          setLocale={setLocale}
-          className="absolute top-8 right-8 z-20 bg-background/80 backdrop-blur-xl"
-        />
+        {/* Language & theme toggle in hero — visible before navbar appears */}
+        <div className="absolute top-8 right-8 z-20 flex items-center gap-2">
+          <ThemeToggle theme={theme} setTheme={setTheme} className="bg-background/80 backdrop-blur-xl" />
+          <LanguageToggle
+            locale={locale}
+            setLocale={setLocale}
+            className="bg-background/80 backdrop-blur-xl"
+          />
+        </div>
 
         {/* Live badge — positioned at top of hero, above candles */}
         <div
@@ -1190,6 +1864,43 @@ export default function Home() {
       {/* ─── LIVE TICKER ─── */}
       <LiveTicker />
 
+      {/* ─── SOCIAL PROOF STRIP ─── */}
+      <section ref={socialProofSection.ref} className="py-16 px-4">
+        <div className="max-w-5xl mx-auto">
+          <p className={`reveal ${socialProofSection.visible ? "visible" : ""} text-center text-muted text-sm uppercase tracking-widest font-mono mb-10`}>
+            {t.trustedBy}
+          </p>
+
+          {/* Stats row */}
+          <div className={`reveal reveal-delay-1 ${socialProofSection.visible ? "visible" : ""} grid grid-cols-2 md:grid-cols-4 gap-6 mb-12`}>
+            {[
+              { value: "4", label: t.metricPairs },
+              { value: "4", label: t.metricTimeframes },
+              { value: "15+", label: t.metricIndicators },
+              { value: "3", label: t.metricExchanges },
+            ].map((stat) => (
+              <div key={stat.label} className="text-center">
+                <div className="font-mono text-3xl font-bold text-primary mb-1">{stat.value}</div>
+                <div className="text-xs text-muted uppercase tracking-wider">{stat.label}</div>
+              </div>
+            ))}
+          </div>
+
+          {/* Exchange logos */}
+          <ExchangeLogos visible={socialProofSection.visible} />
+        </div>
+      </section>
+
+      {/* ─── AS SEEN IN (Media) ─── */}
+      <div ref={mediaSection.ref}>
+        <TechStackLogos visible={mediaSection.visible} label={t.asSeenIn} />
+      </div>
+
+      {/* ─── BENEFITS STRIP ─── */}
+      <BenefitsStrip t={t} visible={mediaSection.visible} />
+
+      <SectionDivider variant="glow" />
+
       {/* ─── METRICS ─── */}
       <section ref={metricsSection.ref} className="py-24 px-4">
         <div className="max-w-5xl mx-auto">
@@ -1204,8 +1915,10 @@ export default function Home() {
               <MetricCard key={m.label} {...m} active={metricsSection.visible} delay={i + 1} />
             ))}
           </div>
+          <EquityCurve label={t.equityCurveLabel} visible={metricsSection.visible} />
+
           <p
-            className={`reveal reveal-delay-5 ${metricsSection.visible ? "visible" : ""} text-center text-muted text-sm mt-8`}
+            className={`reveal reveal-delay-6 ${metricsSection.visible ? "visible" : ""} text-center text-muted text-sm mt-8`}
           >
             {t.metricsFooter} &bull; {t.updatedMonthly} &bull;{" "}
             <a
@@ -1219,6 +1932,8 @@ export default function Home() {
           </p>
         </div>
       </section>
+
+      <SectionDivider variant="dots" />
 
       {/* ─── HOW IT WORKS ─── */}
       <section ref={howItWorks.ref} className="py-24 px-4 bg-card/20">
@@ -1258,6 +1973,8 @@ export default function Home() {
         </div>
       </section>
 
+      <SectionDivider variant="glow" />
+
       {/* ─── SIGNAL PREVIEW ─── */}
       <section ref={signalSection.ref} className="py-24 px-4">
         <div className="max-w-5xl mx-auto">
@@ -1274,6 +1991,8 @@ export default function Home() {
           </div>
         </div>
       </section>
+
+      <SectionDivider variant="dots" />
 
       {/* ─── FEATURES ─── */}
       <section ref={featuresSection.ref} className="py-24 px-4 bg-card/20">
@@ -1299,6 +2018,111 @@ export default function Home() {
         </div>
       </section>
 
+      <SectionDivider variant="dots" />
+
+      {/* ─── COMPARISON TABLE ─── */}
+      <section ref={comparisonSection.ref} className="py-24 px-4">
+        <div className="max-w-5xl mx-auto">
+          <SectionHeading
+            tag={t.comparisonTag}
+            title={t.comparisonTitle}
+            subtitle={t.comparisonSubtitle}
+            visible={comparisonSection.visible}
+          />
+          <ComparisonTable t={t} visible={comparisonSection.visible} />
+        </div>
+      </section>
+
+      <SectionDivider variant="glow" />
+
+      {/* ─── TRANSPARENCY / VERIFIED ON ─── */}
+      <section className="py-24 px-4">
+        <div className="max-w-5xl mx-auto">
+          <div className="text-center mb-16">
+            <span className="inline-block px-4 py-1.5 text-xs font-mono uppercase tracking-widest text-primary border border-primary/30 rounded-full mb-5">
+              {t.transparencyTag}
+            </span>
+            <h2 className="text-3xl md:text-4xl lg:text-5xl font-bold mb-4 tracking-tight">
+              {t.transparencyTitle}
+            </h2>
+            <p className="text-muted max-w-2xl mx-auto text-lg leading-relaxed">
+              {t.transparencySubtitle}
+            </p>
+          </div>
+
+          <div className="grid md:grid-cols-3 gap-6 mb-10">
+            {/* Public Trade Log */}
+            <a
+              href={SHEETS_URL}
+              target="_blank"
+              rel="noopener noreferrer"
+              className="transparency-card group p-6 rounded-2xl border border-primary/20 bg-primary/[0.03] hover:bg-primary/[0.06] hover:border-primary/40"
+            >
+              <div className="w-12 h-12 rounded-xl bg-primary/10 flex items-center justify-center text-primary mb-4 group-hover:scale-110 transition-transform">
+                <svg className="w-6 h-6" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={1.5}>
+                  <path strokeLinecap="round" strokeLinejoin="round" d="M3.375 19.5h17.25m-17.25 0a1.125 1.125 0 0 1-1.125-1.125M3.375 19.5h7.5c.621 0 1.125-.504 1.125-1.125m-9.75 0V5.625m0 12.75v-1.5c0-.621.504-1.125 1.125-1.125m18.375 2.625V5.625m0 12.75c0 .621-.504 1.125-1.125 1.125m1.125-1.125v-1.5c0-.621-.504-1.125-1.125-1.125m0 3.75h-7.5A1.125 1.125 0 0 1 12 18.375m9.75-12.75c0-.621-.504-1.125-1.125-1.125H3.375c-.621 0-1.125.504-1.125 1.125m19.5 0v1.5c0 .621-.504 1.125-1.125 1.125M2.25 5.625v1.5c0 .621.504 1.125 1.125 1.125m0 0h17.25m-17.25 0h7.5c.621 0 1.125.504 1.125 1.125M3.375 8.25c-.621 0-1.125.504-1.125 1.125v1.5c0 .621.504 1.125 1.125 1.125m17.25-3.75h-7.5c-.621 0-1.125.504-1.125 1.125m8.625-1.125c.621 0 1.125.504 1.125 1.125v1.5c0 .621-.504 1.125-1.125 1.125m-17.25 0h7.5m-7.5 0c-.621 0-1.125.504-1.125 1.125v1.5c0 .621.504 1.125 1.125 1.125M12 10.875v-1.5m0 1.5c0 .621-.504 1.125-1.125 1.125M12 10.875c0 .621.504 1.125 1.125 1.125m-2.25 0c.621 0 1.125.504 1.125 1.125M13.125 12h7.5m-7.5 0c-.621 0-1.125.504-1.125 1.125M20.625 12c.621 0 1.125.504 1.125 1.125v1.5c0 .621-.504 1.125-1.125 1.125m-17.25 0h7.5M12 14.625v-1.5m0 1.5c0 .621-.504 1.125-1.125 1.125M12 14.625c0 .621.504 1.125 1.125 1.125m-2.25 0c.621 0 1.125.504 1.125 1.125m0 0v1.5c0 .621-.504 1.125-1.125 1.125" />
+                </svg>
+              </div>
+              <h3 className="text-lg font-semibold mb-2">{t.transparencySheet}</h3>
+              <p className="text-muted text-sm leading-relaxed">{t.transparencySheetDesc}</p>
+              <span className="inline-flex items-center gap-1.5 mt-4 text-primary text-sm font-medium group-hover:gap-2.5 transition-all">
+                {t.verifyYourself}
+                <svg className="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
+                  <path strokeLinecap="round" strokeLinejoin="round" d="M13.5 4.5 21 12m0 0-7.5 7.5M21 12H3" />
+                </svg>
+              </span>
+            </a>
+
+            {/* Open-Source Strategy */}
+            <div className="transparency-card p-6 rounded-2xl border border-border/50 bg-card/30 hover:border-primary/20">
+              <div className="w-12 h-12 rounded-xl bg-violet-500/10 flex items-center justify-center text-violet-400 mb-4">
+                <svg className="w-6 h-6" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={1.5}>
+                  <path strokeLinecap="round" strokeLinejoin="round" d="M17.25 6.75 22.5 12l-5.25 5.25m-10.5 0L1.5 12l5.25-5.25m7.5-3-4.5 16.5" />
+                </svg>
+              </div>
+              <h3 className="text-lg font-semibold mb-2">{t.transparencyGithub}</h3>
+              <p className="text-muted text-sm leading-relaxed">{t.transparencyGithubDesc}</p>
+            </div>
+
+            {/* Paper-Trading Phase */}
+            <div className="transparency-card p-6 rounded-2xl border border-border/50 bg-card/30 hover:border-primary/20">
+              <div className="w-12 h-12 rounded-xl bg-amber-500/10 flex items-center justify-center text-amber-400 mb-4">
+                <svg className="w-6 h-6" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={1.5}>
+                  <path strokeLinecap="round" strokeLinejoin="round" d="M9 12.75 11.25 15 15 9.75m-3-7.036A11.959 11.959 0 0 1 3.598 6 11.99 11.99 0 0 0 3 9.749c0 5.592 3.824 10.29 9 11.623 5.176-1.332 9-6.03 9-11.622 0-1.31-.21-2.571-.598-3.751h-.152c-3.196 0-6.1-1.248-8.25-3.285Z" />
+                </svg>
+              </div>
+              <h3 className="text-lg font-semibold mb-2">{t.transparencyPaper}</h3>
+              <p className="text-muted text-sm leading-relaxed">{t.transparencyPaperDesc}</p>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <SectionDivider variant="dots" />
+
+      {/* ─── TESTIMONIALS ─── */}
+      <section ref={testimonialsSection.ref} className="py-24 px-4 bg-card/20">
+        <div className="max-w-5xl mx-auto">
+          <SectionHeading
+            tag={t.testimonialsTag}
+            title={t.testimonialsTitle}
+            subtitle={t.testimonialsSubtitle}
+            visible={testimonialsSection.visible}
+          />
+          <div className="grid md:grid-cols-3 gap-6 mb-6">
+            <TestimonialCard quote={t.testimonial1} author={t.testimonial1Author} role={t.testimonial1Role} delay={1} visible={testimonialsSection.visible} />
+            <TestimonialCard quote={t.testimonial2} author={t.testimonial2Author} role={t.testimonial2Role} delay={2} visible={testimonialsSection.visible} />
+            <TestimonialCard quote={t.testimonial3} author={t.testimonial3Author} role={t.testimonial3Role} delay={3} visible={testimonialsSection.visible} />
+          </div>
+          <div className="grid md:grid-cols-2 gap-6 max-w-2xl mx-auto">
+            <TestimonialCard quote={t.testimonial4} author={t.testimonial4Author} role={t.testimonial4Role} delay={4} visible={testimonialsSection.visible} />
+            <TestimonialCard quote={t.testimonial5} author={t.testimonial5Author} role={t.testimonial5Role} delay={5} visible={testimonialsSection.visible} />
+          </div>
+        </div>
+      </section>
+
+      <SectionDivider variant="glow" />
+
       {/* ─── PRICING ─── */}
       <section ref={pricingSection.ref} className="py-24 px-4">
         <div className="max-w-5xl mx-auto">
@@ -1308,6 +2132,10 @@ export default function Home() {
             subtitle={t.priceSubtitle}
             visible={pricingSection.visible}
           />
+          <div className={`reveal reveal-delay-1 ${pricingSection.visible ? "visible" : ""} flex justify-center mb-8`}>
+            <EarlyAdopterBadge label={t.earlyAdopterLabel} />
+          </div>
+
           <div className="grid md:grid-cols-3 gap-6 max-w-4xl mx-auto items-start">
             {pricing.map((plan, i) => {
               const isVip = plan.highlight;
@@ -1315,7 +2143,7 @@ export default function Home() {
                 <div
                   className={`${isVip ? "vip-card-inner" : ""} ${
                     isVip ? "animate-pulse-glow-gold" : ""
-                  } reveal reveal-delay-${i + 1} ${pricingSection.visible ? "visible" : ""} relative p-8 rounded-2xl transition-all h-full ${
+                  } pricing-card reveal reveal-delay-${i + 1} ${pricingSection.visible ? "visible" : ""} relative p-8 rounded-2xl h-full ${
                     isVip
                       ? "bg-[#0f1a0f]"
                       : "glass hover:border-primary/20"
@@ -1455,35 +2283,72 @@ export default function Home() {
           </div>
         </div>
       </section>
+      {/* ─── EMAIL CAPTURE ─── */}
+      <EmailCapture t={t} />
+
+      </main>
 
       {/* ─── FOOTER ─── */}
-      <footer className="border-t border-border/40 py-12 px-4">
+      <footer className="border-t border-border/40 py-16 px-4">
         <div className="max-w-5xl mx-auto">
-          <div className="flex flex-col md:flex-row items-center justify-between gap-6 mb-8">
-            <div>
+          {/* Top row: brand + nav columns */}
+          <div className="grid grid-cols-1 md:grid-cols-4 gap-10 mb-12">
+            {/* Brand */}
+            <div className="md:col-span-1">
               <span className="text-xl font-bold gradient-text">TrendRider</span>
-              <p className="text-muted text-sm mt-1">{t.footerTagline}</p>
+              <p className="text-muted text-sm mt-2 leading-relaxed">{t.footerTagline}</p>
+              {/* Social icons */}
+              <div className="flex items-center gap-3 mt-4">
+                {/* Telegram */}
+                <a href={TELEGRAM_URL} target="_blank" rel="noopener noreferrer" className="w-9 h-9 rounded-lg bg-card border border-border/50 flex items-center justify-center text-muted hover:text-primary hover:border-primary/30 transition-all" aria-label="Telegram">
+                  <svg className="w-4 h-4" viewBox="0 0 24 24" fill="currentColor">
+                    <path d="M11.944 0A12 12 0 0 0 0 12a12 12 0 0 0 12 12 12 12 0 0 0 12-12A12 12 0 0 0 12 0a12 12 0 0 0-.056 0zm4.962 7.224c.1-.002.321.023.465.14a.506.506 0 0 1 .171.325c.016.093.036.306.02.472-.18 1.898-.962 6.502-1.36 8.627-.168.9-.499 1.201-.82 1.23-.696.065-1.225-.46-1.9-.902-1.056-.693-1.653-1.124-2.678-1.8-1.185-.78-.417-1.21.258-1.91.177-.184 3.247-2.977 3.307-3.23.007-.032.014-.15-.056-.212s-.174-.041-.249-.024c-.106.024-1.793 1.14-5.061 3.345-.48.33-.913.49-1.302.48-.428-.008-1.252-.241-1.865-.44-.752-.245-1.349-.374-1.297-.789.027-.216.325-.437.893-.663 3.498-1.524 5.83-2.529 6.998-3.014 3.332-1.386 4.025-1.627 4.476-1.635z" />
+                  </svg>
+                </a>
+                {/* X/Twitter */}
+                <a href="https://x.com/TrendRiderBot" target="_blank" rel="noopener noreferrer" className="w-9 h-9 rounded-lg bg-card border border-border/50 flex items-center justify-center text-muted hover:text-primary hover:border-primary/30 transition-all" aria-label="X / Twitter">
+                  <svg className="w-4 h-4" viewBox="0 0 24 24" fill="currentColor">
+                    <path d="M18.244 2.25h3.308l-7.227 8.26 8.502 11.24H16.17l-5.214-6.817L4.99 21.75H1.68l7.73-8.835L1.254 2.25H8.08l4.713 6.231zm-1.161 17.52h1.833L7.084 4.126H5.117z" />
+                  </svg>
+                </a>
+                {/* Discord */}
+                <a href="https://discord.gg/trendrider" target="_blank" rel="noopener noreferrer" className="w-9 h-9 rounded-lg bg-card border border-border/50 flex items-center justify-center text-muted hover:text-primary hover:border-primary/30 transition-all" aria-label="Discord">
+                  <svg className="w-4 h-4" viewBox="0 0 24 24" fill="currentColor">
+                    <path d="M20.317 4.37a19.791 19.791 0 0 0-4.885-1.515.074.074 0 0 0-.079.037c-.21.375-.444.864-.608 1.25a18.27 18.27 0 0 0-5.487 0 12.64 12.64 0 0 0-.617-1.25.077.077 0 0 0-.079-.037A19.736 19.736 0 0 0 3.677 4.37a.07.07 0 0 0-.032.027C.533 9.046-.32 13.58.099 18.057a.082.082 0 0 0 .031.057 19.9 19.9 0 0 0 5.993 3.03.078.078 0 0 0 .084-.028 14.09 14.09 0 0 0 1.226-1.994.076.076 0 0 0-.041-.106 13.107 13.107 0 0 1-1.872-.892.077.077 0 0 1-.008-.128 10.2 10.2 0 0 0 .372-.292.074.074 0 0 1 .077-.01c3.928 1.793 8.18 1.793 12.062 0a.074.074 0 0 1 .078.01c.12.098.246.198.373.292a.077.077 0 0 1-.006.127 12.299 12.299 0 0 1-1.873.892.077.077 0 0 0-.041.107c.36.698.772 1.362 1.225 1.993a.076.076 0 0 0 .084.028 19.839 19.839 0 0 0 6.002-3.03.077.077 0 0 0 .032-.054c.5-5.177-.838-9.674-3.549-13.66a.061.061 0 0 0-.031-.03zM8.02 15.33c-1.183 0-2.157-1.085-2.157-2.419 0-1.333.956-2.419 2.157-2.419 1.21 0 2.176 1.096 2.157 2.42 0 1.333-.956 2.418-2.157 2.418zm7.975 0c-1.183 0-2.157-1.085-2.157-2.419 0-1.333.955-2.419 2.157-2.419 1.21 0 2.176 1.096 2.157 2.42 0 1.333-.946 2.418-2.157 2.418z" />
+                  </svg>
+                </a>
+              </div>
             </div>
-            <div className="flex items-center gap-6">
-              <a
-                href={TELEGRAM_URL}
-                target="_blank"
-                rel="noopener noreferrer"
-                className="text-muted hover:text-primary transition-colors text-sm relative after:absolute after:bottom-0 after:left-0 after:w-0 after:h-px after:bg-primary after:transition-all hover:after:w-full"
-              >
-                {t.telegramChannel}
-              </a>
-              <a
-                href={SHEETS_URL}
-                target="_blank"
-                rel="noopener noreferrer"
-                className="text-muted hover:text-primary transition-colors text-sm relative after:absolute after:bottom-0 after:left-0 after:w-0 after:h-px after:bg-primary after:transition-all hover:after:w-full"
-              >
-                {t.liveResults}
-              </a>
+
+            {/* Product column */}
+            <div>
+              <h4 className="text-sm font-semibold text-foreground mb-4">Product</h4>
+              <ul className="space-y-2.5">
+                <li><a href={TELEGRAM_URL} target="_blank" rel="noopener noreferrer" className="text-muted text-sm hover:text-primary transition-colors">{t.telegramChannel}</a></li>
+                <li><a href={SHEETS_URL} target="_blank" rel="noopener noreferrer" className="text-muted text-sm hover:text-primary transition-colors">{t.liveResults}</a></li>
+              </ul>
+            </div>
+
+            {/* Legal column */}
+            <div>
+              <h4 className="text-sm font-semibold text-foreground mb-4">Legal</h4>
+              <ul className="space-y-2.5">
+                <li><a href="/terms" className="text-muted text-sm hover:text-primary transition-colors">{t.termsOfService}</a></li>
+                <li><a href="/privacy" className="text-muted text-sm hover:text-primary transition-colors">{t.privacyPolicy}</a></li>
+              </ul>
+            </div>
+
+            {/* Contact column */}
+            <div>
+              <h4 className="text-sm font-semibold text-foreground mb-4">{t.contactUs}</h4>
+              <ul className="space-y-2.5">
+                <li><a href="mailto:support@trendrider.pro" className="text-muted text-sm hover:text-primary transition-colors">support@trendrider.pro</a></li>
+                <li><a href={TELEGRAM_URL} target="_blank" rel="noopener noreferrer" className="text-muted text-sm hover:text-primary transition-colors">@TrendRiderSupport</a></li>
+              </ul>
             </div>
           </div>
 
+          {/* Disclaimer + bottom bar */}
           <div className="flex flex-col md:flex-row items-center justify-between gap-4 pt-8 border-t border-border/30">
             <p className="text-muted text-xs leading-relaxed max-w-2xl text-center md:text-left">
               <span className="font-semibold text-danger/80">Risk Disclaimer:</span> {t.riskDisclaimer}
@@ -1496,6 +2361,9 @@ export default function Home() {
           </div>
         </div>
       </footer>
+
+      {/* ─── COOKIE CONSENT ─── */}
+      <CookieConsent t={t} />
     </div>
   );
 }

@@ -14,10 +14,21 @@
   --font-mono: var(--font-jetbrains);
 }
 
+/* ─── Light mode overrides ─── */
+html.light {
+  --color-background: #F8FAFC;
+  --color-foreground: #1A202C;
+  --color-secondary: #EDF2F7;
+  --color-muted: #64748B;
+  --color-card: #FFFFFF;
+  --color-border: #E2E8F0;
+}
+
 /* ─── Base ─── */
 body {
   background: var(--color-background);
   color: var(--color-foreground);
+  transition: background-color 0.3s ease, color 0.3s ease;
 }
 
 html {
@@ -214,6 +225,16 @@ html {
   background-size: 60px 60px;
 }
 
+html.light .grid-bg {
+  background-image:
+    linear-gradient(rgba(0, 212, 170, 0.06) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(0, 212, 170, 0.06) 1px, transparent 1px);
+}
+
+html.light .noise-overlay::before {
+  opacity: 0.015;
+}
+
 .noise-overlay::before {
   content: '';
   position: fixed;
@@ -230,6 +251,11 @@ html {
   border: 1px solid #30363D;
 }
 
+html.light .signal-card {
+  background: linear-gradient(145deg, #FFFFFF 0%, #F1F5F9 100%);
+  border: 1px solid #E2E8F0;
+}
+
 /* ─── Glassmorphism ─── */
 
 .glass {
@@ -237,6 +263,11 @@ html {
   backdrop-filter: blur(20px);
   -webkit-backdrop-filter: blur(20px);
   border: 1px solid rgba(48, 54, 61, 0.8);
+}
+
+html.light .glass {
+  background: rgba(255, 255, 255, 0.7);
+  border: 1px solid rgba(226, 232, 240, 0.8);
 }
 
 .glass-primary {
@@ -280,6 +311,14 @@ html {
   border-radius: calc(1rem - 1px);
   background: #0D1117;
   z-index: 1;
+}
+
+html.light .vip-card-wrapper::after {
+  background: #FFFFFF;
+}
+
+html.light .vip-card-inner {
+  background: #FEFFF8 !important;
 }
 
 .vip-card-inner {
@@ -340,6 +379,37 @@ html {
   border-style: solid;
   border-width: 0 8px 10px 0;
   border-color: transparent #1e2c3a transparent transparent;
+}
+
+html.light .tg-bubble {
+  background: #E8F0FE;
+}
+
+html.light .tg-bubble::before {
+  border-color: transparent #E8F0FE transparent transparent;
+}
+
+/* ─── Telegram chat card ─── */
+
+.tg-header {
+  background: #17212b;
+}
+
+.tg-body {
+  background: #0e1621;
+}
+
+html.light .tg-header {
+  background: #E8EDF2;
+  border-color: rgba(0, 0, 0, 0.06);
+}
+
+html.light .tg-body {
+  background: #F0F4F8;
+}
+
+html.light .tg-header .text-white {
+  color: #1A202C;
 }
 
 /* ─── Typing animation ─── */
@@ -412,6 +482,15 @@ html {
   box-shadow: 0 8px 32px rgba(0, 0, 0, 0.4), 0 0 0 1px rgba(0, 212, 170, 0.1);
   transform: translateY(-3px);
   background: rgba(0, 212, 170, 0.03) !important;
+}
+
+html.light .feature-card:hover {
+  box-shadow: 0 8px 32px rgba(0, 0, 0, 0.08), 0 0 0 1px rgba(0, 212, 170, 0.15);
+  background: rgba(0, 212, 170, 0.05) !important;
+}
+
+html.light .metric-card:hover {
+  box-shadow: 0 0 40px rgba(0, 212, 170, 0.12), 0 0 0 1px rgba(0, 212, 170, 0.2);
 }
 
 /* ─── CTA section glow ─── */
@@ -509,9 +588,9 @@ html {
   50% { transform: translate(35px, 35px) scale(1.15); }
 }
 
-.animate-orb-1 { animation: orbFloat1 15s ease-in-out infinite; }
-.animate-orb-2 { animation: orbFloat2 20s ease-in-out infinite; }
-.animate-orb-3 { animation: orbFloat3 12s ease-in-out infinite; }
+.animate-orb-1 { animation: orbFloat1 15s ease-in-out infinite; contain: strict; }
+.animate-orb-2 { animation: orbFloat2 20s ease-in-out infinite; contain: strict; }
+.animate-orb-3 { animation: orbFloat3 12s ease-in-out infinite; contain: strict; }
 
 /* ─── Scan line animation ─── */
 
@@ -524,4 +603,110 @@ html {
 
 .scan-line-animate {
   animation: scanLine 8s ease-in-out infinite;
+  will-change: top, opacity;
+}
+
+/* ─── Performance optimizations ─── */
+
+.vip-card-wrapper::before {
+  will-change: transform;
+}
+
+.animate-orb-1,
+.animate-orb-2,
+.animate-orb-3 {
+  will-change: transform;
+}
+
+.marquee-track {
+  will-change: transform;
+}
+
+.chart-candle {
+  will-change: opacity, transform;
+}
+
+/* ─── Pricing card hover ─── */
+
+.pricing-card {
+  transition: transform 0.3s ease, box-shadow 0.3s ease, border-color 0.3s ease;
+}
+
+.pricing-card:hover {
+  transform: translateY(-4px);
+  box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3);
+}
+
+html.light .pricing-card:hover {
+  box-shadow: 0 20px 60px rgba(0, 0, 0, 0.08);
+}
+
+/* ─── Transparency card hover ─── */
+
+.transparency-card {
+  transition: transform 0.3s ease, box-shadow 0.3s ease, border-color 0.3s ease;
+}
+
+.transparency-card:hover {
+  transform: translateY(-3px);
+  box-shadow: 0 12px 40px rgba(0, 212, 170, 0.15);
+}
+
+/* ─── Testimonial card shimmer ─── */
+
+.testimonial-card {
+  position: relative;
+  overflow: hidden;
+}
+
+.testimonial-card::after {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: -100%;
+  width: 100%;
+  height: 100%;
+  background: linear-gradient(90deg, transparent, rgba(0, 212, 170, 0.03), transparent);
+  transition: left 0.6s ease;
+  pointer-events: none;
+}
+
+.testimonial-card:hover::after {
+  left: 100%;
+}
+
+/* ─── Equity curve glow ─── */
+
+.equity-glow {
+  position: relative;
+}
+
+.equity-glow::before {
+  content: '';
+  position: absolute;
+  inset: -1px;
+  background: linear-gradient(135deg, rgba(0, 212, 170, 0.1), transparent, rgba(0, 212, 170, 0.05));
+  border-radius: inherit;
+  z-index: -1;
+  opacity: 0;
+  transition: opacity 0.3s ease;
+}
+
+.equity-glow:hover::before {
+  opacity: 1;
+}
+
+/* Reduce motion for users who prefer it */
+@media (prefers-reduced-motion: reduce) {
+  *, *::before, *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+  }
+  .marquee-track {
+    animation: none !important;
+  }
+  .scan-line-animate {
+    animation: none !important;
+  }
 }
