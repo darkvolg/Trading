@@ -1,0 +1,16 @@
+<svg width="32" height="32" viewBox="0 0 32 32" fill="none" xmlns="http://www.w3.org/2000/svg">
+  <rect width="32" height="32" rx="8" fill="#0D1117"/>
+  <rect x="12" y="6" width="8" height="16" rx="1.5" fill="#00D4AA"/>
+  <line x1="16" y1="3" x2="16" y2="6" stroke="#00D4AA" stroke-width="2" stroke-linecap="round"/>
+  <line x1="16" y1="22" x2="16" y2="27" stroke="#00D4AA" stroke-width="2" stroke-linecap="round"/>
+  <rect x="12" y="6" width="8" height="16" rx="1.5" fill="#00D4AA" opacity="0.3">
+    <animate attributeName="opacity" values="0.3;0.6;0.3" dur="3s" repeatCount="indefinite"/>
+  </rect>
+  <!-- Small accent candle -->
+  <rect x="5" y="14" width="4" height="8" rx="1" fill="#00D4AA" opacity="0.4"/>
+  <line x1="7" y1="12" x2="7" y2="14" stroke="#00D4AA" stroke-width="1.5" opacity="0.3" stroke-linecap="round"/>
+  <line x1="7" y1="22" x2="7" y2="25" stroke="#00D4AA" stroke-width="1.5" opacity="0.3" stroke-linecap="round"/>
+  <rect x="23" y="10" width="4" height="10" rx="1" fill="#FFD700" opacity="0.4"/>
+  <line x1="25" y1="7" x2="25" y2="10" stroke="#FFD700" stroke-width="1.5" opacity="0.3" stroke-linecap="round"/>
+  <line x1="25" y1="20" x2="25" y2="23" stroke="#FFD700" stroke-width="1.5" opacity="0.3" stroke-linecap="round"/>
+</svg>
