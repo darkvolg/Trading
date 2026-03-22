@@ -19,8 +19,18 @@ glossy-infinity-*.json
 # Downloaded candle data (large)
 FreqtradeBot/user_data/data/
 
-# Hyperopt lock
+# Hyperopt lock & results
 FreqtradeBot/user_data/hyperopt.lock
+FreqtradeBot/user_data/hyperopt_results/*.fthypt
+FreqtradeBot/user_data/hyperopt_results/*.pkl
+
+# Backtest results (large binary archives)
+FreqtradeBot/user_data/backtest_results/*.zip
+FreqtradeBot/user_data/backtest_results/*.meta.json
+
+# Cache & DB files
+FreqtradeBot/user_data/fng_cache.json
+FreqtradeBot/user_data/price_alerts.db
 
 # Misc
 *.jpg
