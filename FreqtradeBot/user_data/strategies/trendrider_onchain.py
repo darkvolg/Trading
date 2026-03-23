@@ -7,7 +7,7 @@ import os
 import time
 import logging
 import requests
-from datetime import datetime
+from datetime import datetime, timezone
 from pathlib import Path
 
 from trendrider_config import FNG_CACHE_TTL, FUNDING_EXTREME_THRESHOLD
@@ -33,7 +33,9 @@ class FearGreedFetcher:
                 with open(self.cache_file, 'r') as f:
                     cached = json.load(f)
                 cached_time = datetime.fromisoformat(cached.get('timestamp', '2000-01-01'))
-                if (datetime.now() - cached_time).total_seconds() < self.cache_ttl:
+                if cached_time.tzinfo is None:
+                    cached_time = cached_time.replace(tzinfo=timezone.utc)
+                if (datetime.now(timezone.utc) - cached_time).total_seconds() < self.cache_ttl:
                     return cached.get('data', {})
             except Exception:
                 pass
@@ -51,7 +53,7 @@ class FearGreedFetcher:
             for item in data_list:
                 ts = int(item.get('timestamp', 0))
                 val = int(item.get('value', 50))
-                date_str = datetime.utcfromtimestamp(ts).strftime('%Y-%m-%d')
+                date_str = datetime.fromtimestamp(ts, tz=timezone.utc).strftime('%Y-%m-%d')
                 fng_map[date_str] = val
 
             # Save cache
@@ -59,7 +61,7 @@ class FearGreedFetcher:
                 try:
                     with open(self.cache_file, 'w') as f:
                         json.dump({
-                            'timestamp': datetime.now().isoformat(),
+                            'timestamp': datetime.now(timezone.utc).isoformat(),
                             'data': fng_map
                         }, f)
                 except Exception:
