@@ -101,8 +101,8 @@ export const getPricing = (t: TStrings, _locale?: string) => [
     period: t.perMonth,
     features: [t.basicF1, t.basicF2, t.basicF3, t.basicF4],
     cta: t.subscribe,
-    href: "https://buy.stripe.com/test_fZu28sdu5eFacEfclo0x200",
-    cryptoHref: TELEGRAM_BOT_URL + "?start=pay_basic",
+    href: TELEGRAM_BOT_URL + "?start=pay_basic",
+    cryptoHref: "",
     highlight: true,
   },
   {
@@ -111,8 +111,8 @@ export const getPricing = (t: TStrings, _locale?: string) => [
     period: t.perMonth,
     features: [t.vipF1, t.vipF2, t.vipF3, t.vipF4, t.vipF5],
     cta: t.getVip,
-    href: "https://buy.stripe.com/test_4gMfZi9dPfJe33Fadg0x201",
-    cryptoHref: TELEGRAM_BOT_URL + "?start=pay_vip",
+    href: TELEGRAM_BOT_URL + "?start=pay_vip",
+    cryptoHref: "",
     highlight: false,
   },
 ];
