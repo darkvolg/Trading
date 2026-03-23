@@ -1,5 +1,5 @@
 """
-TrendRider Public v2.8.0 — Strat Ninja Edition
+TrendRider Public v2.9.0 — Strat Ninja Edition
 
 Philosophy: Ride established trends with WIDE stoploss.
 Key insight: crypto swings 2-4% per hour. Stoploss must be >= 5-6%.
@@ -146,6 +146,9 @@ class TrendRiderStrategy(IStrategy):
         dataframe["bb_upper"] = bb["upperband"]
         dataframe["bb_middle"] = bb["middleband"]
         dataframe["bb_lower"] = bb["lowerband"]
+        # BB width for volatility regime
+        dataframe["bb_width"] = (dataframe["bb_upper"] - dataframe["bb_lower"]) / (dataframe["bb_middle"] + 1e-10)
+        dataframe["bb_width_sma"] = ta.SMA(dataframe["bb_width"], timeperiod=50)
 
         # Volume (fix #4: epsilon guard against division by zero)
         dataframe["volume_ema"] = ta.EMA(dataframe["volume"], timeperiod=20)

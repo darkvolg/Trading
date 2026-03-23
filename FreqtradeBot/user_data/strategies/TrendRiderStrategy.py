@@ -15,20 +15,34 @@ v2.0 additions:
 - Multi-timeframe 15m + Daily confirmation
 - Fear & Greed Index integration
 - Persistent price alerts (SQLite)
+
+Modular architecture: config, database, on-chain, confidence, messaging
+are extracted into separate modules (trendrider_*.py).
 """
 
-import json
-import os
-import sqlite3
-import time
 import talib.abstract as ta
-from datetime import datetime, timedelta, timezone
+from datetime import datetime
 from freqtrade.strategy import IStrategy, IntParameter, DecimalParameter, merge_informative_pair
 from pandas import DataFrame
 from functools import reduce
-from pathlib import Path
 import logging
-import requests
+
+from trendrider_config import (
+    SETUP_NAMES, ALERT_COOLDOWN_SECONDS, EMA_PROXIMITY_PCT,
+    ENTRY_ZONE_PCT, TP1_PCT, TP2_PCT, TP3_PCT,
+    CONFIDENCE_MIN_DEFAULT, CONFIDENCE_MIN_BEAR,
+    TP1_CLOSE_RATIO, TP2_CLOSE_RATIO,
+    DCA_MAX_ENTRIES, DCA_TRIGGER_1, DCA_TRIGGER_2, DCA_SIZE_RATIO,
+    FNG_HEALTHY_MIN, FNG_HEALTHY_MAX, FNG_SHORT_MIN, FNG_SHORT_MAX,
+    BTC_RSI_LONG_MIN, BTC_RSI_SHORT_MAX, FUNDING_SHORT_BLOCK,
+)
+from trendrider_database import AlertsDB
+from trendrider_onchain import FearGreedFetcher, OnChainDataFetcher
+from trendrider_confidence import calc_confidence, market_context, get_market_regime, get_estimated_hold
+from trendrider_messaging import (
+    build_detailed_reason, format_entry_signal, format_cornix_signal,
+    format_exit_report, format_exit_footer, format_price_alert, get_running_stats,
+)
 
 logger = logging.getLogger(__name__)
 
@@ -113,221 +127,11 @@ class TrendRiderStrategy(IStrategy):
     # --- Leverage: fixed 3x (adaptive tested, worse results) ---
     leverage_value = 3
 
-    # --- FNG cache ---
-    _fng_cache_file = None
-    _fng_cache_ttl = 14400  # 4 hours
-
     def __init__(self, config: dict) -> None:
         super().__init__(config)
-        # SQLite-based persistent price alerts
-        self._alerts_db_path = self._get_alerts_db_path(config)
-        self._init_alerts_db()
-        # FNG cache file path
-        data_dir = config.get('user_data_dir', Path('.'))
-        if isinstance(data_dir, str):
-            data_dir = Path(data_dir)
-        self._fng_cache_file = str(data_dir / 'fng_cache.json')
-        # On-chain data cache: {pair: {'rate': float, 'oi_change': float, 'ts': float}}
-        self._funding_cache = {}
-
-    def _get_alerts_db_path(self, config: dict) -> str:
-        """Get path for price alerts SQLite DB."""
-        data_dir = config.get('user_data_dir', Path('.'))
-        if isinstance(data_dir, str):
-            data_dir = Path(data_dir)
-        return str(data_dir / 'price_alerts.db')
-
-    def _init_alerts_db(self):
-        """Initialize SQLite DB for persistent price alerts."""
-        try:
-            conn = sqlite3.connect(self._alerts_db_path)
-            conn.execute(
-                "CREATE TABLE IF NOT EXISTS price_alerts "
-                "(pair TEXT PRIMARY KEY, last_alert_time TEXT)"
-            )
-            conn.execute(
-                "CREATE TABLE IF NOT EXISTS signal_counter "
-                "(id INTEGER PRIMARY KEY CHECK (id = 1), count INTEGER DEFAULT 0)"
-            )
-            conn.execute(
-                "INSERT OR IGNORE INTO signal_counter (id, count) VALUES (1, 0)"
-            )
-            conn.execute(
-                "CREATE TABLE IF NOT EXISTS signal_queue ("
-                "id INTEGER PRIMARY KEY AUTOINCREMENT, "
-                "signal_num INTEGER, pair TEXT, side TEXT, leverage INTEGER, "
-                "setup_name TEXT, entry_low REAL, entry_high REAL, "
-                "sl_price REAL, sl_pct REAL, "
-                "tp1 REAL, tp2 REAL, tp3 REAL, rr_ratio REAL, "
-                "regime TEXT, created_at TEXT, sent_free INTEGER DEFAULT 0)"
-            )
-            conn.commit()
-            conn.close()
-        except Exception as e:
-            logger.warning(f"Failed to init alerts DB: {e}")
-
-    def _get_last_alert(self, pair: str):
-        """Get last alert time from SQLite."""
-        try:
-            conn = sqlite3.connect(self._alerts_db_path)
-            cursor = conn.execute(
-                "SELECT last_alert_time FROM price_alerts WHERE pair = ?", (pair,)
-            )
-            row = cursor.fetchone()
-            conn.close()
-            if row and row[0]:
-                return datetime.fromisoformat(row[0])
-            return None
-        except Exception:
-            return None
-
-    def _set_last_alert(self, pair: str, alert_time: datetime):
-        """Save last alert time to SQLite."""
-        try:
-            conn = sqlite3.connect(self._alerts_db_path)
-            conn.execute(
-                "INSERT OR REPLACE INTO price_alerts (pair, last_alert_time) VALUES (?, ?)",
-                (pair, alert_time.isoformat())
-            )
-            conn.commit()
-            conn.close()
-        except Exception as e:
-            logger.warning(f"Failed to save alert: {e}")
-
-    def _next_signal_number(self) -> int:
-        """Increment and return next signal number."""
-        try:
-            conn = sqlite3.connect(self._alerts_db_path)
-            conn.execute("UPDATE signal_counter SET count = count + 1 WHERE id = 1")
-            cursor = conn.execute("SELECT count FROM signal_counter WHERE id = 1")
-            num = cursor.fetchone()[0]
-            conn.commit()
-            conn.close()
-            return num
-        except Exception:
-            return 0
-
-    # --- Fear & Greed Index ---
-    def _get_fng_data(self) -> dict:
-        """Fetch Fear & Greed Index with 4h file-based cache."""
-        # Check cache
-        if self._fng_cache_file and os.path.exists(self._fng_cache_file):
-            try:
-                with open(self._fng_cache_file, 'r') as f:
-                    cached = json.load(f)
-                cached_time = datetime.fromisoformat(cached.get('timestamp', '2000-01-01'))
-                if (datetime.now() - cached_time).total_seconds() < self._fng_cache_ttl:
-                    return cached.get('data', {})
-            except Exception:
-                pass
-
-        # Fetch fresh data
-        try:
-            resp = requests.get(
-                'https://api.alternative.me/fng/?limit=60&format=json',
-                timeout=10
-            )
-            resp.raise_for_status()
-            raw = resp.json()
-            data_list = raw.get('data', [])
-            # Build dict: date_str -> fng_value
-            fng_map = {}
-            for item in data_list:
-                ts = int(item.get('timestamp', 0))
-                val = int(item.get('value', 50))
-                date_str = datetime.utcfromtimestamp(ts).strftime('%Y-%m-%d')
-                fng_map[date_str] = val
-
-            # Save cache
-            if self._fng_cache_file:
-                try:
-                    with open(self._fng_cache_file, 'w') as f:
-                        json.dump({
-                            'timestamp': datetime.now().isoformat(),
-                            'data': fng_map
-                        }, f)
-                except Exception:
-                    pass
-            return fng_map
-        except Exception as e:
-            logger.warning(f"FNG fetch failed: {e}")
-            return {}
-
-    # --- On-chain data: Funding Rate & Open Interest (Bybit v5) ---
-    def _pair_to_bybit_symbol(self, pair: str) -> str:
-        """Convert Freqtrade pair format to Bybit symbol. E.g. 'BTC/USDT:USDT' -> 'BTCUSDT'."""
-        return pair.replace('/USDT:USDT', 'USDT').replace('/', '')
-
-    def _fetch_funding_rate(self, pair: str) -> float:
-        """Fetch latest funding rate from Bybit v5 API with 5-min cache."""
-        cached = self._funding_cache.get(pair, {})
-        if cached and (time.time() - cached.get('ts', 0)) < 300:
-            return cached.get('rate', 0.0)
-
-        symbol = self._pair_to_bybit_symbol(pair)
-        try:
-            resp = requests.get(
-                'https://api.bybit.com/v5/market/funding/history',
-                params={'category': 'linear', 'symbol': symbol, 'limit': 1},
-                timeout=10
-            )
-            resp.raise_for_status()
-            data = resp.json()
-            result_list = data.get('result', {}).get('list', [])
-            if result_list:
-                rate = float(result_list[0].get('fundingRate', 0))
-            else:
-                rate = 0.0
-        except Exception as e:
-            logger.warning(f"Funding rate fetch failed for {pair}: {e}")
-            rate = cached.get('rate', 0.0)
-
-        # Update cache (preserve oi_change if already fetched)
-        existing = self._funding_cache.get(pair, {})
-        self._funding_cache[pair] = {
-            'rate': rate,
-            'oi_change': existing.get('oi_change', 0.0),
-            'ts': time.time(),
-        }
-        return rate
-
-    def _fetch_open_interest(self, pair: str) -> float:
-        """Fetch open interest change ratio from Bybit v5 API with 5-min cache."""
-        cached = self._funding_cache.get(pair, {})
-        if cached and (time.time() - cached.get('ts', 0)) < 300:
-            return cached.get('oi_change', 0.0)
-
-        symbol = self._pair_to_bybit_symbol(pair)
-        try:
-            resp = requests.get(
-                'https://api.bybit.com/v5/market/open-interest',
-                params={'category': 'linear', 'symbol': symbol, 'intervalTime': '1h', 'limit': 2},
-                timeout=10
-            )
-            resp.raise_for_status()
-            data = resp.json()
-            result_list = data.get('result', {}).get('list', [])
-            if len(result_list) >= 2:
-                current_oi = float(result_list[0].get('openInterest', 0))
-                previous_oi = float(result_list[1].get('openInterest', 0))
-                if previous_oi > 0:
-                    oi_change = (current_oi / previous_oi) - 1
-                else:
-                    oi_change = 0.0
-            else:
-                oi_change = 0.0
-        except Exception as e:
-            logger.warning(f"Open interest fetch failed for {pair}: {e}")
-            oi_change = cached.get('oi_change', 0.0)
-
-        # Update cache (preserve rate if already fetched)
-        existing = self._funding_cache.get(pair, {})
-        self._funding_cache[pair] = {
-            'rate': existing.get('rate', 0.0),
-            'oi_change': oi_change,
-            'ts': time.time(),
-        }
-        return oi_change
+        self._db = AlertsDB(config)
+        self._fng_fetcher = FearGreedFetcher(config)
+        self._onchain = OnChainDataFetcher()
 
     def leverage(self, pair: str, current_time, current_rate: float,
                  proposed_leverage: float, max_leverage: float, entry_tag: str,
@@ -343,15 +147,15 @@ class TrendRiderStrategy(IStrategy):
         if self.dp.runmode.value in ('live', 'dry_run'):
             for pair in self.dp.current_whitelist():
                 try:
-                    self._fetch_funding_rate(pair)
-                    self._fetch_open_interest(pair)
+                    self._onchain.fetch_funding_rate(pair)
+                    self._onchain.fetch_open_interest(pair)
                 except Exception as e:
                     logger.warning(f"On-chain data fetch failed for {pair}: {e}")
 
         for pair in self.dp.current_whitelist():
             # Cooldown: max 1 alert per pair per 4 hours (persistent via SQLite)
-            last_alert = self._get_last_alert(pair)
-            if last_alert and (current_time - last_alert).total_seconds() < 14400:
+            last_alert = self._db.get_last_alert(pair)
+            if last_alert and (current_time - last_alert).total_seconds() < ALERT_COOLDOWN_SECONDS:
                 continue
 
             dataframe, _ = self.dp.get_analyzed_dataframe(pair, self.timeframe)
@@ -371,7 +175,7 @@ class TrendRiderStrategy(IStrategy):
             if not is_bull or ema_slow_val <= 0:
                 continue
 
-            # Check proximity to EMA support (within 1.5%)
+            # Check proximity to EMA support
             dist_ema = (close - ema_slow_val) / ema_slow_val * 100
             dist_ema50 = (close - ema_50_val) / ema_50_val * 100 if ema_50_val > 0 else 999
 
@@ -379,11 +183,11 @@ class TrendRiderStrategy(IStrategy):
             zone_price = 0
             zone_name = ""
 
-            if 0 < dist_ema < 1.5:
+            if 0 < dist_ema < EMA_PROXIMITY_PCT:
                 zone = "ema_slow"
                 zone_price = ema_slow_val
                 zone_name = f"EMA{self.ema_slow.value}"
-            elif 0 < dist_ema50 < 1.5:
+            elif 0 < dist_ema50 < EMA_PROXIMITY_PCT:
                 zone = "ema50"
                 zone_price = ema_50_val
                 zone_name = "EMA50"
@@ -396,18 +200,10 @@ class TrendRiderStrategy(IStrategy):
 
                 dist = (close - zone_price) / zone_price * 100
 
-                msg = (
-                    f"*PRICE ALERT*\n"
-                    f"{'='*28}\n"
-                    f"*{pair}* approaching entry zone\n\n"
-                    f"*Price:* `{close:.2f}` USDT\n"
-                    f"*{zone_name}:* `{zone_price:.2f}` ({dist:.1f}% above)\n\n"
-                    f"*RSI:* {rsi_val:.1f} | *ADX:* {adx_val:.1f} | *Vol:* {vol_ratio:.2f}x\n"
-                    f"{'='*28}\n"
-                    f"_Watch for entry signal_"
-                )
+                msg = format_price_alert(pair, close, zone_name, zone_price, dist,
+                                         rsi_val, adx_val, vol_ratio)
                 self.dp.send_msg(msg, always_send=True)
-                self._set_last_alert(pair, current_time)
+                self._db.set_last_alert(pair, current_time)
 
     def informative_pairs(self):
         pairs = self.dp.current_whitelist() if self.dp else []
@@ -585,7 +381,7 @@ class TrendRiderStrategy(IStrategy):
                 dataframe[col] = default
 
         # --- Fear & Greed Index ---
-        fng_map = self._get_fng_data()
+        fng_map = self._fng_fetcher.fetch()
         if fng_map:
             dataframe['fng_value'] = dataframe['date'].apply(
                 lambda d: fng_map.get(d.strftime('%Y-%m-%d'), 50)
@@ -600,8 +396,8 @@ class TrendRiderStrategy(IStrategy):
 
         if self.dp and self.dp.runmode.value in ('live', 'dry_run'):
             pair = metadata.get('pair', '')
-            funding = self._funding_cache.get(pair, {}).get('rate', 0.0)
-            oi_change = self._funding_cache.get(pair, {}).get('oi_change', 0.0)
+            funding = self._onchain.cache.get(pair, {}).get('rate', 0.0)
+            oi_change = self._onchain.cache.get(pair, {}).get('oi_change', 0.0)
             dataframe.loc[dataframe.index[-1], 'funding_rate'] = funding
             dataframe.loc[dataframe.index[-1], 'funding_extreme'] = 1 if abs(funding) > 0.0003 else 0
             dataframe.loc[dataframe.index[-1], 'oi_change'] = oi_change
@@ -626,9 +422,9 @@ class TrendRiderStrategy(IStrategy):
             dataframe["plus_di"] > dataframe["minus_di"],
             dataframe["obv"] > dataframe["obv_ema"],
             dataframe["volume"] > 0,
-            dataframe["btc_rsi_1h"] > 35,
-            dataframe["fng_value"] >= 25,      # Not extreme fear
-            dataframe["fng_value"] <= 85,      # Not extreme greed
+            dataframe["btc_rsi_1h"] > BTC_RSI_LONG_MIN,
+            dataframe["fng_value"] >= FNG_HEALTHY_MIN,      # Not extreme fear
+            dataframe["fng_value"] <= FNG_HEALTHY_MAX,      # Not extreme greed
             dataframe[rsi] < 70,                 # Not overbought
         ]
         # Daily EMA200 filter — helps filter bad entries
@@ -653,9 +449,9 @@ class TrendRiderStrategy(IStrategy):
             dataframe["volume_ratio"] > 1.0,
             dataframe["macdhist"] > dataframe["macdhist"].shift(1),
             dataframe["volume"] > 0,
-            dataframe["btc_rsi_1h"] > 35,
-            dataframe["fng_value"] >= 25,
-            dataframe["fng_value"] <= 85,
+            dataframe["btc_rsi_1h"] > BTC_RSI_LONG_MIN,
+            dataframe["fng_value"] >= FNG_HEALTHY_MIN,
+            dataframe["fng_value"] <= FNG_HEALTHY_MAX,
             dataframe[rsi] < 70,
         ]
         # Block entries when funding is extreme (live only)
@@ -676,9 +472,9 @@ class TrendRiderStrategy(IStrategy):
             dataframe["volume_ratio"] > 0.8,
             dataframe["obv"] > dataframe["obv_ema"],
             dataframe["volume"] > 0,
-            dataframe["btc_rsi_1h"] > 35,
-            dataframe["fng_value"] >= 25,
-            dataframe["fng_value"] <= 85,
+            dataframe["btc_rsi_1h"] > BTC_RSI_LONG_MIN,
+            dataframe["fng_value"] >= FNG_HEALTHY_MIN,
+            dataframe["fng_value"] <= FNG_HEALTHY_MAX,
         ]
         # Block entries when funding is extreme (live only)
         if self.dp and self.dp.runmode.value in ('live', 'dry_run'):
@@ -700,13 +496,13 @@ class TrendRiderStrategy(IStrategy):
             dataframe["volume_ratio"] > self.volume_factor.value,
             dataframe["minus_di"] > dataframe["plus_di"],
             dataframe["volume"] > 0,
-            dataframe["btc_rsi_1h"] < 65,
-            dataframe["fng_value"] >= 15,
-            dataframe["fng_value"] <= 75,
+            dataframe["btc_rsi_1h"] < BTC_RSI_SHORT_MAX,
+            dataframe["fng_value"] >= FNG_SHORT_MIN,
+            dataframe["fng_value"] <= FNG_SHORT_MAX,
         ]
         # For shorts: block when funding < -0.0003 (too many shorts already)
         if self.dp and self.dp.runmode.value in ('live', 'dry_run'):
-            conditions_short_pullback.append(dataframe['funding_rate'] > -0.0003)
+            conditions_short_pullback.append(dataframe['funding_rate'] > FUNDING_SHORT_BLOCK)
         dataframe.loc[
             reduce(lambda x, y: x & y, conditions_short_pullback),
             ["enter_short", "enter_tag"]
@@ -721,13 +517,13 @@ class TrendRiderStrategy(IStrategy):
             dataframe["adx"] > 20,
             dataframe["macdhist"] < dataframe["macdhist"].shift(1),  # MACD histogram falling
             dataframe["volume"] > 0,
-            dataframe["btc_rsi_1h"] < 65,
-            dataframe["fng_value"] >= 15,
-            dataframe["fng_value"] <= 75,
+            dataframe["btc_rsi_1h"] < BTC_RSI_SHORT_MAX,
+            dataframe["fng_value"] >= FNG_SHORT_MIN,
+            dataframe["fng_value"] <= FNG_SHORT_MAX,
         ]
         # For shorts: block when funding < -0.0003 (too many shorts already)
         if self.dp and self.dp.runmode.value in ('live', 'dry_run'):
-            conditions_short_ema50.append(dataframe['funding_rate'] > -0.0003)
+            conditions_short_ema50.append(dataframe['funding_rate'] > FUNDING_SHORT_BLOCK)
         dataframe.loc[
             reduce(lambda x, y: x & y, conditions_short_ema50),
             ["enter_short", "enter_tag"]
@@ -741,12 +537,12 @@ class TrendRiderStrategy(IStrategy):
             dataframe["close"] < dataframe["bb_upper"],
             dataframe["close"] < dataframe["open"],          # Bearish candle
             dataframe["volume"] > 0,
-            dataframe["fng_value"] >= 15,
-            dataframe["fng_value"] <= 75,
+            dataframe["fng_value"] >= FNG_SHORT_MIN,
+            dataframe["fng_value"] <= FNG_SHORT_MAX,
         ]
         # For shorts: block when funding < -0.0003 (too many shorts already)
         if self.dp and self.dp.runmode.value in ('live', 'dry_run'):
-            conditions_short_rsi.append(dataframe['funding_rate'] > -0.0003)
+            conditions_short_rsi.append(dataframe['funding_rate'] > FUNDING_SHORT_BLOCK)
         dataframe.loc[
             reduce(lambda x, y: x & y, conditions_short_rsi),
             ["enter_short", "enter_tag"]
@@ -844,13 +640,13 @@ class TrendRiderStrategy(IStrategy):
         # --- Partial Take Profit ---
         filled_exits = trade.nr_of_successful_exits
 
-        if current_profit >= 0.03 and filled_exits == 0:
+        if current_profit >= TP1_PCT and filled_exits == 0:
             # TP1: sell 30% of position
-            return -(trade.stake_amount * 0.3)
+            return -(trade.stake_amount * TP1_CLOSE_RATIO)
 
-        if current_profit >= 0.05 and filled_exits == 1:
+        if current_profit >= TP2_PCT and filled_exits == 1:
             # TP2: sell 30% more
-            return -(trade.stake_amount * 0.3)
+            return -(trade.stake_amount * TP2_CLOSE_RATIO)
 
         # TP3: remaining 40% handled by trailing/ROI
 
@@ -860,275 +656,42 @@ class TrendRiderStrategy(IStrategy):
         if current_profit > -0.02:
             return None
 
-        if filled_entries >= 3:  # 1 initial + 2 DCA max
+        if filled_entries >= DCA_MAX_ENTRIES:  # 1 initial + 2 DCA max
             return None
 
-        if filled_entries == 1 and current_profit <= -0.03:
-            return trade.stake_amount * 0.5  # Half position DCA
+        if filled_entries == 1 and current_profit <= DCA_TRIGGER_1:
+            return trade.stake_amount * DCA_SIZE_RATIO  # Half position DCA
 
-        if filled_entries == 2 and current_profit <= -0.05:
-            return trade.stake_amount * 0.5
+        if filled_entries == 2 and current_profit <= DCA_TRIGGER_2:
+            return trade.stake_amount * DCA_SIZE_RATIO
 
         return None
-
-    # --- Detailed Why (Phase 6.1) ---
-    def _build_detailed_reason(self, entry_tag: str, last: dict, rate: float) -> str:
-        """Build a 2-3 sentence reason with concrete indicator levels."""
-        rsi_key = f"rsi_{self.rsi_period.value}"
-        rsi_val = last.get(rsi_key, 0)
-        adx_val = last.get('adx', 0)
-        ema_fast = last.get(f'ema_{self.ema_fast.value}', 0)
-        ema_slow = last.get(f'ema_{self.ema_slow.value}', 0)
-        ema_50 = last.get('ema_50', 0)
-        ema_200 = last.get('ema_200', 0)
-        macd_hist = last.get('macdhist', 0)
-        bb_lower = last.get('bb_lower', 0)
-        bb_upper = last.get('bb_upper', 0)
-        vol_ratio = last.get('volume_ratio', 0)
-
-        parts = []
-
-        if entry_tag == "trend_pullback":
-            parts.append(
-                f"Price pulled back to EMA{self.ema_fast.value} ({ema_fast:.1f}) "
-                f"in an uptrend — EMA{self.ema_fast.value} > EMA{self.ema_slow.value} ({ema_slow:.1f})."
-            )
-            parts.append(
-                f"RSI at {rsi_val:.0f} (healthy zone), ADX {adx_val:.0f} confirms trend strength."
-            )
-            if vol_ratio > 1.0:
-                parts.append(f"Volume {vol_ratio:.1f}x average supports the bounce.")
-
-        elif entry_tag == "ema50_bounce":
-            parts.append(
-                f"Deep pullback to EMA50 ({ema_50:.1f}), price holding above key support."
-            )
-            parts.append(
-                f"MACD histogram {'positive' if macd_hist > 0 else 'recovering'} "
-                f"({macd_hist:.4f}), RSI {rsi_val:.0f} — room to run."
-            )
-            if adx_val > 20:
-                parts.append(f"ADX {adx_val:.0f} — trend intact despite the pullback.")
-
-        elif entry_tag == "rsi_bounce":
-            parts.append(
-                f"RSI oversold at {rsi_val:.0f}, bouncing off BB lower ({bb_lower:.1f})."
-            )
-            parts.append(
-                f"Price above EMA200 ({ema_200:.1f}) — bullish structure intact."
-            )
-            if vol_ratio > 1.0:
-                parts.append(f"Volume spike {vol_ratio:.1f}x signals buyer interest.")
-
-        elif entry_tag == "short_pullback":
-            parts.append(
-                f"Price rejected at EMA{self.ema_fast.value} ({ema_fast:.1f}) "
-                f"in a downtrend — EMA{self.ema_fast.value} < EMA{self.ema_slow.value} ({ema_slow:.1f})."
-            )
-            parts.append(
-                f"RSI at {rsi_val:.0f}, ADX {adx_val:.0f} confirms bearish momentum."
-            )
-
-        elif entry_tag == "short_ema50_rejection":
-            parts.append(
-                f"Rejection at EMA50 ({ema_50:.1f}) from below — key resistance holds."
-            )
-            parts.append(
-                f"MACD histogram negative ({macd_hist:.4f}), RSI {rsi_val:.0f} — bearish pressure."
-            )
-
-        elif entry_tag == "short_rsi_overbought":
-            parts.append(
-                f"RSI overbought at {rsi_val:.0f}, reversing from BB upper ({bb_upper:.1f})."
-            )
-            parts.append(
-                f"Price below EMA200 ({ema_200:.1f}) — bearish structure intact."
-            )
-
-        else:
-            return entry_tag or "Signal"
-
-        return " ".join(parts)
-
-    # --- Improved Confidence Scoring ---
-    def _calc_confidence(self, last: dict) -> tuple:
-        """Calculate signal confidence based on weighted indicator alignment.
-
-        Max score ~15. Returns (level_str, bar_str, details_list, numeric_level).
-        """
-        score = 0.0
-        details = []
-        rsi_key = f"rsi_{self.rsi_period.value}"
-        rsi_val = last.get(rsi_key, 50)
-
-        # RSI in healthy zone (not overbought): +1.5
-        if 35 < rsi_val < 60:
-            score += 1.5
-            details.append("RSI healthy")
-
-        # Strong trend (ADX): +2.5 strong, +1.5 moderate
-        adx_val = last.get('adx', 0)
-        if adx_val > 30:
-            score += 2.5
-            details.append("Strong trend")
-        elif adx_val > self.adx_threshold.value:
-            score += 1.5
-            details.append("Moderate trend")
-
-        # Volume confirmation: +2.5 high, +1.5 normal
-        vol_ratio = last.get('volume_ratio', 0)
-        if vol_ratio > 1.5:
-            score += 2.5
-            details.append("High volume")
-        elif vol_ratio > 1.0:
-            score += 1.5
-            details.append("Normal volume")
-
-        # MACD positive histogram: +1.5, bonus +0.5 if rising
-        macd_hist = last.get('macdhist', 0)
-        macd_hist_prev = last.get('macdhist_prev', 0)
-        if macd_hist > 0:
-            score += 1.5
-            if macd_hist > macd_hist_prev:
-                score += 0.5
-                details.append("MACD positive+rising")
-            else:
-                details.append("MACD positive")
-
-        # OBV rising AND above EMA: +1.5
-        if last.get('obv', 0) > last.get('obv_ema', 0):
-            score += 1.5
-            details.append("OBV rising")
-
-        # BTC healthy (RSI 40-70): +1.5
-        btc_rsi = last.get('btc_rsi_1h', 50)
-        if 40 < btc_rsi < 70:
-            score += 1.5
-            details.append("BTC healthy")
-
-        # 4h trend alignment AND ADX_4h > 20: +1.5
-        if last.get('is_bull_4h', 0) == 1 and last.get('adx_4h', 0) > 20:
-            score += 1.5
-            details.append("4H trend aligned")
-
-        # Bollinger Band position (close near lower = good for long): +1
-        close = last.get('close', 0)
-        bb_lower = last.get('bb_lower', 0)
-        bb_upper = last.get('bb_upper', 0)
-        bb_range = bb_upper - bb_lower if bb_upper > bb_lower else 1
-        if bb_lower > 0 and close > 0:
-            bb_position = (close - bb_lower) / bb_range
-            if bb_position < 0.35:
-                score += 1.0
-                details.append("Near BB lower")
-
-        # Plus_DI > Minus_DI spread > 10: +1
-        plus_di = last.get('plus_di', 0)
-        minus_di = last.get('minus_di', 0)
-        if plus_di - minus_di > 10:
-            score += 1.0
-            details.append("Strong DI spread")
-
-        # FNG bonus: neutral/healthy (40-60): +1
-        fng_val = last.get('fng_value', 50)
-        if 40 <= fng_val <= 60:
-            score += 1.0
-            details.append("FNG neutral")
-
-        # On-chain: healthy funding rate: +1
-        funding = last.get('funding_rate', 0)
-        if abs(funding) < 0.0001:  # Normal funding
-            score += 1
-            details.append("Healthy funding")
-
-        # Smooth mapping to 1-10 (max possible score ~17.5)
-        MAX_SCORE = 17.5
-        numeric = max(1, min(10, round(score * 10 / MAX_SCORE)))
-
-        # Level label from smooth score
-        if numeric >= 8:
-            level = "STRONG"
-        elif numeric >= 6:
-            level = "GOOD"
-        elif numeric >= 4:
-            level = "MEDIUM"
-        else:
-            level = "WEAK"
-
-        # Dynamic bar: filled + empty blocks
-        bar = "|" * numeric + "-" * (10 - numeric) + f" {numeric}/10"
-
-        return level, bar, details, numeric
-
-    def _market_context(self, last: dict) -> str:
-        """Generate market context string."""
-        btc_rsi = last.get('btc_rsi_1h', 50)
-        btc_bull = last.get('btc_is_bull_1h', 0)
-        bull_4h = last.get('is_bull_4h', 0)
-
-        if btc_bull and btc_rsi > 55:
-            btc_status = "Bullish"
-        elif btc_rsi > 40:
-            btc_status = "Neutral"
-        else:
-            btc_status = "Bearish"
-
-        tf_4h = "Uptrend" if bull_4h else "Downtrend"
-
-        parts = [f"BTC: {btc_status} (RSI {btc_rsi:.0f})", f"4H: {tf_4h}"]
-
-        funding = last.get('funding_rate', 0)
-        if funding != 0:
-            funding_pct = funding * 100
-            parts.append(f"Fund: {funding_pct:+.3f}%")
-
-        return " | ".join(parts)
-
-    def _get_market_regime(self, last: dict) -> str:
-        """Detect market regime from ADX + EMA200 + BB width (Phase 8.5)."""
-        adx_val = last.get('adx', 0)
-        ema_200 = last.get('ema_200', 0)
-        close = last.get('close', 0)
-        is_bull = last.get('is_bull', 0)
-        bb_width = last.get('bb_width', 0)
-        bb_width_sma = last.get('bb_width_sma', 0)
-
-        # Volatility state
-        high_vol = bb_width > bb_width_sma * 1.5 if bb_width_sma > 0 else False
-
-        if adx_val < 20:
-            return "Ranging (High Vol)" if high_vol else "Ranging"
-        elif is_bull and close > ema_200:
-            return "Trending Bull"
-        else:
-            return "Trending Bear (High Vol)" if high_vol else "Trending Bear"
 
     def confirm_trade_entry(self, pair: str, order_type: str, amount: float, rate: float,
                            time_in_force: str, current_time: datetime, entry_tag: str | None,
                            side: str, **kwargs) -> bool:
         is_short = side == "short"
 
-        # Calculate levels depending on direction
+        # Calculate levels
         if is_short:
-            sl_price = rate * (1 - self.stoploss)  # stoploss is negative, so 1 - (-0.06) = 1.06
-            tp1_price = rate * 0.97   # -3%
-            tp2_price = rate * 0.95   # -5%
-            tp3_price = rate * 0.90   # -10%
+            sl_price = rate * (1 - self.stoploss)
+            tp1_price = rate * (1 - TP1_PCT)
+            tp2_price = rate * (1 - TP2_PCT)
+            tp3_price = rate * (1 - TP3_PCT)
         else:
-            sl_price = rate * (1 + self.stoploss)  # stoploss is negative
-            tp1_price = rate * 1.03   # +3%
-            tp2_price = rate * 1.05   # +5%
-            tp3_price = rate * 1.10   # +10%
+            sl_price = rate * (1 + self.stoploss)
+            tp1_price = rate * (1 + TP1_PCT)
+            tp2_price = rate * (1 + TP2_PCT)
+            tp3_price = rate * (1 + TP3_PCT)
 
         leverage = self.leverage_value
         side_str = "SHORT" if is_short else "LONG"
 
-        # Risk/reward ratio
         risk = abs(rate - sl_price)
         reward = abs(tp2_price - rate)
         rr_ratio = reward / risk if risk > 0 else 0
 
-        # Get current indicators for context (must be before _build_detailed_reason)
+        # Get indicators
         dataframe, _ = self.dp.get_analyzed_dataframe(pair, self.timeframe)
         if len(dataframe) > 0:
             last = dataframe.iloc[-1]
@@ -1141,25 +704,14 @@ class TrendRiderStrategy(IStrategy):
             rsi_val = adx_val = vol_ratio = macd_hist = 0
             last = {}
 
-        # Entry reason — dynamic with concrete levels
-        reason = self._build_detailed_reason(entry_tag, last, rate)
+        # Use modules
+        reason = build_detailed_reason(entry_tag, last, rate, self.ema_fast.value, self.ema_slow.value, self.rsi_period.value)
+        setup_name = SETUP_NAMES.get(entry_tag, "Signal")
+        conf_level, conf_bar, conf_details, conf_numeric = calc_confidence(last, self.adx_threshold.value, self.rsi_period.value)
+        market_ctx = market_context(last)
+        regime = get_market_regime(last)
 
-        setup_names = {
-            "trend_pullback": "Trend Pullback",
-            "ema50_bounce": "EMA50 Bounce",
-            "rsi_bounce": "RSI Oversold Bounce",
-            "short_pullback": "Short Pullback",
-            "short_ema50_rejection": "EMA50 Rejection",
-            "short_rsi_overbought": "RSI Overbought",
-        }
-        setup_name = setup_names.get(entry_tag, "Signal")
-
-        # Confidence, market context, regime
-        conf_level, conf_bar, conf_details, conf_numeric = self._calc_confidence(last)
-        market_ctx = self._market_context(last)
-        regime = self._get_market_regime(last)
-
-        # Portfolio heat — count open trades
+        # Portfolio heat
         open_trades = 0
         max_trades = self.config.get('max_open_trades', 4)
         try:
@@ -1169,15 +721,9 @@ class TrendRiderStrategy(IStrategy):
             pass
         heat_str = f"{open_trades}/{max_trades} positions open"
 
-        # Estimated hold time based on ROI table and confidence
-        if conf_numeric >= 8:
-            est_hold = "2-6h"
-        elif conf_numeric >= 6:
-            est_hold = "6-24h"
-        else:
-            est_hold = "24-48h"
+        est_hold = get_estimated_hold(conf_numeric)
 
-        # Invalidation level — key support/resistance where signal breaks
+        # Invalidation
         ema_200 = last.get('ema_200', 0)
         bb_lower = last.get('bb_lower', 0)
         if is_short:
@@ -1187,243 +733,45 @@ class TrendRiderStrategy(IStrategy):
             invalidation = max(ema_200, bb_lower) if ema_200 > 0 else sl_price
             inv_label = "EMA200" if invalidation == ema_200 else "BB Lower"
 
-        # --- REJECT WEAK SIGNALS (Phase 8.5: regime-aware threshold) ---
-        min_conf = 5  # default
-        if "Bear" in regime:
-            min_conf = 6  # stricter in bear markets
+        # Reject weak signals
+        min_conf = CONFIDENCE_MIN_BEAR if "Bear" in regime else CONFIDENCE_MIN_DEFAULT
         if conf_numeric < min_conf:
             logger.info(f"Rejecting signal for {pair}: confidence {conf_numeric}/10 < {min_conf} (regime: {regime})")
             return False
 
-        # Entry zone (±0.3%)
-        entry_low = rate * 0.997
-        entry_high = rate * 1.003
-
         # Signal number
-        signal_num = self._next_signal_number()
+        signal_num = self._db.next_signal_number()
 
-        # --- Main Telegram Signal ---
-        msg = (
-            f"*TRENDRIDER SIGNAL #{signal_num:03d}*\n"
-            f"{'='*28}\n"
-            f"*{pair}* | *{side_str}* | {leverage}x\n"
-            f"*Setup:* {setup_name}\n"
-            f"{'='*28}\n\n"
-            f"*Entry Zone:* `{entry_low:.2f}` - `{entry_high:.2f}` USDT\n"
-            f"*Stop Loss:* `{sl_price:.2f}` ({self.stoploss*100:+.1f}%)\n\n"
-            f"*Targets:*\n"
-            f"  TP1: `{tp1_price:.2f}` (+3%) — close 30%\n"
-            f"  TP2: `{tp2_price:.2f}` (+5%) — close 40%\n"
-            f"  TP3: `{tp3_price:.2f}` (+10%) — close 30%\n"
-            f"  R:R = 1:{rr_ratio:.1f}\n\n"
-            f"*Trailing:* SL -> Entry after TP1\n\n"
-            f"*Confidence:* {conf_level} ({conf_numeric}/10)\n"
-            f"  [{conf_bar}]\n"
-            f"  {', '.join(conf_details)}\n\n"
-            f"*Regime:* {regime}\n"
-            f"*Portfolio:* {heat_str}\n"
-            f"*Est. Hold:* {est_hold}\n"
-            f"*Invalidation:* `{invalidation:.2f}` ({inv_label})\n\n"
-            f"*Indicators:*\n"
-            f"  RSI: {rsi_val:.1f} | ADX: {adx_val:.1f}\n"
-            f"  Volume: {vol_ratio:.2f}x | MACD: {'+'  if macd_hist > 0 else '-'}\n\n"
-            f"*Market:* {market_ctx}\n\n"
-            f"*Why:* {reason}\n"
-            f"{'='*28}\n"
-            f"_TrendRider Algo | @TrendRiderSignals_"
+        # Send main signal
+        msg = format_entry_signal(
+            signal_num, pair, side_str, leverage, setup_name, rate,
+            sl_price, self.stoploss, tp1_price, tp2_price, tp3_price, rr_ratio,
+            conf_level, conf_numeric, conf_bar, conf_details,
+            regime, heat_str, est_hold, invalidation, inv_label,
+            rsi_val, adx_val, vol_ratio, macd_hist, market_ctx, reason
         )
         self.dp.send_msg(msg, always_send=True)
 
-        # --- Cornix-Compatible Format ---
-        pair_clean = pair.replace('/USDT:USDT', '').replace('/', '')
-        signal_type = "Regular (Short)" if is_short else "Regular (Long)"
-
-        if is_short:
-            cornix_tp1 = rate * 0.97
-            cornix_tp2 = rate * 0.95
-            cornix_tp3 = rate * 0.90
-        else:
-            cornix_tp1 = rate * 1.03
-            cornix_tp2 = rate * 1.05
-            cornix_tp3 = rate * 1.10
-
-        cornix_msg = (
-            f"#{pair_clean}\n\n"
-            f"Exchanges: Bybit USDT\n"
-            f"Signal Type: {signal_type}\n"
-            f"Leverage: Isolated ({leverage}X)\n\n"
-            f"Entry Zone: {entry_low:.2f} - {entry_high:.2f}\n\n"
-            f"Take-Profit Targets:\n"
-            f"1) {cornix_tp1:.2f}\n"
-            f"2) {cornix_tp2:.2f}\n"
-            f"3) {cornix_tp3:.2f}\n\n"
-            f"Stop Targets:\n"
-            f"1) {sl_price:.2f}\n\n"
-            f"Trailing Configuration:\n"
-            f"Stop: Breakeven - Trigger: Target (1)"
-        )
+        # Send Cornix signal
+        cornix_msg = format_cornix_signal(pair, side_str, leverage, rate, sl_price, is_short)
         self.dp.send_msg(cornix_msg, always_send=True)
 
-        # --- Queue signal for delayed free channel ---
-        try:
-            conn = sqlite3.connect(self._alerts_db_path)
-            conn.execute(
-                "INSERT INTO signal_queue "
-                "(signal_num, pair, side, leverage, setup_name, "
-                "entry_low, entry_high, sl_price, sl_pct, "
-                "tp1, tp2, tp3, rr_ratio, regime, created_at) "
-                "VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)",
-                (signal_num, pair, side_str, leverage, setup_name,
-                 entry_low, entry_high, sl_price, self.stoploss * 100,
-                 tp1_price, tp2_price, tp3_price, rr_ratio,
-                 regime, datetime.now().isoformat())
-            )
-            conn.commit()
-            conn.close()
-        except Exception as e:
-            logger.warning(f"Failed to queue signal for free channel: {e}")
+        # Queue for free channel
+        entry_low = rate * (1 - ENTRY_ZONE_PCT)
+        entry_high = rate * (1 + ENTRY_ZONE_PCT)
+        self._db.queue_signal(
+            signal_num, pair, side_str, leverage, setup_name,
+            entry_low, entry_high, sl_price, self.stoploss * 100,
+            tp1_price, tp2_price, tp3_price, rr_ratio, regime
+        )
 
         return True
-
-    def _get_running_stats(self) -> str:
-        """Get running stats for last 30 days from trade history."""
-        try:
-            from freqtrade.persistence import Trade
-            trades = Trade.get_trades_proxy(is_open=False)
-
-            # Filter last 30 days (use timezone-aware datetime)
-            from datetime import timezone
-            cutoff = datetime.now(timezone.utc) - timedelta(days=30)
-            recent = [t for t in trades if t.close_date and t.close_date >= cutoff]
-
-            if not recent:
-                return "No trades in last 30 days"
-
-            wins = sum(1 for t in recent if t.profit_ratio and t.profit_ratio > 0)
-            losses = len(recent) - wins
-            win_rate = (wins / len(recent)) * 100 if recent else 0
-            avg_profit = sum(t.profit_ratio * 100 for t in recent if t.profit_ratio) / len(recent)
-            total_profit = sum(t.profit_ratio * 100 for t in recent if t.profit_ratio)
-
-            return (
-                f"*Last 30 days:* {wins}W/{losses}L "
-                f"({win_rate:.0f}% WR) | "
-                f"Avg {avg_profit:+.2f}% | "
-                f"Total {total_profit:+.1f}%"
-            )
-        except Exception as e:
-            logger.warning(f"Failed to get running stats: {e}")
-            return ""
 
     def confirm_trade_exit(self, pair: str, trade, order_type: str, amount: float,
                           rate: float, time_in_force: str, exit_reason: str,
                           current_time: datetime, **kwargs) -> bool:
-        # Calculate results
-        if trade.is_short:
-            profit_pct = ((trade.open_rate - rate) / trade.open_rate) * 100 * trade.leverage
-        else:
-            profit_pct = ((rate - trade.open_rate) / trade.open_rate) * 100 * trade.leverage
-        duration_hours = (current_time - trade.open_date_utc).total_seconds() / 3600
-
-        side_str = "SHORT" if trade.is_short else "LONG"
-
-        # Exit reason mapping
-        exit_reasons = {
-            "roi": "ROI target reached",
-            "stop_loss": "Stop Loss hit",
-            "trailing_stop_loss": "Trailing Stop",
-            "exit_signal": "Exit signal",
-            "rsi_overbought": "RSI overbought (>81)",
-            "ema_bearish_cross": "EMA bearish crossover",
-            "trend_broken": "Trend broken (below EMA200)",
-            "rsi_oversold_short": "RSI oversold (<19)",
-            "ema_bullish_cross_short": "EMA bullish crossover (short exit)",
-            "trend_broken_short": "Trend broken (above EMA200)",
-            "partial_tp1": "Partial TP1 (+3%)",
-            "partial_tp2": "Partial TP2 (+5%)",
-            "force_exit": "Force exit",
-        }
-        reason_text = exit_reasons.get(exit_reason, exit_reason)
-
-        # Result emoji
-        if profit_pct > 0:
-            result_line = f"+{profit_pct:.2f}%"
-        else:
-            result_line = f"{profit_pct:.2f}%"
-
-        # Duration formatting
-        if duration_hours < 1:
-            dur_str = f"{int(duration_hours * 60)}m"
-        elif duration_hours < 24:
-            dur_str = f"{duration_hours:.1f}h"
-        else:
-            dur_str = f"{duration_hours/24:.1f}d"
-
-        # R:R achieved (actual profit vs stoploss risk)
-        risk_pct = abs(self.stoploss * 100)  # 6%
-        reward_pct = abs(profit_pct / trade.leverage) if trade.leverage else abs(profit_pct)
-        rr_achieved = reward_pct / risk_pct if risk_pct > 0 else 0
-
-        # Max drawdown during trade
-        if trade.is_short:
-            max_dd = ((trade.max_rate - trade.open_rate) / trade.open_rate) * 100
-        else:
-            max_dd = ((trade.open_rate - trade.min_rate) / trade.open_rate) * 100 if trade.min_rate else 0
-
-        # What worked / what didn't
-        if profit_pct > 5:
-            review = "Strong momentum carried to TP2+"
-        elif profit_pct > 3:
-            review = "Clean setup, hit TP1 target"
-        elif profit_pct > 0:
-            review = "Modest gain, trailing stop secured profit"
-        elif exit_reason == "stop_loss":
-            review = "Setup invalidated, SL protected capital"
-        elif exit_reason == "trailing_stop_loss":
-            review = "Gave back gains after reversal"
-        else:
-            review = "Market conditions changed"
-
-        # Confidence at entry (reconstruct from enter_tag)
-        enter_tag = getattr(trade, 'enter_tag', '') or ''
-        setup_names = {
-            "trend_pullback": "Trend Pullback",
-            "ema50_bounce": "EMA50 Bounce",
-            "rsi_bounce": "RSI Oversold Bounce",
-            "short_pullback": "Short Pullback",
-            "short_ema50_rejection": "EMA50 Rejection",
-            "short_rsi_overbought": "RSI Overbought",
-        }
-        setup_name = setup_names.get(enter_tag, enter_tag or "—")
-
-        # Running stats
-        stats_line = self._get_running_stats()
-
-        msg = (
-            f"*TRADE CLOSED* {'WIN' if profit_pct > 0 else 'LOSS'}\n"
-            f"{'='*28}\n"
-            f"*{pair}* | {side_str} | {trade.leverage}x\n"
-            f"*Setup:* {setup_name}\n"
-            f"{'='*28}\n\n"
-            f"*Entry:* `{trade.open_rate:.2f}`\n"
-            f"*Exit:* `{rate:.2f}`\n"
-            f"*Result:* *{result_line}*\n"
-            f"*R:R:* 1:{rr_achieved:.1f} achieved\n"
-            f"*Duration:* {dur_str}\n"
-            f"*Reason:* {reason_text}\n\n"
-            f"*Max price:* `{trade.max_rate:.2f}`\n"
-            f"*Max DD:* {max_dd:.1f}%\n\n"
-            f"*Review:* {review}\n\n"
-        )
-
-        if stats_line:
-            msg += f"{stats_line}\n\n"
-
-        msg += (
-            f"{'='*28}\n"
-            f"[Full Trade History](https://docs.google.com/spreadsheets/d/1ZWRJ0PcBSk910MZv426PrleriBnInykr3OebWXJPm-g)\n"
-            f"_TrendRider Algo | @TrendRiderSignals_"
-        )
-
+        msg = format_exit_report(pair, trade, rate, exit_reason, current_time)
+        stats_line = get_running_stats()
+        msg += format_exit_footer(stats_line)
         self.dp.send_msg(msg, always_send=True)
         return True
