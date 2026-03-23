@@ -628,6 +628,7 @@ const getPricing = (t: TStrings) => [
     features: [t.freeF1, t.freeF2, t.freeF3, t.freeF4],
     cta: t.joinFree,
     href: TELEGRAM_URL,
+    cryptoHref: "",
     highlight: false,
   },
   {
@@ -636,7 +637,8 @@ const getPricing = (t: TStrings) => [
     period: t.perMonth,
     features: [t.basicF1, t.basicF2, t.basicF3, t.basicF4],
     cta: t.subscribe,
-    href: TELEGRAM_BOT_URL + "?start=basic",
+    href: "https://buy.stripe.com/test_fZu28sdu5eFacEfclo0x200",
+    cryptoHref: TELEGRAM_BOT_URL + "?start=pay_basic",
     highlight: true,
   },
   {
@@ -645,7 +647,8 @@ const getPricing = (t: TStrings) => [
     period: t.perMonth,
     features: [t.vipF1, t.vipF2, t.vipF3, t.vipF4, t.vipF5],
     cta: t.getVip,
-    href: TELEGRAM_BOT_URL + "?start=vip",
+    href: "https://buy.stripe.com/test_4gMfZi9dPfJe33Fadg0x201",
+    cryptoHref: TELEGRAM_BOT_URL + "?start=pay_vip",
     highlight: false,
   },
 ];
@@ -1862,7 +1865,7 @@ export default function Home() {
   const metrics = getMetrics(t);
   const steps = getSteps(t);
   const features = getFeatures(t);
-  const pricing = getPricing(t);
+  const pricing = getPricing(t, locale);
   const faqItems = getFaqItems(t);
 
   return (
