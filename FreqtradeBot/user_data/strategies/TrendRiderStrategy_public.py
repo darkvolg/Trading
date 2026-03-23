@@ -1,5 +1,5 @@
 """
-TrendRider Public v2.0 — Strat Ninja Edition
+TrendRider Public v2.8.0 — Strat Ninja Edition
 
 Philosophy: Ride established trends with WIDE stoploss.
 Key insight: crypto swings 2-4% per hour. Stoploss must be >= 5-6%.
@@ -25,14 +25,12 @@ logger = logging.getLogger(__name__)
 class TrendRiderStrategy(IStrategy):
     INTERFACE_VERSION = 3
 
-    # --- ROI: Wide, let winners run ---
+    # --- ROI: Hyperopt-optimized (2026-03-23, 6 pairs) ---
     minimal_roi = {
-        "0": 0.10,      # 10% immediate
-        "120": 0.06,    # 6% after 2h
-        "360": 0.04,    # 4% after 6h
-        "720": 0.025,   # 2.5% after 12h
-        "1440": 0.015,  # 1.5% after 24h
-        "2880": 0.01,   # 1% after 48h
+        "0": 0.229,     # 22.9% immediate
+        "124": 0.136,   # 13.6% after ~2h
+        "290": 0.044,   # 4.4% after ~5h
+        "764": 0,       # breakeven after ~12.7h
     }
 
     # --- Stoploss: WIDE for crypto volatility ---
@@ -74,7 +72,7 @@ class TrendRiderStrategy(IStrategy):
         }
     ]
 
-    # --- HyperOpt Results (applied from optimization session 2026-03-21) ---
+    # --- HyperOpt Results (applied from optimization session 2026-03-23) ---
     buy_params = {
         "ema_fast": 9,
         "ema_slow": 16,
@@ -87,7 +85,7 @@ class TrendRiderStrategy(IStrategy):
     }
 
     sell_params = {
-        "rsi_exit": 81,
+        "rsi_exit": 82,
     }
 
     # --- HyperOpt Parameters ---

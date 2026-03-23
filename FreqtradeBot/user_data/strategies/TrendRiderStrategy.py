@@ -1128,6 +1128,19 @@ class TrendRiderStrategy(IStrategy):
         reward = abs(tp2_price - rate)
         rr_ratio = reward / risk if risk > 0 else 0
 
+        # Get current indicators for context (must be before _build_detailed_reason)
+        dataframe, _ = self.dp.get_analyzed_dataframe(pair, self.timeframe)
+        if len(dataframe) > 0:
+            last = dataframe.iloc[-1]
+            rsi_key = f"rsi_{self.rsi_period.value}"
+            rsi_val = last.get(rsi_key, 0)
+            adx_val = last.get("adx", 0)
+            vol_ratio = last.get("volume_ratio", 0)
+            macd_hist = last.get("macdhist", 0)
+        else:
+            rsi_val = adx_val = vol_ratio = macd_hist = 0
+            last = {}
+
         # Entry reason — dynamic with concrete levels
         reason = self._build_detailed_reason(entry_tag, last, rate)
 
@@ -1140,19 +1153,6 @@ class TrendRiderStrategy(IStrategy):
             "short_rsi_overbought": "RSI Overbought",
         }
         setup_name = setup_names.get(entry_tag, "Signal")
-
-        # Get current indicators for context
-        dataframe, _ = self.dp.get_analyzed_dataframe(pair, self.timeframe)
-        if len(dataframe) > 0:
-            last = dataframe.iloc[-1]
-            rsi_key = f"rsi_{self.rsi_period.value}"
-            rsi_val = last.get(rsi_key, 0)
-            adx_val = last.get("adx", 0)
-            vol_ratio = last.get("volume_ratio", 0)
-            macd_hist = last.get("macdhist", 0)
-        else:
-            rsi_val = adx_val = vol_ratio = macd_hist = 0
-            last = {}
 
         # Confidence, market context, regime
         conf_level, conf_bar, conf_details, conf_numeric = self._calc_confidence(last)
@@ -1291,8 +1291,9 @@ class TrendRiderStrategy(IStrategy):
             from freqtrade.persistence import Trade
             trades = Trade.get_trades_proxy(is_open=False)
 
-            # Filter last 30 days
-            cutoff = datetime.utcnow() - timedelta(days=30)
+            # Filter last 30 days (use timezone-aware datetime)
+            from datetime import timezone
+            cutoff = datetime.now(timezone.utc) - timedelta(days=30)
             recent = [t for t in trades if t.close_date and t.close_date >= cutoff]
 
             if not recent:
