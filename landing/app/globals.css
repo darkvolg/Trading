@@ -16,12 +16,13 @@
 
 /* ─── Light mode overrides ─── */
 html.light {
-  --color-background: #F8FAFC;
-  --color-foreground: #1A202C;
-  --color-secondary: #EDF2F7;
-  --color-muted: #64748B;
+  --color-background: #D5DAE1;
+  --color-foreground: #111827;
+  --color-primary: #00875A;
+  --color-secondary: #C5CCD6;
+  --color-muted: #4A5568;
   --color-card: #FFFFFF;
-  --color-border: #E2E8F0;
+  --color-border: #A8B3C0;
 }
 
 /* ─── Base ─── */
@@ -209,6 +210,13 @@ html {
   background-clip: text;
 }
 
+html.light .gradient-text {
+  background: linear-gradient(135deg, #00875A 0%, #00A86B 50%, #00875A 100%);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+}
+
 .gold-gradient-text {
   background: linear-gradient(135deg, #FFD700 0%, #FFA500 50%, #FFD700 100%);
   -webkit-background-clip: text;
@@ -227,12 +235,60 @@ html {
 
 html.light .grid-bg {
   background-image:
-    linear-gradient(rgba(0, 212, 170, 0.06) 1px, transparent 1px),
-    linear-gradient(90deg, rgba(0, 212, 170, 0.06) 1px, transparent 1px);
+    linear-gradient(rgba(0, 135, 90, 0.03) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(0, 135, 90, 0.03) 1px, transparent 1px);
 }
 
 html.light .noise-overlay::before {
   opacity: 0.015;
+}
+
+/* Dim candlestick bg + orbs + particles in light mode */
+html.light .candle-group { opacity: 0.15 !important; }
+html.light [class*="animate-orb"] { opacity: 0.3; }
+html.light .scan-line-animate { opacity: 0.3; }
+
+/* ─── Light mode: comprehensive card & section overrides ─── */
+
+/* All cards → white with shadow */
+html.light .metric-card,
+html.light .feature-card,
+html.light .testimonial-card,
+html.light .transparency-card,
+html.light .pricing-card,
+html.light .equity-glow,
+html.light .step-card,
+html.light .security-badge {
+  background: #FFFFFF !important;
+  border-color: #B8C4D0 !important;
+  box-shadow: 0 2px 12px rgba(0, 0, 0, 0.08), 0 1px 3px rgba(0, 0, 0, 0.04) !important;
+}
+
+/* Alternating sections → darker gray band */
+html.light section[class*="bg-card"] {
+  background: #DAE0E8 !important;
+}
+
+/* Any element using bg-background/50 → solid white in light mode */
+html.light [class*="bg-background\\/50"],
+html.light [class*="bg-background/50"] {
+  background-color: #FFFFFF !important;
+}
+
+/* Comparison section bg */
+html.light section[class*="border-y"] {
+  background: #DFE4EB !important;
+}
+
+/* Tech stack / media logos area */
+html.light [class*="bg-card\\/"] {
+  background-color: transparent !important;
+}
+
+/* Navbar solid in light mode */
+html.light nav[aria-label] {
+  background: rgba(232, 236, 241, 0.95) !important;
+  border-bottom-color: #B8C4D0 !important;
 }
 
 .noise-overlay::before {
@@ -347,6 +403,10 @@ html.light .vip-card-inner {
   border-radius: 9999px;
   animation: fillBar 1.8s cubic-bezier(0.16, 1, 0.3, 1) forwards;
   transition: none;
+}
+
+html.light .progress-bar-fill {
+  background: linear-gradient(90deg, #00875A, #00A86B);
 }
 
 /* ─── Marquee ─── */
@@ -535,6 +595,11 @@ html.light .metric-card:hover {
   transition: filter 0.2s ease, transform 0.1s ease, box-shadow 0.3s ease;
 }
 
+html.light .btn-primary {
+  background: linear-gradient(135deg, #00875A, #006B45);
+  color: #FFFFFF;
+}
+
 .btn-primary:hover {
   filter: brightness(1.12);
   box-shadow: 0 0 30px rgba(0, 212, 170, 0.4);
@@ -562,6 +627,10 @@ html.light .metric-card:hover {
   z-index: 100;
   transform-origin: left;
   transition: width 0.1s linear;
+}
+
+html.light .scroll-line {
+  background: linear-gradient(90deg, #00875A, #D4A000);
 }
 
 /* ─── Letter reveal animation ─── */
