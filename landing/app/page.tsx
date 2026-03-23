@@ -52,6 +52,17 @@ const T = {
     maxDrawdown: "Max Drawdown",
     sqnScore: "SQN Score",
 
+    // roi calculator
+    roiTag: "Calculator",
+    roiTitle: "Calculate Your Potential Returns",
+    roiSubtitle: "See how TrendRider's algorithm could grow your investment",
+    roiDeposit: "Initial Deposit",
+    roiMonth1: "1 Month",
+    roiMonth3: "3 Months",
+    roiMonth6: "6 Months",
+    roiMonth12: "12 Months",
+    roiDisclaimer: "Based on historical backtest performance (13.57%/mo). Past results don\u2019t guarantee future returns.",
+
     // how it works
     howTag: "Process",
     howTitle: "How It Works",
@@ -193,6 +204,7 @@ const T = {
 
     // early adopter
     earlyAdopterLabel: "Early Adopter Pricing — Lock in before public launch",
+    daysLeft: "days left",
 
     // technology stack
     asSeenIn: "Technology Stack",
@@ -260,6 +272,11 @@ const T = {
     followUs: "Follow Us",
     riskDisclaimer: "Trading cryptocurrencies involves substantial risk of loss and is not suitable for every investor. Past performance is not indicative of future results. Never invest more than you can afford to lose. This is not financial advice.",
     poweredBy: "Powered by Freqtrade",
+
+    // exit-intent popup
+    exitTitle: "Wait! Don't miss free signals",
+    exitText: "Join our free Telegram channel and get algorithmic trading signals — no credit card required.",
+    exitCta: "Get Free Signals",
   },
   ru: {
     navPerformance: "Результаты",
@@ -297,6 +314,17 @@ const T = {
     viewFullResults: "Все результаты",
     maxDrawdown: "Макс. просадка",
     sqnScore: "SQN",
+
+    // roi calculator
+    roiTag: "Калькулятор",
+    roiTitle: "Рассчитайте потенциальную прибыль",
+    roiSubtitle: "Посмотрите как алгоритм TrendRider может увеличить ваш капитал",
+    roiDeposit: "Начальный депозит",
+    roiMonth1: "1 Месяц",
+    roiMonth3: "3 Месяца",
+    roiMonth6: "6 Месяцев",
+    roiMonth12: "12 Месяцев",
+    roiDisclaimer: "На основе исторических бэктестов (13.57%/мес). Прошлые результаты не гарантируют будущую доходность.",
 
     howTag: "Процесс",
     howTitle: "Как это работает",
@@ -430,6 +458,7 @@ const T = {
 
     // early adopter
     earlyAdopterLabel: "Цены раннего доступа — Зафиксируйте до публичного запуска",
+    daysLeft: "дней осталось",
 
     // technology stack
     asSeenIn: "Технологический стек",
@@ -497,6 +526,11 @@ const T = {
     followUs: "Мы в соцсетях",
     riskDisclaimer: "Торговля криптовалютами сопряжена со значительным риском убытков и подходит не каждому инвестору. Прошлые результаты не гарантируют будущих. Никогда не инвестируйте больше, чем можете позволить себе потерять. Это не финансовая рекомендация.",
     poweredBy: "На базе Freqtrade",
+
+    // exit-intent popup
+    exitTitle: "Подождите! Не упустите бесплатные сигналы",
+    exitText: "Присоединяйтесь к бесплатному Telegram-каналу и получайте алгоритмические торговые сигналы — без оплаты.",
+    exitCta: "Получить бесплатные сигналы",
   },
 } as const;
 
@@ -603,7 +637,7 @@ const getPricing = (t: TStrings) => [
     features: [t.basicF1, t.basicF2, t.basicF3, t.basicF4],
     cta: t.subscribe,
     href: TELEGRAM_BOT_URL + "?start=basic",
-    highlight: false,
+    highlight: true,
   },
   {
     name: "VIP",
@@ -612,7 +646,7 @@ const getPricing = (t: TStrings) => [
     features: [t.vipF1, t.vipF2, t.vipF3, t.vipF4, t.vipF5],
     cta: t.getVip,
     href: TELEGRAM_BOT_URL + "?start=vip",
-    highlight: true,
+    highlight: false,
   },
 ];
 
@@ -886,7 +920,19 @@ function SectionHeading({
       <h2
         className={`reveal reveal-delay-1 ${visible ? "visible" : ""} text-3xl md:text-4xl lg:text-5xl font-bold mb-4 tracking-tight`}
       >
-        {title}
+        {title.split(' ').map((word, i) => (
+          <span
+            key={i}
+            className="inline-block opacity-0 translate-y-4 transition-all duration-500"
+            style={{
+              transitionDelay: visible ? `${i * 0.08 + 0.2}s` : '0s',
+              opacity: visible ? 1 : 0,
+              transform: visible ? 'translateY(0)' : 'translateY(16px)',
+            }}
+          >
+            {word}{' '}
+          </span>
+        ))}
       </h2>
       {subtitle && (
         <p
@@ -1508,14 +1554,19 @@ function EquityCurve({ label, visible }: { label: string; visible: boolean }) {
 }
 
 /* ─── Early Adopter Badge ─── */
-function EarlyAdopterBadge({ label }: { label: string }) {
+function EarlyAdopterBadge({ label, daysLeftLabel }: { label: string; daysLeftLabel: string }) {
+  const launchDate = new Date("2026-04-15T00:00:00");
+  const now = new Date();
+  const daysRemaining = Math.max(0, Math.ceil((launchDate.getTime() - now.getTime()) / (1000 * 60 * 60 * 24)));
   return (
     <div className="inline-flex items-center gap-2 px-4 py-2 rounded-full border border-accent/30 bg-accent/5">
       <span className="relative flex h-2 w-2">
         <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-accent opacity-75" />
         <span className="relative inline-flex rounded-full h-2 w-2 bg-accent" />
       </span>
-      <span className="text-xs text-accent/80 font-medium">{label}</span>
+      <span className="text-xs text-accent/80 font-medium">
+        {label} · {daysRemaining} {daysLeftLabel}
+      </span>
     </div>
   );
 }
@@ -1569,8 +1620,8 @@ function TechStackLogos({ visible, label }: { visible: boolean; label: string })
 function ComparisonTable({ t, visible }: { t: TStrings; visible: boolean }) {
   const rows = [t.compRow1, t.compRow2, t.compRow3, t.compRow4, t.compRow5, t.compRow6];
   return (
-    <div className={`reveal reveal-delay-2 ${visible ? "visible" : ""} max-w-3xl mx-auto overflow-x-auto`}>
-      <table className="w-full border-collapse">
+    <div className={`reveal reveal-delay-2 ${visible ? "visible" : ""} max-w-3xl mx-auto overflow-x-auto -mx-4 px-4`}>
+      <table className="w-full border-collapse min-w-[500px]">
         <thead>
           <tr>
             <th className="text-left py-4 px-4 text-xs uppercase tracking-widest text-muted font-mono border-b border-border/30">{t.compCol1}</th>
@@ -1741,6 +1792,9 @@ function CookieConsent({ t }: { t: TStrings }) {
 export default function Home() {
   const [locale, setLocale] = useState<Locale>("en");
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
+  const [exitPopupShown, setExitPopupShown] = useState(false);
+  const [exitPopupDismissed, setExitPopupDismissed] = useState(false);
+  const [deposit, setDeposit] = useState(1000);
   const theme: Theme = "dark";
   const t = T[locale];
 
@@ -1749,6 +1803,7 @@ export default function Home() {
   const securitySection = useInView(0.2);
   const dashboardSection = useInView(0.15);
   const metricsSection = useInView(0.2);
+  const roiSection = useInView(0.1);
   const howItWorks = useInView(0.15);
   const signalSection = useInView(0.2);
   const featuresSection = useInView(0.1);
@@ -1761,6 +1816,31 @@ export default function Home() {
   const scrollProgress = useScrollProgress();
   const floatingVisible = useFloatingVisible();
   const navVisible = useNavVisible();
+  const parallaxRef = useRef<HTMLDivElement>(null);
+
+  // Parallax effect for floating orbs
+  useEffect(() => {
+    const onScroll = () => {
+      if (parallaxRef.current) {
+        parallaxRef.current.style.transform = `translateY(${window.scrollY * 0.05}px)`;
+      }
+    };
+    window.addEventListener("scroll", onScroll, { passive: true });
+    return () => window.removeEventListener("scroll", onScroll);
+  }, []);
+
+  const cursorGlowRef = useRef<HTMLDivElement>(null);
+
+  useEffect(() => {
+    const handler = (e: MouseEvent) => {
+      if (cursorGlowRef.current) {
+        cursorGlowRef.current.style.left = `${e.clientX}px`;
+        cursorGlowRef.current.style.top = `${e.clientY}px`;
+      }
+    };
+    window.addEventListener('mousemove', handler);
+    return () => window.removeEventListener('mousemove', handler);
+  }, []);
 
   const scrollTo = useCallback((ref: React.RefObject<HTMLDivElement | null>) => {
     if (ref.current) {
@@ -1770,6 +1850,17 @@ export default function Home() {
     }
   }, []);
 
+  // Exit-intent popup: show once when cursor leaves viewport top
+  useEffect(() => {
+    const handler = (e: MouseEvent) => {
+      if (e.clientY <= 0 && !exitPopupDismissed) {
+        setExitPopupShown(true);
+      }
+    };
+    document.documentElement.addEventListener('mouseleave', handler);
+    return () => document.documentElement.removeEventListener('mouseleave', handler);
+  }, [exitPopupDismissed]);
+
   const metrics = getMetrics(t);
   const steps = getSteps(t);
   const features = getFeatures(t);
@@ -1778,6 +1869,13 @@ export default function Home() {
 
   return (
     <div className="grid-bg relative">
+      {/* Cursor glow effect */}
+      <div
+        ref={cursorGlowRef}
+        className="pointer-events-none fixed w-[300px] h-[300px] rounded-full opacity-[0.04] bg-primary blur-[100px] -translate-x-1/2 -translate-y-1/2 z-0 hidden md:block"
+        aria-hidden="true"
+      />
+
       {/* Skip to main content — accessibility */}
       <a
         href="#main-content"
@@ -1825,7 +1923,7 @@ export default function Home() {
             <LanguageToggle locale={locale} setLocale={setLocale} />
             {/* Mobile burger */}
             <button
-              className="md:hidden flex flex-col gap-1.5 p-2 rounded-lg hover:bg-card/50 transition-colors"
+              className="md:hidden flex flex-col gap-1.5 p-3 min-w-[44px] min-h-[44px] items-center justify-center rounded-lg hover:bg-card/50 transition-colors"
               onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
               aria-label="Toggle menu"
             >
@@ -1860,7 +1958,7 @@ export default function Home() {
               <button
                 key={item.label}
                 onClick={() => { scrollTo(item.ref); setMobileMenuOpen(false); }}
-                className="block w-full text-left py-3 px-3 text-sm text-muted hover:text-foreground hover:bg-card/30 rounded-lg transition-colors"
+                className="block w-full text-left py-4 px-3 text-sm text-muted hover:text-foreground hover:bg-card/30 rounded-lg transition-colors"
               >
                 {item.label}
               </button>
@@ -1900,10 +1998,15 @@ export default function Home() {
         <div className="absolute inset-0 bg-[radial-gradient(ellipse_80%_60%_at_50%_-10%,rgba(0,212,170,0.08)_0%,transparent_70%)] pointer-events-none" />
         <div className="absolute inset-0 bg-[radial-gradient(ellipse_40%_40%_at_75%_70%,rgba(255,215,0,0.04)_0%,transparent_60%)] pointer-events-none" />
 
-        {/* Floating gradient orbs */}
-        <div className="absolute top-1/4 left-1/4 w-[500px] h-[500px] rounded-full bg-primary/[0.03] blur-[120px] animate-orb-1" />
-        <div className="absolute bottom-1/3 right-1/5 w-[400px] h-[400px] rounded-full bg-accent/[0.02] blur-[100px] animate-orb-2" />
-        <div className="absolute top-2/3 left-2/3 w-[300px] h-[300px] rounded-full bg-danger/[0.02] blur-[80px] animate-orb-3" />
+        {/* Animated gradient mesh blob */}
+        <div className="gradient-mesh top-1/4 left-1/2 -translate-x-1/2 -translate-y-1/4 opacity-60" aria-hidden="true" />
+
+        {/* Floating gradient orbs — parallax wrapper */}
+        <div ref={parallaxRef} className="absolute inset-0 pointer-events-none" aria-hidden="true">
+          <div className="absolute top-1/4 left-1/4 w-[500px] h-[500px] rounded-full bg-primary/[0.03] blur-[120px] animate-orb-1" />
+          <div className="absolute bottom-1/3 right-1/5 w-[400px] h-[400px] rounded-full bg-accent/[0.02] blur-[100px] animate-orb-2" />
+          <div className="absolute top-2/3 left-2/3 w-[300px] h-[300px] rounded-full bg-danger/[0.02] blur-[80px] animate-orb-3" />
+        </div>
 
         {/* Candlestick chart background — faded in center so text is readable */}
         <div className="absolute inset-0 pointer-events-none" style={{
@@ -1922,7 +2025,7 @@ export default function Home() {
         }} />
 
         {/* Language toggle in hero — visible before navbar appears */}
-        <div className="absolute top-8 right-8 z-20 flex items-center gap-2">
+        <div className="absolute top-10 right-6 sm:top-8 sm:right-8 z-20 flex items-center gap-2">
           <LanguageToggle
             locale={locale}
             setLocale={setLocale}
@@ -1955,7 +2058,7 @@ export default function Home() {
           </div>
 
           {/* Headline — animated letter reveal */}
-          <h1 className="text-6xl md:text-8xl font-bold tracking-tight mb-4"
+          <h1 className="text-3xl sm:text-4xl md:text-6xl lg:text-8xl font-bold tracking-tight mb-4"
             style={{ animation: "fadeInUp 0.7s 0.2s cubic-bezier(0.16, 1, 0.3, 1) both" }}>
             {"TrendRider".split("").map((letter, i) => (
               <span
@@ -1971,7 +2074,7 @@ export default function Home() {
           </h1>
 
           <p
-            className="text-xl md:text-3xl text-foreground/80 font-light mb-3 tracking-wide"
+            className="text-lg sm:text-xl md:text-2xl lg:text-3xl text-foreground/80 font-light mb-3 tracking-wide"
             style={{ animation: "fadeInUp 0.7s 0.35s cubic-bezier(0.16, 1, 0.3, 1) both" }}
           >
             {t.tagline}{" "}
@@ -2208,6 +2311,85 @@ export default function Home() {
 
       <SectionDivider variant="dots" />
 
+
+      {/* ─── ROI CALCULATOR ─── */}
+      <section ref={roiSection.ref} className="py-24 px-4">
+        <div className="max-w-4xl mx-auto">
+          <SectionHeading
+            tag={t.roiTag}
+            title={t.roiTitle}
+            subtitle={t.roiSubtitle}
+            visible={roiSection.visible}
+          />
+
+          {/* Deposit slider */}
+          <div
+            className={`reveal reveal-delay-1 ${roiSection.visible ? "visible" : ""} max-w-xl mx-auto mb-12`}
+          >
+            <label className="block text-sm font-mono uppercase tracking-wider text-muted mb-3 text-center">
+              {t.roiDeposit}
+            </label>
+            <div className="text-4xl font-bold text-center mb-4 text-primary">
+              {"$"}{deposit.toLocaleString("en-US")}
+            </div>
+            <input
+              type="range"
+              min={100}
+              max={50000}
+              step={100}
+              value={deposit}
+              onChange={(e) => setDeposit(Number(e.target.value))}
+              className="w-full h-2 rounded-full appearance-none cursor-pointer"
+              style={{
+                background: `linear-gradient(to right, #00D4AA ${((deposit - 100) / (50000 - 100)) * 100}%, rgba(255,255,255,0.1) ${((deposit - 100) / (50000 - 100)) * 100}%)`,
+              }}
+            />
+            <div className="flex justify-between text-xs text-muted mt-2 font-mono">
+              <span>$100</span>
+              <span>$50,000</span>
+            </div>
+          </div>
+
+          {/* Result cards */}
+          <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
+            {([
+              { label: t.roiMonth1, months: 1 },
+              { label: t.roiMonth3, months: 3 },
+              { label: t.roiMonth6, months: 6 },
+              { label: t.roiMonth12, months: 12 },
+            ] as const).map((item, i) => {
+              const result = deposit * Math.pow(1.1357, item.months);
+              const profit = result - deposit;
+              const pctGain = ((result / deposit - 1) * 100).toFixed(1);
+              return (
+                <div
+                  key={item.months}
+                  className={`reveal reveal-delay-${i + 2} ${roiSection.visible ? "visible" : ""} relative p-4 md:p-6 rounded-2xl border border-border/50 bg-background/50 backdrop-blur-sm hover:border-primary/30 transition-all text-center`}
+                >
+                  <p className="text-xs font-mono uppercase tracking-wider text-muted mb-2">
+                    {item.label}
+                  </p>
+                  <p className="text-xl sm:text-2xl md:text-3xl font-bold mb-1 truncate" style={{ color: "#00D4AA" }}>
+                    {"$"}{result.toLocaleString("en-US", { maximumFractionDigits: 0 })}
+                  </p>
+                  <p className="text-xs sm:text-sm font-semibold truncate" style={{ color: "#FFD700" }}>
+                    {`+$${profit.toLocaleString("en-US", { maximumFractionDigits: 0 })} (${pctGain}%)`}
+                  </p>
+                </div>
+              );
+            })}
+          </div>
+
+          {/* Disclaimer */}
+          <p
+            className={`reveal reveal-delay-6 ${roiSection.visible ? "visible" : ""} text-center text-xs text-muted/70 mt-8 max-w-lg mx-auto`}
+          >
+            {t.roiDisclaimer}
+          </p>
+        </div>
+      </section>
+
+      <SectionDivider variant="dots" />
       {/* ─── HOW IT WORKS ─── */}
       <section ref={howItWorks.ref} className="py-24 px-4 bg-card/20">
         <div className="max-w-5xl mx-auto">
@@ -2407,12 +2589,13 @@ export default function Home() {
             visible={pricingSection.visible}
           />
           <div className={`reveal reveal-delay-1 ${pricingSection.visible ? "visible" : ""} flex justify-center mb-8`}>
-            <EarlyAdopterBadge label={t.earlyAdopterLabel} />
+            <EarlyAdopterBadge label={t.earlyAdopterLabel} daysLeftLabel={t.daysLeft} />
           </div>
 
           <div className="grid md:grid-cols-3 gap-6 max-w-4xl mx-auto items-start">
             {pricing.map((plan, i) => {
-              const isVip = plan.highlight;
+              const isPopular = plan.highlight;
+              const isVip = plan.name === "VIP";
               const cardContent = (
                 <div
                   className={`${isVip ? "vip-card-inner" : ""} ${
@@ -2420,12 +2603,14 @@ export default function Home() {
                   } pricing-card reveal reveal-delay-${i + 1} ${pricingSection.visible ? "visible" : ""} relative p-8 rounded-2xl h-full ${
                     isVip
                       ? "bg-[#0f1a0f]"
-                      : "glass hover:border-primary/20"
+                      : isPopular
+                        ? "glass border-primary/30 shadow-[0_0_20px_rgba(0,212,170,0.1)]"
+                        : "glass hover:border-primary/20"
                   }`}
                 >
-                  {isVip && (
+                  {isPopular && (
                     <div className="absolute -top-3 left-1/2 -translate-x-1/2 z-10">
-                      <span className="px-4 py-1 bg-accent text-background text-xs font-bold rounded-full uppercase tracking-wider">
+                      <span className="px-4 py-1 bg-primary text-background text-xs font-bold rounded-full uppercase tracking-wider">
                         {t.mostPopular}
                       </span>
                     </div>
@@ -2466,7 +2651,9 @@ export default function Home() {
                     className={`btn-press block w-full text-center py-3.5 rounded-xl font-semibold transition-all ${
                       isVip
                         ? "bg-accent text-background hover:brightness-110"
-                        : "border border-border text-foreground hover:bg-card/50 hover:border-primary/30"
+                        : isPopular
+                          ? "bg-primary text-background hover:brightness-110"
+                          : "border border-border text-foreground hover:bg-card/50 hover:border-primary/30"
                     }`}
                   >
                     {plan.cta}
@@ -2616,7 +2803,7 @@ export default function Home() {
             <div>
               <h4 className="text-sm font-semibold text-foreground mb-4">{t.contactUs}</h4>
               <ul className="space-y-2.5">
-                <li><a href="mailto:support@trendrider.pro" className="text-muted text-sm hover:text-primary transition-colors">support@trendrider.pro</a></li>
+                <li><a href="mailto:support@trendrider.net" className="text-muted text-sm hover:text-primary transition-colors">support@trendrider.net</a></li>
                 <li><a href={TELEGRAM_URL} target="_blank" rel="noopener noreferrer" className="text-muted text-sm hover:text-primary transition-colors">@TrendRiderSupport</a></li>
               </ul>
             </div>
@@ -2638,6 +2825,21 @@ export default function Home() {
 
       {/* ─── COOKIE CONSENT ─── */}
       <CookieConsent t={t} />
+
+      {/* ─── EXIT-INTENT POPUP ─── */}
+      {exitPopupShown && !exitPopupDismissed && (
+        <div className="fixed inset-0 z-[100] flex items-center justify-center bg-black/60 backdrop-blur-sm" onClick={() => { setExitPopupShown(false); setExitPopupDismissed(true); }}>
+          <div className="relative max-w-md mx-4 p-8 rounded-2xl glass border border-primary/30 text-center" onClick={e => e.stopPropagation()}>
+            <button onClick={() => { setExitPopupShown(false); setExitPopupDismissed(true); }} className="absolute top-3 right-3 text-muted hover:text-foreground text-xl">&times;</button>
+            <div className="text-4xl mb-4">{"\u{1F4E1}"}</div>
+            <h3 className="text-xl font-bold text-foreground mb-2">{t.exitTitle}</h3>
+            <p className="text-muted mb-6">{t.exitText}</p>
+            <a href="https://t.me/TrendRiderSignals" target="_blank" rel="noopener noreferrer" className="inline-block px-6 py-3 bg-primary text-background font-semibold rounded-xl hover:brightness-110 transition-all">
+              {t.exitCta}
+            </a>
+          </div>
+        </div>
+      )}
     </div>
   );
 }

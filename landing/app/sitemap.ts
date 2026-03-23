@@ -3,7 +3,7 @@ import type { MetadataRoute } from "next";
 export const dynamic = "force-static";
 
 export default function sitemap(): MetadataRoute.Sitemap {
-  const baseUrl = "https://trendrider.pro";
+  const baseUrl = "https://trendrider.net";
   return [
     {
       url: baseUrl,

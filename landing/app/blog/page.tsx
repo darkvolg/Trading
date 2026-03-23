@@ -91,6 +91,20 @@ const posts = [
 
 export default function BlogPage() {
   return (
+    <>
+      <script
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{
+          __html: JSON.stringify({
+            "@context": "https://schema.org",
+            "@type": "BreadcrumbList",
+            "itemListElement": [
+              { "@type": "ListItem", "position": 1, "name": "Home", "item": "https://trendrider.net" },
+              { "@type": "ListItem", "position": 2, "name": "Blog" }
+            ]
+          })
+        }}
+      />
     <div className="min-h-screen bg-background text-foreground">
       <div className="max-w-4xl mx-auto px-4 py-20">
         <a href="/" className="text-primary text-sm hover:underline mb-8 inline-block">&larr; Back to home</a>
@@ -118,5 +132,6 @@ export default function BlogPage() {
         </div>
       </div>
     </div>
+    </>
   );
 }

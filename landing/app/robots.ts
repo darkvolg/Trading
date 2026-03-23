@@ -8,6 +8,6 @@ export default function robots(): MetadataRoute.Robots {
       userAgent: "*",
       allow: "/",
     },
-    sitemap: "https://trendrider.pro/sitemap.xml",
+    sitemap: "https://trendrider.net/sitemap.xml",
   };
 }

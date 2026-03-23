@@ -30,7 +30,7 @@ export const metadata: Metadata = {
     "automated crypto trading",
     "bybit signals",
   ],
-  metadataBase: new URL("https://trendrider.pro"),
+  metadataBase: new URL("https://trendrider.net"),
   alternates: {
     canonical: "/",
     languages: {
@@ -43,7 +43,7 @@ export const metadata: Metadata = {
     description:
       "AI-powered crypto signals with 71% win rate. Verified results, ultra-low drawdown.",
     type: "website",
-    url: "https://trendrider.pro",
+    url: "https://trendrider.net",
     siteName: "TrendRider",
     locale: "en_US",
   },
@@ -53,6 +53,9 @@ export const metadata: Metadata = {
     description:
       "AI-powered crypto signals with 71% win rate. Verified results.",
     creator: "@TrendRiderPro",
+  },
+  other: {
+    'theme-color': '#0D1117',
   },
   robots: {
     index: true,
@@ -118,7 +121,7 @@ const jsonLd = {
   applicationCategory: "FinanceApplication",
   description:
     "AI-powered algorithmic crypto trading signals with 71% win rate. BTC, ETH, SOL, BNB signals via Telegram.",
-  url: "https://trendrider.pro",
+  url: "https://trendrider.net",
   operatingSystem: "Telegram",
   offers: [
     {

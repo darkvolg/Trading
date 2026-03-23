@@ -162,7 +162,7 @@ export default async function Image() {
               background: "#00D4AA",
             }}
           />
-          trendrider.pro — AI-powered crypto trading signals
+          trendrider.net — AI-powered crypto trading signals
         </div>
       </div>
     ),
