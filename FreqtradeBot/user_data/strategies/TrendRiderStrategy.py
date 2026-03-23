@@ -38,12 +38,10 @@ class TrendRiderStrategy(IStrategy):
 
     # --- ROI: Wide, let winners run ---
     minimal_roi = {
-        "0": 0.10,      # 10% immediate
-        "120": 0.06,    # 6% after 2h
-        "360": 0.04,    # 4% after 6h
-        "720": 0.025,   # 2.5% after 12h
-        "1440": 0.015,  # 1.5% after 24h
-        "2880": 0.01,   # 1% after 48h
+        "0": 0.229,     # 22.9% immediate (hyperopt 2026-03-23)
+        "124": 0.136,   # 13.6% after ~2h
+        "290": 0.044,   # 4.4% after ~5h
+        "764": 0,       # breakeven after ~12.7h
     }
 
     # --- Stoploss: WIDE for crypto volatility ---
@@ -98,7 +96,7 @@ class TrendRiderStrategy(IStrategy):
     }
 
     sell_params = {
-        "rsi_exit": 81,
+        "rsi_exit": 82,
     }
 
     # --- HyperOpt Parameters ---
