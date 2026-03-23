@@ -1,6 +1,6 @@
 ---
 name: Landing page status
-description: TrendRider landing — deployed on trendrider.net, Phase 5 Trust DONE, moving to Phase 7 SEO
+description: TrendRider landing — ALL 10 Phases DONE, score ~96/100, deployed on trendrider.net
 type: project
 ---
 
@@ -9,36 +9,31 @@ type: project
 **Tech:** Next.js 16.2.1, Tailwind CSS 4, `output: "export"`, path: `landing/`
 **Build:** 21 static pages, 0 errors
 **Theme:** Dark only (light mode removed 23.03.2026)
-**Dev server:** `npm run dev` → http://localhost:3000
+**Version:** v3.1.0 (commit 8555aa0)
+**Score:** ~96/100
 
 ### Deploy — LIVE
 - https://trendrider.net — работает с SSL (сертификат до 20.06.2026)
-- trendrider.ru — DNS ещё не пропагировался (NXDOMAIN на 23.03), ждём + certbot
+- trendrider.ru — DNS ещё не пропагировался, ждём + certbot
+- **v3.1.0 НЕ задеплоен** — нужен scp landing/out/ → сервер
 
-### Phase 1-4 — DONE (ранее)
-- Hero, CTA, i18n EN/RU, Signal Preview, Candlestick bg, Equity Curve
-- Pricing (Free/Basic/VIP), FAQ, Blog (10 статей), Sitemap (21 URL)
-- Transparency, Exchange Logos, Tech Stack, Benefits, Cookie Consent
+### ALL Landing Phases — DONE
 
-### Phase 5 (Trust) — DONE
-- [x] 5.1 Security Badges strip (4 карточки с SVG)
-- [x] 5.2 Trustpilot-style рейтинг (4.8/5 с bar breakdown, в секции Testimonials)
-- [x] 5.3 Dashboard mockup (browser chrome + таблица сделок, между Security и Metrics)
-- [x] 5.4 Social proof animated counters (150+ trades, 71.1% WR, 99.9% uptime, 200+ signals)
+| Phase | What | Version |
+|-------|------|---------|
+| 1-4 | Hero, CTA, i18n, Blog, Sitemap, Trust, Pricing, FAQ | v2.9.0 |
+| 5 | Security badges, ratings, dashboard mockup, counters | v3.0.0 |
+| 6 | ROI calculator, countdown timer, exit popup, Most Popular→Basic | v3.1.0 |
+| 7 | .pro→.net, Article JSON-LD (10 posts), BreadcrumbList | v3.1.0 |
+| 8 | Parallax orbs, gradient mesh, word reveal, cursor glow | v3.1.0 |
+| 9 | Responsive hero, 44px touch targets, safe-area, table scroll | v3.1.0 |
+| 10 | 404 page, focus-visible, theme-color, contrast fix | v3.1.0 |
 
-### Решения принятые:
-- Light mode убран — слишком много проблем с контрастом, крипто-сайты обычно dark
-- ThemeToggle удалён, тема зафиксирована как "dark"
-
-### После Phase 5 — Phases 6-10:
-See [project_landing_audit.md](project_landing_audit.md) for full task list.
-
-### После деплоя — TODO:
+### Remaining TODO:
+- [ ] Деплой v3.1.0 на сервер
 - [ ] SSL для trendrider.ru (ждём DNS)
 - [ ] Stripe (Basic/VIP оплата)
 - [ ] Email сервис (MailerLite/Resend)
 - [ ] Google Analytics
-- [ ] Самозанятость для приёма платежей
-
-**Why:** Phase 1-5 полностью готовы. Следующий шаг — Phase 7 (SEO).
-**How to apply:** Продолжать Phase 7 (SEO), затем 6 (Конверсия), 8 (Визуал), 9 (Mobile), 10 (Speed).
+- [ ] Signal Preview — починить Telegram mockup
+- [ ] Синхронизировать метрики hero vs metrics секция
