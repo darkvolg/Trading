@@ -4,7 +4,7 @@ import { useEffect, useRef, useState, useCallback } from "react";
 
 /* ──────────────────────────── imports from extracted modules ──────────────────────────── */
 
-import { TELEGRAM_URL, SHEETS_URL } from "@/lib/constants";
+import { TELEGRAM_URL, TELEGRAM_BOT_URL, SHEETS_URL } from "@/lib/constants";
 import { T } from "@/lib/i18n";
 import type { Locale } from "@/lib/i18n";
 import { getMetrics, getSteps, getFeatures, getPricing, getFaqItems } from "@/lib/data";
@@ -915,14 +915,14 @@ export default function Home() {
                   >
                     {plan.cta}
                   </a>
-                  {plan.cryptoHref && (
+                  {plan.price !== "$0" && (
                     <a
-                      href={plan.cryptoHref}
+                      href={TELEGRAM_BOT_URL + "?start=pay_usdt"}
                       target="_blank"
                       rel="noopener noreferrer"
                       className="block text-center text-xs text-muted hover:text-primary transition-colors mt-2"
                     >
-                      💎 {t.payWithCrypto}
+                      {locale === "ru" ? "Или переведите USDT напрямую" : "Or send USDT directly"}
                     </a>
                   )}
                 </div>
