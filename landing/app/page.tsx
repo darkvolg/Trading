@@ -1718,7 +1718,7 @@ function EmailCapture({ t }: { t: TStrings }) {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
-          Authorization: "Bearer REDACTED_MAILERLITE_TOKEN",
+          Authorization: `Bearer ${process.env.NEXT_PUBLIC_MAILERLITE_TOKEN}`,
         },
         body: JSON.stringify({ email }),
       });
