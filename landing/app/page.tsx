@@ -30,7 +30,7 @@ const T = {
     taglineHighlight: "Verified Results.",
     heroDesc: (
       <>AI-powered crypto trading signals with a{" "}
-      <span className="text-primary font-semibold">71% win rate</span> and{" "}
+      <span className="text-primary font-semibold">71.1% win rate</span> and{" "}
       <span className="text-primary font-semibold">1.81% max drawdown</span>.
       Multi-timeframe analysis across BTC, ETH, SOL, and BNB.</>
     ),
@@ -297,7 +297,7 @@ const T = {
     taglineHighlight: "Проверенные результаты.",
     heroDesc: (
       <>Крипто-сигналы на основе ИИ с{" "}
-      <span className="text-primary font-semibold">винрейтом 71%</span> и{" "}
+      <span className="text-primary font-semibold">винрейтом 71.1%</span> и{" "}
       <span className="text-primary font-semibold">просадкой 1.81%</span>.
       Мультитаймфрейм анализ BTC, ETH, SOL и BNB.</>
     ),
