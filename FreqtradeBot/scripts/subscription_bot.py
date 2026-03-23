@@ -13,7 +13,7 @@ from datetime import datetime, timedelta, timezone
 
 import aiohttp
 from telegram import InlineKeyboardButton, InlineKeyboardMarkup, Update
-from telegram.ext import Application, CommandHandler, ContextTypes
+from telegram.ext import Application, CallbackQueryHandler, CommandHandler, ContextTypes
 
 logging.basicConfig(
     format="%(asctime)s - %(name)s - %(levelname)s - %(message)s",
@@ -424,6 +424,14 @@ PLANS_TEXT = (
 async def plans_command(update: Update, _ctx: ContextTypes.DEFAULT_TYPE) -> None:
     """Show available subscription tiers."""
     await update.message.reply_text(PLANS_TEXT, parse_mode="Markdown")
+
+
+async def callback_handler(update: Update, ctx: ContextTypes.DEFAULT_TYPE) -> None:
+    """Handle inline button callbacks."""
+    query = update.callback_query
+    await query.answer()
+    if query.data == "plans":
+        await query.message.reply_text(PLANS_TEXT, parse_mode="Markdown")
 
 
 # ── /pay ─────────────────────────────────────────────────────────────────
@@ -944,6 +952,7 @@ def main() -> None:
     app.add_handler(CommandHandler("calc", calc_command))
     app.add_handler(CommandHandler("stats", stats_command))
     app.add_handler(CommandHandler("help", help_command))
+    app.add_handler(CallbackQueryHandler(callback_handler))
 
     # Admin commands
     app.add_handler(CommandHandler("grant", grant_command))
