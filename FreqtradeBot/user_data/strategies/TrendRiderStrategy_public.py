@@ -25,7 +25,7 @@ logger = logging.getLogger(__name__)
 class TrendRiderStrategy(IStrategy):
     INTERFACE_VERSION = 3
 
-    # --- ROI: Hyperopt-optimized (2026-03-23, 6 pairs) ---
+    # --- ROI: Hyperopt-optimized (2026-03-23, 5 pairs) ---
     minimal_roi = {
         "0": 0.229,     # 22.9% immediate
         "124": 0.136,   # 13.6% after ~2h
