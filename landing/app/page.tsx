@@ -117,7 +117,7 @@ const T = {
     basicF1: "Real-time signals",
     basicF2: "Cornix auto-trade ready",
     basicF3: "Weekly performance recap",
-    basicF4: "6 pairs: BTC/ETH/SOL/BNB/DOGE/LINK",
+    basicF4: "5 pairs: BTC/ETH/SOL/BNB/DOGE",
     basicF5: "Priority support",
     // VIP features
     vipF1: "Everything in Basic",
@@ -377,7 +377,7 @@ const T = {
     basicF1: "Сигналы в реальном времени",
     basicF2: "Формат для Cornix",
     basicF3: "Еженедельный отчёт",
-    basicF4: "6 пар: BTC/ETH/SOL/BNB/DOGE/LINK",
+    basicF4: "5 пар: BTC/ETH/SOL/BNB/DOGE",
     basicF5: "Приоритетная поддержка",
     vipF1: "Всё из Basic",
     vipF2: "Пост-трейд анализ",
