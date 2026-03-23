@@ -25,7 +25,6 @@ def build_detailed_reason(entry_tag: str, last: dict, rate: float,
     ema_200 = last.get('ema_200', 0)
     macd_hist = last.get('macdhist', 0)
     bb_lower = last.get('bb_lower', 0)
-    bb_upper = last.get('bb_upper', 0)
     vol_ratio = last.get('volume_ratio', 0)
 
     parts = []
@@ -61,31 +60,6 @@ def build_detailed_reason(entry_tag: str, last: dict, rate: float,
         )
         if vol_ratio > 1.0:
             parts.append(f"Volume spike {vol_ratio:.1f}x signals buyer interest.")
-
-    elif entry_tag == "short_pullback":
-        parts.append(
-            f"Price rejected at EMA{ema_fast_period} ({ema_fast:.1f}) "
-            f"in a downtrend — EMA{ema_fast_period} < EMA{ema_slow_period} ({ema_slow:.1f})."
-        )
-        parts.append(
-            f"RSI at {rsi_val:.0f}, ADX {adx_val:.0f} confirms bearish momentum."
-        )
-
-    elif entry_tag == "short_ema50_rejection":
-        parts.append(
-            f"Rejection at EMA50 ({ema_50:.1f}) from below — key resistance holds."
-        )
-        parts.append(
-            f"MACD histogram negative ({macd_hist:.4f}), RSI {rsi_val:.0f} — bearish pressure."
-        )
-
-    elif entry_tag == "short_rsi_overbought":
-        parts.append(
-            f"RSI overbought at {rsi_val:.0f}, reversing from BB upper ({bb_upper:.1f})."
-        )
-        parts.append(
-            f"Price below EMA200 ({ema_200:.1f}) — bearish structure intact."
-        )
 
     else:
         return entry_tag or "Signal"
@@ -137,22 +111,17 @@ def format_entry_signal(signal_num: int, pair: str, side_str: str, leverage: int
 
 
 def format_cornix_signal(pair: str, side: str, leverage: int, rate: float,
-                         sl_price: float, is_short: bool) -> str:
+                         sl_price: float) -> str:
     """Format Cornix-compatible signal message."""
     pair_clean = pair.replace('/USDT:USDT', '').replace('/', '')
-    signal_type = "Regular (Short)" if is_short else "Regular (Long)"
+    signal_type = "Regular (Long)"
 
     entry_low = rate * (1 - ENTRY_ZONE_PCT)
     entry_high = rate * (1 + ENTRY_ZONE_PCT)
 
-    if is_short:
-        tp1 = rate * (1 - TP1_PCT)
-        tp2 = rate * (1 - TP2_PCT)
-        tp3 = rate * (1 - TP3_PCT)
-    else:
-        tp1 = rate * (1 + TP1_PCT)
-        tp2 = rate * (1 + TP2_PCT)
-        tp3 = rate * (1 + TP3_PCT)
+    tp1 = rate * (1 + TP1_PCT)
+    tp2 = rate * (1 + TP2_PCT)
+    tp3 = rate * (1 + TP3_PCT)
 
     return (
         f"#{pair_clean}\n\n"
@@ -174,14 +143,11 @@ def format_cornix_signal(pair: str, side: str, leverage: int, rate: float,
 def format_exit_report(pair: str, trade, rate: float, exit_reason: str,
                        current_time: datetime) -> str:
     """Format the trade exit report message."""
-    # Calculate results
-    if trade.is_short:
-        profit_pct = ((trade.open_rate - rate) / trade.open_rate) * 100 * trade.leverage
-    else:
-        profit_pct = ((rate - trade.open_rate) / trade.open_rate) * 100 * trade.leverage
+    # Calculate results (LONG only)
+    profit_pct = ((rate - trade.open_rate) / trade.open_rate) * 100 * trade.leverage
     duration_hours = (current_time - trade.open_date_utc).total_seconds() / 3600
 
-    side_str = "SHORT" if trade.is_short else "LONG"
+    side_str = "LONG"
     reason_text = EXIT_REASONS.get(exit_reason, exit_reason)
 
     # Result
@@ -201,10 +167,7 @@ def format_exit_report(pair: str, trade, rate: float, exit_reason: str,
     rr_achieved = reward_pct / risk_pct if risk_pct > 0 else 0
 
     # Max drawdown
-    if trade.is_short:
-        max_dd = ((trade.max_rate - trade.open_rate) / trade.open_rate) * 100
-    else:
-        max_dd = ((trade.open_rate - trade.min_rate) / trade.open_rate) * 100 if trade.min_rate else 0
+    max_dd = ((trade.open_rate - trade.min_rate) / trade.open_rate) * 100 if trade.min_rate else 0
 
     # Review
     if profit_pct > 5:

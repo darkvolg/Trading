@@ -1,5 +1,5 @@
 """
-TrendRider Public v2.9.0 — Strat Ninja Edition
+TrendRider Public v2.11.0 — Strat Ninja Edition
 
 Philosophy: Ride established trends with WIDE stoploss.
 Key insight: crypto swings 2-4% per hour. Stoploss must be >= 5-6%.
@@ -190,23 +190,6 @@ class TrendRiderStrategy(IStrategy):
             (dataframe["close"] > dataframe["open"])
         ).astype(int)
 
-        # --- SHORT pullback detection ---
-        if ema_slow_key in dataframe.columns:
-            dataframe["pullback_from_ema"] = (
-                (dataframe["high"] >= dataframe[ema_slow_key] * 0.99) &
-                (dataframe["close"] < dataframe[ema_slow_key]) &
-                (dataframe["close"] < dataframe["open"])  # Bearish candle
-            ).astype(int)
-        else:
-            dataframe["pullback_from_ema"] = 0
-
-        # EMA50 rejection (SHORT)
-        dataframe["ema50_rejection"] = (
-            (dataframe["high"] >= dataframe["ema_50"] * 0.99) &
-            (dataframe["close"] < dataframe["ema_50"]) &
-            (dataframe["close"] < dataframe["open"])
-        ).astype(int)
-
         # --- Multi-Timeframe data ---
         if self.dp:
             # 4h data for current pair
@@ -311,7 +294,7 @@ class TrendRiderStrategy(IStrategy):
             dataframe["btc_rsi_1h"] > 35,
             dataframe["fng_value"] >= 25,      # Not extreme fear
             dataframe["fng_value"] <= 85,      # Not extreme greed
-            dataframe[rsi] < 70,                 # Not overbought
+            dataframe[rsi] < 70,               # Not overbought
         ]
         # Daily EMA200 filter — helps filter bad entries
         if 'ema_200_1d_1d' in dataframe.columns:
@@ -361,61 +344,6 @@ class TrendRiderStrategy(IStrategy):
             ["enter_long", "enter_tag"]
         ] = (1, "rsi_bounce")
 
-        # ========== SHORT ENTRIES ==========
-
-        # === SHORT 1: Trend Pullback from EMA (bear market) ===
-        conditions_short_pullback = [
-            dataframe["is_bear"] == 1,
-            dataframe["pullback_from_ema"] == 1,
-            dataframe[rsi] > 42,
-            dataframe[rsi] < 60,
-            dataframe["adx"] > self.adx_threshold.value,
-            dataframe["volume_ratio"] > self.volume_factor.value,
-            dataframe["minus_di"] > dataframe["plus_di"],
-            dataframe["volume"] > 0,
-            dataframe["btc_rsi_1h"] < 65,
-            dataframe["fng_value"] >= 15,
-            dataframe["fng_value"] <= 75,
-        ]
-        dataframe.loc[
-            reduce(lambda x, y: x & y, conditions_short_pullback),
-            ["enter_short", "enter_tag"]
-        ] = (1, "short_pullback")
-
-        # === SHORT 2: EMA50 Rejection ===
-        conditions_short_ema50 = [
-            dataframe["is_bear"] == 1,
-            dataframe["ema50_rejection"] == 1,
-            dataframe[rsi] > 50,
-            dataframe[rsi] < 70,
-            dataframe["adx"] > 20,
-            dataframe["macdhist"] < dataframe["macdhist"].shift(1),  # MACD histogram falling
-            dataframe["volume"] > 0,
-            dataframe["btc_rsi_1h"] < 65,
-            dataframe["fng_value"] >= 15,
-            dataframe["fng_value"] <= 75,
-        ]
-        dataframe.loc[
-            reduce(lambda x, y: x & y, conditions_short_ema50),
-            ["enter_short", "enter_tag"]
-        ] = (1, "short_ema50_rejection")
-
-        # === SHORT 3: RSI Overbought Cross Down ===
-        conditions_short_rsi = [
-            dataframe["close"] < dataframe["ema_200"],
-            dataframe[rsi].shift(1) > 70,
-            dataframe[rsi] <= 70,                            # RSI crosses 70 from above
-            dataframe["close"] < dataframe["bb_upper"],
-            dataframe["close"] < dataframe["open"],          # Bearish candle
-            dataframe["volume"] > 0,
-            dataframe["fng_value"] >= 15,
-            dataframe["fng_value"] <= 75,
-        ]
-        dataframe.loc[
-            reduce(lambda x, y: x & y, conditions_short_rsi),
-            ["enter_short", "enter_tag"]
-        ] = (1, "short_rsi_overbought")
-
         return dataframe
 
     def populate_exit_trend(self, dataframe: DataFrame, metadata: dict) -> DataFrame:
@@ -449,31 +377,6 @@ class TrendRiderStrategy(IStrategy):
             (dataframe["volume"] > 0),
             ["exit_long", "exit_tag"]
         ] = (1, "trend_broken")
-
-        # ========== SHORT EXITS ==========
-
-        # SHORT EXIT 1: RSI oversold (inverse of rsi_exit 81 -> 19)
-        dataframe.loc[
-            (dataframe[rsi] < 19) &
-            (dataframe["volume"] > 0),
-            ["exit_short", "exit_tag"]
-        ] = (1, "rsi_oversold_short")
-
-        # SHORT EXIT 2: Bullish EMA cross
-        dataframe.loc[
-            (dataframe[ema_fast] > dataframe[ema_slow]) &
-            (dataframe[ema_fast].shift(1) <= dataframe[ema_slow].shift(1)) &
-            (dataframe["volume"] > 0),
-            ["exit_short", "exit_tag"]
-        ] = (1, "ema_bullish_cross_short")
-
-        # SHORT EXIT 3: Price rises above EMA200 (trend broken for shorts)
-        dataframe.loc[
-            (dataframe["close"] > dataframe["ema_200"]) &
-            (dataframe["close"].shift(1) <= dataframe["ema_200"].shift(1)) &
-            (dataframe["volume"] > 0),
-            ["exit_short", "exit_tag"]
-        ] = (1, "trend_broken_short")
 
         return dataframe
 
@@ -535,11 +438,11 @@ class TrendRiderStrategy(IStrategy):
 
         return None
 
-    # --- Improved Confidence Scoring ---
+    # --- Improved Confidence Scoring (inline from trendrider_confidence) ---
     def _calc_confidence(self, last: dict) -> tuple:
         """Calculate signal confidence based on weighted indicator alignment.
 
-        Max score ~15. Returns (level_str, bar_str, details_list, numeric_level).
+        Max score ~17.5. Returns (level_str, bar_str, details_list, numeric_level).
         """
         score = 0.0
         details = []
@@ -569,15 +472,16 @@ class TrendRiderStrategy(IStrategy):
             score += 1.5
             details.append("Normal volume")
 
-        # MACD positive histogram AND rising: +1.5 both, +1.0 positive only
+        # MACD positive histogram: +1.5, bonus +0.5 if rising
         macd_hist = last.get('macdhist', 0)
         macd_hist_prev = last.get('macdhist_prev', 0)
-        if macd_hist > 0 and macd_hist > macd_hist_prev:
+        if macd_hist > 0:
             score += 1.5
-            details.append("MACD positive+rising")
-        elif macd_hist > 0:
-            score += 1.0
-            details.append("MACD positive")
+            if macd_hist > macd_hist_prev:
+                score += 0.5
+                details.append("MACD positive+rising")
+            else:
+                details.append("MACD positive")
 
         # OBV rising AND above EMA: +1.5
         if last.get('obv', 0) > last.get('obv_ema', 0):
@@ -625,23 +529,21 @@ class TrendRiderStrategy(IStrategy):
             score += 1
             details.append("Healthy funding")
 
-        # Map to level (max ~15 points)
-        if score >= 11:
+        # Smooth mapping to 1-10 (max score ~17.5)
+        numeric = max(1, min(10, round(score * 10 / 17.5)))
+
+        # Level label
+        if numeric >= 8:
             level = "STRONG"
-            bar = "|||||||||| 9/10"
-            numeric = 9
-        elif score >= 8:
+        elif numeric >= 6:
             level = "GOOD"
-            bar = "||||||||-- 7/10"
-            numeric = 7
-        elif score >= 5:
+        elif numeric >= 4:
             level = "MEDIUM"
-            bar = "||||||---- 5/10"
-            numeric = 5
         else:
             level = "WEAK"
-            bar = "|||------- 3/10"
-            numeric = 3
+
+        # Dynamic bar
+        bar = "|" * numeric + "-" * (10 - numeric) + f" {numeric}/10"
 
         return level, bar, details, numeric
 
@@ -664,25 +566,35 @@ class TrendRiderStrategy(IStrategy):
 
         return " | ".join(parts)
 
+    def _get_market_regime(self, last: dict) -> str:
+        """Detect market regime from ADX + EMA200 + BB width."""
+        adx_val = last.get('adx', 0)
+        ema_200 = last.get('ema_200', 0)
+        close = last.get('close', 0)
+        is_bull = last.get('is_bull', 0)
+        bb_width = last.get('bb_width', 0)
+        bb_width_sma = last.get('bb_width_sma', 0)
+
+        high_vol = bb_width > bb_width_sma * 1.5 if bb_width_sma > 0 else False
+
+        if adx_val < 20:
+            return "Ranging (High Vol)" if high_vol else "Ranging"
+        elif is_bull and close > ema_200:
+            return "Trending Bull"
+        else:
+            return "Trending Bear (High Vol)" if high_vol else "Trending Bear"
+
     def confirm_trade_entry(self, pair: str, order_type: str, amount: float, rate: float,
                            time_in_force: str, current_time: datetime, entry_tag: str | None,
                            side: str, **kwargs) -> bool:
-        is_short = side == "short"
-
-        # Calculate levels depending on direction
-        if is_short:
-            sl_price = rate * (1 - self.stoploss)  # stoploss is negative, so 1 - (-0.06) = 1.06
-            tp1_price = rate * 0.97   # -3%
-            tp2_price = rate * 0.95   # -5%
-            tp3_price = rate * 0.90   # -10%
-        else:
-            sl_price = rate * (1 + self.stoploss)  # stoploss is negative
-            tp1_price = rate * 1.03   # +3%
-            tp2_price = rate * 1.05   # +5%
-            tp3_price = rate * 1.10   # +10%
+        # Calculate levels (LONG only, can_short = False)
+        sl_price = rate * (1 + self.stoploss)
+        tp1_price = rate * 1.03   # +3%
+        tp2_price = rate * 1.05   # +5%
+        tp3_price = rate * 1.10   # +10%
 
         leverage = self.leverage_value
-        side_str = "SHORT" if is_short else "LONG"
+        side_str = "LONG"
 
         # Risk/reward ratio
         risk = abs(rate - sl_price)
@@ -694,9 +606,6 @@ class TrendRiderStrategy(IStrategy):
             "trend_pullback": "Pullback to EMA in uptrend, bounce with volume confirmation",
             "ema50_bounce": "Deep pullback to EMA50, bounce with rising MACD",
             "rsi_bounce": "RSI oversold, bounce from lower Bollinger in bull market",
-            "short_pullback": "Pullback to EMA in downtrend, rejection with volume confirmation",
-            "short_ema50_rejection": "Rejection from EMA50 above, falling MACD",
-            "short_rsi_overbought": "RSI overbought, reversal from upper Bollinger in bear market",
         }
         reason = reasons.get(entry_tag, entry_tag or "Signal")
 
@@ -716,10 +625,12 @@ class TrendRiderStrategy(IStrategy):
         # Confidence & market context
         conf_level, conf_bar, conf_details, conf_numeric = self._calc_confidence(last)
         market_ctx = self._market_context(last)
+        regime = self._get_market_regime(last)
 
         # --- REJECT WEAK SIGNALS ---
-        if conf_numeric <= 5:
-            logger.info(f"Rejecting weak signal for {pair}: confidence {conf_numeric}/10")
+        min_conf = 6 if "Bear" in regime else 5
+        if conf_numeric < min_conf:
+            logger.info(f"Rejecting signal for {pair}: confidence {conf_numeric}/10 < {min_conf} (regime: {regime})")
             return False
 
         # --- Main Telegram Signal ---
@@ -738,6 +649,7 @@ class TrendRiderStrategy(IStrategy):
             f"*Confidence:* {conf_level}\n"
             f"  [{conf_bar}]\n"
             f"  {', '.join(conf_details)}\n\n"
+            f"*Regime:* {regime}\n"
             f"*Indicators:*\n"
             f"  RSI: {rsi_val:.1f} | ADX: {adx_val:.1f}\n"
             f"  Volume: {vol_ratio:.2f}x | MACD: {'+'  if macd_hist > 0 else '-'}\n\n"
@@ -753,14 +665,9 @@ class TrendRiderStrategy(IStrategy):
     def confirm_trade_exit(self, pair: str, trade, order_type: str, amount: float,
                           rate: float, time_in_force: str, exit_reason: str,
                           current_time: datetime, **kwargs) -> bool:
-        # Calculate results
-        if trade.is_short:
-            profit_pct = ((trade.open_rate - rate) / trade.open_rate) * 100 * trade.leverage
-        else:
-            profit_pct = ((rate - trade.open_rate) / trade.open_rate) * 100 * trade.leverage
+        # Calculate results (LONG only)
+        profit_pct = ((rate - trade.open_rate) / trade.open_rate) * 100 * trade.leverage
         duration_hours = (current_time - trade.open_date_utc).total_seconds() / 3600
-
-        side_str = "SHORT" if trade.is_short else "LONG"
 
         # Exit reason mapping
         exit_reasons = {
@@ -771,9 +678,6 @@ class TrendRiderStrategy(IStrategy):
             "rsi_overbought": "RSI overbought (>81)",
             "ema_bearish_cross": "EMA bearish crossover",
             "trend_broken": "Trend broken (below EMA200)",
-            "rsi_oversold_short": "RSI oversold (<19)",
-            "ema_bullish_cross_short": "EMA bullish crossover (short exit)",
-            "trend_broken_short": "Trend broken (above EMA200)",
             "partial_tp1": "Partial TP1 (+3%)",
             "partial_tp2": "Partial TP2 (+5%)",
             "force_exit": "Force exit",
@@ -797,7 +701,7 @@ class TrendRiderStrategy(IStrategy):
         msg = (
             f"*TRADE CLOSED* {'WIN' if profit_pct > 0 else 'LOSS'}\n"
             f"{'='*25}\n"
-            f"*{pair}* | {side_str} | {trade.leverage}x\n"
+            f"*{pair}* | LONG | {trade.leverage}x\n"
             f"{'='*25}\n\n"
             f"*Entry:* `{trade.open_rate:.2f}`\n"
             f"*Exit:* `{rate:.2f}`\n"

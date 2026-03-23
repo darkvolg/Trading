@@ -5,7 +5,6 @@ Philosophy: Ride established trends with WIDE stoploss.
 Key insight: crypto swings 2-4% per hour. Stoploss must be >= 5-6%.
 
 v2.0 additions:
-- SHORT strategy (mirrored LONG logic)
 - DCA (Dollar Cost Averaging) for losing positions
 - Dynamic ATR-based stoploss
 - Partial Take Profit (TP1/TP2/TP3 via adjust_trade_position)
@@ -33,8 +32,8 @@ from trendrider_config import (
     CONFIDENCE_MIN_DEFAULT, CONFIDENCE_MIN_BEAR,
     TP1_CLOSE_RATIO, TP2_CLOSE_RATIO,
     DCA_MAX_ENTRIES, DCA_TRIGGER_1, DCA_TRIGGER_2, DCA_SIZE_RATIO,
-    FNG_HEALTHY_MIN, FNG_HEALTHY_MAX, FNG_SHORT_MIN, FNG_SHORT_MAX,
-    BTC_RSI_LONG_MIN, BTC_RSI_SHORT_MAX, FUNDING_SHORT_BLOCK,
+    FNG_HEALTHY_MIN, FNG_HEALTHY_MAX,
+    BTC_RSI_LONG_MIN,
 )
 from trendrider_database import AlertsDB
 from trendrider_onchain import FearGreedFetcher, OnChainDataFetcher
@@ -289,23 +288,6 @@ class TrendRiderStrategy(IStrategy):
             (dataframe["close"] > dataframe["open"])
         ).astype(int)
 
-        # --- SHORT pullback detection ---
-        if ema_slow_key in dataframe.columns:
-            dataframe["pullback_from_ema"] = (
-                (dataframe["high"] >= dataframe[ema_slow_key] * 0.99) &
-                (dataframe["close"] < dataframe[ema_slow_key]) &
-                (dataframe["close"] < dataframe["open"])  # Bearish candle
-            ).astype(int)
-        else:
-            dataframe["pullback_from_ema"] = 0
-
-        # EMA50 rejection (SHORT)
-        dataframe["ema50_rejection"] = (
-            (dataframe["high"] >= dataframe["ema_50"] * 0.99) &
-            (dataframe["close"] < dataframe["ema_50"]) &
-            (dataframe["close"] < dataframe["open"])
-        ).astype(int)
-
         # --- Multi-Timeframe data ---
         if self.dp:
             # 4h data for current pair
@@ -484,70 +466,6 @@ class TrendRiderStrategy(IStrategy):
             ["enter_long", "enter_tag"]
         ] = (1, "rsi_bounce")
 
-        # ========== SHORT ENTRIES ==========
-
-        # === SHORT 1: Trend Pullback from EMA (bear market) ===
-        conditions_short_pullback = [
-            dataframe["is_bear"] == 1,
-            dataframe["pullback_from_ema"] == 1,
-            dataframe[rsi] > 42,
-            dataframe[rsi] < 60,
-            dataframe["adx"] > self.adx_threshold.value,
-            dataframe["volume_ratio"] > self.volume_factor.value,
-            dataframe["minus_di"] > dataframe["plus_di"],
-            dataframe["volume"] > 0,
-            dataframe["btc_rsi_1h"] < BTC_RSI_SHORT_MAX,
-            dataframe["fng_value"] >= FNG_SHORT_MIN,
-            dataframe["fng_value"] <= FNG_SHORT_MAX,
-        ]
-        # For shorts: block when funding < -0.0003 (too many shorts already)
-        if self.dp and self.dp.runmode.value in ('live', 'dry_run'):
-            conditions_short_pullback.append(dataframe['funding_rate'] > FUNDING_SHORT_BLOCK)
-        dataframe.loc[
-            reduce(lambda x, y: x & y, conditions_short_pullback),
-            ["enter_short", "enter_tag"]
-        ] = (1, "short_pullback")
-
-        # === SHORT 2: EMA50 Rejection ===
-        conditions_short_ema50 = [
-            dataframe["is_bear"] == 1,
-            dataframe["ema50_rejection"] == 1,
-            dataframe[rsi] > 50,
-            dataframe[rsi] < 70,
-            dataframe["adx"] > 20,
-            dataframe["macdhist"] < dataframe["macdhist"].shift(1),  # MACD histogram falling
-            dataframe["volume"] > 0,
-            dataframe["btc_rsi_1h"] < BTC_RSI_SHORT_MAX,
-            dataframe["fng_value"] >= FNG_SHORT_MIN,
-            dataframe["fng_value"] <= FNG_SHORT_MAX,
-        ]
-        # For shorts: block when funding < -0.0003 (too many shorts already)
-        if self.dp and self.dp.runmode.value in ('live', 'dry_run'):
-            conditions_short_ema50.append(dataframe['funding_rate'] > FUNDING_SHORT_BLOCK)
-        dataframe.loc[
-            reduce(lambda x, y: x & y, conditions_short_ema50),
-            ["enter_short", "enter_tag"]
-        ] = (1, "short_ema50_rejection")
-
-        # === SHORT 3: RSI Overbought Cross Down ===
-        conditions_short_rsi = [
-            dataframe["close"] < dataframe["ema_200"],
-            dataframe[rsi].shift(1) > 70,
-            dataframe[rsi] <= 70,                            # RSI crosses 70 from above
-            dataframe["close"] < dataframe["bb_upper"],
-            dataframe["close"] < dataframe["open"],          # Bearish candle
-            dataframe["volume"] > 0,
-            dataframe["fng_value"] >= FNG_SHORT_MIN,
-            dataframe["fng_value"] <= FNG_SHORT_MAX,
-        ]
-        # For shorts: block when funding < -0.0003 (too many shorts already)
-        if self.dp and self.dp.runmode.value in ('live', 'dry_run'):
-            conditions_short_rsi.append(dataframe['funding_rate'] > FUNDING_SHORT_BLOCK)
-        dataframe.loc[
-            reduce(lambda x, y: x & y, conditions_short_rsi),
-            ["enter_short", "enter_tag"]
-        ] = (1, "short_rsi_overbought")
-
         return dataframe
 
     def populate_exit_trend(self, dataframe: DataFrame, metadata: dict) -> DataFrame:
@@ -581,31 +499,6 @@ class TrendRiderStrategy(IStrategy):
             (dataframe["volume"] > 0),
             ["exit_long", "exit_tag"]
         ] = (1, "trend_broken")
-
-        # ========== SHORT EXITS ==========
-
-        # SHORT EXIT 1: RSI oversold (inverse of rsi_exit 81 -> 19)
-        dataframe.loc[
-            (dataframe[rsi] < 19) &
-            (dataframe["volume"] > 0),
-            ["exit_short", "exit_tag"]
-        ] = (1, "rsi_oversold_short")
-
-        # SHORT EXIT 2: Bullish EMA cross
-        dataframe.loc[
-            (dataframe[ema_fast] > dataframe[ema_slow]) &
-            (dataframe[ema_fast].shift(1) <= dataframe[ema_slow].shift(1)) &
-            (dataframe["volume"] > 0),
-            ["exit_short", "exit_tag"]
-        ] = (1, "ema_bullish_cross_short")
-
-        # SHORT EXIT 3: Price rises above EMA200 (trend broken for shorts)
-        dataframe.loc[
-            (dataframe["close"] > dataframe["ema_200"]) &
-            (dataframe["close"].shift(1) <= dataframe["ema_200"].shift(1)) &
-            (dataframe["volume"] > 0),
-            ["exit_short", "exit_tag"]
-        ] = (1, "trend_broken_short")
 
         return dataframe
 
@@ -670,22 +563,14 @@ class TrendRiderStrategy(IStrategy):
     def confirm_trade_entry(self, pair: str, order_type: str, amount: float, rate: float,
                            time_in_force: str, current_time: datetime, entry_tag: str | None,
                            side: str, **kwargs) -> bool:
-        is_short = side == "short"
-
-        # Calculate levels
-        if is_short:
-            sl_price = rate * (1 - self.stoploss)
-            tp1_price = rate * (1 - TP1_PCT)
-            tp2_price = rate * (1 - TP2_PCT)
-            tp3_price = rate * (1 - TP3_PCT)
-        else:
-            sl_price = rate * (1 + self.stoploss)
-            tp1_price = rate * (1 + TP1_PCT)
-            tp2_price = rate * (1 + TP2_PCT)
-            tp3_price = rate * (1 + TP3_PCT)
+        # Calculate levels (LONG only, can_short = False)
+        sl_price = rate * (1 + self.stoploss)
+        tp1_price = rate * (1 + TP1_PCT)
+        tp2_price = rate * (1 + TP2_PCT)
+        tp3_price = rate * (1 + TP3_PCT)
 
         leverage = self.leverage_value
-        side_str = "SHORT" if is_short else "LONG"
+        side_str = "LONG"
 
         risk = abs(rate - sl_price)
         reward = abs(tp2_price - rate)
@@ -726,12 +611,8 @@ class TrendRiderStrategy(IStrategy):
         # Invalidation
         ema_200 = last.get('ema_200', 0)
         bb_lower = last.get('bb_lower', 0)
-        if is_short:
-            invalidation = last.get('bb_upper', rate * 1.04)
-            inv_label = "BB Upper"
-        else:
-            invalidation = max(ema_200, bb_lower) if ema_200 > 0 else sl_price
-            inv_label = "EMA200" if invalidation == ema_200 else "BB Lower"
+        invalidation = max(ema_200, bb_lower) if ema_200 > 0 else sl_price
+        inv_label = "EMA200" if invalidation == ema_200 else "BB Lower"
 
         # Reject weak signals
         min_conf = CONFIDENCE_MIN_BEAR if "Bear" in regime else CONFIDENCE_MIN_DEFAULT
@@ -753,7 +634,7 @@ class TrendRiderStrategy(IStrategy):
         self.dp.send_msg(msg, always_send=True)
 
         # Send Cornix signal
-        cornix_msg = format_cornix_signal(pair, side_str, leverage, rate, sl_price, is_short)
+        cornix_msg = format_cornix_signal(pair, side_str, leverage, rate, sl_price)
         self.dp.send_msg(cornix_msg, always_send=True)
 
         # Queue for free channel
