@@ -11,6 +11,7 @@ import os
 import sqlite3
 from datetime import datetime, timedelta, timezone
 
+import aiohttp
 from telegram import InlineKeyboardButton, InlineKeyboardMarkup, Update
 from telegram.ext import Application, CommandHandler, ContextTypes
 
@@ -38,6 +39,29 @@ VIP_CHANNEL_ID = os.getenv("VIP_CHANNEL_ID", "")
 
 BOT_USERNAME = "TrendRiderSignals_bot"
 REFERRAL_BONUS_DAYS = 7
+
+# ── CryptoBot (Crypto Pay) ──────────────────────────────────────────────
+CRYPTOBOT_API_TOKEN = os.getenv(
+    "CRYPTOBOT_API_TOKEN", "REDACTED"
+)
+CRYPTOBOT_API_URL = "https://pay.crypt.bot/api/"
+
+PAYMENT_PLANS: dict[str, dict] = {
+    "basic": {
+        "amount": "39.00",
+        "description": "TrendRider Basic - 1 Month",
+        "tier": "basic",
+        "days": 30,
+        "label": "Basic ($39/mo)",
+    },
+    "vip": {
+        "amount": "99.00",
+        "description": "TrendRider VIP - 1 Month",
+        "tier": "vip",
+        "days": 30,
+        "label": "VIP ($99/mo)",
+    },
+}
 
 
 # ── Credentials ──────────────────────────────────────────────────────────
@@ -189,6 +213,101 @@ def _is_admin(user_id: int) -> bool:
     return user_id in ADMIN_IDS
 
 
+# ── CryptoBot helpers ────────────────────────────────────────────────────
+
+
+async def _create_cryptobot_invoice(plan_key: str, user_id: int) -> dict | None:
+    """Call CryptoBot API to create a payment invoice.
+
+    Returns the API response dict on success, or None on failure.
+    """
+    plan = PAYMENT_PLANS.get(plan_key)
+    if not plan:
+        return None
+
+    payload = {
+        "currency_type": "fiat",
+        "fiat": "USD",
+        "amount": plan["amount"],
+        "description": plan["description"],
+        "payload": f"{plan_key}_{user_id}",
+        "paid_btn_name": "openBot",
+        "paid_btn_url": f"https://t.me/{BOT_USERNAME}",
+    }
+
+    headers = {
+        "Crypto-Pay-API-Token": CRYPTOBOT_API_TOKEN,
+        "Content-Type": "application/json",
+    }
+
+    try:
+        async with aiohttp.ClientSession() as session:
+            async with session.post(
+                f"{CRYPTOBOT_API_URL}createInvoice",
+                json=payload,
+                headers=headers,
+                timeout=aiohttp.ClientTimeout(total=15),
+            ) as resp:
+                data = await resp.json()
+                if resp.status == 200 and data.get("ok"):
+                    return data.get("result", {})
+                logger.error(
+                    "CryptoBot API error: status=%d, body=%s", resp.status, data
+                )
+                return None
+    except Exception:
+        logger.exception("CryptoBot API request failed")
+        return None
+
+
+async def _handle_payment_deeplink(
+    update: Update, plan_key: str, user_id: int
+) -> None:
+    """Create a CryptoBot invoice and send the payment link to the user."""
+    plan = PAYMENT_PLANS.get(plan_key)
+    if not plan:
+        await update.message.reply_text("Unknown plan. Use /plans to see options.")
+        return
+
+    await update.message.reply_text(
+        f"Creating payment link for *{plan['label']}*...\nPlease wait.",
+        parse_mode="Markdown",
+    )
+
+    invoice = await _create_cryptobot_invoice(plan_key, user_id)
+    if not invoice:
+        await update.message.reply_text(
+            "Sorry, failed to create payment link. Please try again later "
+            "or contact support."
+        )
+        return
+
+    pay_url = invoice.get("pay_url") or invoice.get("bot_invoice_url", "")
+    if not pay_url:
+        await update.message.reply_text(
+            "Payment service returned an unexpected response. Please contact support."
+        )
+        return
+
+    keyboard = [
+        [InlineKeyboardButton(f"Pay {plan['label']}", url=pay_url)],
+        [InlineKeyboardButton("View All Plans", callback_data="plans")],
+    ]
+
+    await update.message.reply_text(
+        f"*Payment for {plan['label']}*\n"
+        f"============================\n\n"
+        f"Amount: *${plan['amount']}*\n"
+        f"Duration: {plan['days']} days\n\n"
+        f"Click the button below to pay via CryptoBot.\n"
+        f"After payment, your subscription will be activated automatically.\n\n"
+        f"============================\n"
+        f"_Powered by @CryptoBot_",
+        parse_mode="Markdown",
+        reply_markup=InlineKeyboardMarkup(keyboard),
+    )
+
+
 # ── /start ───────────────────────────────────────────────────────────────
 
 
@@ -202,7 +321,7 @@ async def start_command(update: Update, ctx: ContextTypes.DEFAULT_TYPE) -> None:
     try:
         _ensure_subscriber(conn, user.id, user.username, user.first_name)
 
-        # Handle referral deep link: /start ref_12345
+        # Handle deep links: /start ref_*, pay_basic, pay_vip
         args = ctx.args or []
         if args and args[0].startswith("ref_"):
             try:
@@ -245,6 +364,14 @@ async def start_command(update: Update, ctx: ContextTypes.DEFAULT_TYPE) -> None:
                             )
                         except Exception:
                             logger.warning("Could not notify referrer %d", referrer_id)
+
+        # Handle payment deep links: ?start=pay_basic or ?start=pay_vip
+        if args and args[0].startswith("pay_"):
+            plan_key = args[0][4:]  # "basic" or "vip"
+            if plan_key in PAYMENT_PLANS:
+                conn.close()
+                await _handle_payment_deeplink(update, plan_key, user.id)
+                return
 
         keyboard = [
             [InlineKeyboardButton("View Plans", callback_data="plans")],
@@ -290,13 +417,57 @@ PLANS_TEXT = (
     "  \u2022 Priority support\n\n"
     "Invite friends with /refer to earn free VIP days!\n"
     "============================\n"
-    "_Contact admin to subscribe._"
+    "_Use /pay to subscribe via crypto._"
 )
 
 
 async def plans_command(update: Update, _ctx: ContextTypes.DEFAULT_TYPE) -> None:
     """Show available subscription tiers."""
     await update.message.reply_text(PLANS_TEXT, parse_mode="Markdown")
+
+
+# ── /pay ─────────────────────────────────────────────────────────────────
+
+
+async def pay_command(update: Update, ctx: ContextTypes.DEFAULT_TYPE) -> None:
+    """Create a CryptoBot payment link: /pay basic or /pay vip."""
+    user = update.effective_user
+    if not user:
+        return
+
+    conn = _get_db()
+    try:
+        _ensure_subscriber(conn, user.id, user.username, user.first_name)
+    finally:
+        conn.close()
+
+    args = ctx.args or []
+    if not args or args[0].lower() not in PAYMENT_PLANS:
+        keyboard = [
+            [
+                InlineKeyboardButton(
+                    "Basic — $39/mo",
+                    url=f"https://t.me/{BOT_USERNAME}?start=pay_basic",
+                ),
+            ],
+            [
+                InlineKeyboardButton(
+                    "VIP — $99/mo",
+                    url=f"https://t.me/{BOT_USERNAME}?start=pay_vip",
+                ),
+            ],
+        ]
+        await update.message.reply_text(
+            "*Choose a plan to subscribe:*\n\n"
+            "\U0001f538 *Basic* — $39/mo — Real-time signals, Cornix format\n"
+            "\U0001f4ce *VIP* — $99/mo — Everything + analysis & briefings\n",
+            parse_mode="Markdown",
+            reply_markup=InlineKeyboardMarkup(keyboard),
+        )
+        return
+
+    plan_key = args[0].lower()
+    await _handle_payment_deeplink(update, plan_key, user.id)
 
 
 # ── /status ──────────────────────────────────────────────────────────────
@@ -554,6 +725,7 @@ HELP_TEXT = (
     "Available commands:\n\n"
     "`/start` \u2014 Welcome & registration\n"
     "`/plans` \u2014 Subscription tiers & pricing\n"
+    "`/pay` \u2014 Subscribe (pay via crypto)\n"
     "`/status` \u2014 Your subscription info\n"
     "`/refer` \u2014 Your referral link\n"
     "`/calc <deposit> <risk%>` \u2014 Risk calculator\n"
@@ -766,6 +938,7 @@ def main() -> None:
     # User commands
     app.add_handler(CommandHandler("start", start_command))
     app.add_handler(CommandHandler("plans", plans_command))
+    app.add_handler(CommandHandler("pay", pay_command))
     app.add_handler(CommandHandler("status", status_command))
     app.add_handler(CommandHandler("refer", refer_command))
     app.add_handler(CommandHandler("calc", calc_command))
