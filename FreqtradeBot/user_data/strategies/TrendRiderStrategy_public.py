@@ -218,14 +218,14 @@ class TrendRiderStrategy(IStrategy):
             # Daily data for macro trend
             df_1d = self.dp.get_pair_dataframe(pair=metadata['pair'], timeframe='1d')
             if len(df_1d) > 0:
-                df_1d['ema_200_1d'] = ta.EMA(df_1d, timeperiod=200)
+                df_1d['ema_200'] = ta.EMA(df_1d, timeperiod=200)
                 dataframe = merge_informative_pair(
                     dataframe,
-                    df_1d[['date', 'ema_200_1d']],
+                    df_1d[['date', 'ema_200']],
                     self.timeframe, '1d', ffill=True
                 )
             else:
-                dataframe['ema_200_1d_1d'] = 0
+                dataframe['ema_200_1d'] = 0
 
             # BTC market sentiment
             df_btc = self.dp.get_pair_dataframe(pair='BTC/USDT:USDT', timeframe='1h')
@@ -252,13 +252,13 @@ class TrendRiderStrategy(IStrategy):
             dataframe['adx_4h'] = dataframe['adx']
             dataframe['btc_is_bull_1h'] = 1
             dataframe['btc_rsi_1h'] = 50
-            dataframe['ema_200_1d_1d'] = 0
+            dataframe['ema_200_1d'] = 0
 
         # Ensure columns exist (safety for backtesting edge cases)
         for col, default in [
             ('is_bull_4h', 1), ('rsi_14_4h', 50), ('adx_4h', 20),
             ('btc_is_bull_1h', 1), ('btc_rsi_1h', 50),
-            ('ema_200_1d_1d', 0),
+            ('ema_200_1d', 0),
         ]:
             if col not in dataframe.columns:
                 dataframe[col] = default
@@ -297,8 +297,8 @@ class TrendRiderStrategy(IStrategy):
             dataframe[rsi] < 70,               # Not overbought
         ]
         # Daily EMA200 filter — helps filter bad entries
-        if 'ema_200_1d_1d' in dataframe.columns:
-            conditions_pullback.append(dataframe["close"] > dataframe["ema_200_1d_1d"])
+        if 'ema_200_1d' in dataframe.columns:
+            conditions_pullback.append(dataframe["close"] > dataframe["ema_200_1d"])
 
         dataframe.loc[
             reduce(lambda x, y: x & y, conditions_pullback),

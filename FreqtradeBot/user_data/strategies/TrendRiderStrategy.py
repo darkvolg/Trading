@@ -5,9 +5,6 @@ Philosophy: Ride established trends with WIDE stoploss.
 Key insight: crypto swings 2-4% per hour. Stoploss must be >= 5-6%.
 
 v2.0 additions:
-- DCA (Dollar Cost Averaging) for losing positions
-- Dynamic ATR-based stoploss
-- Partial Take Profit (TP1/TP2/TP3 via adjust_trade_position)
 - Improved confidence scoring with weighted factors
 - Cornix-compatible signal format
 - Reject weak signals (confidence < 5)
@@ -30,8 +27,6 @@ from trendrider_config import (
     SETUP_NAMES, ALERT_COOLDOWN_SECONDS, EMA_PROXIMITY_PCT,
     ENTRY_ZONE_PCT, TP1_PCT, TP2_PCT, TP3_PCT,
     CONFIDENCE_MIN_DEFAULT, CONFIDENCE_MIN_BEAR,
-    TP1_CLOSE_RATIO, TP2_CLOSE_RATIO,
-    DCA_MAX_ENTRIES, DCA_TRIGGER_1, DCA_TRIGGER_2, DCA_SIZE_RATIO,
     FNG_HEALTHY_MIN, FNG_HEALTHY_MAX,
     BTC_RSI_LONG_MIN,
 )
@@ -58,7 +53,7 @@ class TrendRiderStrategy(IStrategy):
     }
 
     # --- Stoploss: WIDE for crypto volatility ---
-    stoploss = -0.06           # 6% default (ATR-based custom stoploss overrides)
+    stoploss = -0.06           # 6% default
     use_custom_stoploss = False
 
     # --- Trailing Stop: WIDE ---
@@ -316,14 +311,14 @@ class TrendRiderStrategy(IStrategy):
             # Daily data for macro trend
             df_1d = self.dp.get_pair_dataframe(pair=metadata['pair'], timeframe='1d')
             if len(df_1d) > 0:
-                df_1d['ema_200_1d'] = ta.EMA(df_1d, timeperiod=200)
+                df_1d['ema_200'] = ta.EMA(df_1d, timeperiod=200)
                 dataframe = merge_informative_pair(
                     dataframe,
-                    df_1d[['date', 'ema_200_1d']],
+                    df_1d[['date', 'ema_200']],
                     self.timeframe, '1d', ffill=True
                 )
             else:
-                dataframe['ema_200_1d_1d'] = 0
+                dataframe['ema_200_1d'] = 0
 
             # BTC market sentiment
             df_btc = self.dp.get_pair_dataframe(pair='BTC/USDT:USDT', timeframe='1h')
@@ -350,14 +345,14 @@ class TrendRiderStrategy(IStrategy):
             dataframe['adx_4h'] = dataframe['adx']
             dataframe['btc_is_bull_1h'] = 1
             dataframe['btc_rsi_1h'] = 50
-            dataframe['ema_200_1d_1d'] = 0
+            dataframe['ema_200_1d'] = 0
 
         # Ensure columns exist (safety for backtesting edge cases)
         for col, default in [
             ('is_bull_4h', 1), ('rsi_14_4h', 50), ('adx_4h', 20),
             ('btc_is_bull_1h', 1), ('btc_rsi_1h', 50),
 
-            ('ema_200_1d_1d', 0),
+            ('ema_200_1d', 0),
         ]:
             if col not in dataframe.columns:
                 dataframe[col] = default
@@ -410,8 +405,8 @@ class TrendRiderStrategy(IStrategy):
             dataframe[rsi] < 70,                 # Not overbought
         ]
         # Daily EMA200 filter — helps filter bad entries
-        if 'ema_200_1d_1d' in dataframe.columns:
-            conditions_pullback.append(dataframe["close"] > dataframe["ema_200_1d_1d"])
+        if 'ema_200_1d' in dataframe.columns:
+            conditions_pullback.append(dataframe["close"] > dataframe["ema_200_1d"])
         # Block entries when funding is extreme (live only)
         if self.dp and self.dp.runmode.value in ('live', 'dry_run'):
             conditions_pullback.append(dataframe['funding_extreme'] == 0)
@@ -501,64 +496,6 @@ class TrendRiderStrategy(IStrategy):
         ] = (1, "trend_broken")
 
         return dataframe
-
-    # --- Dynamic ATR-based Stoploss ---
-    def custom_stoploss(self, pair: str, trade, current_time: datetime,
-                        current_rate: float, current_profit: float,
-                        after_fill: bool, **kwargs) -> float:
-        dataframe, _ = self.dp.get_analyzed_dataframe(pair, self.timeframe)
-        if len(dataframe) < 1:
-            return self.stoploss  # default -0.06
-
-        last_candle = dataframe.iloc[-1]
-        atr = last_candle.get('atr', 0)
-        if atr <= 0:
-            return self.stoploss
-
-        # Dynamic stoploss = 2x ATR from entry
-        atr_stoploss = -(atr * 2) / current_rate
-
-        # Clamp between -3% and -8%
-        atr_stoploss = max(min(atr_stoploss, -0.03), -0.08)
-
-        return atr_stoploss
-
-    # --- DCA + Partial Take Profit via adjust_trade_position ---
-    def adjust_trade_position(self, trade, current_time: datetime,
-                              current_rate: float, current_profit: float,
-                              min_stake: float, max_stake: float,
-                              current_entry_rate: float, current_exit_rate: float,
-                              current_exit_profit: float, current_entry_profit: float,
-                              **kwargs):
-        # --- Partial Take Profit ---
-        filled_exits = trade.nr_of_successful_exits
-
-        if current_profit >= TP1_PCT and filled_exits == 0:
-            # TP1: sell 30% of position
-            return -(trade.stake_amount * TP1_CLOSE_RATIO)
-
-        if current_profit >= TP2_PCT and filled_exits == 1:
-            # TP2: sell 30% more
-            return -(trade.stake_amount * TP2_CLOSE_RATIO)
-
-        # TP3: remaining 40% handled by trailing/ROI
-
-        # --- DCA (only for losing positions) ---
-        filled_entries = trade.nr_of_successful_entries
-
-        if current_profit > -0.02:
-            return None
-
-        if filled_entries >= DCA_MAX_ENTRIES:  # 1 initial + 2 DCA max
-            return None
-
-        if filled_entries == 1 and current_profit <= DCA_TRIGGER_1:
-            return trade.stake_amount * DCA_SIZE_RATIO  # Half position DCA
-
-        if filled_entries == 2 and current_profit <= DCA_TRIGGER_2:
-            return trade.stake_amount * DCA_SIZE_RATIO
-
-        return None
 
     def confirm_trade_entry(self, pair: str, order_type: str, amount: float, rate: float,
                            time_in_force: str, current_time: datetime, entry_tag: str | None,
