@@ -1,14 +1,6 @@
 {
   "strategy_name": "TrendRiderStrategy",
   "params": {
-    "roi": {
-      "0": 0.1,
-      "120": 0.06,
-      "360": 0.04,
-      "720": 0.025,
-      "1440": 0.015,
-      "2880": 0.01
-    },
     "stoploss": {
       "stoploss": -0.06
     },
@@ -19,7 +11,7 @@
       "trailing_only_offset_is_reached": true
     },
     "max_open_trades": {
-      "max_open_trades": 4
+      "max_open_trades": 6
     },
     "buy": {
       "adx_threshold": 23,
@@ -32,9 +24,15 @@
       "volume_factor": 1.165
     },
     "sell": {
-      "rsi_exit": 79
+      "rsi_exit": 82
+    },
+    "roi": {
+      "0": 0.229,
+      "124": 0.136,
+      "290": 0.044,
+      "764": 0
     }
   },
   "ft_stratparam_v": 1,
-  "export_time": "2026-03-22 12:07:07.267118+00:00"
+  "export_time": "2026-03-23 10:18:04.486701+00:00"
 }
