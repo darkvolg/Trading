@@ -107,6 +107,7 @@ const T = {
     joinFree: "Join Free",
     subscribe: "Subscribe",
     getVip: "Go VIP",
+    payWithCrypto: "Pay with Crypto",
     // Free features
     freeF1: "Delayed signals (3h)",
     freeF2: "Monthly performance report",
@@ -255,6 +256,8 @@ const T = {
     emailPlaceholder: "your@email.com",
     emailButton: "Subscribe Free",
     emailSuccess: "Thanks! Check your inbox.",
+    emailError: "Something went wrong. Please try again.",
+    emailSending: "Subscribing...",
     emailDisclaimer: "We respect your privacy. Unsubscribe at any time.",
 
     // cookie
@@ -366,6 +369,7 @@ const T = {
     joinFree: "Начать бесплатно",
     subscribe: "Подписаться",
     getVip: "Получить VIP",
+    payWithCrypto: "Оплатить криптой",
     freeF1: "Сигналы с задержкой (3ч)",
     freeF2: "Ежемесячный отчёт",
     freeF3: "Доступ к результатам",
@@ -509,6 +513,8 @@ const T = {
     emailPlaceholder: "ваш@email.com",
     emailButton: "Подписаться бесплатно",
     emailSuccess: "Спасибо! Проверьте почту.",
+    emailError: "Что-то пошло не так. Попробуйте ещё раз.",
+    emailSending: "Подписываем...",
     emailDisclaimer: "Мы уважаем вашу конфиденциальность. Отписка в любое время.",
 
     // cookie
@@ -620,7 +626,7 @@ const getFeatures = (t: TStrings): { icon: ReactNode; title: string; desc: strin
   { icon: featureIcons[5], title: t.feat6Title, desc: t.feat6Desc },
 ];
 
-const getPricing = (t: TStrings) => [
+const getPricing = (t: TStrings, _locale?: string) => [
   {
     name: t.free,
     price: "$0",
@@ -1701,17 +1707,27 @@ function BenefitsStrip({ t, visible }: { t: TStrings; visible: boolean }) {
 
 function EmailCapture({ t }: { t: TStrings }) {
   const [email, setEmail] = useState("");
-  const [submitted, setSubmitted] = useState(false);
+  const [status, setStatus] = useState<"idle" | "loading" | "success" | "error">("idle");
 
-  const handleSubmit = (e: React.FormEvent) => {
+  const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     if (!email || !email.includes("@")) return;
-    // Store locally for now — integrate with MailerLite/Resend later
-    const emails = JSON.parse(localStorage.getItem("captured-emails") || "[]");
-    emails.push({ email, date: new Date().toISOString() });
-    localStorage.setItem("captured-emails", JSON.stringify(emails));
-    setSubmitted(true);
-    setEmail("");
+    setStatus("loading");
+    try {
+      const res = await fetch("https://connect.mailerlite.com/api/subscribers", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: "Bearer REDACTED_MAILERLITE_TOKEN",
+        },
+        body: JSON.stringify({ email }),
+      });
+      if (!res.ok) throw new Error("API error");
+      setStatus("success");
+      setEmail("");
+    } catch {
+      setStatus("error");
+    }
   };
 
   return (
@@ -1723,7 +1739,7 @@ function EmailCapture({ t }: { t: TStrings }) {
         <h2 className="text-2xl md:text-3xl font-bold mb-3 tracking-tight">{t.emailTitle}</h2>
         <p className="text-muted mb-8 text-sm leading-relaxed">{t.emailSubtitle}</p>
 
-        {submitted ? (
+        {status === "success" ? (
           <div className="flex items-center justify-center gap-2 text-primary font-medium py-4">
             <svg className="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
               <path strokeLinecap="round" strokeLinejoin="round" d="m4.5 12.75 6 6 9-13.5" />
@@ -1731,22 +1747,29 @@ function EmailCapture({ t }: { t: TStrings }) {
             {t.emailSuccess}
           </div>
         ) : (
-          <form onSubmit={handleSubmit} className="flex flex-col sm:flex-row gap-3 max-w-md mx-auto">
-            <input
-              type="email"
-              value={email}
-              onChange={(e) => setEmail(e.target.value)}
-              placeholder={t.emailPlaceholder}
-              required
-              className="flex-1 px-4 py-3 rounded-xl bg-background border border-border/50 text-foreground placeholder:text-muted/50 focus:outline-none focus:border-primary/50 focus:ring-1 focus:ring-primary/20 transition-all text-sm font-mono"
-            />
-            <button
-              type="submit"
-              className="btn-primary btn-press px-6 py-3 rounded-xl text-sm font-semibold whitespace-nowrap"
-            >
-              {t.emailButton}
-            </button>
-          </form>
+          <>
+            <form onSubmit={handleSubmit} className="flex flex-col sm:flex-row gap-3 max-w-md mx-auto">
+              <input
+                type="email"
+                value={email}
+                onChange={(e) => { setEmail(e.target.value); if (status === "error") setStatus("idle"); }}
+                placeholder={t.emailPlaceholder}
+                required
+                disabled={status === "loading"}
+                className="flex-1 px-4 py-3 rounded-xl bg-background border border-border/50 text-foreground placeholder:text-muted/50 focus:outline-none focus:border-primary/50 focus:ring-1 focus:ring-primary/20 transition-all text-sm font-mono disabled:opacity-50"
+              />
+              <button
+                type="submit"
+                disabled={status === "loading"}
+                className="btn-primary btn-press px-6 py-3 rounded-xl text-sm font-semibold whitespace-nowrap disabled:opacity-50"
+              >
+                {status === "loading" ? t.emailSending : t.emailButton}
+              </button>
+            </form>
+            {status === "error" && (
+              <p className="text-red-400 text-sm mt-3">{t.emailError}</p>
+            )}
+          </>
         )}
 
         <p className="text-muted/50 text-xs mt-4">{t.emailDisclaimer}</p>
@@ -2659,6 +2682,16 @@ export default function Home() {
                   >
                     {plan.cta}
                   </a>
+                  {plan.cryptoHref && (
+                    <a
+                      href={plan.cryptoHref}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      className="block text-center text-xs text-muted hover:text-primary transition-colors mt-2"
+                    >
+                      💎 {t.payWithCrypto}
+                    </a>
+                  )}
                 </div>
               );
 
