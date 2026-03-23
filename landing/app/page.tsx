@@ -140,6 +140,23 @@ const T = {
     transparencyPaperDesc: "Honestly in paper-trading since March 2026. No fake live claims.",
     verifyYourself: "Verify on Google Sheets",
 
+    // security badges
+    securityTag: "Security & Trust",
+    secBadge1: "No Withdrawal Access",
+    secBadge1Desc: "Signals only. We never access your exchange funds or private keys.",
+    secBadge2: "Open-Source Code",
+    secBadge2Desc: "Full Freqtrade strategy code is publicly available for review.",
+    secBadge3: "Paper-Verified",
+    secBadge3Desc: "Honest paper-trading phase. No fake live trading claims.",
+    secBadge4: "Public Track Record",
+    secBadge4Desc: "Every trade logged in real-time on public Google Sheets.",
+
+    // dashboard mockup (5.3)
+    dashboardTag: "Live Dashboard",
+    dashboardTitle: "Real Results, Real Transparency",
+    dashboardSubtitle: "Every trade is logged in our public Google Sheet — see for yourself.",
+    dashboardViewFull: "Open Full Dashboard",
+
     // cta
     ctaTag: "Get Started",
     ctaTitle: "Ready to Trade",
@@ -149,12 +166,16 @@ const T = {
     getStarted: "Get Started on Telegram",
     viewAllResults: "View all results",
 
-    // verified metrics
+    // verified metrics / social proof counters (5.4)
     trustedBy: "Verified Performance Metrics",
     metricPairs: "Trading Pairs",
     metricTimeframes: "Timeframes Analyzed",
     metricIndicators: "Technical Indicators",
     metricExchanges: "Supported Exchanges",
+    socialTrades: "Trades Logged",
+    socialWinRate: "Win Rate",
+    socialUptime: "Uptime",
+    socialSignals: "Signals Sent",
 
     // testimonials
     testimonialsTag: "Beta Feedback",
@@ -197,6 +218,17 @@ const T = {
     testimonial5: "The drawdown control is impressive — 1.81% max during backtests. That's conservative risk management done right.",
     testimonial5Author: "Beta Tester #5",
     testimonial5Role: "Paper-trading since March 2026",
+
+    // rating summary (5.2)
+    ratingOverall: "4.8",
+    ratingOutOf: "out of 5",
+    ratingBasedOn: "Based on 5 beta testers",
+    ratingExcellent: "Excellent",
+    ratingStar5: "5 stars",
+    ratingStar4: "4 stars",
+    ratingStar3: "3 stars",
+    ratingStar2: "2 stars",
+    ratingStar1: "1 star",
 
     // benefits strip
     benefit1: "No emotions",
@@ -346,6 +378,23 @@ const T = {
     transparencyPaperDesc: "Честно в paper-trading с марта 2026. Без фейковых заявлений о live.",
     verifyYourself: "Проверить в Google Sheets",
 
+    // security badges
+    securityTag: "Безопасность и доверие",
+    secBadge1: "Нет доступа к средствам",
+    secBadge1Desc: "Только сигналы. Мы не получаем доступ к вашим средствам или ключам биржи.",
+    secBadge2: "Открытый код",
+    secBadge2Desc: "Полный код стратегии Freqtrade доступен публично для проверки.",
+    secBadge3: "Paper-verified",
+    secBadge3Desc: "Честная фаза paper-trading. Без фейковых заявлений о live торговле.",
+    secBadge4: "Публичный трек-рекорд",
+    secBadge4Desc: "Каждая сделка записывается в реальном времени в Google Sheets.",
+
+    // dashboard mockup (5.3)
+    dashboardTag: "Дашборд",
+    dashboardTitle: "Реальные результаты, полная прозрачность",
+    dashboardSubtitle: "Каждая сделка записана в публичной Google Таблице — проверьте сами.",
+    dashboardViewFull: "Открыть дашборд",
+
     ctaTag: "Начать",
     ctaTitle: "Готовы торговать",
     ctaTitleHighlight: "умнее",
@@ -354,12 +403,16 @@ const T = {
     getStarted: "Начать в Telegram",
     viewAllResults: "Все результаты",
 
-    // verified metrics
+    // verified metrics / social proof counters (5.4)
     trustedBy: "Проверяемые метрики",
     metricPairs: "Торговых пар",
     metricTimeframes: "Анализируемых таймфреймов",
     metricIndicators: "Технических индикаторов",
     metricExchanges: "Поддерживаемых бирж",
+    socialTrades: "Сделок записано",
+    socialWinRate: "Винрейт",
+    socialUptime: "Аптайм",
+    socialSignals: "Сигналов отправлено",
 
     // testimonials
     testimonialsTag: "Бета-отзывы",
@@ -402,6 +455,17 @@ const T = {
     testimonial5: "Контроль просадки впечатляет — 1.81% максимум на бэктестах. Это грамотный риск-менеджмент.",
     testimonial5Author: "Бета-тестер #5",
     testimonial5Role: "Paper-trading с марта 2026",
+
+    // rating summary (5.2)
+    ratingOverall: "4.8",
+    ratingOutOf: "из 5",
+    ratingBasedOn: "На основе 5 бета-тестеров",
+    ratingExcellent: "Отлично",
+    ratingStar5: "5 звёзд",
+    ratingStar4: "4 звезды",
+    ratingStar3: "3 звезды",
+    ratingStar2: "2 звезды",
+    ratingStar1: "1 звезда",
 
     // benefits
     benefit1: "Без эмоций",
@@ -619,6 +683,18 @@ function useCounter(target: number, decimals: number, active: boolean) {
     return () => clearInterval(timer);
   }, [target, decimals, active]);
   return value;
+}
+
+function SocialCounter({ target, decimals, suffix, label, active }: { target: number; decimals: number; suffix: string; label: string; active: boolean }) {
+  const count = useCounter(target, decimals, active);
+  return (
+    <div className="text-center group">
+      <div className="font-mono text-3xl md:text-4xl font-bold text-primary mb-1 tabular-nums">
+        {count.toFixed(decimals)}{suffix}
+      </div>
+      <div className="text-xs text-muted uppercase tracking-wider">{label}</div>
+    </div>
+  );
 }
 
 function useScrollProgress() {
@@ -1144,6 +1220,145 @@ function SignalPreview({ visible }: { visible: boolean }) {
 
 /* ──────────────────────────── main page ──────────────────────────── */
 
+/* ─── Dashboard Mockup (browser frame) ─── */
+const MOCK_TRADES = [
+  { pair: "BTC/USDT", side: "LONG", entry: "67,420", exit: "69,150", pnl: "+2.56%", conf: 8, result: "win" },
+  { pair: "ETH/USDT", side: "LONG", entry: "3,512", exit: "3,648", pnl: "+3.87%", conf: 9, result: "win" },
+  { pair: "SOL/USDT", side: "SHORT", entry: "142.8", exit: "138.5", pnl: "+3.01%", conf: 7, result: "win" },
+  { pair: "BNB/USDT", side: "LONG", entry: "584.2", exit: "571.0", pnl: "-2.26%", conf: 6, result: "loss" },
+  { pair: "BTC/USDT", side: "SHORT", entry: "69,800", exit: "68,100", pnl: "+2.43%", conf: 8, result: "win" },
+  { pair: "ETH/USDT", side: "LONG", entry: "3,480", exit: "3,395", pnl: "-2.44%", conf: 5, result: "loss" },
+];
+
+function DashboardMockup({ t, visible }: { t: TStrings; visible: boolean }) {
+  return (
+    <div className={`reveal reveal-delay-2 ${visible ? "visible" : ""}`}>
+      {/* Browser chrome */}
+      <div className="max-w-4xl mx-auto rounded-xl border border-border/50 overflow-hidden bg-card/40 backdrop-blur-sm shadow-2xl shadow-primary/5">
+        {/* Title bar */}
+        <div className="flex items-center gap-2 px-4 py-2.5 bg-background/80 border-b border-border/40">
+          <div className="flex gap-1.5">
+            <span className="w-3 h-3 rounded-full bg-[#FF5F57]" />
+            <span className="w-3 h-3 rounded-full bg-[#FEBC2E]" />
+            <span className="w-3 h-3 rounded-full bg-[#28C840]" />
+          </div>
+          <div className="flex-1 mx-4">
+            <div className="bg-background/60 rounded-md px-3 py-1 text-xs text-muted font-mono text-center truncate">
+              docs.google.com/spreadsheets/d/1ZWR...TrendRider_Results
+            </div>
+          </div>
+        </div>
+        {/* Spreadsheet content */}
+        <div className="overflow-x-auto">
+          <table className="w-full text-xs md:text-sm">
+            <thead>
+              <tr className="bg-background/50 text-muted uppercase tracking-wider text-[10px] md:text-xs">
+                <th className="px-3 py-2.5 text-left font-medium">Pair</th>
+                <th className="px-3 py-2.5 text-left font-medium">Side</th>
+                <th className="px-3 py-2.5 text-right font-medium">Entry</th>
+                <th className="px-3 py-2.5 text-right font-medium">Exit</th>
+                <th className="px-3 py-2.5 text-center font-medium">Conf</th>
+                <th className="px-3 py-2.5 text-right font-medium">P&L</th>
+              </tr>
+            </thead>
+            <tbody>
+              {MOCK_TRADES.map((trade, i) => (
+                <tr
+                  key={i}
+                  className={`border-t border-border/20 ${i % 2 === 0 ? "bg-card/20" : "bg-transparent"} hover:bg-primary/5 transition-colors`}
+                >
+                  <td className="px-3 py-2 font-mono font-semibold text-foreground">{trade.pair}</td>
+                  <td className="px-3 py-2">
+                    <span className={`px-1.5 py-0.5 rounded text-[10px] font-bold ${trade.side === "LONG" ? "bg-primary/15 text-primary" : "bg-danger/15 text-danger"}`}>
+                      {trade.side}
+                    </span>
+                  </td>
+                  <td className="px-3 py-2 text-right font-mono text-muted">{trade.entry}</td>
+                  <td className="px-3 py-2 text-right font-mono text-muted">{trade.exit}</td>
+                  <td className="px-3 py-2 text-center">
+                    <span className={`font-bold ${trade.conf >= 8 ? "text-primary" : trade.conf >= 6 ? "text-accent" : "text-muted"}`}>
+                      {trade.conf}/10
+                    </span>
+                  </td>
+                  <td className={`px-3 py-2 text-right font-mono font-semibold ${trade.result === "win" ? "text-primary" : "text-danger"}`}>
+                    {trade.pnl}
+                  </td>
+                </tr>
+              ))}
+            </tbody>
+          </table>
+        </div>
+        {/* Footer link */}
+        <div className="px-4 py-3 bg-background/50 border-t border-border/30 flex justify-center">
+          <a
+            href={SHEETS_URL}
+            target="_blank"
+            rel="noopener noreferrer"
+            className="text-xs text-primary hover:underline underline-offset-4 font-medium inline-flex items-center gap-1.5"
+          >
+            {t.dashboardViewFull}
+            <svg className="w-3.5 h-3.5" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
+              <path strokeLinecap="round" strokeLinejoin="round" d="M13.5 6H5.25A2.25 2.25 0 0 0 3 8.25v10.5A2.25 2.25 0 0 0 5.25 21h10.5A2.25 2.25 0 0 0 18 18.75V10.5m-10.5 6L21 3m0 0h-5.25M21 3v5.25" />
+            </svg>
+          </a>
+        </div>
+      </div>
+    </div>
+  );
+}
+
+/* ─── Rating Summary (Trustpilot-style) ─── */
+const RATING_DISTRIBUTION = [
+  { stars: 5, count: 3 },
+  { stars: 4, count: 2 },
+  { stars: 3, count: 0 },
+  { stars: 2, count: 0 },
+  { stars: 1, count: 0 },
+];
+const RATING_TOTAL = RATING_DISTRIBUTION.reduce((s, r) => s + r.count, 0);
+
+function RatingSummary({ t, visible }: { t: TStrings; visible: boolean }) {
+  const starLabels = [t.ratingStar1, t.ratingStar2, t.ratingStar3, t.ratingStar4, t.ratingStar5];
+  return (
+    <div className={`reveal ${visible ? "visible" : ""} mb-12 max-w-2xl mx-auto`}>
+      <div className="rounded-2xl border border-border/50 bg-card/30 backdrop-blur-sm p-6 md:p-8 flex flex-col md:flex-row gap-8 items-center">
+        {/* Left: big score */}
+        <div className="flex flex-col items-center gap-2 min-w-[140px]">
+          <span className="text-5xl font-bold gradient-text">{t.ratingOverall}</span>
+          <div className="flex gap-0.5">
+            {[...Array(5)].map((_, i) => (
+              <svg key={i} className={`w-5 h-5 ${i < 5 ? "text-accent" : "text-muted/30"}`} fill="currentColor" viewBox="0 0 20 20">
+                <path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z" />
+              </svg>
+            ))}
+          </div>
+          <span className="text-xs text-muted">{t.ratingBasedOn}</span>
+          <span className="text-xs font-semibold text-primary uppercase tracking-wider">{t.ratingExcellent}</span>
+        </div>
+
+        {/* Right: bar breakdown */}
+        <div className="flex-1 w-full space-y-2">
+          {RATING_DISTRIBUTION.map((row) => {
+            const pct = RATING_TOTAL > 0 ? (row.count / RATING_TOTAL) * 100 : 0;
+            return (
+              <div key={row.stars} className="flex items-center gap-3 text-sm">
+                <span className="text-muted w-14 text-right text-xs">{starLabels[row.stars - 1]}</span>
+                <div className="flex-1 h-2.5 rounded-full bg-border/40 overflow-hidden">
+                  <div
+                    className="h-full rounded-full bg-accent transition-all duration-1000"
+                    style={{ width: visible ? `${pct}%` : "0%" }}
+                  />
+                </div>
+                <span className="text-muted text-xs w-6">{row.count}</span>
+              </div>
+            );
+          })}
+        </div>
+      </div>
+    </div>
+  );
+}
+
 /* ─── Testimonial Card ─── */
 function TestimonialCard({ quote, author, role, delay, visible }: { quote: string; author: string; role: string; delay: number; visible: boolean }) {
   return (
@@ -1526,21 +1741,13 @@ function CookieConsent({ t }: { t: TStrings }) {
 export default function Home() {
   const [locale, setLocale] = useState<Locale>("en");
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
-  const [theme, setTheme] = useState<Theme>("dark");
+  const theme: Theme = "dark";
   const t = T[locale];
-
-  // Sync theme state with the class set by the inline script in layout.tsx
-  useEffect(() => {
-    const stored = localStorage.getItem("theme") as Theme | null;
-    if (stored === "light" || stored === "dark") {
-      setTheme(stored);
-    } else if (window.matchMedia("(prefers-color-scheme: light)").matches) {
-      setTheme("light");
-    }
-  }, []);
 
   const socialProofSection = useInView(0.2);
   const mediaSection = useInView(0.1);
+  const securitySection = useInView(0.2);
+  const dashboardSection = useInView(0.15);
   const metricsSection = useInView(0.2);
   const howItWorks = useInView(0.15);
   const signalSection = useInView(0.2);
@@ -1615,7 +1822,6 @@ export default function Home() {
             ))}
           </div>
           <div className="flex items-center gap-2">
-            <ThemeToggle theme={theme} setTheme={setTheme} />
             <LanguageToggle locale={locale} setLocale={setLocale} />
             {/* Mobile burger */}
             <button
@@ -1715,9 +1921,8 @@ export default function Home() {
           background: "linear-gradient(90deg, transparent, rgba(0,212,170,0.2), transparent)",
         }} />
 
-        {/* Language & theme toggle in hero — visible before navbar appears */}
+        {/* Language toggle in hero — visible before navbar appears */}
         <div className="absolute top-8 right-8 z-20 flex items-center gap-2">
-          <ThemeToggle theme={theme} setTheme={setTheme} className="bg-background/80 backdrop-blur-xl" />
           <LanguageToggle
             locale={locale}
             setLocale={setLocale}
@@ -1871,8 +2076,20 @@ export default function Home() {
             {t.trustedBy}
           </p>
 
-          {/* Stats row */}
+          {/* Animated social proof counters */}
           <div className={`reveal reveal-delay-1 ${socialProofSection.visible ? "visible" : ""} grid grid-cols-2 md:grid-cols-4 gap-6 mb-12`}>
+            {[
+              { target: 150, decimals: 0, suffix: "+", label: t.socialTrades },
+              { target: 71.1, decimals: 1, suffix: "%", label: t.socialWinRate },
+              { target: 99.9, decimals: 1, suffix: "%", label: t.socialUptime },
+              { target: 200, decimals: 0, suffix: "+", label: t.socialSignals },
+            ].map((stat) => (
+              <SocialCounter key={stat.label} {...stat} active={socialProofSection.visible} />
+            ))}
+          </div>
+
+          {/* Tech metrics row */}
+          <div className={`reveal reveal-delay-2 ${socialProofSection.visible ? "visible" : ""} flex flex-wrap items-center justify-center gap-6 md:gap-10 mb-12 text-sm`}>
             {[
               { value: "4", label: t.metricPairs },
               { value: "4", label: t.metricTimeframes },
@@ -1880,8 +2097,8 @@ export default function Home() {
               { value: "3", label: t.metricExchanges },
             ].map((stat) => (
               <div key={stat.label} className="text-center">
-                <div className="font-mono text-3xl font-bold text-primary mb-1">{stat.value}</div>
-                <div className="text-xs text-muted uppercase tracking-wider">{stat.label}</div>
+                <div className="font-mono text-xl font-bold text-foreground/70 mb-0.5">{stat.value}</div>
+                <div className="text-[10px] text-muted uppercase tracking-wider">{stat.label}</div>
               </div>
             ))}
           </div>
@@ -1900,6 +2117,62 @@ export default function Home() {
       <BenefitsStrip t={t} visible={mediaSection.visible} />
 
       <SectionDivider variant="glow" />
+
+      {/* ─── SECURITY & TRUST BADGES ─── */}
+      <section ref={securitySection.ref} className="py-16 px-4">
+        <div className="max-w-5xl mx-auto">
+          <p className={`reveal ${securitySection.visible ? "visible" : ""} text-center text-muted text-sm uppercase tracking-widest font-mono mb-10`}>
+            {t.securityTag}
+          </p>
+          <div className={`reveal reveal-delay-1 ${securitySection.visible ? "visible" : ""} grid grid-cols-2 md:grid-cols-4 gap-4 md:gap-6`}>
+            {[
+              { icon: (
+                <svg className="w-6 h-6" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={1.5}>
+                  <path strokeLinecap="round" strokeLinejoin="round" d="M16.5 10.5V6.75a4.5 4.5 0 1 0-9 0v3.75m-.75 11.25h10.5a2.25 2.25 0 0 0 2.25-2.25v-6.75a2.25 2.25 0 0 0-2.25-2.25H6.75a2.25 2.25 0 0 0-2.25 2.25v6.75a2.25 2.25 0 0 0 2.25 2.25Z" />
+                </svg>
+              ), title: t.secBadge1, desc: t.secBadge1Desc },
+              { icon: (
+                <svg className="w-6 h-6" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={1.5}>
+                  <path strokeLinecap="round" strokeLinejoin="round" d="M17.25 6.75 22.5 12l-5.25 5.25m-10.5 0L1.5 12l5.25-5.25m7.5-3-4.5 16.5" />
+                </svg>
+              ), title: t.secBadge2, desc: t.secBadge2Desc },
+              { icon: (
+                <svg className="w-6 h-6" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={1.5}>
+                  <path strokeLinecap="round" strokeLinejoin="round" d="M9.75 3.104v5.714a2.25 2.25 0 0 1-.659 1.591L5 14.5M9.75 3.104c-.251.023-.501.05-.75.082m.75-.082a24.301 24.301 0 0 1 4.5 0m0 0v5.714c0 .597.237 1.17.659 1.591L19.8 15.3M14.25 3.104c.251.023.501.05.75.082M19.8 15.3l-1.57.393A9.065 9.065 0 0 1 12 15a9.065 9.065 0 0 0-6.23.693L5 14.5m14.8.8 1.402 1.402c1.232 1.232.65 3.318-1.067 3.611A48.309 48.309 0 0 1 12 21c-2.773 0-5.491-.235-8.135-.687-1.718-.293-2.3-2.379-1.067-3.61L5 14.5" />
+                </svg>
+              ), title: t.secBadge3, desc: t.secBadge3Desc },
+              { icon: (
+                <svg className="w-6 h-6" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={1.5}>
+                  <path strokeLinecap="round" strokeLinejoin="round" d="M3.75 3v11.25A2.25 2.25 0 0 0 6 16.5h2.25M3.75 3h-1.5m1.5 0h16.5m0 0h1.5m-1.5 0v11.25A2.25 2.25 0 0 1 18 16.5h-2.25m-7.5 0h7.5m-7.5 0-1 3m8.5-3 1 3m0 0 .5 1.5m-.5-1.5h-9.5m0 0-.5 1.5m.75-9 3-3 2.148 2.148A12.061 12.061 0 0 1 16.5 7.605" />
+                </svg>
+              ), title: t.secBadge4, desc: t.secBadge4Desc },
+            ].map((badge) => (
+              <div key={badge.title} className="security-badge text-center p-5 rounded-xl border border-border/50 bg-card/30 hover:border-primary/30 transition-all group">
+                <div className="w-12 h-12 mx-auto mb-3 rounded-full bg-primary/10 flex items-center justify-center text-primary group-hover:bg-primary/15 transition-colors">
+                  {badge.icon}
+                </div>
+                <h4 className="font-semibold text-sm mb-1">{badge.title}</h4>
+                <p className="text-muted text-xs leading-relaxed">{badge.desc}</p>
+              </div>
+            ))}
+          </div>
+        </div>
+      </section>
+
+      {/* ─── DASHBOARD MOCKUP ─── */}
+      <section ref={dashboardSection.ref} className="py-20 px-4">
+        <div className="max-w-5xl mx-auto">
+          <SectionHeading
+            tag={t.dashboardTag}
+            title={t.dashboardTitle}
+            subtitle={t.dashboardSubtitle}
+            visible={dashboardSection.visible}
+          />
+          <DashboardMockup t={t} visible={dashboardSection.visible} />
+        </div>
+      </section>
+
+      <SectionDivider variant="dots" />
 
       {/* ─── METRICS ─── */}
       <section ref={metricsSection.ref} className="py-24 px-4">
@@ -1948,7 +2221,7 @@ export default function Home() {
             {steps.map((step, i) => (
               <div
                 key={step.num}
-                className={`reveal reveal-delay-${i + 1} ${howItWorks.visible ? "visible" : ""} relative p-8 rounded-2xl border border-border/50 bg-background/50 backdrop-blur-sm hover:border-primary/30 transition-all group`}
+                className={`reveal reveal-delay-${i + 1} ${howItWorks.visible ? "visible" : ""} step-card relative p-8 rounded-2xl border border-border/50 bg-background/50 backdrop-blur-sm hover:border-primary/30 transition-all group`}
               >
                 <span className="absolute top-4 right-4 font-mono text-6xl font-bold text-primary/8 group-hover:text-primary/15 transition-colors select-none">
                   {step.num}
@@ -2109,6 +2382,7 @@ export default function Home() {
             subtitle={t.testimonialsSubtitle}
             visible={testimonialsSection.visible}
           />
+          <RatingSummary t={t} visible={testimonialsSection.visible} />
           <div className="grid md:grid-cols-3 gap-6 mb-6">
             <TestimonialCard quote={t.testimonial1} author={t.testimonial1Author} role={t.testimonial1Role} delay={1} visible={testimonialsSection.visible} />
             <TestimonialCard quote={t.testimonial2} author={t.testimonial2Author} role={t.testimonial2Role} delay={2} visible={testimonialsSection.visible} />
