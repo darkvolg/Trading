@@ -99,7 +99,7 @@ export const T = {
     freeF1: "Delayed signals (3h)",
     freeF2: "Monthly performance report",
     freeF3: "Public results access",
-    freeF4: "Community chat",
+    freeF4: (<a href="https://t.me/TrendRiderChat" target="_blank" rel="noopener noreferrer" className="text-primary hover:underline">Community chat</a>),
     // Basic features
     basicF1: "Real-time signals",
     basicF2: "Cornix auto-trade ready",
@@ -255,6 +255,7 @@ export const T = {
     // footer
     footerTagline: "AI-Powered Signals. Verified Results.",
     telegramChannel: "Telegram Channel",
+    communityChat: "Community Chat",
     liveResults: "Live Results",
     termsOfService: "Terms of Service",
     privacyPolicy: "Privacy Policy",
@@ -360,7 +361,7 @@ export const T = {
     freeF1: "Сигналы с задержкой (3ч)",
     freeF2: "Ежемесячный отчёт",
     freeF3: "Доступ к результатам",
-    freeF4: "Общий чат",
+    freeF4: (<a href="https://t.me/TrendRiderChat" target="_blank" rel="noopener noreferrer" className="text-primary hover:underline">Общий чат</a>),
     basicF1: "Сигналы в реальном времени",
     basicF2: "Формат для Cornix",
     basicF3: "Еженедельный отчёт",
@@ -512,6 +513,7 @@ export const T = {
     // footer
     footerTagline: "AI-сигналы. Проверенные результаты.",
     telegramChannel: "Telegram-канал",
+    communityChat: "Чат сообщества",
     liveResults: "Результаты",
     termsOfService: "Условия использования",
     privacyPolicy: "Политика конфиденциальности",

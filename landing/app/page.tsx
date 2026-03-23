@@ -4,7 +4,7 @@ import { useEffect, useRef, useState, useCallback } from "react";
 
 /* ──────────────────────────── imports from extracted modules ──────────────────────────── */
 
-import { TELEGRAM_URL, TELEGRAM_BOT_URL, SHEETS_URL } from "@/lib/constants";
+import { TELEGRAM_URL, TELEGRAM_BOT_URL, TELEGRAM_CHAT_URL, SHEETS_URL } from "@/lib/constants";
 import { T } from "@/lib/i18n";
 import type { Locale } from "@/lib/i18n";
 import { getMetrics, getSteps, getFeatures, getPricing, getFaqItems } from "@/lib/data";
@@ -886,8 +886,8 @@ export default function Home() {
                     </div>
                   </div>
                   <ul className="space-y-3 mb-8">
-                    {plan.features.map((feat) => (
-                      <li key={feat} className="flex items-start gap-3 text-sm">
+                    {plan.features.map((feat, fi) => (
+                      <li key={fi} className="flex items-start gap-3 text-sm">
                         <svg
                           className={`w-5 h-5 shrink-0 mt-0.5 ${isVip ? "text-accent" : "text-primary"}`}
                           fill="none"
@@ -1053,6 +1053,7 @@ export default function Home() {
               <h4 className="text-sm font-semibold text-foreground mb-4">Product</h4>
               <ul className="space-y-2.5">
                 <li><a href={TELEGRAM_URL} target="_blank" rel="noopener noreferrer" className="text-muted text-sm hover:text-primary transition-colors">{t.telegramChannel}</a></li>
+                <li><a href={TELEGRAM_CHAT_URL} target="_blank" rel="noopener noreferrer" className="text-muted text-sm hover:text-primary transition-colors">{t.communityChat}</a></li>
                 <li><a href={SHEETS_URL} target="_blank" rel="noopener noreferrer" className="text-muted text-sm hover:text-primary transition-colors">{t.liveResults}</a></li>
               </ul>
             </div>
