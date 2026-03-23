@@ -17,7 +17,7 @@ import requests
 FT_HOME = os.environ.get("FT_HOME", os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
 CONFIG_PATH = os.getenv("FT_CONFIG_PATH", os.path.join(FT_HOME, "config.json"))
 
-PAIRS = ["BTC/USDT", "ETH/USDT", "SOL/USDT", "BNB/USDT"]
+PAIRS = ["BTC/USDT", "ETH/USDT", "SOL/USDT", "BNB/USDT", "DOGE/USDT"]
 OI_SPIKE_THRESHOLD = 5.0          # percent
 FUNDING_ALERT_THRESHOLD = 0.0003  # 0.03%
 FUNDING_EXTREME_THRESHOLD = 0.0005  # 0.05%
