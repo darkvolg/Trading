@@ -111,9 +111,14 @@ def format_entry_signal(signal_num: int, pair: str, side_str: str, leverage: int
 
 def format_cornix_signal(pair: str, side: str, leverage: int, rate: float,
                          sl_price: float) -> str:
-    """Format Cornix-compatible signal message."""
-    pair_clean = pair.replace('/USDT:USDT', '').replace('/', '')
-    signal_type = "Regular (Long)"
+    """Format Cornix-compatible signal message.
+
+    Cornix requires exactly ONE symbol per message. The symbol must be
+    a clean futures ticker like BTCUSDT (no slashes, no :USDT suffix).
+    """
+    # Clean pair: "BTC/USDT:USDT" -> "BTCUSDT", "ETH/USDT" -> "ETHUSDT"
+    pair_clean = pair.split(':')[0].replace('/', '')
+    side_upper = side.upper()
 
     entry_low = rate * (1 - ENTRY_ZONE_PCT)
     entry_high = rate * (1 + ENTRY_ZONE_PCT)
@@ -123,19 +128,14 @@ def format_cornix_signal(pair: str, side: str, leverage: int, rate: float,
     tp3 = rate * (1 + TP3_PCT)
 
     return (
-        f"#{pair_clean}\n\n"
-        f"Exchanges: Bybit USDT\n"
-        f"Signal Type: {signal_type}\n"
-        f"Leverage: Isolated ({leverage}X)\n\n"
-        f"Entry Zone: {entry_low:.2f} - {entry_high:.2f}\n\n"
-        f"Take-Profit Targets:\n"
-        f"1) {tp1:.2f}\n"
-        f"2) {tp2:.2f}\n"
-        f"3) {tp3:.2f}\n\n"
-        f"Stop Targets:\n"
-        f"1) {sl_price:.2f}\n\n"
-        f"Trailing Configuration:\n"
-        f"Stop: Breakeven - Trigger: Target (1)"
+        f"\U0001f4ca {pair_clean} {side_upper}\n"
+        f"Exchange: Bybit\n"
+        f"Leverage: {leverage}x\n"
+        f"Entry: {entry_low:.2f}-{entry_high:.2f}\n"
+        f"TP1: {tp1:.2f} (30%)\n"
+        f"TP2: {tp2:.2f} (40%)\n"
+        f"TP3: {tp3:.2f} (30%)\n"
+        f"SL: {sl_price:.2f}"
     )
 
 
