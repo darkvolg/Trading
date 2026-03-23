@@ -1125,20 +1125,18 @@ function LiveTicker() {
 /* ─── Telegram Signal Preview ─── */
 
 function SignalPreview({ visible }: { visible: boolean }) {
-  const [showTyping, setShowTyping] = useState(true);
-  const [showMessage, setShowMessage] = useState(false);
-  const [justReceived, setJustReceived] = useState(false);
+  const [phase, setPhase] = useState<"typing" | "message" | "idle">("typing");
 
   useEffect(() => {
     if (!visible) return;
-    const t1 = setTimeout(() => {
-      setShowTyping(false);
-      setShowMessage(true);
-      setJustReceived(true);
-    }, 1800);
-    const t2 = setTimeout(() => setJustReceived(false), 4500);
+    const t1 = setTimeout(() => setPhase("message"), 1500);
+    const t2 = setTimeout(() => setPhase("idle"), 4000);
     return () => { clearTimeout(t1); clearTimeout(t2); };
   }, [visible]);
+
+  const showTyping = visible && phase === "typing";
+  const showMessage = phase === "message" || phase === "idle";
+  const justReceived = phase === "message";
 
   return (
     <div className="max-w-sm mx-auto">
