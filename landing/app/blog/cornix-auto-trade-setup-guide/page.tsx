@@ -7,6 +7,47 @@ export const metadata: Metadata = {
 
 export default function Article() {
   return (
+    <>
+      <script
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{
+          __html: JSON.stringify({
+            "@context": "https://schema.org",
+            "@type": "BlogPosting",
+            "headline": "How to Set Up Cornix Auto-Trade with TrendRider Signals — TrendRider Blog",
+            "description": "Step-by-step guide to connecting Cornix auto-trade bot with TrendRider signals on Bybit, Binance, and OKX for hands-free crypto trading.",
+            "author": {
+              "@type": "Organization",
+              "name": "TrendRider",
+              "url": "https://trendrider.net"
+            },
+            "publisher": {
+              "@type": "Organization",
+              "name": "TrendRider",
+              "url": "https://trendrider.net"
+            },
+            "datePublished": "2026-03-22",
+            "mainEntityOfPage": {
+              "@type": "WebPage",
+              "@id": "https://trendrider.net/blog/cornix-auto-trade-setup-guide"
+            }
+          })
+        }}
+      />
+      <script
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{
+          __html: JSON.stringify({
+            "@context": "https://schema.org",
+            "@type": "BreadcrumbList",
+            "itemListElement": [
+              { "@type": "ListItem", "position": 1, "name": "Home", "item": "https://trendrider.net" },
+              { "@type": "ListItem", "position": 2, "name": "Blog", "item": "https://trendrider.net/blog" },
+              { "@type": "ListItem", "position": 3, "name": "How to Set Up Cornix Auto-Trade with TrendRider Signals — TrendRider Blog" }
+            ]
+          })
+        }}
+      />
     <div className="min-h-screen bg-background text-foreground">
       <article className="max-w-3xl mx-auto px-4 py-20">
         <a href="/blog" className="text-primary text-sm hover:underline mb-8 inline-block">&larr; Back to blog</a>
@@ -130,5 +171,6 @@ export default function Article() {
         </div>
       </article>
     </div>
+    </>
   );
 }

@@ -7,6 +7,47 @@ export const metadata: Metadata = {
 
 export default function Article() {
   return (
+    <>
+      <script
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{
+          __html: JSON.stringify({
+            "@context": "https://schema.org",
+            "@type": "BlogPosting",
+            "headline": "What Is SQN Score? Understanding System Quality Number — TrendRider Blog",
+            "description": "Learn what SQN (System Quality Number) means in trading, how it's calculated, what the score ranges indicate, and how TrendRider achieves an SQN of 3.02.",
+            "author": {
+              "@type": "Organization",
+              "name": "TrendRider",
+              "url": "https://trendrider.net"
+            },
+            "publisher": {
+              "@type": "Organization",
+              "name": "TrendRider",
+              "url": "https://trendrider.net"
+            },
+            "datePublished": "2026-03-22",
+            "mainEntityOfPage": {
+              "@type": "WebPage",
+              "@id": "https://trendrider.net/blog/what-is-sqn-score-system-quality-number"
+            }
+          })
+        }}
+      />
+      <script
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{
+          __html: JSON.stringify({
+            "@context": "https://schema.org",
+            "@type": "BreadcrumbList",
+            "itemListElement": [
+              { "@type": "ListItem", "position": 1, "name": "Home", "item": "https://trendrider.net" },
+              { "@type": "ListItem", "position": 2, "name": "Blog", "item": "https://trendrider.net/blog" },
+              { "@type": "ListItem", "position": 3, "name": "What Is SQN Score? Understanding System Quality Number — TrendRider Blog" }
+            ]
+          })
+        }}
+      />
     <div className="min-h-screen bg-background text-foreground">
       <article className="max-w-3xl mx-auto px-4 py-20">
         <a href="/blog" className="text-primary text-sm hover:underline mb-8 inline-block">&larr; Back to blog</a>
@@ -97,5 +138,6 @@ export default function Article() {
         </div>
       </article>
     </div>
+    </>
   );
 }

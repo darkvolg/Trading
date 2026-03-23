@@ -67,7 +67,7 @@ export default function PrivacyPage() {
             <h2 className="text-xl font-semibold text-foreground mb-3">8. Contact</h2>
             <p className="text-muted leading-relaxed text-sm">
               For privacy-related inquiries, contact us at{" "}
-              <a href="mailto:support@trendrider.pro" className="text-primary hover:underline">support@trendrider.pro</a>.
+              <a href="mailto:support@trendrider.net" className="text-primary hover:underline">support@trendrider.net</a>.
             </p>
           </section>
         </div>

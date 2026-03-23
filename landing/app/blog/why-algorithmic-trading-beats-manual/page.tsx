@@ -7,6 +7,47 @@ export const metadata: Metadata = {
 
 export default function Article() {
   return (
+    <>
+      <script
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{
+          __html: JSON.stringify({
+            "@context": "https://schema.org",
+            "@type": "BlogPosting",
+            "headline": "Why Algorithmic Trading Beats Manual — TrendRider Blog",
+            "description": "Discover why removing emotions from trading decisions leads to consistently better results with algorithmic crypto signals.",
+            "author": {
+              "@type": "Organization",
+              "name": "TrendRider",
+              "url": "https://trendrider.net"
+            },
+            "publisher": {
+              "@type": "Organization",
+              "name": "TrendRider",
+              "url": "https://trendrider.net"
+            },
+            "datePublished": "2026-03-22",
+            "mainEntityOfPage": {
+              "@type": "WebPage",
+              "@id": "https://trendrider.net/blog/why-algorithmic-trading-beats-manual"
+            }
+          })
+        }}
+      />
+      <script
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{
+          __html: JSON.stringify({
+            "@context": "https://schema.org",
+            "@type": "BreadcrumbList",
+            "itemListElement": [
+              { "@type": "ListItem", "position": 1, "name": "Home", "item": "https://trendrider.net" },
+              { "@type": "ListItem", "position": 2, "name": "Blog", "item": "https://trendrider.net/blog" },
+              { "@type": "ListItem", "position": 3, "name": "Why Algorithmic Trading Beats Manual — TrendRider Blog" }
+            ]
+          })
+        }}
+      />
     <div className="min-h-screen bg-background text-foreground">
       <article className="max-w-3xl mx-auto px-4 py-20">
         <a href="/blog" className="text-primary text-sm hover:underline mb-8 inline-block">&larr; Back to blog</a>
@@ -45,5 +86,6 @@ export default function Article() {
         </div>
       </article>
     </div>
+    </>
   );
 }

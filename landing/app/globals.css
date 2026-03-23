@@ -7,7 +7,7 @@
   --color-secondary: #1E2A3A;
   --color-accent: #FFD700;
   --color-danger: #FF4757;
-  --color-muted: #8B949E;
+  --color-muted: #9CA3AF;
   --color-card: #161B22;
   --color-border: #30363D;
   --font-sans: var(--font-inter);
@@ -765,6 +765,13 @@ html.light .pricing-card:hover {
   opacity: 1;
 }
 
+/* Focus-visible for accessibility */
+*:focus-visible {
+  outline: 2px solid #00D4AA;
+  outline-offset: 2px;
+  border-radius: 4px;
+}
+
 /* Reduce motion for users who prefer it */
 @media (prefers-reduced-motion: reduce) {
   *, *::before, *::after {
@@ -778,4 +785,51 @@ html.light .pricing-card:hover {
   .scan-line-animate {
     animation: none !important;
   }
+}
+
+/* ─── ROI Calculator slider ─── */
+input[type="range"]::-webkit-slider-thumb {
+  -webkit-appearance: none;
+  appearance: none;
+  width: 24px;
+  height: 24px;
+  border-radius: 50%;
+  background: #00D4AA;
+  cursor: pointer;
+  border: 3px solid #0a0a0a;
+  box-shadow: 0 0 10px rgba(0, 212, 170, 0.4);
+  transition: box-shadow 0.2s;
+}
+input[type="range"]::-webkit-slider-thumb:hover {
+  box-shadow: 0 0 18px rgba(0, 212, 170, 0.6);
+}
+input[type="range"]::-moz-range-thumb {
+  width: 24px;
+  height: 24px;
+  border-radius: 50%;
+  background: #00D4AA;
+  cursor: pointer;
+  border: 3px solid #0a0a0a;
+  box-shadow: 0 0 10px rgba(0, 212, 170, 0.4);
+}
+
+/* ─── Morphing gradient mesh blob ─── */
+@keyframes morphBlob {
+  0%, 100% { border-radius: 60% 40% 30% 70% / 60% 30% 70% 40%; }
+  25% { border-radius: 30% 60% 70% 40% / 50% 60% 30% 60%; }
+  50% { border-radius: 50% 60% 30% 60% / 40% 70% 50% 60%; }
+  75% { border-radius: 60% 40% 60% 40% / 70% 30% 50% 60%; }
+}
+
+.gradient-mesh {
+  position: absolute;
+  width: 600px;
+  height: 600px;
+  background: radial-gradient(ellipse at 30% 40%, rgba(0,212,170,0.08) 0%, transparent 60%),
+              radial-gradient(ellipse at 70% 60%, rgba(255,215,0,0.05) 0%, transparent 60%),
+              radial-gradient(ellipse at 50% 50%, rgba(0,212,170,0.04) 0%, transparent 70%);
+  filter: blur(80px);
+  animation: morphBlob 20s ease-in-out infinite;
+  pointer-events: none;
+  will-change: border-radius;
 }
