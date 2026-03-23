@@ -37,7 +37,7 @@ ADMIN_IDS: list[int] = [
 FREE_CHANNEL_ID = os.getenv("FREE_CHANNEL_ID", "")
 VIP_CHANNEL_ID = os.getenv("VIP_CHANNEL_ID", "")
 
-BOT_USERNAME = "TrendRiderSignals_bot"
+BOT_USERNAME = "dtrade_signals_bot"
 REFERRAL_BONUS_DAYS = 7
 
 # ── CryptoBot (Crypto Pay) ──────────────────────────────────────────────
