@@ -47,7 +47,9 @@ export function EmailCapture({ t }: { t: TStrings }) {
         ) : (
           <>
             <form onSubmit={handleSubmit} className="flex flex-col sm:flex-row gap-3 max-w-md mx-auto">
+              <label htmlFor="email-capture" className="sr-only">Email address</label>
               <input
+                id="email-capture"
                 type="email"
                 value={email}
                 onChange={(e) => { setEmail(e.target.value); if (status === "error") setStatus("idle"); }}
