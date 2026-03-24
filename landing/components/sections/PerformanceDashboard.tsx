@@ -407,8 +407,9 @@ export function PerformanceDashboard({ t, visible, sectionRef }: PerformanceDash
             </span>
           </div>
 
-          {/* SVG Chart */}
+          {/* SVG Chart — lazy-rendered when scrolled into view */}
           <div className="relative rounded-2xl border border-border/50 bg-card/30 backdrop-blur-sm p-4 overflow-hidden">
+            {visible ? (
             <svg
               ref={svgRef}
               viewBox={`0 0 ${CHART_W} ${CHART_H}`}
@@ -419,6 +420,8 @@ export function PerformanceDashboard({ t, visible, sectionRef }: PerformanceDash
               aria-label="Equity curve chart comparing TrendRider vs BTC Buy and Hold"
               role="img"
             >
+              <title>TrendRider Performance Chart</title>
+              <desc>Equity curve comparing TrendRider strategy returns vs BTC buy-and-hold over time</desc>
               <defs>
                 {/* TrendRider line gradient */}
                 <linearGradient id="trLineGrad" x1="0" y1="0" x2="1" y2="0">
@@ -600,6 +603,9 @@ export function PerformanceDashboard({ t, visible, sectionRef }: PerformanceDash
                 </>
               )}
             </svg>
+            ) : (
+              <div style={{ paddingBottom: `${(CHART_H / CHART_W) * 100}%` }} />
+            )}
           </div>
 
           {/* Key insight banner */}

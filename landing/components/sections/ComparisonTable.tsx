@@ -18,7 +18,7 @@ export function ComparisonTable({ t, visible }: { t: TStrings; visible: boolean 
               <td className="py-4 px-4 text-sm font-medium text-foreground">{row[0]}</td>
               <td className="py-4 px-4 text-sm text-center text-muted">
                 <span className="inline-flex items-center gap-1.5">
-                  <svg className="w-4 h-4 text-danger/50" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
+                  <svg className="w-4 h-4 text-danger/50" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2} aria-hidden="true">
                     <path strokeLinecap="round" strokeLinejoin="round" d="M6 18 18 6M6 6l12 12" />
                   </svg>
                   {row[1]}
@@ -26,7 +26,7 @@ export function ComparisonTable({ t, visible }: { t: TStrings; visible: boolean 
               </td>
               <td className="py-4 px-4 text-sm text-center bg-primary/5">
                 <span className="inline-flex items-center gap-1.5 text-primary font-medium">
-                  <svg className="w-4 h-4 text-primary" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
+                  <svg className="w-4 h-4 text-primary" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2} aria-hidden="true">
                     <path strokeLinecap="round" strokeLinejoin="round" d="m4.5 12.75 6 6 9-13.5" />
                   </svg>
                   {row[2]}

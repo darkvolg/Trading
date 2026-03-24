@@ -27,6 +27,7 @@ export default function Article() {
               "url": "https://trendrider.net"
             },
             "datePublished": "2026-03-22",
+            "dateModified": "2026-03-24",
             "mainEntityOfPage": {
               "@type": "WebPage",
               "@id": "https://trendrider.net/blog/what-is-sqn-score-system-quality-number"
@@ -133,6 +134,24 @@ export default function Article() {
             <p className="text-foreground font-medium mb-3">See our SQN 3.45 system in action</p>
             <a href="https://t.me/TrendRiderSignals" className="inline-block px-6 py-3 rounded-xl font-semibold text-sm" style={{ background: "linear-gradient(135deg, #00D4AA, #00B894)", color: "#0D1117" }}>
               Join TrendRider on Telegram &rarr;
+            </a>
+          </div>
+        </div>
+
+        <div className="mt-16 pt-10 border-t border-border/30">
+          <h2 className="text-xl font-semibold text-foreground mb-6">Related Articles</h2>
+          <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
+            <a href="/blog/understanding-win-rate-and-profit-factor" className="p-4 rounded-xl border border-border/50 bg-card/30 hover:border-primary/30 hover:bg-card/50 transition-all">
+              <span className="text-xs text-primary font-mono uppercase tracking-widest">Education</span>
+              <p className="text-sm font-medium text-foreground mt-2">Understanding Win Rate &amp; Profit Factor: What Really Matters</p>
+            </a>
+            <a href="/blog/risk-management-6-percent-stop-loss" className="p-4 rounded-xl border border-border/50 bg-card/30 hover:border-primary/30 hover:bg-card/50 transition-all">
+              <span className="text-xs text-primary font-mono uppercase tracking-widest">Risk Management</span>
+              <p className="text-sm font-medium text-foreground mt-2">The 6% Stop-Loss Rule: How We Keep Drawdown at 1.42%</p>
+            </a>
+            <a href="/blog/why-algorithmic-trading-beats-manual" className="p-4 rounded-xl border border-border/50 bg-card/30 hover:border-primary/30 hover:bg-card/50 transition-all">
+              <span className="text-xs text-primary font-mono uppercase tracking-widest">Strategy</span>
+              <p className="text-sm font-medium text-foreground mt-2">Why Algorithmic Trading Beats Manual: Data Over Emotions</p>
             </a>
           </div>
         </div>

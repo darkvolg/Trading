@@ -46,6 +46,7 @@ export const metadata: Metadata = {
     url: "https://trendrider.net",
     siteName: "TrendRider",
     locale: "en_US",
+    images: [{ url: "/opengraph-image", width: 1200, height: 630 }],
   },
   twitter: {
     card: "summary_large_image",
@@ -114,6 +115,24 @@ const faqJsonLd = {
   ],
 };
 
+const organizationJsonLd = {
+  "@context": "https://schema.org",
+  "@type": "Organization",
+  "name": "TrendRider",
+  "url": "https://trendrider.net",
+  "logo": "https://trendrider.net/icon.svg",
+  "description": "AI-powered crypto trading signals",
+  "contactPoint": {
+    "@type": "ContactPoint",
+    "contactType": "customer support",
+    "url": "https://t.me/TrendRider_Support",
+  },
+  "sameAs": [
+    "https://t.me/TrendRiderSignals",
+    "https://x.com/TrendRiderPro",
+  ],
+};
+
 const jsonLd = {
   "@context": "https://schema.org",
   "@type": "SoftwareApplication",
@@ -173,6 +192,10 @@ export default function RootLayout({
         <script
           type="application/ld+json"
           dangerouslySetInnerHTML={{ __html: JSON.stringify(faqJsonLd) }}
+        />
+        <script
+          type="application/ld+json"
+          dangerouslySetInnerHTML={{ __html: JSON.stringify(organizationJsonLd) }}
         />
       </head>
       <body className="min-h-screen bg-background text-foreground font-sans">

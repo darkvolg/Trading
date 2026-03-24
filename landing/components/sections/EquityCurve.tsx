@@ -19,7 +19,7 @@ export function EquityCurve({ label, visible }: { label: string; visible: boolea
     <div className={`reveal reveal-delay-5 ${visible ? "visible" : ""} mt-10 max-w-lg mx-auto`}>
       <p className="text-xs text-muted text-center uppercase tracking-widest font-mono mb-3">{label}</p>
       <div className="equity-glow relative rounded-xl border border-border/50 bg-card/30 p-4 overflow-hidden">
-        <svg viewBox={`0 0 ${w} ${h}`} className="w-full h-auto" preserveAspectRatio="none">
+        <svg viewBox={`0 0 ${w} ${h}`} className="w-full h-auto" preserveAspectRatio="none" aria-hidden="true">
           <defs>
             <linearGradient id="equityGrad" x1="0" y1="0" x2="0" y2="1">
               <stop offset="0%" stopColor="#00D4AA" stopOpacity="0.3" />
