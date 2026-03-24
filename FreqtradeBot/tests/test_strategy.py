@@ -1099,8 +1099,8 @@ class TestConfirmTradeEntry:
 
         assert result is True
 
-    def test_sl_tp_calculated_correctly(self, strategy):
-        """SL = rate*(1+stoploss), TP1/2/3 use config percentages."""
+    def test_sl_calculated_correctly(self, strategy):
+        """SL = rate*(1+stoploss)."""
         last = self._make_last_candle()
         self._setup_dp(strategy, last)
         strategy._db.next_signal_number.return_value = 1
@@ -1110,12 +1110,9 @@ class TestConfirmTradeEntry:
         def capture_format_entry(*args, **kwargs):
             # format_entry_signal is called positionally; map by position
             # Signature: signal_num, pair, side_str, leverage, setup_name, rate,
-            #            sl_price, stoploss_pct, tp1, tp2, tp3, rr_ratio, ...
-            if len(args) >= 11:
+            #            sl_price, stoploss_pct, rr_ratio, ...
+            if len(args) >= 7:
                 captured["sl_price"] = args[6]
-                captured["tp1"] = args[8]
-                captured["tp2"] = args[9]
-                captured["tp3"] = args[10]
             captured.update(kwargs)
             return "msg"
 
@@ -1139,11 +1136,7 @@ class TestConfirmTradeEntry:
                 side="long",
             )
 
-        from trendrider_config import TP1_PCT, TP2_PCT, TP3_PCT
         assert abs(captured["sl_price"] - 200.0 * (1 - 0.06)) < 0.01
-        assert abs(captured["tp1"] - 200.0 * (1 + TP1_PCT)) < 0.01
-        assert abs(captured["tp2"] - 200.0 * (1 + TP2_PCT)) < 0.01
-        assert abs(captured["tp3"] - 200.0 * (1 + TP3_PCT)) < 0.01
 
     def test_setup_name_resolved_from_entry_tag(self, strategy):
         last = self._make_last_candle()

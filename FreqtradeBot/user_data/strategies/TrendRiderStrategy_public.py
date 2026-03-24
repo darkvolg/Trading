@@ -380,63 +380,6 @@ class TrendRiderStrategy(IStrategy):
 
         return dataframe
 
-    # --- Dynamic ATR-based Stoploss ---
-    def custom_stoploss(self, pair: str, trade, current_time: datetime,
-                        current_rate: float, current_profit: float,
-                        after_fill: bool, **kwargs) -> float:
-        dataframe, _ = self.dp.get_analyzed_dataframe(pair, self.timeframe)
-        if len(dataframe) < 1:
-            return self.stoploss  # default -0.06
-
-        last_candle = dataframe.iloc[-1]
-        atr = last_candle.get('atr', 0)
-        if atr <= 0:
-            return self.stoploss
-
-        # Dynamic stoploss = 2x ATR from entry
-        atr_stoploss = -(atr * 2) / current_rate
-
-        # Clamp between -3% and -8%
-        atr_stoploss = max(min(atr_stoploss, -0.03), -0.08)
-
-        return atr_stoploss
-
-    # --- DCA + Partial Take Profit via adjust_trade_position ---
-    def adjust_trade_position(self, trade, current_time: datetime,
-                              current_rate: float, current_profit: float,
-                              min_stake: float, max_stake: float,
-                              current_entry_rate: float, current_exit_rate: float,
-                              current_exit_profit: float, current_entry_profit: float,
-                              **kwargs):
-        # --- Partial Take Profit ---
-        filled_exits = trade.nr_of_successful_exits
-
-        if current_profit >= 0.03 and filled_exits == 0:
-            # TP1: sell 30% of position
-            return -(trade.stake_amount * 0.3)
-
-        if current_profit >= 0.05 and filled_exits == 1:
-            # TP2: sell 30% more
-            return -(trade.stake_amount * 0.3)
-
-        # TP3: remaining 40% handled by trailing/ROI
-
-        # --- DCA (only for losing positions) ---
-        filled_entries = trade.nr_of_successful_entries
-
-        if current_profit > -0.02:
-            return None
-
-        if filled_entries >= 3:  # 1 initial + 2 DCA max
-            return None
-
-        if filled_entries == 1 and current_profit <= -0.03:
-            return trade.stake_amount * 0.5  # Half position DCA
-
-        if filled_entries == 2 and current_profit <= -0.05:
-            return trade.stake_amount * 0.5
-
-        return None
 
     # --- Improved Confidence Scoring (inline from trendrider_confidence) ---
     def _calc_confidence(self, last: dict) -> tuple:
@@ -640,11 +583,7 @@ class TrendRiderStrategy(IStrategy):
             f"*{pair}* | *{side_str}* | {leverage}x\n"
             f"{'='*28}\n\n"
             f"*Entry:* `{rate:.2f}` USDT\n"
-            f"*Stop Loss:* `{sl_price:.2f}` ({self.stoploss*100:+.1f}%)\n\n"
-            f"*Targets:*\n"
-            f"  TP1: `{tp1_price:.2f}` (+3%)\n"
-            f"  TP2: `{tp2_price:.2f}` (+5%)\n"
-            f"  TP3: `{tp3_price:.2f}` (+10%)\n"
+            f"*Stop Loss:* `{sl_price:.2f}` ({self.stoploss*100:+.1f}%)\n"
             f"  R:R = 1:{rr_ratio:.1f}\n\n"
             f"*Confidence:* {conf_level}\n"
             f"  [{conf_bar}]\n"
@@ -678,8 +617,6 @@ class TrendRiderStrategy(IStrategy):
             "rsi_overbought": "RSI overbought (>81)",
             "ema_bearish_cross": "EMA bearish crossover",
             "trend_broken": "Trend broken (below EMA200)",
-            "partial_tp1": "Partial TP1 (+3%)",
-            "partial_tp2": "Partial TP2 (+5%)",
             "force_exit": "Force exit",
         }
         reason_text = exit_reasons.get(exit_reason, exit_reason)

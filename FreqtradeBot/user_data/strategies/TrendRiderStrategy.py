@@ -30,6 +30,8 @@ from trendrider_config import (
     FNG_HEALTHY_MIN, FNG_HEALTHY_MAX,
     BTC_RSI_LONG_MIN,
 )
+# Note: TP1/TP2/TP3 are still used for R:R ratio calculation and signal queue,
+# but are no longer displayed in Telegram messages (DCA/partial TP disabled).
 from trendrider_database import AlertsDB
 from trendrider_onchain import FearGreedFetcher, OnChainDataFetcher
 from trendrider_confidence import calc_confidence, market_context, get_market_regime, get_estimated_hold
@@ -563,7 +565,7 @@ class TrendRiderStrategy(IStrategy):
         # Send main signal
         msg = format_entry_signal(
             signal_num, pair, side_str, leverage, setup_name, rate,
-            sl_price, self.stoploss, tp1_price, tp2_price, tp3_price, rr_ratio,
+            sl_price, self.stoploss, rr_ratio,
             conf_level, conf_numeric, conf_bar, conf_details,
             regime, heat_str, est_hold, invalidation, inv_label,
             rsi_val, adx_val, vol_ratio, macd_hist, market_ctx, reason

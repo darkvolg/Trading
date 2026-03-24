@@ -18,7 +18,7 @@ class TestFormatEntrySignal:
         defaults = dict(
             signal_num=1, pair="ETH/USDT:USDT", side_str="LONG", leverage=5,
             setup_name="Trend Pullback", rate=2000.0, sl_price=1880.0,
-            stoploss_pct=-0.06, tp1=2060.0, tp2=2100.0, tp3=2200.0,
+            stoploss_pct=-0.06,
             rr_ratio=1.7, conf_level="STRONG", conf_numeric=8,
             conf_bar="||||||||-- 8/10", conf_details=["RSI healthy", "Strong trend"],
             regime="Trending Bull", heat_str="1/3 slots", est_hold="2-6h",
@@ -34,12 +34,9 @@ class TestFormatEntrySignal:
         msg = format_entry_signal(**self._make_signal())
         assert "ETH/USDT:USDT" in msg
 
-    def test_contains_sl_and_tp(self):
+    def test_contains_sl(self):
         msg = format_entry_signal(**self._make_signal())
         assert "1880.00" in msg  # SL
-        assert "2060.00" in msg  # TP1
-        assert "2100.00" in msg  # TP2
-        assert "2200.00" in msg  # TP3
 
     def test_contains_signal_number(self):
         msg = format_entry_signal(**self._make_signal(signal_num=42))
@@ -96,10 +93,8 @@ class TestFormatCornixSignal:
         # The word USDT should only appear as part of ETHUSDT, not standalone
         assert msg.count("USDT") == 1  # only in "ETHUSDT"
 
-    def test_contains_tp_levels(self):
+    def test_contains_sl(self):
         msg = format_cornix_signal("ETH/USDT:USDT", "long", 5, 2000.0, 1880.0)
-        # TP1 = 2000 * 1.03 = 2060
-        assert "2060.00" in msg
         assert "1880.00" in msg  # SL
 
     def test_contains_leverage(self):
