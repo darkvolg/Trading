@@ -2,7 +2,10 @@ import type { Metadata } from "next";
 
 export const metadata: Metadata = {
   title: "How to Set Up Cornix Auto-Trade with TrendRider Signals — TrendRider Blog",
-  description: "Step-by-step guide to connecting Cornix auto-trade bot with TrendRider signals on Bybit, Binance, and OKX for hands-free crypto trading.",
+  description: "Step-by-step Cornix setup guide: connect to Bybit, Binance, or OKX, configure position sizing, and auto-trade TrendRider crypto signals hands-free.",
+  alternates: {
+    canonical: "https://trendrider.net/blog/cornix-auto-trade-setup-guide",
+  },
 };
 
 export default function Article() {
@@ -13,21 +16,26 @@ export default function Article() {
         dangerouslySetInnerHTML={{
           __html: JSON.stringify({
             "@context": "https://schema.org",
-            "@type": "BlogPosting",
+            "@type": "Article",
             "headline": "How to Set Up Cornix Auto-Trade with TrendRider Signals — TrendRider Blog",
-            "description": "Step-by-step guide to connecting Cornix auto-trade bot with TrendRider signals on Bybit, Binance, and OKX for hands-free crypto trading.",
+            "description": "Step-by-step Cornix setup guide: connect to Bybit, Binance, or OKX, configure position sizing, and auto-trade TrendRider crypto signals hands-free.",
             "author": {
-              "@type": "Organization",
-              "name": "TrendRider",
+              "@type": "Person",
+              "name": "TrendRider Team",
               "url": "https://trendrider.net"
             },
             "publisher": {
               "@type": "Organization",
               "name": "TrendRider",
-              "url": "https://trendrider.net"
+              "url": "https://trendrider.net",
+              "logo": {
+                "@type": "ImageObject",
+                "url": "https://trendrider.net/icon.svg"
+              }
             },
             "datePublished": "2026-03-22",
             "dateModified": "2026-03-24",
+            "image": "https://trendrider.net/opengraph-image",
             "mainEntityOfPage": {
               "@type": "WebPage",
               "@id": "https://trendrider.net/blog/cornix-auto-trade-setup-guide"

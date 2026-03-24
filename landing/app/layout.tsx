@@ -32,7 +32,7 @@ export const metadata: Metadata = {
   ],
   metadataBase: new URL("https://trendrider.net"),
   alternates: {
-    canonical: "/",
+    canonical: "https://trendrider.net",
     languages: {
       "en": "/",
       "ru": "/ru",

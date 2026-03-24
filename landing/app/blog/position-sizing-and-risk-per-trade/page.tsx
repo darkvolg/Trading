@@ -2,7 +2,10 @@ import type { Metadata } from "next";
 
 export const metadata: Metadata = {
   title: "Position Sizing & Risk Per Trade: The 2% Rule — TrendRider Blog",
-  description: "Learn position sizing formulas, why the 2% risk-per-trade rule protects your capital, and how TrendRider manages position sizes automatically.",
+  description: "The 2% rule is a survival mechanism, not a suggestion. Learn the position sizing formula, common mistakes, and how to size trades by account size.",
+  alternates: {
+    canonical: "https://trendrider.net/blog/position-sizing-and-risk-per-trade",
+  },
 };
 
 export default function Article() {
@@ -13,21 +16,26 @@ export default function Article() {
         dangerouslySetInnerHTML={{
           __html: JSON.stringify({
             "@context": "https://schema.org",
-            "@type": "BlogPosting",
+            "@type": "Article",
             "headline": "Position Sizing & Risk Per Trade: The 2% Rule — TrendRider Blog",
-            "description": "Learn position sizing formulas, why the 2% risk-per-trade rule protects your capital, and how TrendRider manages position sizes automatically.",
+            "description": "The 2% rule is a survival mechanism, not a suggestion. Learn the position sizing formula, common mistakes, and how to size trades by account size.",
             "author": {
-              "@type": "Organization",
-              "name": "TrendRider",
+              "@type": "Person",
+              "name": "TrendRider Team",
               "url": "https://trendrider.net"
             },
             "publisher": {
               "@type": "Organization",
               "name": "TrendRider",
-              "url": "https://trendrider.net"
+              "url": "https://trendrider.net",
+              "logo": {
+                "@type": "ImageObject",
+                "url": "https://trendrider.net/icon.svg"
+              }
             },
             "datePublished": "2026-03-22",
             "dateModified": "2026-03-24",
+            "image": "https://trendrider.net/opengraph-image",
             "mainEntityOfPage": {
               "@type": "WebPage",
               "@id": "https://trendrider.net/blog/position-sizing-and-risk-per-trade"
