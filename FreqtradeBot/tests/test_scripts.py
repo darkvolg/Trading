@@ -6,15 +6,12 @@ Covers: daily_digest, export_trades, export_to_sheets, oi_funding_alerts,
 External deps (gspread, google.oauth2, ccxt, talib) are mocked at import time.
 """
 
-import importlib
-import math
-import os
 import sqlite3
 import sys
 import types
 from datetime import datetime, timedelta, timezone
 from pathlib import Path
-from unittest.mock import MagicMock, patch
+from unittest.mock import MagicMock
 
 import pytest
 
@@ -722,7 +719,6 @@ class TestMondayContextBuildMessage:
             mc.datetime = original_dt
 
     def test_structure(self):
-        import numpy as np
         results = [
             {
                 "symbol": "BTC/USDT", "error": False,

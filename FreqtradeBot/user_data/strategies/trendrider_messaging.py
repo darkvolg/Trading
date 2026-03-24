@@ -113,7 +113,8 @@ def format_entry_signal(signal_num: int, pair: str, side_str: str, leverage: int
 
 
 def format_cornix_signal(pair: str, side: str, leverage: int, rate: float,
-                         sl_price: float) -> str:
+                         sl_price: float, tp1: float, tp2: float,
+                         tp3: float) -> str:
     """Format Cornix-compatible signal message.
 
     Cornix requires exactly ONE symbol per message. The symbol must be
@@ -131,6 +132,9 @@ def format_cornix_signal(pair: str, side: str, leverage: int, rate: float,
         f"Exchange: Bybit\n"
         f"Leverage: {leverage}x\n"
         f"Entry: {entry_low:.2f}-{entry_high:.2f}\n"
+        f"TP1: {tp1:.2f}\n"
+        f"TP2: {tp2:.2f}\n"
+        f"TP3: {tp3:.2f}\n"
         f"SL: {sl_price:.2f}"
     )
 

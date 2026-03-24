@@ -278,7 +278,7 @@ def main() -> None:
     print("=" * 60)
     print(f"  Spreadsheet ID:  {spreadsheet_id}")
     print(f"  URL:             {spreadsheet_url}")
-    print(f"  Worksheets:      Dashboard (summary) + Trades (raw data)")
+    print("  Worksheets:      Dashboard (summary) + Trades (raw data)")
     print()
     print("Next steps:")
     print(f'  1. Set env var:  export GOOGLE_SHEETS_ID="{spreadsheet_id}"')

@@ -532,9 +532,7 @@ class TrendRiderStrategy(IStrategy):
                            side: str, **kwargs) -> bool:
         # Calculate levels (LONG only, can_short = False)
         sl_price = rate * (1 + self.stoploss)
-        tp1_price = rate * 1.03   # +3%
         tp2_price = rate * 1.05   # +5%
-        tp3_price = rate * 1.10   # +10%
 
         leverage = self.leverage_value
         side_str = "LONG"

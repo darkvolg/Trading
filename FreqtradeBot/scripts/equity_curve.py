@@ -18,7 +18,6 @@ import json
 import os
 import sqlite3
 import sys
-import tempfile
 from datetime import datetime, timezone
 from urllib.request import Request, urlopen
 
@@ -100,12 +99,12 @@ def send_photo(token: str, chat_id: str, photo_bytes: bytes, caption: str) -> di
     # parse_mode
     body.extend(f"--{boundary}\r\n".encode())
     body.extend(
-        f'Content-Disposition: form-data; name="parse_mode"\r\n\r\nMarkdown\r\n'.encode()
+        'Content-Disposition: form-data; name="parse_mode"\r\n\r\nMarkdown\r\n'.encode()
     )
     # photo file
     body.extend(f"--{boundary}\r\n".encode())
     body.extend(
-        f'Content-Disposition: form-data; name="photo"; filename="equity_curve.png"\r\n'.encode()
+        'Content-Disposition: form-data; name="photo"; filename="equity_curve.png"\r\n'.encode()
     )
     body.extend(b"Content-Type: image/png\r\n\r\n")
     body.extend(photo_bytes)
