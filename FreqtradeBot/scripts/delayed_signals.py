@@ -40,6 +40,9 @@ CONFIG_PATH = os.path.join(FT_HOME, "config.json")
 DELAY_HOURS = 3
 TG_API = "https://api.telegram.org/bot{token}/sendMessage"
 
+BYBIT_REFERRAL_CODE = "0GDX5JR"
+BYBIT_REFERRAL_LINK = "https://www.bybit.com/invite?ref=" + BYBIT_REFERRAL_CODE
+
 
 # ---------------------------------------------------------------------------
 # Helpers
@@ -118,6 +121,7 @@ def format_signal(row: dict) -> str:
         f"\n"
         f"Regime: {row['regime']}\n"
         f"════════════════════════════\n"
+        f"📈 Trade on Bybit → {BYBIT_REFERRAL_LINK}\n"
         f"⏱ Signal delayed 3h | Real-time → @TrendRiderSignals\n"
         f"💎 Plans: /plans in @TrendRiderSignals\\_bot"
     )

@@ -55,6 +55,10 @@ SETUP_NAMES = {
     "rsi_bounce": "RSI Oversold Bounce",
 }
 
+# --- Bybit Affiliate ---
+BYBIT_REFERRAL_CODE = "0GDX5JR"
+BYBIT_REFERRAL_LINK = "https://www.bybit.com/invite?ref=0GDX5JR"
+
 # --- Exit Reasons ---
 EXIT_REASONS = {
     "roi": "ROI target reached",
