@@ -13,3 +13,7 @@ export { ComparisonTable } from "./ComparisonTable";
 export { BenefitsStrip } from "./BenefitsStrip";
 export { EmailCapture } from "./EmailCapture";
 export { CookieConsent } from "./CookieConsent";
+export { Footer } from "./Footer";
+export { PricingGrid } from "./PricingGrid";
+export { StickyNav } from "./StickyNav";
+export { HeroSection } from "./HeroSection";

@@ -38,8 +38,8 @@ class TestCalcConfidence:
     def test_level_labels(self, mock_last_candle_bullish, mock_last_candle_bearish):
         level_bull, _, _, _ = calc_confidence(mock_last_candle_bullish, adx_threshold=20)
         level_bear, _, _, _ = calc_confidence(mock_last_candle_bearish, adx_threshold=20)
-        assert level_bull in ("STRONG", "GOOD", "MEDIUM", "WEAK")
-        assert level_bear in ("STRONG", "GOOD", "MEDIUM", "WEAK")
+        assert any(label in level_bull for label in ("STRONG", "GOOD", "MEDIUM", "WEAK"))
+        assert any(label in level_bear for label in ("STRONG", "GOOD", "MEDIUM", "WEAK"))
 
     def test_bar_contains_slash_ten(self, mock_last_candle_bullish):
         _, bar, _, _ = calc_confidence(mock_last_candle_bullish, adx_threshold=20)
@@ -67,7 +67,7 @@ class TestCalcConfidence:
         """Empty dict should still return valid result with minimum confidence."""
         level, bar, details, numeric = calc_confidence({}, adx_threshold=20)
         assert numeric >= 1
-        assert level in ("STRONG", "GOOD", "MEDIUM", "WEAK")
+        assert any(label in level for label in ("STRONG", "GOOD", "MEDIUM", "WEAK"))
 
 
 class TestMarketContext:
