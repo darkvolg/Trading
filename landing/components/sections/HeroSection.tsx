@@ -58,13 +58,13 @@ export function HeroSection({ t, locale, setLocale, parallaxRef }: HeroSectionPr
 
       {/* Live badge — positioned at top of hero, above candles */}
       <div
-        className="absolute top-8 left-1/2 -translate-x-1/2 z-20 inline-flex items-center gap-2 px-5 py-2.5 rounded-full border border-primary/40 bg-background/90 backdrop-blur-xl shadow-lg shadow-black/30"
+        className="absolute top-8 left-1/2 -translate-x-1/2 z-20 inline-flex items-center gap-2 px-5 py-2.5 rounded-full border border-primary-700/40 bg-primary-900/20 backdrop-blur-xl shadow-lg shadow-black/30"
         style={{ animation: "fadeInDown 0.6s ease-out forwards" }}
       >
-        <span className="w-2 h-2 rounded-full bg-primary animate-pulse" />
-        <span className="text-sm font-mono text-primary font-medium">{t.liveSince}</span>
-        <span className="w-px h-3 bg-primary/30" />
-        <span className="text-xs font-mono text-foreground/60">{t.paperVerified}</span>
+        <span className="w-2 h-2 rounded-full bg-primary-400 animate-pulse" />
+        <span className="text-sm font-mono text-primary-100 font-medium">{t.liveSince}</span>
+        <span className="w-px h-3 bg-primary-700/40" />
+        <span className="text-xs font-mono text-primary-200/70">{t.paperVerified}</span>
       </div>
 
       <div className="relative text-center max-w-4xl mx-auto z-10">

@@ -3,14 +3,14 @@ import Link from "next/link";
 
 export const metadata: Metadata = {
   title: "Blog — TrendRider | Crypto Trading Insights",
-  description: "Learn about algorithmic crypto trading, risk management, and signal analysis from the TrendRider team.",
+  description: "Learn about AI-powered crypto trading, risk management, and signal analysis from the TrendRider team.",
 };
 
 const posts = [
   {
     slug: "why-algorithmic-trading-beats-manual",
-    title: "Why Algorithmic Trading Beats Manual: Data Over Emotions",
-    excerpt: "Discover why removing emotions from trading decisions leads to consistently better results. We break down the science behind algorithmic signals.",
+    title: "Why AI-Powered Trading Beats Manual: Data Over Emotions",
+    excerpt: "Discover why removing emotions from trading decisions leads to consistently better results. We break down the science behind AI-powered signals.",
     date: "March 20, 2026",
     readTime: "5 min read",
     tag: "Strategy",
@@ -109,7 +109,7 @@ export default function BlogPage() {
       <div className="max-w-4xl mx-auto px-4 py-20">
         <a href="/" className="text-primary text-sm hover:underline mb-8 inline-block">&larr; Back to home</a>
         <h1 className="text-4xl font-bold mb-4 gradient-text">Blog</h1>
-        <p className="text-muted mb-12 text-lg">Insights on algorithmic trading, risk management, and crypto signals.</p>
+        <p className="text-muted mb-12 text-lg">Insights on AI-powered trading, risk management, and crypto signals.</p>
 
         <div className="space-y-6">
           {posts.map((post) => (
