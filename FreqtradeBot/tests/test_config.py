@@ -10,13 +10,9 @@ class TestFngThresholds:
     def test_fng_neutral_range(self):
         assert cfg.FNG_NEUTRAL_MIN < cfg.FNG_NEUTRAL_MAX
 
-    def test_fng_short_range(self):
-        assert cfg.FNG_SHORT_MIN < cfg.FNG_SHORT_MAX
-
     def test_fng_values_are_ints(self):
         for val in (cfg.FNG_HEALTHY_MIN, cfg.FNG_HEALTHY_MAX,
-                    cfg.FNG_NEUTRAL_MIN, cfg.FNG_NEUTRAL_MAX,
-                    cfg.FNG_SHORT_MIN, cfg.FNG_SHORT_MAX):
+                    cfg.FNG_NEUTRAL_MIN, cfg.FNG_NEUTRAL_MAX):
             assert isinstance(val, int)
 
     def test_fng_cache_ttl_positive(self):
@@ -82,17 +78,6 @@ class TestExitReasons:
         assert "stop_loss" in cfg.EXIT_REASONS
         assert "trailing_stop_loss" in cfg.EXIT_REASONS
 
-
-class TestDcaConstants:
-    def test_dca_max_entries_positive(self):
-        assert cfg.DCA_MAX_ENTRIES >= 1
-
-    def test_dca_triggers_negative(self):
-        assert cfg.DCA_TRIGGER_1 < 0
-        assert cfg.DCA_TRIGGER_2 < 0
-
-    def test_dca_trigger_ordering(self):
-        assert cfg.DCA_TRIGGER_1 > cfg.DCA_TRIGGER_2  # -3% > -5%
 
 
 class TestEntryZone:

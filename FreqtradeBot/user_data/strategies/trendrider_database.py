@@ -87,9 +87,10 @@ class AlertsDB:
             logger.warning(f"Failed to save alert: {e}")
 
     def next_signal_number(self) -> int:
-        """Increment and return the next signal number."""
+        """Increment and return the next signal number (atomic)."""
         try:
             with self._connect() as conn:
+                conn.execute("BEGIN EXCLUSIVE")
                 conn.execute("UPDATE signal_counter SET count = count + 1 WHERE id = 1")
                 cursor = conn.execute("SELECT count FROM signal_counter WHERE id = 1")
                 num = cursor.fetchone()[0]

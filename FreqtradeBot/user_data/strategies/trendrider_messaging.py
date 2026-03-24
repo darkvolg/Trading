@@ -7,7 +7,6 @@ from datetime import datetime, timedelta, timezone
 
 from trendrider_config import (
     SETUP_NAMES, EXIT_REASONS, ENTRY_ZONE_PCT,
-    TP1_PCT, TP2_PCT, TP3_PCT,
 )
 
 logger = logging.getLogger(__name__)
@@ -69,7 +68,7 @@ def build_detailed_reason(entry_tag: str, last: dict, rate: float,
 
 def format_entry_signal(signal_num: int, pair: str, side_str: str, leverage: int,
                         setup_name: str, rate: float, sl_price: float, stoploss_pct: float,
-                        tp1: float, tp2: float, tp3: float, rr_ratio: float,
+                        rr_ratio: float,
                         conf_level: str, conf_numeric: int, conf_bar: str,
                         conf_details: list, regime: str, heat_str: str,
                         est_hold: str, invalidation: float, inv_label: str,
@@ -92,11 +91,7 @@ def format_entry_signal(signal_num: int, pair: str, side_str: str, leverage: int
         f"*Setup:* {setup_name}\n"
         f"{'='*28}\n\n"
         f"\U0001f3af *Entry Zone:* `{entry_low:.2f}` - `{entry_high:.2f}` USDT\n"
-        f"\U0001f6e1 *Stop Loss:* `{sl_price:.2f}` ({stoploss_pct*100:+.1f}%)\n\n"
-        f"*Targets (manual — bot uses ROI/trailing):*\n"
-        f"  \U0001f4b0 TP1: `{tp1:.2f}` (+3%)\n"
-        f"  \U0001f4b0 TP2: `{tp2:.2f}` (+5%)\n"
-        f"  \U0001f4b0 TP3: `{tp3:.2f}` (+10%)\n"
+        f"\U0001f6e1 *Stop Loss:* `{sl_price:.2f}` ({stoploss_pct*100:+.1f}%)\n"
         f"  R:R = 1:{rr_ratio:.1f}\n\n"
         f"*Confidence:* {conf_level} ({conf_numeric}/10)\n"
         f"  {conf_bar}\n"
@@ -129,18 +124,11 @@ def format_cornix_signal(pair: str, side: str, leverage: int, rate: float,
     entry_low = rate * (1 - ENTRY_ZONE_PCT)
     entry_high = rate * (1 + ENTRY_ZONE_PCT)
 
-    tp1 = rate * (1 + TP1_PCT)
-    tp2 = rate * (1 + TP2_PCT)
-    tp3 = rate * (1 + TP3_PCT)
-
     return (
         f"\U0001f4ca {pair_clean} {side_upper}\n"
         f"Exchange: Bybit\n"
         f"Leverage: {leverage}x\n"
         f"Entry: {entry_low:.2f}-{entry_high:.2f}\n"
-        f"TP1: {tp1:.2f} (30%)\n"
-        f"TP2: {tp2:.2f} (40%)\n"
-        f"TP3: {tp3:.2f} (30%)\n"
         f"SL: {sl_price:.2f}"
     )
 
@@ -176,10 +164,10 @@ def format_exit_report(pair: str, trade, rate: float, exit_reason: str,
 
     # Review with profit tier emoji
     if profit_pct > 5:
-        review = "Strong momentum carried to TP2+"
+        review = "Strong momentum, excellent trade"
         result_emoji = "\U0001f7e2 STRONG WIN"
     elif profit_pct > 3:
-        review = "Clean setup, hit TP1 target"
+        review = "Clean setup, solid gain"
         result_emoji = "\U0001f7e2 WIN"
     elif profit_pct > 0:
         review = "Modest gain, trailing stop secured profit"
