@@ -19,7 +19,7 @@ export const T = {
       <>AI-powered crypto trading signals with a{" "}
       <span className="text-primary font-semibold">67.9% win rate</span> and{" "}
       <span className="text-primary font-semibold">1.42% max drawdown</span>.
-      Multi-timeframe analysis across BTC, ETH, SOL, and BNB.</>
+      Multi-timeframe analysis across BTC, ETH, SOL, BNB, and DOGE.</>
     ),
     winRate: "Win Rate",
     profitFactor: "Profit Factor",
@@ -142,7 +142,7 @@ export const T = {
     faqTag: "FAQ",
     faqTitle: "Frequently Asked Questions",
     faq1Q: "What is TrendRider?",
-    faq1A: "TrendRider is an AI-powered algorithmic trading system built on Freqtrade. It analyzes BTC, ETH, SOL, and BNB across multiple timeframes using 15+ technical indicators combined with on-chain data to generate high-confidence trade signals.",
+    faq1A: "TrendRider is an AI-powered algorithmic trading system built on Freqtrade. It analyzes BTC, ETH, SOL, BNB, and DOGE across multiple timeframes using 15+ technical indicators combined with on-chain data to generate high-confidence trade signals.",
     faq2Q: "How are signals generated?",
     faq2A: "Our algorithm combines 15+ technical indicators (RSI, MACD, Bollinger Bands, EMA crossovers, etc.), multi-timeframe analysis (5m, 15m, 1h, 4h), and on-chain metrics (Fear & Greed Index, funding rates, open interest) to identify high-probability setups.",
     faq3Q: "What's the track record?",
@@ -312,7 +312,7 @@ export const T = {
       <>Крипто-сигналы на основе ИИ с{" "}
       <span className="text-primary font-semibold">винрейтом 67.9%</span> и{" "}
       <span className="text-primary font-semibold">просадкой 1.42%</span>.
-      Мультитаймфрейм анализ BTC, ETH, SOL и BNB.</>
+      Мультитаймфрейм анализ BTC, ETH, SOL, BNB и DOGE.</>
     ),
     winRate: "Винрейт",
     profitFactor: "Профит-фактор",
@@ -426,7 +426,7 @@ export const T = {
     faqTag: "FAQ",
     faqTitle: "Частые вопросы",
     faq1Q: "Что такое TrendRider?",
-    faq1A: "TrendRider — это алгоритмическая торговая система на базе ИИ, построенная на Freqtrade. Она анализирует BTC, ETH, SOL и BNB на нескольких таймфреймах, используя 15+ технических индикаторов и данные on-chain для генерации высокоточных торговых сигналов.",
+    faq1A: "TrendRider — это алгоритмическая торговая система на базе ИИ, построенная на Freqtrade. Она анализирует BTC, ETH, SOL, BNB и DOGE на нескольких таймфреймах, используя 15+ технических индикаторов и данные on-chain для генерации высокоточных торговых сигналов.",
     faq2Q: "Как генерируются сигналы?",
     faq2A: "Наш алгоритм объединяет 15+ технических индикаторов (RSI, MACD, Bollinger Bands, пересечения EMA и др.), мультитаймфрейм анализ (5м, 15м, 1ч, 4ч) и метрики on-chain (Fear & Greed Index, funding rates, open interest) для определения высоковероятных сетапов.",
     faq3Q: "Какой трек-рекорд?",

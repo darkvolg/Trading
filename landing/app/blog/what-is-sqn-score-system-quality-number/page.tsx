@@ -2,7 +2,7 @@ import type { Metadata } from "next";
 
 export const metadata: Metadata = {
   title: "What Is SQN Score? Understanding System Quality Number — TrendRider Blog",
-  description: "Learn what SQN (System Quality Number) means in trading, how it's calculated, what the score ranges indicate, and how TrendRider achieves an SQN of 3.02.",
+  description: "Learn what SQN (System Quality Number) means in trading, how it's calculated, what the score ranges indicate, and how TrendRider achieves an SQN of 3.45.",
 };
 
 export default function Article() {
@@ -15,7 +15,7 @@ export default function Article() {
             "@context": "https://schema.org",
             "@type": "BlogPosting",
             "headline": "What Is SQN Score? Understanding System Quality Number — TrendRider Blog",
-            "description": "Learn what SQN (System Quality Number) means in trading, how it's calculated, what the score ranges indicate, and how TrendRider achieves an SQN of 3.02.",
+            "description": "Learn what SQN (System Quality Number) means in trading, how it's calculated, what the score ranges indicate, and how TrendRider achieves an SQN of 3.45.",
             "author": {
               "@type": "Organization",
               "name": "TrendRider",
@@ -109,7 +109,7 @@ export default function Article() {
           </ul>
           <p>System A looks spectacular on the surface. System B looks mediocre. But System B will make you money over time, while System A will slowly bleed your account dry. SQN captures this reality in a single number.</p>
 
-          <h2 className="text-xl font-semibold text-foreground mt-8 mb-3">How TrendRider Achieves an SQN of 3.02</h2>
+          <h2 className="text-xl font-semibold text-foreground mt-8 mb-3">How TrendRider Achieves an SQN of 3.45</h2>
           <p>TrendRider&apos;s algorithm is engineered for consistency above all else. Here&apos;s what contributes to our &ldquo;Excellent&rdquo; SQN rating:</p>
           <ul className="list-disc pl-6 space-y-2">
             <li><strong className="text-foreground">Tight risk control</strong> &mdash; Every trade uses a fixed 6% stop-loss, keeping the negative R-multiples bounded. Our max drawdown is just 1.42%.</li>
@@ -130,7 +130,7 @@ export default function Article() {
           <p>If a provider won&apos;t share the data needed to calculate SQN, that alone tells you something about their confidence in their own system.</p>
 
           <div className="mt-10 p-6 rounded-2xl border border-primary/20 bg-primary/5 text-center">
-            <p className="text-foreground font-medium mb-3">See our SQN 3.02 system in action</p>
+            <p className="text-foreground font-medium mb-3">See our SQN 3.45 system in action</p>
             <a href="https://t.me/TrendRiderSignals" className="inline-block px-6 py-3 rounded-xl font-semibold text-sm" style={{ background: "linear-gradient(135deg, #00D4AA, #00B894)", color: "#0D1117" }}>
               Join TrendRider on Telegram &rarr;
             </a>

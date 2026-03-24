@@ -202,7 +202,7 @@ export default function Home() {
           {/* Tech metrics row */}
           <div className={`reveal reveal-delay-2 ${socialProofSection.visible ? "visible" : ""} flex flex-wrap items-center justify-center gap-6 md:gap-10 mb-12 text-sm`}>
             {[
-              { value: "4", label: t.metricPairs },
+              { value: "5", label: t.metricPairs },
               { value: "4", label: t.metricTimeframes },
               { value: "15+", label: t.metricIndicators },
               { value: "3", label: t.metricExchanges },

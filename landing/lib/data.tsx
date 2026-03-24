@@ -8,7 +8,7 @@ export const getMetrics = (t: TStrings) => [
   { label: t.winRate, value: 67.9, suffix: "%", decimals: 1, barWidth: 67.9 },
   { label: t.maxDrawdown, value: 1.42, suffix: "%", decimals: 2, barWidth: 14.2 },
   { label: t.profitFactor, value: 2.12, suffix: "x", decimals: 2, barWidth: 70.7 },
-  { label: t.sqnScore, value: 3.02, suffix: "", decimals: 2, barWidth: 75.5 },
+  { label: t.sqnScore, value: 3.45, suffix: "", decimals: 2, barWidth: 86.3 },
 ];
 
 export const getStepIcons = () => [

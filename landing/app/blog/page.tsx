@@ -18,7 +18,7 @@ const posts = [
   {
     slug: "understanding-win-rate-and-profit-factor",
     title: "Understanding Win Rate & Profit Factor: What Really Matters",
-    excerpt: "A 71% win rate means nothing without context. Learn how profit factor, drawdown, and SQN score work together to measure true performance.",
+    excerpt: "A 67.9% win rate means nothing without context. Learn how profit factor, drawdown, and SQN score work together to measure true performance.",
     date: "March 15, 2026",
     readTime: "4 min read",
     tag: "Education",
@@ -34,7 +34,7 @@ const posts = [
   {
     slug: "what-is-sqn-score-system-quality-number",
     title: "What Is SQN Score? Understanding System Quality Number in Trading",
-    excerpt: "SQN measures how good your trading system really is. Learn what scores mean and how TrendRider achieves a 3.02 SQN.",
+    excerpt: "SQN measures how good your trading system really is. Learn what scores mean and how TrendRider achieves a 3.45 SQN.",
     date: "March 22, 2026",
     readTime: "5 min read",
     tag: "Education",
