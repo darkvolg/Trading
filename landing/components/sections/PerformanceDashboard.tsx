@@ -2,11 +2,12 @@
 
 import { useState, useEffect, useRef, useCallback, type RefObject } from "react";
 import { SectionHeading } from "../ui";
+import type { TStrings } from "@/lib/i18n";
 
 /* ─── Types ─────────────────────────────────────────────────────────── */
 
 interface PerformanceDashboardProps {
-  t: any;
+  t: TStrings;
   visible: boolean;
   sectionRef: RefObject<HTMLDivElement | null>;
 }
