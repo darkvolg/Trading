@@ -42,7 +42,7 @@ export const T = {
     // performance dashboard
     perfTag: "Performance",
     perfTitle: "Backtest-Verified Results",
-    perfSubtitle: "Transparent metrics from 26 months of algorithmic trading",
+    perfSubtitle: "Transparent metrics from 26 months of AI-powered trading",
     perfAllTime: "All Time",
     perf12m: "12 Months",
     perf6m: "6 Months",
@@ -142,7 +142,7 @@ export const T = {
     faqTag: "FAQ",
     faqTitle: "Frequently Asked Questions",
     faq1Q: "What is TrendRider?",
-    faq1A: "TrendRider is an AI-powered algorithmic trading system built on Freqtrade. It analyzes BTC, ETH, SOL, BNB, and DOGE across multiple timeframes using 15+ technical indicators combined with on-chain data to generate high-confidence trade signals.",
+    faq1A: "TrendRider is an AI-powered trading system built on Freqtrade. It analyzes BTC, ETH, SOL, BNB, and DOGE across multiple timeframes using 15+ technical indicators combined with on-chain data to generate high-confidence trade signals.",
     faq2Q: "How are signals generated?",
     faq2A: "Our algorithm combines 15+ technical indicators (RSI, MACD, Bollinger Bands, EMA crossovers, etc.), multi-timeframe analysis (5m, 15m, 1h, 4h), and on-chain metrics (Fear & Greed Index, funding rates, open interest) to identify high-probability setups.",
     faq3Q: "What's the track record?",
@@ -306,7 +306,7 @@ export const T = {
 
     liveSince: "Работает с марта 2026",
     paperVerified: "Paper-trading подтверждён",
-    tagline: "AI-сигналы.",
+    tagline: "AI-Powered сигналы.",
     taglineHighlight: "Проверенные результаты.",
     heroDesc: (
       <>Крипто-сигналы на основе ИИ с{" "}
@@ -318,7 +318,7 @@ export const T = {
     profitFactor: "Профит-фактор",
     maxDD: "Макс. просадка",
     publicTrack: "Публичный трек-рекорд",
-    algoTrading: "AI-трейдинг",
+    algoTrading: "AI-Powered трейдинг",
     openSource: "Открытая стратегия",
 
     metricsTag: "Результаты",
@@ -334,7 +334,7 @@ export const T = {
     // performance dashboard
     perfTag: "Результаты",
     perfTitle: "Подтверждено бэктестами",
-    perfSubtitle: "Прозрачные метрики за 26 месяцев алгоритмической торговли",
+    perfSubtitle: "Прозрачные метрики за 26 месяцев AI-Powered торговли",
     perfAllTime: "Всё время",
     perf12m: "12 месяцев",
     perf6m: "6 месяцев",
@@ -369,7 +369,7 @@ export const T = {
 
     howTag: "Процесс",
     howTitle: "Как это работает",
-    howSubtitle: "Три простых шага для получения AI-торговых сигналов.",
+    howSubtitle: "Три простых шага для получения AI-Powered торговых сигналов.",
     step1Title: "Подпишитесь на Telegram",
     step1Desc: "Присоединяйтесь к каналу и получайте сигналы в реальном времени.",
     step2Title: "Авто-трейд через Cornix",
@@ -426,7 +426,7 @@ export const T = {
     faqTag: "FAQ",
     faqTitle: "Частые вопросы",
     faq1Q: "Что такое TrendRider?",
-    faq1A: "TrendRider — это алгоритмическая торговая система на базе ИИ, построенная на Freqtrade. Она анализирует BTC, ETH, SOL, BNB и DOGE на нескольких таймфреймах, используя 15+ технических индикаторов и данные on-chain для генерации высокоточных торговых сигналов.",
+    faq1A: "TrendRider — AI-Powered торговая система, построенная на Freqtrade. Она анализирует BTC, ETH, SOL, BNB и DOGE на нескольких таймфреймах, используя 15+ технических индикаторов и данные on-chain для генерации высокоточных торговых сигналов.",
     faq2Q: "Как генерируются сигналы?",
     faq2A: "Наш алгоритм объединяет 15+ технических индикаторов (RSI, MACD, Bollinger Bands, пересечения EMA и др.), мультитаймфрейм анализ (5м, 15м, 1ч, 4ч) и метрики on-chain (Fear & Greed Index, funding rates, open interest) для определения высоковероятных сетапов.",
     faq3Q: "Какой трек-рекорд?",
@@ -468,7 +468,7 @@ export const T = {
     ctaTag: "Начать",
     ctaTitle: "Готовы торговать",
     ctaTitleHighlight: "умнее",
-    ctaDesc: "Присоединяйтесь к трейдерам, получающим AI-сигналы с проверенной эффективностью.",
+    ctaDesc: "Присоединяйтесь к трейдерам, получающим AI-Powered сигналы с проверенной эффективностью.",
     ctaSubDesc: "Бесплатный тариф. Без привязки карты.",
     getStarted: "Начать в Telegram",
     viewAllResults: "Все результаты",
@@ -508,7 +508,7 @@ export const T = {
     // comparison
     comparisonTag: "Сравнение",
     comparisonTitle: "TrendRider vs Ручной трейдинг",
-    comparisonSubtitle: "Почему AI-сигналы эффективнее эмоциональной торговли.",
+    comparisonSubtitle: "Почему AI-Powered сигналы эффективнее эмоциональной торговли.",
     compCol1: "Критерий",
     compCol2: "Ручной трейдинг",
     compCol3: "TrendRider",
@@ -561,7 +561,7 @@ export const T = {
     cookieDeny: "Отклонить",
 
     // footer
-    footerTagline: "AI-сигналы. Проверенные результаты.",
+    footerTagline: "AI-Powered сигналы. Проверенные результаты.",
     telegramChannel: "Telegram-канал",
     communityChat: "Чат сообщества",
     liveResults: "Результаты",
@@ -574,7 +574,7 @@ export const T = {
 
     // exit-intent popup
     exitTitle: "Подождите! Не упустите бесплатные сигналы",
-    exitText: "Присоединяйтесь к бесплатному Telegram-каналу и получайте AI-торговые сигналы — без оплаты.",
+    exitText: "Присоединяйтесь к бесплатному Telegram-каналу и получайте AI-Powered торговые сигналы — без оплаты.",
     exitCta: "Получить бесплатные сигналы",
   },
 } as const;

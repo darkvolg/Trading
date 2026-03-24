@@ -3,7 +3,16 @@
 @theme inline {
   --color-background: #0D1117;
   --color-foreground: #E6EDF3;
+  --color-primary-50: #E6FAF5;
+  --color-primary-100: #B3F0E0;
+  --color-primary-200: #80E6CB;
+  --color-primary-300: #4DDDB6;
+  --color-primary-400: #1AD3A1;
   --color-primary: #00D4AA;
+  --color-primary-600: #00B892;
+  --color-primary-700: #009B7A;
+  --color-primary-800: #007F63;
+  --color-primary-900: #00634C;
   --color-secondary: #1E2A3A;
   --color-accent: #FFD700;
   --color-danger: #FF4757;
@@ -20,7 +29,7 @@ html.light {
   --color-foreground: #111827;
   --color-primary: #00875A;
   --color-secondary: #C5CCD6;
-  --color-muted: #4A5568;
+  --color-muted: #3D4756;
   --color-card: #FFFFFF;
   --color-border: #A8B3C0;
 }
@@ -73,11 +82,11 @@ html {
   50%      { opacity: 1; filter: drop-shadow(0 0 12px rgba(0, 212, 170, 0.5)); }
 }
 
-.logo-glow-0 { animation: logo-breathe 3s ease-in-out infinite; animation-delay: 0s; }
-.logo-glow-1 { animation: logo-breathe 3s ease-in-out infinite; animation-delay: 0.6s; }
-.logo-glow-2 { animation: logo-breathe 3s ease-in-out infinite; animation-delay: 1.2s; }
-.logo-glow-3 { animation: logo-breathe 3s ease-in-out infinite; animation-delay: 1.8s; }
-.logo-glow-4 { animation: logo-breathe 3s ease-in-out infinite; animation-delay: 2.4s; }
+.logo-glow-0 { animation: logo-breathe 3s ease-in-out infinite; animation-delay: 0s; will-change: opacity, filter; }
+.logo-glow-1 { animation: logo-breathe 3s ease-in-out infinite; animation-delay: 0.6s; will-change: opacity, filter; }
+.logo-glow-2 { animation: logo-breathe 3s ease-in-out infinite; animation-delay: 1.2s; will-change: opacity, filter; }
+.logo-glow-3 { animation: logo-breathe 3s ease-in-out infinite; animation-delay: 1.8s; will-change: opacity, filter; }
+.logo-glow-4 { animation: logo-breathe 3s ease-in-out infinite; animation-delay: 2.4s; will-change: opacity, filter; }
 
 @keyframes shimmer {
   0%   { background-position: -200% 0; }
@@ -104,6 +113,7 @@ html {
 
 .candle-group {
   --glow-filter: none;
+  will-change: opacity;
 }
 
 @keyframes chartLine {
@@ -185,10 +195,12 @@ html {
 
 .animate-pulse-glow {
   animation: pulse-glow 3s ease-in-out infinite;
+  will-change: box-shadow;
 }
 
 .animate-pulse-glow-gold {
   animation: pulse-glow-gold 3s ease-in-out infinite;
+  will-change: box-shadow;
 }
 
 /* ─── Scroll reveal ─── */
@@ -222,7 +234,7 @@ html {
 }
 
 html.light .gradient-text {
-  background: linear-gradient(135deg, #00875A 0%, #00A86B 50%, #00875A 100%);
+  background: linear-gradient(135deg, #006B45 0%, #008866 50%, #006B45 100%);
   -webkit-background-clip: text;
   -webkit-text-fill-color: transparent;
   background-clip: text;
@@ -259,6 +271,13 @@ html.light .candle-group { opacity: 0.15 !important; }
 html.light [class*="animate-orb"] { opacity: 0.3; }
 html.light .scan-line-animate { opacity: 0.3; }
 
+/* ─── Light mode: feature icon visibility boost ─── */
+html.light .feature-card svg,
+html.light .security-badge svg {
+  opacity: 0.85;
+  filter: saturate(1.3) brightness(0.75);
+}
+
 /* ─── Light mode: comprehensive card & section overrides ─── */
 
 /* All cards → white with shadow */
@@ -272,7 +291,7 @@ html.light .step-card,
 html.light .security-badge {
   background: #FFFFFF !important;
   border-color: #B8C4D0 !important;
-  box-shadow: 0 2px 12px rgba(0, 0, 0, 0.08), 0 1px 3px rgba(0, 0, 0, 0.04) !important;
+  box-shadow: 0 2px 16px rgba(0, 0, 0, 0.10), 0 1px 4px rgba(0, 0, 0, 0.06) !important;
 }
 
 /* Alternating sections → darker gray band */
@@ -368,6 +387,7 @@ html.light .glass {
     #FFD700 100%
   );
   animation: borderSpin 4s linear infinite;
+  will-change: transform;
   z-index: 0;
 }
 
@@ -402,7 +422,7 @@ html.light .vip-card-inner {
 
 .metric-card:hover {
   box-shadow: 0 0 40px rgba(0, 212, 170, 0.2), 0 0 0 1px rgba(0, 212, 170, 0.3);
-  border-color: rgba(0, 212, 170, 0.3) !important;
+  border-color: var(--color-primary-400) !important;
   transform: translateY(-2px);
 }
 
@@ -549,10 +569,10 @@ html.light .tg-header .text-white {
 }
 
 .feature-card:hover {
-  border-color: rgba(0, 212, 170, 0.25);
+  border-color: var(--color-primary-400);
   box-shadow: 0 8px 32px rgba(0, 0, 0, 0.4), 0 0 0 1px rgba(0, 212, 170, 0.1);
   transform: translateY(-3px);
-  background: rgba(0, 212, 170, 0.03) !important;
+  background: color-mix(in srgb, var(--color-primary-50) 4%, transparent) !important;
 }
 
 html.light .feature-card:hover {
@@ -614,6 +634,7 @@ html.light .btn-primary {
 .btn-primary:hover {
   filter: brightness(1.12);
   box-shadow: 0 0 30px rgba(0, 212, 170, 0.4);
+  background: linear-gradient(135deg, var(--color-primary-600), #009B7A);
 }
 
 .btn-primary:active {
@@ -625,6 +646,7 @@ html.light .btn-primary {
 .chart-candle {
   animation: candleRise 0.8s ease-out forwards;
   transform-origin: bottom;
+  will-change: opacity;
 }
 
 /* ─── Scroll progress line ─── */
@@ -668,9 +690,9 @@ html.light .scroll-line {
   50% { transform: translate(35px, 35px) scale(1.15); }
 }
 
-.animate-orb-1 { animation: orbFloat1 15s ease-in-out infinite; contain: strict; }
-.animate-orb-2 { animation: orbFloat2 20s ease-in-out infinite; contain: strict; }
-.animate-orb-3 { animation: orbFloat3 12s ease-in-out infinite; contain: strict; }
+.animate-orb-1 { animation: orbFloat1 15s ease-in-out infinite; contain: strict; will-change: transform; }
+.animate-orb-2 { animation: orbFloat2 20s ease-in-out infinite; contain: strict; will-change: transform; }
+.animate-orb-3 { animation: orbFloat3 12s ease-in-out infinite; contain: strict; will-change: transform; }
 
 /* ─── Scan line animation ─── */
 
@@ -683,6 +705,7 @@ html.light .scroll-line {
 
 .scan-line-animate {
   animation: scanLine 16s ease-in-out infinite;
+  will-change: top, opacity;
 }
 
 /* ─── Performance optimizations ─── */
@@ -781,11 +804,23 @@ button:focus-visible, a:focus-visible, [role="button"]:focus-visible {
     animation-iteration-count: 1 !important;
     transition-duration: 0.01ms !important;
   }
+  /* Keep marquee running — essential UX ticker, but slowed down */
   .marquee-track {
+    animation: marquee 60s linear infinite !important;
+  }
+  /* Disable all decorative animations */
+  .scan-line-animate,
+  .animate-orb-1, .animate-orb-2, .animate-orb-3,
+  .logo-glow-0, .logo-glow-1, .logo-glow-2, .logo-glow-3, .logo-glow-4,
+  .animate-pulse-glow, .animate-pulse-glow-gold,
+  .chart-candle, .typing-dot, .word-reveal {
     animation: none !important;
   }
-  .scan-line-animate {
-    animation: none !important;
+  /* Remove will-change hints when animations are off */
+  .animate-orb-1, .animate-orb-2, .animate-orb-3,
+  .scan-line-animate, .chart-candle, .candle-group,
+  .logo-glow-0, .logo-glow-1, .logo-glow-2, .logo-glow-3, .logo-glow-4 {
+    will-change: auto !important;
   }
 }
 

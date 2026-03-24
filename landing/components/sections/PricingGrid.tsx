@@ -46,7 +46,7 @@ export function PricingGrid({
             >
               {isPopular && (
                 <div className="absolute -top-3 left-1/2 -translate-x-1/2 z-10">
-                  <span className="px-4 py-1 bg-primary text-background text-xs font-bold rounded-full uppercase tracking-wider">
+                  <span className="px-4 py-1 bg-primary-100 text-primary-900 text-xs font-bold rounded-full uppercase tracking-wider">
                     {t.mostPopular}
                   </span>
                 </div>
