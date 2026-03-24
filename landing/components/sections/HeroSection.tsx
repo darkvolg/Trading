@@ -2,7 +2,7 @@
 
 import type { RefObject } from "react";
 import type { TStrings, Locale } from "@/lib/i18n";
-import { TELEGRAM_URL, SHEETS_URL } from "@/lib/constants";
+import { TELEGRAM_URL, SHEETS_URL, BYBIT_AFFILIATE_URL } from "@/lib/constants";
 import { LanguageToggle } from "@/components/ui";
 import { CandlestickChart } from "./CandlestickChart";
 import { Particles } from "./Particles";
@@ -151,6 +151,37 @@ export function HeroSection({ t, locale, setLocale, parallaxRef }: HeroSectionPr
               <path strokeLinecap="round" strokeLinejoin="round" d="M3 13.125C3 12.504 3.504 12 4.125 12h2.25c.621 0 1.125.504 1.125 1.125v6.75C7.5 20.496 6.996 21 6.375 21h-2.25A1.125 1.125 0 0 1 3 19.875v-6.75ZM9.75 8.625c0-.621.504-1.125 1.125-1.125h2.25c.621 0 1.125.504 1.125 1.125v11.25c0 .621-.504 1.125-1.125 1.125h-2.25a1.125 1.125 0 0 1-1.125-1.125V8.625ZM16.5 4.125c0-.621.504-1.125 1.125-1.125h2.25C20.496 3 21 3.504 21 4.125v15.75c0 .621-.504 1.125-1.125 1.125h-2.25a1.125 1.125 0 0 1-1.125-1.125V4.125Z" />
             </svg>
             {t.viewLiveResults}
+          </a>
+        </div>
+
+        {/* Bybit affiliate CTA */}
+        <div
+          className="flex justify-center mt-4"
+          style={{ animation: "fadeInUp 0.7s 0.8s cubic-bezier(0.16, 1, 0.3, 1) both" }}
+        >
+          <a
+            href={BYBIT_AFFILIATE_URL}
+            target="_blank"
+            rel="noopener noreferrer"
+            className="btn-press group flex items-center gap-3 px-6 py-3 rounded-xl text-sm border border-[#F7A600]/30 bg-[#F7A600]/10 hover:bg-[#F7A600]/20 hover:border-[#F7A600]/50 transition-all"
+          >
+            <svg className="w-5 h-5 text-[#F7A600]" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true">
+              <path d="M12.028 2L7.25 6.776h3.163v5.063h3.23V6.776h3.163L12.028 2zM7.25 12.16L2.472 16.937h3.163V22h3.23v-5.063h3.163L7.25 12.16zM16.806 12.16l-4.778 4.777h3.163V22h3.23v-5.063h3.163L16.806 12.16z" />
+            </svg>
+            <span className="flex flex-col items-start leading-tight">
+              <span className="font-medium text-[#F7A600]">{t.tradeOnBybit}</span>
+              <span className="text-[10px] text-muted">{t.bybitBonus}</span>
+            </span>
+            <svg
+              className="w-3.5 h-3.5 text-[#F7A600]/60 transition-transform group-hover:translate-x-0.5"
+              fill="none"
+              viewBox="0 0 24 24"
+              stroke="currentColor"
+              strokeWidth={2}
+              aria-hidden="true"
+            >
+              <path strokeLinecap="round" strokeLinejoin="round" d="M13.5 4.5 21 12m0 0-7.5 7.5M21 12H3" />
+            </svg>
           </a>
         </div>
 

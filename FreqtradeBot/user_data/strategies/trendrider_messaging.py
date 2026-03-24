@@ -7,6 +7,7 @@ from datetime import datetime, timedelta, timezone
 
 from trendrider_config import (
     SETUP_NAMES, EXIT_REASONS, ENTRY_ZONE_PCT,
+    BYBIT_REFERRAL_LINK,
 )
 
 logger = logging.getLogger(__name__)
@@ -106,6 +107,7 @@ def format_entry_signal(signal_num: int, pair: str, side_str: str, leverage: int
         f"*Market:* {market_ctx}\n\n"
         f"*Why:* {reason}\n"
         f"{'='*28}\n"
+        f"\U0001f4c8 [Trade on Bybit]({BYBIT_REFERRAL_LINK})\n"
         f"_TrendRider Algo | @TrendRiderSignals_"
     )
 

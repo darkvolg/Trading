@@ -289,6 +289,11 @@ export const T = {
     riskDisclaimer: "Trading cryptocurrencies involves substantial risk of loss and is not suitable for every investor. Past performance is not indicative of future results. Never invest more than you can afford to lose. This is not financial advice.",
     poweredBy: "Powered by Freqtrade",
 
+    // bybit affiliate
+    tradeOnBybit: "Start Trading on Bybit",
+    bybitBonus: "Get up to $6,135 in bonuses",
+    bybitPartner: "Official Partner",
+
     // exit-intent popup
     exitTitle: "Wait! Don't miss free signals",
     exitText: "Join our free Telegram channel and get AI-powered trading signals — no credit card required.",
@@ -571,6 +576,11 @@ export const T = {
     followUs: "Мы в соцсетях",
     riskDisclaimer: "Торговля криптовалютами сопряжена со значительным риском убытков и подходит не каждому инвестору. Прошлые результаты не гарантируют будущих. Никогда не инвестируйте больше, чем можете позволить себе потерять. Это не финансовая рекомендация.",
     poweredBy: "На базе Freqtrade",
+
+    // bybit affiliate
+    tradeOnBybit: "Начать торговлю на Bybit",
+    bybitBonus: "Получите до $6,135 в бонусах",
+    bybitPartner: "Официальный партнёр",
 
     // exit-intent popup
     exitTitle: "Подождите! Не упустите бесплатные сигналы",

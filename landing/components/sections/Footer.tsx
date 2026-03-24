@@ -1,5 +1,5 @@
 import type { TStrings } from "@/lib/i18n";
-import { TELEGRAM_URL, TELEGRAM_CHAT_URL, SHEETS_URL } from "@/lib/constants";
+import { TELEGRAM_URL, TELEGRAM_CHAT_URL, SHEETS_URL, BYBIT_AFFILIATE_URL } from "@/lib/constants";
 
 export function Footer({ t }: { t: TStrings }) {
   return (
@@ -36,6 +36,7 @@ export function Footer({ t }: { t: TStrings }) {
               <li><a href={TELEGRAM_CHAT_URL} target="_blank" rel="noopener noreferrer" className="text-muted text-sm hover:text-primary transition-colors">{t.communityChat}</a></li>
               <li><a href={SHEETS_URL} target="_blank" rel="noopener noreferrer" className="text-muted text-sm hover:text-primary transition-colors">{t.liveResults}</a></li>
               <li><a href="/blog" className="text-muted text-sm hover:text-primary transition-colors">Blog</a></li>
+              <li><a href={BYBIT_AFFILIATE_URL} target="_blank" rel="noopener noreferrer" className="text-muted text-sm hover:text-[#F7A600] transition-colors">{t.tradeOnBybit}</a></li>
             </ul>
           </div>
 
