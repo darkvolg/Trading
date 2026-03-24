@@ -21,17 +21,19 @@ export function SectionHeading({
       <h2
         className={`reveal reveal-delay-1 ${visible ? "visible" : ""} text-3xl md:text-4xl lg:text-5xl font-bold mb-4 tracking-tight`}
       >
-        {title.split(' ').map((word, i) => (
-          <span
-            key={i}
-            className="inline-block opacity-0 translate-y-4 transition-all duration-500"
-            style={{
-              transitionDelay: visible ? `${i * 0.08 + 0.2}s` : '0s',
-              opacity: visible ? 1 : 0,
-              transform: visible ? 'translateY(0)' : 'translateY(16px)',
-            }}
-          >
-            {word}{' '}
+        {title.split(' ').map((word, i, arr) => (
+          <span key={i}>
+            <span
+              className="inline-block opacity-0 translate-y-4 transition-all duration-500"
+              style={{
+                transitionDelay: visible ? `${i * 0.08 + 0.2}s` : '0s',
+                opacity: visible ? 1 : 0,
+                transform: visible ? 'translateY(0)' : 'translateY(16px)',
+              }}
+            >
+              {word}
+            </span>
+            {i < arr.length - 1 ? ' ' : ''}
           </span>
         ))}
       </h2>

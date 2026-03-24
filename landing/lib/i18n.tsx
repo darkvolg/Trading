@@ -48,7 +48,7 @@ export const T = {
     roiMonth3: "3 Months",
     roiMonth6: "6 Months",
     roiMonth12: "12 Months",
-    roiDisclaimer: "Based on historical backtest performance (13.57%/mo). Past results don\u2019t guarantee future returns.",
+    roiDisclaimer: "Based on historical backtest: +14.49% over 26 months (~0.55%/mo compounded). Past results don\u2019t guarantee future returns.",
 
     // how it works
     howTag: "Process",
@@ -315,7 +315,7 @@ export const T = {
     roiMonth3: "3 Месяца",
     roiMonth6: "6 Месяцев",
     roiMonth12: "12 Месяцев",
-    roiDisclaimer: "На основе исторических бэктестов (13.57%/мес). Прошлые результаты не гарантируют будущую доходность.",
+    roiDisclaimer: "На основе бэктеста: +14.49% за 26 месяцев (~0.55%/мес с реинвестированием). Прошлые результаты не гарантируют будущую доходность.",
 
     howTag: "Процесс",
     howTitle: "Как это работает",

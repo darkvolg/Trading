@@ -79,29 +79,35 @@ def format_entry_signal(signal_num: int, pair: str, side_str: str, leverage: int
     entry_low = rate * (1 - ENTRY_ZONE_PCT)
     entry_high = rate * (1 + ENTRY_ZONE_PCT)
 
+    side_emoji = "\U0001f7e2" if side_str == "LONG" else "\U0001f534"
+    macd_indicator = "\u2705 +" if macd_hist > 0 else "\u26a0\ufe0f -"
+    rsi_indicator = "\u2705" if 35 < rsi_val < 65 else "\u26a0\ufe0f"
+    adx_indicator = "\u2705" if adx_val > 20 else "\u26a0\ufe0f"
+    vol_indicator = "\u2705" if vol_ratio > 1.0 else "\u26a0\ufe0f"
+
     return (
         f"*TRENDRIDER SIGNAL #{signal_num:03d}*\n"
         f"{'='*28}\n"
-        f"*{pair}* | *{side_str}* | {leverage}x\n"
+        f"*{pair}* | {side_emoji} *{side_str}* | {leverage}x\n"
         f"*Setup:* {setup_name}\n"
         f"{'='*28}\n\n"
-        f"*Entry Zone:* `{entry_low:.2f}` - `{entry_high:.2f}` USDT\n"
-        f"*Stop Loss:* `{sl_price:.2f}` ({stoploss_pct*100:+.1f}%)\n\n"
+        f"\U0001f3af *Entry Zone:* `{entry_low:.2f}` - `{entry_high:.2f}` USDT\n"
+        f"\U0001f6e1 *Stop Loss:* `{sl_price:.2f}` ({stoploss_pct*100:+.1f}%)\n\n"
         f"*Targets (manual — bot uses ROI/trailing):*\n"
-        f"  TP1: `{tp1:.2f}` (+3%)\n"
-        f"  TP2: `{tp2:.2f}` (+5%)\n"
-        f"  TP3: `{tp3:.2f}` (+10%)\n"
+        f"  \U0001f4b0 TP1: `{tp1:.2f}` (+3%)\n"
+        f"  \U0001f4b0 TP2: `{tp2:.2f}` (+5%)\n"
+        f"  \U0001f4b0 TP3: `{tp3:.2f}` (+10%)\n"
         f"  R:R = 1:{rr_ratio:.1f}\n\n"
         f"*Confidence:* {conf_level} ({conf_numeric}/10)\n"
-        f"  [{conf_bar}]\n"
+        f"  {conf_bar}\n"
         f"  {', '.join(conf_details)}\n\n"
         f"*Regime:* {regime}\n"
         f"*Portfolio:* {heat_str}\n"
         f"*Est. Hold:* {est_hold}\n"
         f"*Invalidation:* `{invalidation:.2f}` ({inv_label})\n\n"
         f"*Indicators:*\n"
-        f"  RSI: {rsi_val:.1f} | ADX: {adx_val:.1f}\n"
-        f"  Volume: {vol_ratio:.2f}x | MACD: {'+'  if macd_hist > 0 else '-'}\n\n"
+        f"  {rsi_indicator} RSI: {rsi_val:.1f} | {adx_indicator} ADX: {adx_val:.1f}\n"
+        f"  {vol_indicator} Volume: {vol_ratio:.2f}x | {macd_indicator}\n\n"
         f"*Market:* {market_ctx}\n\n"
         f"*Why:* {reason}\n"
         f"{'='*28}\n"
@@ -168,26 +174,32 @@ def format_exit_report(pair: str, trade, rate: float, exit_reason: str,
     # Max drawdown
     max_dd = ((trade.open_rate - trade.min_rate) / trade.open_rate) * 100 if trade.min_rate else 0
 
-    # Review
+    # Review with profit tier emoji
     if profit_pct > 5:
         review = "Strong momentum carried to TP2+"
+        result_emoji = "\U0001f7e2 STRONG WIN"
     elif profit_pct > 3:
         review = "Clean setup, hit TP1 target"
+        result_emoji = "\U0001f7e2 WIN"
     elif profit_pct > 0:
         review = "Modest gain, trailing stop secured profit"
+        result_emoji = "\U0001f7e1 MODEST"
     elif exit_reason == "stop_loss":
         review = "Setup invalidated, SL protected capital"
+        result_emoji = "\U0001f534 LOSS"
     elif exit_reason == "trailing_stop_loss":
         review = "Gave back gains after reversal"
+        result_emoji = "\U0001f534 LOSS"
     else:
         review = "Market conditions changed"
+        result_emoji = "\U0001f534 LOSS"
 
     # Setup name from enter_tag
     enter_tag = getattr(trade, 'enter_tag', '') or ''
     setup_name = SETUP_NAMES.get(enter_tag, enter_tag or "—")
 
     msg = (
-        f"*TRADE CLOSED* {'WIN' if profit_pct > 0 else 'LOSS'}\n"
+        f"*TRADE CLOSED* {result_emoji}\n"
         f"{'='*28}\n"
         f"*{pair}* | {side_str} | {trade.leverage}x\n"
         f"*Setup:* {setup_name}\n"

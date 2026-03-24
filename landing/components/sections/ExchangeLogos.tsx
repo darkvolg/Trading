@@ -33,15 +33,15 @@ export function ExchangeLogos({ visible }: { visible: boolean }) {
   const exchanges = ["Bybit", "Binance", "OKX", "Cornix", "Freqtrade"];
   return (
     <div className={`reveal reveal-delay-2 ${visible ? "visible" : ""} flex flex-wrap items-center justify-center gap-8 md:gap-12`}>
-      {exchanges.map((name) => (
+      {exchanges.map((name, i) => (
         <div
           key={name}
-          className="flex items-center gap-2.5 opacity-40 hover:opacity-70 transition-opacity duration-300"
+          className={`logo-glow-${i} flex items-center gap-2.5 hover:opacity-100 transition-all duration-300 hover:drop-shadow-[0_0_12px_rgba(0,212,170,0.6)] cursor-default`}
         >
-          <div className="text-muted">
+          <div className="text-primary/80">
             {exchangeLogosMap[name]}
           </div>
-          <span className="font-mono text-xs text-muted tracking-widest uppercase">{name}</span>
+          <span className="font-mono text-xs text-foreground/80 tracking-widest uppercase">{name}</span>
         </div>
       ))}
     </div>

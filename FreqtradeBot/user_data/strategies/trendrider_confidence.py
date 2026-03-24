@@ -104,18 +104,23 @@ def calc_confidence(last: dict, adx_threshold: int, rsi_period: int = 14) -> tup
     # Smooth mapping to 1-10
     numeric = max(1, min(10, round(score * 10 / CONFIDENCE_MAX_SCORE)))
 
-    # Level label
+    # Level label with emoji
     if numeric >= 8:
-        level = "STRONG"
+        level = "\U0001f680 STRONG"
+        fill_char = "\U0001f7e9"
     elif numeric >= 6:
-        level = "GOOD"
+        level = "\u2705 GOOD"
+        fill_char = "\U0001f7e8"
     elif numeric >= 4:
-        level = "MEDIUM"
+        level = "\u26a1 MEDIUM"
+        fill_char = "\U0001f7e5"
     else:
-        level = "WEAK"
+        level = "\u26a0\ufe0f WEAK"
+        fill_char = "\U0001f7e5"
 
-    # Dynamic bar
-    bar = "|" * numeric + "-" * (10 - numeric) + f" {numeric}/10"
+    # Dynamic bar with colored squares
+    empty_char = "\u2b1c"
+    bar = fill_char * numeric + empty_char * (10 - numeric) + f" {numeric}/10"
 
     return level, bar, details, numeric
 
@@ -127,13 +132,13 @@ def market_context(last: dict) -> str:
     bull_4h = last.get('is_bull_4h', 0)
 
     if btc_bull and btc_rsi > 55:
-        btc_status = "Bullish"
+        btc_status = "\U0001f7e2 Bullish"
     elif btc_rsi > 40:
-        btc_status = "Neutral"
+        btc_status = "\U0001f7e1 Neutral"
     else:
-        btc_status = "Bearish"
+        btc_status = "\U0001f534 Bearish"
 
-    tf_4h = "Uptrend" if bull_4h else "Downtrend"
+    tf_4h = "\U0001f7e2 Uptrend" if bull_4h else "\U0001f534 Downtrend"
 
     parts = [f"BTC: {btc_status} (RSI {btc_rsi:.0f})", f"4H: {tf_4h}"]
 
