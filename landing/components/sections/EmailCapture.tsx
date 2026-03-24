@@ -39,7 +39,7 @@ export function EmailCapture({ t }: { t: TStrings }) {
 
         {status === "success" ? (
           <div className="flex items-center justify-center gap-2 text-primary font-medium py-4">
-            <svg className="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
+            <svg className="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2} aria-hidden="true">
               <path strokeLinecap="round" strokeLinejoin="round" d="m4.5 12.75 6 6 9-13.5" />
             </svg>
             {t.emailSuccess}

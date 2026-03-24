@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useRef, useState } from "react";
+import { useEffect, useRef, useState, useCallback } from "react";
 
 /* ──────────────────────────── imports from extracted modules ──────────────────────────── */
 
@@ -83,16 +83,23 @@ export default function Home() {
   }, []);
 
   const cursorGlowRef = useRef<HTMLDivElement>(null);
+  const rafRef = useRef<number>(0);
 
   useEffect(() => {
     const handler = (e: MouseEvent) => {
-      if (cursorGlowRef.current) {
-        cursorGlowRef.current.style.left = `${e.clientX}px`;
-        cursorGlowRef.current.style.top = `${e.clientY}px`;
-      }
+      cancelAnimationFrame(rafRef.current);
+      rafRef.current = requestAnimationFrame(() => {
+        if (cursorGlowRef.current) {
+          cursorGlowRef.current.style.left = `${e.clientX}px`;
+          cursorGlowRef.current.style.top = `${e.clientY}px`;
+        }
+      });
     };
     window.addEventListener('mousemove', handler);
-    return () => window.removeEventListener('mousemove', handler);
+    return () => {
+      window.removeEventListener('mousemove', handler);
+      cancelAnimationFrame(rafRef.current);
+    };
   }, []);
 
 
@@ -559,7 +566,7 @@ export default function Home() {
       <Footer t={t} />
 
       {/* ─── COOKIE CONSENT ─── */}
-      <CookieConsent t={t} />
+      <CookieConsent t={t} locale={locale} />
 
       {/* ─── SCROLL TO TOP ─── */}
       <ScrollToTop />

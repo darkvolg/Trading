@@ -27,6 +27,7 @@ export default function Article() {
               "url": "https://trendrider.net"
             },
             "datePublished": "2026-03-22",
+            "dateModified": "2026-03-24",
             "mainEntityOfPage": {
               "@type": "WebPage",
               "@id": "https://trendrider.net/blog/multi-timeframe-analysis-explained"
@@ -117,6 +118,24 @@ export default function Article() {
             <p className="text-foreground font-medium mb-3">Get signals powered by 4-timeframe analysis</p>
             <a href="https://t.me/TrendRiderSignals" className="inline-block px-6 py-3 rounded-xl font-semibold text-sm" style={{ background: "linear-gradient(135deg, #00D4AA, #00B894)", color: "#0D1117" }}>
               Join TrendRider on Telegram &rarr;
+            </a>
+          </div>
+        </div>
+
+        <div className="mt-16 pt-10 border-t border-border/30">
+          <h2 className="text-xl font-semibold text-foreground mb-6">Related Articles</h2>
+          <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
+            <a href="/blog/why-algorithmic-trading-beats-manual" className="p-4 rounded-xl border border-border/50 bg-card/30 hover:border-primary/30 hover:bg-card/50 transition-all">
+              <span className="text-xs text-primary font-mono uppercase tracking-widest">Strategy</span>
+              <p className="text-sm font-medium text-foreground mt-2">Why Algorithmic Trading Beats Manual: Data Over Emotions</p>
+            </a>
+            <a href="/blog/funding-rates-open-interest-trading-signals" className="p-4 rounded-xl border border-border/50 bg-card/30 hover:border-primary/30 hover:bg-card/50 transition-all">
+              <span className="text-xs text-primary font-mono uppercase tracking-widest">On-Chain Data</span>
+              <p className="text-sm font-medium text-foreground mt-2">Funding Rates &amp; Open Interest: The On-Chain Edge in Crypto Trading</p>
+            </a>
+            <a href="/blog/fear-and-greed-index-crypto-trading" className="p-4 rounded-xl border border-border/50 bg-card/30 hover:border-primary/30 hover:bg-card/50 transition-all">
+              <span className="text-xs text-primary font-mono uppercase tracking-widest">On-Chain Data</span>
+              <p className="text-sm font-medium text-foreground mt-2">Fear &amp; Greed Index: How On-Chain Sentiment Drives Crypto Signals</p>
             </a>
           </div>
         </div>

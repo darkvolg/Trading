@@ -515,8 +515,8 @@ html.light .tg-header .text-white {
 
 .floating-btn {
   position: fixed;
-  bottom: 2rem;
-  right: 2rem;
+  bottom: max(2rem, env(safe-area-inset-bottom));
+  right: max(1rem, env(safe-area-inset-right));
   z-index: 50;
   opacity: 0;
   transform: translateY(20px);
@@ -764,9 +764,14 @@ html.light .pricing-card:hover {
 
 /* Focus-visible for accessibility */
 *:focus-visible {
-  outline: 2px solid #00D4AA;
+  outline: 2px solid var(--color-primary);
   outline-offset: 2px;
   border-radius: 4px;
+}
+
+button:focus-visible, a:focus-visible, [role="button"]:focus-visible {
+  outline: 2px solid var(--color-primary);
+  outline-offset: 2px;
 }
 
 /* Reduce motion for users who prefer it */
