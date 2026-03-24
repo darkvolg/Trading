@@ -2,7 +2,10 @@ import type { Metadata } from "next";
 
 export const metadata: Metadata = {
   title: "What Is SQN Score? Understanding System Quality Number — TrendRider Blog",
-  description: "Learn what SQN (System Quality Number) means in trading, how it's calculated, what the score ranges indicate, and how TrendRider achieves an SQN of 3.45.",
+  description: "SQN (System Quality Number) by Van Tharp rates trading systems. Learn the formula, score ranges, and why TrendRider's SQN of 3.45 ranks Excellent.",
+  alternates: {
+    canonical: "https://trendrider.net/blog/what-is-sqn-score-system-quality-number",
+  },
 };
 
 export default function Article() {
@@ -13,21 +16,26 @@ export default function Article() {
         dangerouslySetInnerHTML={{
           __html: JSON.stringify({
             "@context": "https://schema.org",
-            "@type": "BlogPosting",
+            "@type": "Article",
             "headline": "What Is SQN Score? Understanding System Quality Number — TrendRider Blog",
-            "description": "Learn what SQN (System Quality Number) means in trading, how it's calculated, what the score ranges indicate, and how TrendRider achieves an SQN of 3.45.",
+            "description": "SQN (System Quality Number) by Van Tharp rates trading systems. Learn the formula, score ranges, and why TrendRider's SQN of 3.45 ranks Excellent.",
             "author": {
-              "@type": "Organization",
-              "name": "TrendRider",
+              "@type": "Person",
+              "name": "TrendRider Team",
               "url": "https://trendrider.net"
             },
             "publisher": {
               "@type": "Organization",
               "name": "TrendRider",
-              "url": "https://trendrider.net"
+              "url": "https://trendrider.net",
+              "logo": {
+                "@type": "ImageObject",
+                "url": "https://trendrider.net/icon.svg"
+              }
             },
             "datePublished": "2026-03-22",
             "dateModified": "2026-03-24",
+            "image": "https://trendrider.net/opengraph-image",
             "mainEntityOfPage": {
               "@type": "WebPage",
               "@id": "https://trendrider.net/blog/what-is-sqn-score-system-quality-number"

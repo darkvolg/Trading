@@ -2,7 +2,10 @@ import type { Metadata } from "next";
 
 export const metadata: Metadata = {
   title: "Multi-Timeframe Analysis: How to Read Markets on 5m, 15m, 1h, and 4h — TrendRider Blog",
-  description: "Learn how multi-timeframe analysis works, why combining 5m, 15m, 1h, and 4h charts reduces false signals, and how TrendRider uses MTF for crypto trading.",
+  description: "Multi-timeframe analysis combines 5m, 15m, 1h, and 4h charts to filter false signals. Learn the confluence method TrendRider uses for 67.9% win rate.",
+  alternates: {
+    canonical: "https://trendrider.net/blog/multi-timeframe-analysis-explained",
+  },
 };
 
 export default function Article() {
@@ -13,21 +16,26 @@ export default function Article() {
         dangerouslySetInnerHTML={{
           __html: JSON.stringify({
             "@context": "https://schema.org",
-            "@type": "BlogPosting",
+            "@type": "Article",
             "headline": "Multi-Timeframe Analysis: How to Read Markets on 5m, 15m, 1h, and 4h — TrendRider Blog",
-            "description": "Learn how multi-timeframe analysis works, why combining 5m, 15m, 1h, and 4h charts reduces false signals, and how TrendRider uses MTF for crypto trading.",
+            "description": "Multi-timeframe analysis combines 5m, 15m, 1h, and 4h charts to filter false signals. Learn the confluence method TrendRider uses for 67.9% win rate.",
             "author": {
-              "@type": "Organization",
-              "name": "TrendRider",
+              "@type": "Person",
+              "name": "TrendRider Team",
               "url": "https://trendrider.net"
             },
             "publisher": {
               "@type": "Organization",
               "name": "TrendRider",
-              "url": "https://trendrider.net"
+              "url": "https://trendrider.net",
+              "logo": {
+                "@type": "ImageObject",
+                "url": "https://trendrider.net/icon.svg"
+              }
             },
             "datePublished": "2026-03-22",
             "dateModified": "2026-03-24",
+            "image": "https://trendrider.net/opengraph-image",
             "mainEntityOfPage": {
               "@type": "WebPage",
               "@id": "https://trendrider.net/blog/multi-timeframe-analysis-explained"

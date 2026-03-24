@@ -2,7 +2,10 @@ import type { Metadata } from "next";
 
 export const metadata: Metadata = {
   title: "Paper Trading vs Live Trading: When to Go Live — TrendRider Blog",
-  description: "Discover the benefits of paper trading, how to validate a strategy before risking real money, and when to make the switch to live trading.",
+  description: "Paper trading vs live trading: learn the 4-phase transition framework, minimum sample sizes, and red flags that mean you are not ready to go live yet.",
+  alternates: {
+    canonical: "https://trendrider.net/blog/paper-trading-vs-live-trading-when-to-switch",
+  },
 };
 
 export default function Article() {
@@ -13,21 +16,26 @@ export default function Article() {
         dangerouslySetInnerHTML={{
           __html: JSON.stringify({
             "@context": "https://schema.org",
-            "@type": "BlogPosting",
+            "@type": "Article",
             "headline": "Paper Trading vs Live Trading: When to Go Live — TrendRider Blog",
-            "description": "Discover the benefits of paper trading, how to validate a strategy before risking real money, and when to make the switch to live trading.",
+            "description": "Paper trading vs live trading: learn the 4-phase transition framework, minimum sample sizes, and red flags that mean you are not ready to go live yet.",
             "author": {
-              "@type": "Organization",
-              "name": "TrendRider",
+              "@type": "Person",
+              "name": "TrendRider Team",
               "url": "https://trendrider.net"
             },
             "publisher": {
               "@type": "Organization",
               "name": "TrendRider",
-              "url": "https://trendrider.net"
+              "url": "https://trendrider.net",
+              "logo": {
+                "@type": "ImageObject",
+                "url": "https://trendrider.net/icon.svg"
+              }
             },
             "datePublished": "2026-03-22",
             "dateModified": "2026-03-24",
+            "image": "https://trendrider.net/opengraph-image",
             "mainEntityOfPage": {
               "@type": "WebPage",
               "@id": "https://trendrider.net/blog/paper-trading-vs-live-trading-when-to-switch"

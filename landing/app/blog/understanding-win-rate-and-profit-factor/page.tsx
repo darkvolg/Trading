@@ -2,7 +2,10 @@ import type { Metadata } from "next";
 
 export const metadata: Metadata = {
   title: "Understanding Win Rate & Profit Factor — TrendRider Blog",
-  description: "Learn how win rate, profit factor, drawdown, and SQN score work together to measure true trading performance.",
+  description: "Win rate alone is misleading. Learn how profit factor, drawdown, and SQN score reveal true trading system quality with real examples.",
+  alternates: {
+    canonical: "https://trendrider.net/blog/understanding-win-rate-and-profit-factor",
+  },
 };
 
 export default function Article() {
@@ -13,21 +16,26 @@ export default function Article() {
         dangerouslySetInnerHTML={{
           __html: JSON.stringify({
             "@context": "https://schema.org",
-            "@type": "BlogPosting",
+            "@type": "Article",
             "headline": "Understanding Win Rate & Profit Factor — TrendRider Blog",
-            "description": "Learn how win rate, profit factor, drawdown, and SQN score work together to measure true trading performance.",
+            "description": "Win rate alone is misleading. Learn how profit factor, drawdown, and SQN score reveal true trading system quality with real examples.",
             "author": {
-              "@type": "Organization",
-              "name": "TrendRider",
+              "@type": "Person",
+              "name": "TrendRider Team",
               "url": "https://trendrider.net"
             },
             "publisher": {
               "@type": "Organization",
               "name": "TrendRider",
-              "url": "https://trendrider.net"
+              "url": "https://trendrider.net",
+              "logo": {
+                "@type": "ImageObject",
+                "url": "https://trendrider.net/icon.svg"
+              }
             },
             "datePublished": "2026-03-22",
             "dateModified": "2026-03-24",
+            "image": "https://trendrider.net/opengraph-image",
             "mainEntityOfPage": {
               "@type": "WebPage",
               "@id": "https://trendrider.net/blog/understanding-win-rate-and-profit-factor"

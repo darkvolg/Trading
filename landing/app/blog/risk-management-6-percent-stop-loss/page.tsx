@@ -2,7 +2,10 @@ import type { Metadata } from "next";
 
 export const metadata: Metadata = {
   title: "The 6% Stop-Loss Rule — TrendRider Blog",
-  description: "Learn TrendRider's exact risk management framework: 6% stop-loss per trade, 2% portfolio risk, and how we maintain 1.42% max drawdown.",
+  description: "Master the 6% stop-loss rule and 2% portfolio risk framework that keeps TrendRider's max drawdown at just 1.42%. Full risk management guide.",
+  alternates: {
+    canonical: "https://trendrider.net/blog/risk-management-6-percent-stop-loss",
+  },
 };
 
 export default function Article() {
@@ -13,21 +16,26 @@ export default function Article() {
         dangerouslySetInnerHTML={{
           __html: JSON.stringify({
             "@context": "https://schema.org",
-            "@type": "BlogPosting",
+            "@type": "Article",
             "headline": "The 6% Stop-Loss Rule — TrendRider Blog",
-            "description": "Learn TrendRider's exact risk management framework: 6% stop-loss per trade, 2% portfolio risk, and how we maintain 1.42% max drawdown.",
+            "description": "Master the 6% stop-loss rule and 2% portfolio risk framework that keeps TrendRider's max drawdown at just 1.42%. Full risk management guide.",
             "author": {
-              "@type": "Organization",
-              "name": "TrendRider",
+              "@type": "Person",
+              "name": "TrendRider Team",
               "url": "https://trendrider.net"
             },
             "publisher": {
               "@type": "Organization",
               "name": "TrendRider",
-              "url": "https://trendrider.net"
+              "url": "https://trendrider.net",
+              "logo": {
+                "@type": "ImageObject",
+                "url": "https://trendrider.net/icon.svg"
+              }
             },
             "datePublished": "2026-03-22",
             "dateModified": "2026-03-24",
+            "image": "https://trendrider.net/opengraph-image",
             "mainEntityOfPage": {
               "@type": "WebPage",
               "@id": "https://trendrider.net/blog/risk-management-6-percent-stop-loss"

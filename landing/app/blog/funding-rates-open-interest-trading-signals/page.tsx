@@ -2,7 +2,10 @@ import type { Metadata } from "next";
 
 export const metadata: Metadata = {
   title: "Funding Rates & Open Interest: The On-Chain Edge — TrendRider Blog",
-  description: "Learn how funding rates and open interest reveal market positioning and how TrendRider integrates these on-chain signals into its trading system.",
+  description: "Funding rates and open interest reveal hidden market positioning. Learn to read these on-chain signals and spot squeezes before they happen.",
+  alternates: {
+    canonical: "https://trendrider.net/blog/funding-rates-open-interest-trading-signals",
+  },
 };
 
 export default function Article() {
@@ -13,21 +16,26 @@ export default function Article() {
         dangerouslySetInnerHTML={{
           __html: JSON.stringify({
             "@context": "https://schema.org",
-            "@type": "BlogPosting",
+            "@type": "Article",
             "headline": "Funding Rates & Open Interest: The On-Chain Edge — TrendRider Blog",
-            "description": "Learn how funding rates and open interest reveal market positioning and how TrendRider integrates these on-chain signals into its trading system.",
+            "description": "Funding rates and open interest reveal hidden market positioning. Learn to read these on-chain signals and spot squeezes before they happen.",
             "author": {
-              "@type": "Organization",
-              "name": "TrendRider",
+              "@type": "Person",
+              "name": "TrendRider Team",
               "url": "https://trendrider.net"
             },
             "publisher": {
               "@type": "Organization",
               "name": "TrendRider",
-              "url": "https://trendrider.net"
+              "url": "https://trendrider.net",
+              "logo": {
+                "@type": "ImageObject",
+                "url": "https://trendrider.net/icon.svg"
+              }
             },
             "datePublished": "2026-03-22",
             "dateModified": "2026-03-24",
+            "image": "https://trendrider.net/opengraph-image",
             "mainEntityOfPage": {
               "@type": "WebPage",
               "@id": "https://trendrider.net/blog/funding-rates-open-interest-trading-signals"

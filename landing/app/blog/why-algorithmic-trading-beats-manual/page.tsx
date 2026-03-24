@@ -2,7 +2,10 @@ import type { Metadata } from "next";
 
 export const metadata: Metadata = {
   title: "Why AI-Powered Trading Beats Manual — TrendRider Blog",
-  description: "Discover why removing emotions from trading decisions leads to consistently better results with AI-powered crypto signals.",
+  description: "Algorithmic trading removes fear and greed from decisions. Learn why AI-powered crypto signals achieve 67.9% win rate vs emotional manual trading.",
+  alternates: {
+    canonical: "https://trendrider.net/blog/why-algorithmic-trading-beats-manual",
+  },
 };
 
 export default function Article() {
@@ -13,21 +16,26 @@ export default function Article() {
         dangerouslySetInnerHTML={{
           __html: JSON.stringify({
             "@context": "https://schema.org",
-            "@type": "BlogPosting",
+            "@type": "Article",
             "headline": "Why AI-Powered Trading Beats Manual — TrendRider Blog",
-            "description": "Discover why removing emotions from trading decisions leads to consistently better results with AI-powered crypto signals.",
+            "description": "Algorithmic trading removes fear and greed from decisions. Learn why AI-powered crypto signals achieve 67.9% win rate vs emotional manual trading.",
             "author": {
-              "@type": "Organization",
-              "name": "TrendRider",
+              "@type": "Person",
+              "name": "TrendRider Team",
               "url": "https://trendrider.net"
             },
             "publisher": {
               "@type": "Organization",
               "name": "TrendRider",
-              "url": "https://trendrider.net"
+              "url": "https://trendrider.net",
+              "logo": {
+                "@type": "ImageObject",
+                "url": "https://trendrider.net/icon.svg"
+              }
             },
             "datePublished": "2026-03-22",
             "dateModified": "2026-03-24",
+            "image": "https://trendrider.net/opengraph-image",
             "mainEntityOfPage": {
               "@type": "WebPage",
               "@id": "https://trendrider.net/blog/why-algorithmic-trading-beats-manual"

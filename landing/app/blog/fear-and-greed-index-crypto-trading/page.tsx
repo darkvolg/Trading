@@ -2,7 +2,10 @@ import type { Metadata } from "next";
 
 export const metadata: Metadata = {
   title: "Fear & Greed Index: How On-Chain Sentiment Drives Crypto Signals — TrendRider Blog",
-  description: "Learn how the Fear & Greed Index works, what it measures, how it integrates with technical analysis, and how TrendRider uses sentiment data for crypto signals.",
+  description: "The Crypto Fear & Greed Index measures market sentiment from 0-100. Learn how to combine it with technical analysis for better crypto trading decisions.",
+  alternates: {
+    canonical: "https://trendrider.net/blog/fear-and-greed-index-crypto-trading",
+  },
 };
 
 export default function Article() {
@@ -13,21 +16,26 @@ export default function Article() {
         dangerouslySetInnerHTML={{
           __html: JSON.stringify({
             "@context": "https://schema.org",
-            "@type": "BlogPosting",
+            "@type": "Article",
             "headline": "Fear & Greed Index: How On-Chain Sentiment Drives Crypto Signals — TrendRider Blog",
-            "description": "Learn how the Fear & Greed Index works, what it measures, how it integrates with technical analysis, and how TrendRider uses sentiment data for crypto signals.",
+            "description": "The Crypto Fear & Greed Index measures market sentiment from 0-100. Learn how to combine it with technical analysis for better crypto trading decisions.",
             "author": {
-              "@type": "Organization",
-              "name": "TrendRider",
+              "@type": "Person",
+              "name": "TrendRider Team",
               "url": "https://trendrider.net"
             },
             "publisher": {
               "@type": "Organization",
               "name": "TrendRider",
-              "url": "https://trendrider.net"
+              "url": "https://trendrider.net",
+              "logo": {
+                "@type": "ImageObject",
+                "url": "https://trendrider.net/icon.svg"
+              }
             },
             "datePublished": "2026-03-22",
             "dateModified": "2026-03-24",
+            "image": "https://trendrider.net/opengraph-image",
             "mainEntityOfPage": {
               "@type": "WebPage",
               "@id": "https://trendrider.net/blog/fear-and-greed-index-crypto-trading"

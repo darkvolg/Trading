@@ -4,6 +4,9 @@ import Link from "next/link";
 export const metadata: Metadata = {
   title: "Blog — TrendRider | Crypto Trading Insights",
   description: "Learn about AI-powered crypto trading, risk management, and signal analysis from the TrendRider team.",
+  alternates: {
+    canonical: "https://trendrider.net/blog",
+  },
 };
 
 const posts = [
