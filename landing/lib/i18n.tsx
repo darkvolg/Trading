@@ -75,6 +75,21 @@ export const T = {
     perfAvgBot: "Average Bot",
     perfDisclaimer: "Based on backtest results from January 2024 to March 2026. 5 pairs: BTC, ETH, SOL, BNB, DOGE. Past performance does not guarantee future results. Trading involves risk.",
 
+    // simulated performance (investment simulator)
+    simTag: "Simulator",
+    simTitle: "Investment Simulator",
+    simSubtitle: "See how your capital would have grown based on historical backtest data",
+    simStarting: "Starting Capital",
+    simFinalValue: "Final Value",
+    simReturn: "return in 26 months",
+    simWinRate: "Win Rate",
+    simProfitFactor: "Profit Factor",
+    simMaxDD: "Max Drawdown",
+    simSharpe: "Sharpe Ratio",
+    simNetProfit: "Net Profit",
+    simCapital: "Capital",
+    simDisclaimer: "Simulated results based on backtest from January 2024 to March 2026. Past performance does not guarantee future results. Trading cryptocurrencies involves significant risk.",
+
     // how it works
     howTag: "Process",
     howTitle: "How It Works",
@@ -371,6 +386,21 @@ export const T = {
     perfRiskMgmt: "Управление рисками",
     perfAvgBot: "Средний бот",
     perfDisclaimer: "На основе бэктеста с января 2024 по март 2026. 5 пар: BTC, ETH, SOL, BNB, DOGE. Прошлые результаты не гарантируют будущую доходность. Торговля связана с риском.",
+
+    // simulated performance (investment simulator)
+    simTag: "Симулятор",
+    simTitle: "Симулятор инвестиций",
+    simSubtitle: "Посмотрите, как вырос бы ваш капитал на основе исторических данных бэктеста",
+    simStarting: "Начальный капитал",
+    simFinalValue: "Итоговая сумма",
+    simReturn: "доходность за 26 месяцев",
+    simWinRate: "Винрейт",
+    simProfitFactor: "Профит-фактор",
+    simMaxDD: "Макс. просадка",
+    simSharpe: "Коэфф. Шарпа",
+    simNetProfit: "Чистая прибыль",
+    simCapital: "Капитал",
+    simDisclaimer: "Результаты симуляции на основе бэктеста с января 2024 по март 2026. Прошлые результаты не гарантируют будущую доходность. Торговля криптовалютами связана со значительным риском.",
 
     howTag: "Процесс",
     howTitle: "Как это работает",

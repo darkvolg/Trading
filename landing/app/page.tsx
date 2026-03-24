@@ -42,6 +42,7 @@ import {
   CookieConsent,
   StickyNav,
   PerformanceDashboard,
+  SimulatedPerformance,
 } from "@/components/sections";
 
 /* ──────────────────────────── Home component ──────────────────────────── */
@@ -58,6 +59,7 @@ export default function Home() {
   const securitySection = useInView(0.2);
   const dashboardSection = useInView(0.15);
   const roiSection = useInView(0.1);
+  const simSection = useInView(0.1);
   const howItWorks = useInView(0.15);
   const signalSection = useInView(0.2);
   const featuresSection = useInView(0.1);
@@ -292,6 +294,9 @@ export default function Home() {
 
       {/* ─── PERFORMANCE DASHBOARD (replaces old Metrics + ROI Calculator) ─── */}
       <PerformanceDashboard t={t} visible={roiSection.visible} sectionRef={roiSection.ref} />
+
+      {/* ─── SIMULATED PERFORMANCE (Investment Simulator) ─── */}
+      <SimulatedPerformance t={t} visible={simSection.visible} sectionRef={simSection.ref} />
 
       <SectionDivider variant="dots" />
       {/* ─── HOW IT WORKS ─── */}
