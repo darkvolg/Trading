@@ -25,7 +25,7 @@ const posts = [
   },
   {
     slug: "risk-management-6-percent-stop-loss",
-    title: "The 6% Stop-Loss Rule: How We Keep Drawdown at 1.81%",
+    title: "The 6% Stop-Loss Rule: How We Keep Drawdown at 1.42%",
     excerpt: "Most traders blow accounts because of poor risk management. Here's the exact framework TrendRider uses to protect capital on every trade.",
     date: "March 10, 2026",
     readTime: "6 min read",

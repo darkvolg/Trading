@@ -28,7 +28,7 @@ export function PricingGrid({
         <EarlyAdopterBadge label={t.earlyAdopterLabel} daysLeftLabel={t.daysLeft} />
       </div>
 
-      <div className="grid md:grid-cols-3 gap-6 max-w-4xl mx-auto items-start">
+      <div className="grid md:grid-cols-3 gap-6 max-w-4xl mx-auto items-stretch">
         {pricing.map((plan, i) => {
           const isPopular = plan.highlight;
           const isVip = plan.name === "VIP";
@@ -36,7 +36,7 @@ export function PricingGrid({
             <div
               className={`${isVip ? "vip-card-inner" : ""} ${
                 isVip ? "animate-pulse-glow-gold" : ""
-              } pricing-card reveal reveal-delay-${i + 1} ${visible ? "visible" : ""} relative p-8 rounded-2xl h-full ${
+              } pricing-card reveal reveal-delay-${i + 1} ${visible ? "visible" : ""} relative p-8 rounded-2xl h-full flex flex-col ${
                 isVip
                   ? "bg-[#0f1a0f]"
                   : isPopular
@@ -64,7 +64,7 @@ export function PricingGrid({
                   <span className="text-muted text-sm">{plan.period}</span>
                 </div>
               </div>
-              <ul className="space-y-3 mb-8">
+              <ul className="space-y-3 mb-8 flex-1">
                 {plan.features.map((feat: string, fi: number) => (
                   <li key={fi} className="flex items-start gap-3 text-sm">
                     <svg

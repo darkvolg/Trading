@@ -17,7 +17,7 @@ export function TechStackLogos({ visible, label }: { visible: boolean; label: st
     )},
   ];
   return (
-    <section className="py-12 px-4 border-y border-border/20 bg-card/10">
+    <section className="py-12 px-4">
       <div className="max-w-5xl mx-auto">
         <p className={`reveal ${visible ? "visible" : ""} text-center text-muted text-[11px] uppercase tracking-[0.25em] font-mono mb-8`}>
           {label}

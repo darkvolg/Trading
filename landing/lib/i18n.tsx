@@ -17,8 +17,8 @@ export const T = {
     taglineHighlight: "Verified Results.",
     heroDesc: (
       <>AI-powered crypto trading signals with a{" "}
-      <span className="text-primary font-semibold">71.1% win rate</span> and{" "}
-      <span className="text-primary font-semibold">1.81% max drawdown</span>.
+      <span className="text-primary font-semibold">67.9% win rate</span> and{" "}
+      <span className="text-primary font-semibold">1.42% max drawdown</span>.
       Multi-timeframe analysis across BTC, ETH, SOL, and BNB.</>
     ),
     winRate: "Win Rate",
@@ -39,16 +39,41 @@ export const T = {
     maxDrawdown: "Max Drawdown",
     sqnScore: "SQN Score",
 
-    // roi calculator
-    roiTag: "Calculator",
-    roiTitle: "Calculate Your Potential Returns",
-    roiSubtitle: "See how TrendRider's algorithm could grow your investment",
-    roiDeposit: "Initial Deposit",
-    roiMonth1: "1 Month",
-    roiMonth3: "3 Months",
-    roiMonth6: "6 Months",
-    roiMonth12: "12 Months",
-    roiDisclaimer: "Based on historical backtest: +14.49% over 26 months (~0.55%/mo compounded). Past results don\u2019t guarantee future returns.",
+    // performance dashboard
+    perfTag: "Performance",
+    perfTitle: "Backtest-Verified Results",
+    perfSubtitle: "Transparent metrics from 26 months of algorithmic trading",
+    perfAllTime: "All Time",
+    perf12m: "12 Months",
+    perf6m: "6 Months",
+    perf3m: "3 Months",
+    perfRoi: "Total ROI",
+    perfWinRate: "Win Rate",
+    perfMaxDD: "Max Drawdown",
+    perfSQN: "System Quality",
+    perfTrendRider: "TrendRider",
+    perfBTC: "BTC Buy & Hold",
+    perfInsight: "TrendRider generated +14.49% while protecting capital from a -38.88% market drop",
+    perfCrashTitle: "What If the Market Crashes?",
+    perfCrashSubtitle: "Your capital stays protected while the market bleeds",
+    perfCrashScenario: "Imagine: you invested $10,000. The market drops 40%.",
+    perfWithoutStrategy: "Without strategy",
+    perfWithTrendRider: "With TrendRider",
+    perfYouSaved: "You saved",
+    perfCrashTesis: "We don\u2019t promise extraordinary returns. We deliver extraordinary risk management.",
+    perfCrashDisclaimer: "Based on backtest max drawdown of 1.42%. Actual results may vary. Past performance does not guarantee future results.",
+    perfAdvanced: "Advanced Metrics",
+    perfProfitFactor: "Profit Factor",
+    perfTotalTrades: "Total Trades",
+    perfAvgTrade: "Avg Trade",
+    perfAvgDuration: "Avg Duration",
+    perfBestTrade: "Best Trade",
+    perfWorstTrade: "Worst Trade",
+    perfProfitability: "Profitability",
+    perfConsistency: "Consistency",
+    perfRiskMgmt: "Risk Management",
+    perfAvgBot: "Average Bot",
+    perfDisclaimer: "Based on backtest results from January 2024 to March 2026. 5 pairs: BTC, ETH, SOL, BNB, DOGE. Past performance does not guarantee future results. Trading involves risk.",
 
     // how it works
     howTag: "Process",
@@ -79,7 +104,7 @@ export const T = {
     feat4Title: "Verified Track Record",
     feat4Desc: "Public Google Sheet with every trade. No cherry-picking, no hidden losses.",
     feat5Title: "Ultra-Low Drawdown",
-    feat5Desc: "1.81% max drawdown. Conservative risk management with 6% stop-loss per trade.",
+    feat5Desc: "1.42% max drawdown. Conservative risk management with 6% stop-loss per trade.",
     feat6Title: "Real-Time Alerts",
     feat6Desc: "Instant Telegram notifications. Never miss an entry or exit signal.",
 
@@ -121,7 +146,7 @@ export const T = {
     faq2Q: "How are signals generated?",
     faq2A: "Our algorithm combines 15+ technical indicators (RSI, MACD, Bollinger Bands, EMA crossovers, etc.), multi-timeframe analysis (5m, 15m, 1h, 4h), and on-chain metrics (Fear & Greed Index, funding rates, open interest) to identify high-probability setups.",
     faq3Q: "What's the track record?",
-    faq3A: "All trades are logged in a public Google Sheet with full transparency. Our backtested results show a 71.1% win rate, 2.09 profit factor, and just 1.81% max drawdown. We also maintain a Strat Ninja verified profile.",
+    faq3A: "All trades are logged in a public Google Sheet with full transparency. Our backtested results show a 67.9% win rate, 2.12 profit factor, and just 1.42% max drawdown. We also maintain a Strat Ninja verified profile.",
     faq4Q: "How do I auto-trade?",
     faq4A: "Connect the Cornix bot to our Telegram channel and link it to your exchange (Bybit, Binance, or OKX). Cornix will automatically execute trades based on our signals with your configured position sizing.",
     faq5Q: "Is it safe?",
@@ -208,14 +233,14 @@ export const T = {
     compRow2: ["Analysis Time", "2-4 hours/day", "Fully automated 24/7"],
     compRow3: ["Risk Management", "Inconsistent", "Strict 6% SL per trade"],
     compRow4: ["Track Record", "Rarely public", "100% transparent Google Sheet"],
-    compRow5: ["Win Rate", "~45-55%", "71.1% verified"],
-    compRow6: ["Drawdown", "Often 15-30%+", "1.81% max"],
+    compRow5: ["Win Rate", "~45-55%", "67.9% verified"],
+    compRow6: ["Drawdown", "Often 15-30%+", "1.42% max"],
 
     // extra testimonials
     testimonial4: "Multi-timeframe analysis gives a much better picture than single-TF signals. The confluence filter is solid.",
     testimonial4Author: "Beta Tester #4",
     testimonial4Role: "Paper-trading since March 2026",
-    testimonial5: "The drawdown control is impressive — 1.81% max during backtests. That's conservative risk management done right.",
+    testimonial5: "The drawdown control is impressive — 1.42% max during backtests. That's conservative risk management done right.",
     testimonial5Author: "Beta Tester #5",
     testimonial5Role: "Paper-trading since March 2026",
 
@@ -285,8 +310,8 @@ export const T = {
     taglineHighlight: "Проверенные результаты.",
     heroDesc: (
       <>Крипто-сигналы на основе ИИ с{" "}
-      <span className="text-primary font-semibold">винрейтом 71.1%</span> и{" "}
-      <span className="text-primary font-semibold">просадкой 1.81%</span>.
+      <span className="text-primary font-semibold">винрейтом 67.9%</span> и{" "}
+      <span className="text-primary font-semibold">просадкой 1.42%</span>.
       Мультитаймфрейм анализ BTC, ETH, SOL и BNB.</>
     ),
     winRate: "Винрейт",
@@ -306,16 +331,41 @@ export const T = {
     maxDrawdown: "Макс. просадка",
     sqnScore: "SQN",
 
-    // roi calculator
-    roiTag: "Калькулятор",
-    roiTitle: "Рассчитайте потенциальную прибыль",
-    roiSubtitle: "Посмотрите как алгоритм TrendRider может увеличить ваш капитал",
-    roiDeposit: "Начальный депозит",
-    roiMonth1: "1 Месяц",
-    roiMonth3: "3 Месяца",
-    roiMonth6: "6 Месяцев",
-    roiMonth12: "12 Месяцев",
-    roiDisclaimer: "На основе бэктеста: +14.49% за 26 месяцев (~0.55%/мес с реинвестированием). Прошлые результаты не гарантируют будущую доходность.",
+    // performance dashboard
+    perfTag: "Результаты",
+    perfTitle: "Подтверждено бэктестами",
+    perfSubtitle: "Прозрачные метрики за 26 месяцев алгоритмической торговли",
+    perfAllTime: "Всё время",
+    perf12m: "12 месяцев",
+    perf6m: "6 месяцев",
+    perf3m: "3 месяца",
+    perfRoi: "Общий ROI",
+    perfWinRate: "Win Rate",
+    perfMaxDD: "Макс. просадка",
+    perfSQN: "Качество системы",
+    perfTrendRider: "TrendRider",
+    perfBTC: "BTC Buy & Hold",
+    perfInsight: "TrendRider заработал +14.49%, защитив капитал от падения рынка на -38.88%",
+    perfCrashTitle: "Что если рынок упадёт?",
+    perfCrashSubtitle: "Ваш капитал защищён, пока рынок падает",
+    perfCrashScenario: "Представьте: вы вложили $10,000. Рынок падает на 40%.",
+    perfWithoutStrategy: "Без стратегии",
+    perfWithTrendRider: "С TrendRider",
+    perfYouSaved: "Вы сохранили",
+    perfCrashTesis: "Мы не обещаем сверхприбыль. Мы обеспечиваем сверхзащиту капитала.",
+    perfCrashDisclaimer: "На основе макс. просадки бэктеста 1.42%. Реальные результаты могут отличаться. Прошлые результаты не гарантируют будущую доходность.",
+    perfAdvanced: "Расширенные метрики",
+    perfProfitFactor: "Фактор прибыли",
+    perfTotalTrades: "Всего сделок",
+    perfAvgTrade: "Средняя сделка",
+    perfAvgDuration: "Среднее время",
+    perfBestTrade: "Лучшая сделка",
+    perfWorstTrade: "Худшая сделка",
+    perfProfitability: "Прибыльность",
+    perfConsistency: "Стабильность",
+    perfRiskMgmt: "Управление рисками",
+    perfAvgBot: "Средний бот",
+    perfDisclaimer: "На основе бэктеста с января 2024 по март 2026. 5 пар: BTC, ETH, SOL, BNB, DOGE. Прошлые результаты не гарантируют будущую доходность. Торговля связана с риском.",
 
     howTag: "Процесс",
     howTitle: "Как это работает",
@@ -343,7 +393,7 @@ export const T = {
     feat4Title: "Проверяемый трек-рекорд",
     feat4Desc: "Публичная Google Таблица с каждой сделкой. Без подтасовок и скрытых убытков.",
     feat5Title: "Минимальная просадка",
-    feat5Desc: "Просадка 1.81%. Консервативный риск-менеджмент со стоп-лоссом 6% на сделку.",
+    feat5Desc: "Просадка 1.42%. Консервативный риск-менеджмент со стоп-лоссом 6% на сделку.",
     feat6Title: "Уведомления в реальном времени",
     feat6Desc: "Мгновенные Telegram-уведомления. Не пропустите ни одного входа или выхода.",
 
@@ -380,7 +430,7 @@ export const T = {
     faq2Q: "Как генерируются сигналы?",
     faq2A: "Наш алгоритм объединяет 15+ технических индикаторов (RSI, MACD, Bollinger Bands, пересечения EMA и др.), мультитаймфрейм анализ (5м, 15м, 1ч, 4ч) и метрики on-chain (Fear & Greed Index, funding rates, open interest) для определения высоковероятных сетапов.",
     faq3Q: "Какой трек-рекорд?",
-    faq3A: "Все сделки записываются в публичную Google Таблицу с полной прозрачностью. Результаты бэктестов: винрейт 71.1%, профит-фактор 2.09 и просадка всего 1.81%. Также ведётся верифицированный профиль на Strat Ninja.",
+    faq3A: "Все сделки записываются в публичную Google Таблицу с полной прозрачностью. Результаты бэктестов: винрейт 67.9%, профит-фактор 2.12 и просадка всего 1.42%. Также ведётся верифицированный профиль на Strat Ninja.",
     faq4Q: "Как настроить авто-трейд?",
     faq4A: "Подключите бота Cornix к нашему Telegram-каналу и привяжите его к вашей бирже (Bybit, Binance или OKX). Cornix будет автоматически исполнять сделки на основе наших сигналов с вашими настройками размера позиции.",
     faq5Q: "Безопасно ли это?",
@@ -466,14 +516,14 @@ export const T = {
     compRow2: ["Время анализа", "2-4 часа/день", "Полностью автоматизирован 24/7"],
     compRow3: ["Риск-менеджмент", "Нестабильный", "Строгий SL 6% на сделку"],
     compRow4: ["Трек-рекорд", "Редко публичный", "100% прозрачная Google Таблица"],
-    compRow5: ["Винрейт", "~45-55%", "71.1% подтверждённый"],
-    compRow6: ["Просадка", "Часто 15-30%+", "1.81% максимум"],
+    compRow5: ["Винрейт", "~45-55%", "67.9% подтверждённый"],
+    compRow6: ["Просадка", "Часто 15-30%+", "1.42% максимум"],
 
     // extra testimonials
     testimonial4: "Мультитаймфрейм анализ даёт гораздо лучшую картину. Фильтр конфлюенции работает отлично.",
     testimonial4Author: "Бета-тестер #4",
     testimonial4Role: "Paper-trading с марта 2026",
-    testimonial5: "Контроль просадки впечатляет — 1.81% максимум на бэктестах. Это грамотный риск-менеджмент.",
+    testimonial5: "Контроль просадки впечатляет — 1.42% максимум на бэктестах. Это грамотный риск-менеджмент.",
     testimonial5Author: "Бета-тестер #5",
     testimonial5Role: "Paper-trading с марта 2026",
 

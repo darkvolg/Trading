@@ -92,7 +92,7 @@ const faqJsonLd = {
       name: "What's the track record?",
       acceptedAnswer: {
         "@type": "Answer",
-        text: "All trades are logged in a public Google Sheet with full transparency. Our backtested results show a 71.1% win rate, 2.09 profit factor, and just 1.81% max drawdown.",
+        text: "All trades are logged in a public Google Sheet with full transparency. Our backtested results show a 67.9% win rate, 2.12 profit factor, and just 1.42% max drawdown.",
       },
     },
     {

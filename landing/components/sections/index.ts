@@ -17,3 +17,4 @@ export { Footer } from "./Footer";
 export { PricingGrid } from "./PricingGrid";
 export { StickyNav } from "./StickyNav";
 export { HeroSection } from "./HeroSection";
+export { PerformanceDashboard } from "./PerformanceDashboard";

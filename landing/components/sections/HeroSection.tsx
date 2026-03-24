@@ -68,18 +68,6 @@ export function HeroSection({ t, locale, setLocale, parallaxRef }: HeroSectionPr
       </div>
 
       <div className="relative text-center max-w-4xl mx-auto z-10">
-        {/* Logo icon */}
-        <div className="flex items-center justify-center gap-3 mb-2" style={{ animation: "fadeInUp 0.7s 0.15s cubic-bezier(0.16, 1, 0.3, 1) both" }}>
-          <svg width="40" height="40" viewBox="0 0 40 40" fill="none" className="text-primary">
-            <rect x="16" y="8" width="8" height="20" rx="1" fill="currentColor" opacity="0.9" />
-            <line x1="20" y1="4" x2="20" y2="8" stroke="currentColor" strokeWidth="2" opacity="0.6" />
-            <line x1="20" y1="28" x2="20" y2="34" stroke="currentColor" strokeWidth="2" opacity="0.6" />
-            <rect x="16" y="8" width="8" height="20" rx="1" fill="currentColor" opacity="0.15">
-              <animate attributeName="opacity" values="0.15;0.4;0.15" dur="3s" repeatCount="indefinite" />
-            </rect>
-          </svg>
-        </div>
-
         {/* Headline — animated letter reveal */}
         <h1 className="text-3xl sm:text-4xl md:text-6xl lg:text-8xl font-bold tracking-tight mb-4"
           style={{ animation: "fadeInUp 0.7s 0.2s cubic-bezier(0.16, 1, 0.3, 1) both" }}>
@@ -117,9 +105,9 @@ export function HeroSection({ t, locale, setLocale, parallaxRef }: HeroSectionPr
           style={{ animation: "fadeInUp 0.7s 0.6s cubic-bezier(0.16, 1, 0.3, 1) both" }}
         >
           {[
-            { v: "71.1%", l: t.winRate },
-            { v: "2.09x", l: t.profitFactor },
-            { v: "1.81%", l: t.maxDD },
+            { v: "67.9%", l: t.winRate },
+            { v: "2.12x", l: t.profitFactor },
+            { v: "1.42%", l: t.maxDD },
           ].map(stat => (
             <div key={stat.l} className="text-center">
               <div className="font-mono font-bold text-xl text-primary">{stat.v}</div>

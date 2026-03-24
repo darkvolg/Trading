@@ -105,7 +105,7 @@ export default function Article() {
 
           <h2 className="text-xl font-semibold text-foreground mt-8 mb-3">TrendRider&apos;s Honest Approach to Paper Trading</h2>
           <p>TrendRider is transparent about its track record. The system went through an extensive paper-trading and backtesting phase before any signals were published. Every signal since launch is logged in a public spreadsheet with exact entries, exits, and P&amp;L — no cherry-picking, no hidden losses.</p>
-          <p>The current stats — <strong className="text-primary">71.1% win rate</strong>, <strong className="text-primary">2.09x profit factor</strong>, <strong className="text-primary">1.81% max drawdown</strong> — are based on real, tracked signals. We encourage every subscriber to paper-trade alongside TrendRider for their first 2-4 weeks before committing real capital. There is no rush. The signals will keep coming.</p>
+          <p>The current stats — <strong className="text-primary">67.9% win rate</strong>, <strong className="text-primary">2.12x profit factor</strong>, <strong className="text-primary">1.42% max drawdown</strong> — are based on real, tracked signals. We encourage every subscriber to paper-trade alongside TrendRider for their first 2-4 weeks before committing real capital. There is no rush. The signals will keep coming.</p>
 
           <h2 className="text-xl font-semibold text-foreground mt-8 mb-3">Red Flags That You&apos;re Not Ready</h2>
           <ul className="list-disc pl-6 space-y-2">
