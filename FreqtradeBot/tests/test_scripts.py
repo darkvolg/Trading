@@ -987,6 +987,22 @@ class TestMonthlyReportBuildMessage:
 # ═══════════════════════════════════════════════════════════════════════
 
 class TestSharedUtilsQueryStats:
+    def setup_method(self):
+        """Ensure real shared_utils is loaded, not a mock from other test files.
+
+        test_subscription_menu.py installs a mock shared_utils into sys.modules
+        at import time. If that runs first, 'from shared_utils import query_stats'
+        returns the mock. Fix: detect mock and force reimport of the real module.
+        """
+        mod = sys.modules.get("shared_utils")
+        if mod is not None and not hasattr(mod, '__file__'):
+            # It's a mock — remove it so the real module gets imported
+            sys.modules.pop("shared_utils", None)
+        elif mod is not None and mod.__file__ is not None:
+            # Real module already loaded — reload to clear any patches
+            import importlib
+            importlib.reload(mod)
+
     def test_no_database(self, tmp_path):
         from shared_utils import query_stats
         result = query_stats(str(tmp_path / "nonexistent.db"))
