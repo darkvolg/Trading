@@ -27,6 +27,7 @@ const MONTH_LABEL_INDICES = [0, 6, 12, 18, 25];
 const CHART_W = 780;
 const CHART_H = 380;
 const CHART_PAD = { top: 30, right: 100, bottom: 48, left: 75 };
+const CHART_FONT = "system-ui, sans-serif";
 const PLOT_W = CHART_W - CHART_PAD.left - CHART_PAD.right;
 const PLOT_H = CHART_H - CHART_PAD.top - CHART_PAD.bottom;
 
@@ -231,7 +232,7 @@ export function SimulatedPerformance({ t, visible, sectionRef }: SimulatedPerfor
             <button
               key={opt}
               onClick={() => setCapital(opt)}
-              className={`px-4 py-2 rounded-lg text-sm font-medium transition-all duration-200 ${
+              className={`px-4 py-2 rounded-lg text-sm font-medium transition-all duration-200 focus:ring-2 focus:ring-primary/50 focus:outline-none ${
                 capital === opt
                   ? "bg-primary text-black shadow-lg shadow-primary/25"
                   : "bg-card border border-border/50 text-muted hover:border-primary/30 hover:text-foreground"
@@ -253,6 +254,8 @@ export function SimulatedPerformance({ t, visible, sectionRef }: SimulatedPerfor
               viewBox={`0 0 ${CHART_W} ${CHART_H}`}
               className="w-full h-auto"
               preserveAspectRatio="xMidYMid meet"
+              role="img"
+              aria-label="Equity curve chart"
             >
               <defs>
                 <linearGradient id="sim-profit-gradient" x1="0" y1="0" x2="0" y2="1">
@@ -282,7 +285,7 @@ export function SimulatedPerformance({ t, visible, sectionRef }: SimulatedPerfor
                       fill={LABEL_COLOR}
                       fontSize={12}
                       fontWeight={500}
-                      fontFamily="system-ui, sans-serif"
+                      fontFamily={CHART_FONT}
                       opacity={0.7}
                     >
                       {formatDollar(Math.round(val))}
@@ -301,7 +304,7 @@ export function SimulatedPerformance({ t, visible, sectionRef }: SimulatedPerfor
                   fill={LABEL_COLOR}
                   fontSize={12}
                   fontWeight={500}
-                  fontFamily="system-ui, sans-serif"
+                  fontFamily={CHART_FONT}
                   opacity={0.7}
                 >
                   {MONTH_LABELS[i]}
@@ -337,7 +340,7 @@ export function SimulatedPerformance({ t, visible, sectionRef }: SimulatedPerfor
                 fill={LABEL_COLOR}
                 fontSize={10}
                 fontWeight={500}
-                fontFamily="system-ui, sans-serif"
+                fontFamily={CHART_FONT}
                 opacity={visible ? 0.4 : 0}
                 style={{ transition: "opacity 0.6s ease 0.5s" }}
               >
@@ -360,7 +363,7 @@ export function SimulatedPerformance({ t, visible, sectionRef }: SimulatedPerfor
                 fill={GREEN}
                 fontSize={16}
                 fontWeight={700}
-                fontFamily="system-ui, sans-serif"
+                fontFamily={CHART_FONT}
                 opacity={visible ? 0.7 : 0}
                 style={{ transition: "opacity 0.8s ease 1.5s" }}
               >
@@ -437,7 +440,7 @@ export function SimulatedPerformance({ t, visible, sectionRef }: SimulatedPerfor
                   fill={GREEN}
                   fontSize={13}
                   fontWeight={700}
-                  fontFamily="system-ui, sans-serif"
+                  fontFamily={CHART_FONT}
                 >
                   {formatDollar(finalValue)}
                 </text>
@@ -487,7 +490,7 @@ export function SimulatedPerformance({ t, visible, sectionRef }: SimulatedPerfor
             </p>
             <p className="text-xl sm:text-2xl font-bold text-primary">
               <span className="inline-flex items-center gap-1">
-                <svg className="w-4 h-4" viewBox="0 0 16 16" fill="none">
+                <svg className="w-4 h-4" viewBox="0 0 16 16" fill="none" aria-hidden="true">
                   <path d="M8 12V4M8 4L4 8M8 4L12 8" stroke="currentColor" strokeWidth={2} strokeLinecap="round" strokeLinejoin="round" />
                 </svg>
                 +{formatDollar(netProfit)}
