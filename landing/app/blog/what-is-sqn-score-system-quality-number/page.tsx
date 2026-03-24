@@ -112,12 +112,12 @@ export default function Article() {
           <h2 className="text-xl font-semibold text-foreground mt-8 mb-3">How TrendRider Achieves an SQN of 3.02</h2>
           <p>TrendRider&apos;s algorithm is engineered for consistency above all else. Here&apos;s what contributes to our &ldquo;Excellent&rdquo; SQN rating:</p>
           <ul className="list-disc pl-6 space-y-2">
-            <li><strong className="text-foreground">Tight risk control</strong> &mdash; Every trade uses a fixed 6% stop-loss, keeping the negative R-multiples bounded. Our max drawdown is just 1.81%.</li>
+            <li><strong className="text-foreground">Tight risk control</strong> &mdash; Every trade uses a fixed 6% stop-loss, keeping the negative R-multiples bounded. Our max drawdown is just 1.42%.</li>
             <li><strong className="text-foreground">Multi-timeframe confirmation</strong> &mdash; Signals require alignment across 5m, 15m, 1h, and 4h charts, filtering out low-probability setups before they enter the pipeline.</li>
             <li><strong className="text-foreground">Regime awareness</strong> &mdash; The algorithm adjusts behavior based on market conditions (trending vs. ranging), which reduces the variance of trade outcomes.</li>
             <li><strong className="text-foreground">Sufficient sample size</strong> &mdash; With 200+ backtested trades across multiple market conditions, the &radic;N component adds statistical confidence to the score.</li>
           </ul>
-          <p>The result is a 71.1% win rate paired with a profit factor of 2.18 and consistent R-multiples &mdash; the exact profile that produces a high SQN.</p>
+          <p>The result is a 67.9% win rate paired with a profit factor of 2.12 and consistent R-multiples &mdash; the exact profile that produces a high SQN.</p>
 
           <h2 className="text-xl font-semibold text-foreground mt-8 mb-3">How to Use SQN When Evaluating Signal Providers</h2>
           <p>Next time you evaluate a signal provider or trading system, ask these questions:</p>

@@ -5,9 +5,9 @@ import { TELEGRAM_URL, TELEGRAM_BOT_URL } from "./constants";
 /* ──────────────────────────── dynamic data builders ──────────────────────────── */
 
 export const getMetrics = (t: TStrings) => [
-  { label: t.winRate, value: 71.1, suffix: "%", decimals: 1, barWidth: 71.1 },
-  { label: t.maxDrawdown, value: 1.81, suffix: "%", decimals: 2, barWidth: 18.1 },
-  { label: t.profitFactor, value: 2.09, suffix: "x", decimals: 2, barWidth: 69.7 },
+  { label: t.winRate, value: 67.9, suffix: "%", decimals: 1, barWidth: 67.9 },
+  { label: t.maxDrawdown, value: 1.42, suffix: "%", decimals: 2, barWidth: 14.2 },
+  { label: t.profitFactor, value: 2.12, suffix: "x", decimals: 2, barWidth: 70.7 },
   { label: t.sqnScore, value: 3.02, suffix: "", decimals: 2, barWidth: 75.5 },
 ];
 

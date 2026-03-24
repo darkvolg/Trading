@@ -93,7 +93,7 @@ export default function Article() {
             <li><strong className="text-foreground">OI divergence detection</strong> — If price is rising but OI is declining, the system flags the move as potentially unsustainable, lowering the confidence score.</li>
             <li><strong className="text-foreground">Liquidation heatmap awareness</strong> — Large clusters of OI at specific price levels act as magnets. TrendRider factors these into take-profit and stop-loss placement.</li>
           </ul>
-          <p>This multi-layered approach is one reason TrendRider maintains a <strong className="text-primary">71.1% win rate</strong> — the system avoids taking trades into crowded positioning where the risk of a sudden reversal is highest.</p>
+          <p>This multi-layered approach is one reason TrendRider maintains a <strong className="text-primary">67.9% win rate</strong> — the system avoids taking trades into crowded positioning where the risk of a sudden reversal is highest.</p>
 
           <h2 className="text-xl font-semibold text-foreground mt-8 mb-3">Practical Tips for Using Funding &amp; OI</h2>
           <div className="overflow-x-auto">

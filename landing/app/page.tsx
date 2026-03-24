@@ -7,7 +7,7 @@ import { useEffect, useRef, useState } from "react";
 import { TELEGRAM_URL, SHEETS_URL } from "@/lib/constants";
 import { T } from "@/lib/i18n";
 import type { Locale } from "@/lib/i18n";
-import { getMetrics, getSteps, getFeatures, getFaqItems } from "@/lib/data";
+import { getSteps, getFeatures, getFaqItems } from "@/lib/data";
 
 import {
   useInView,
@@ -18,7 +18,6 @@ import {
 import {
   SocialCounter,
   LanguageToggle,
-  MetricCard,
   FAQItem,
   SectionHeading,
   SectionDivider,
@@ -34,7 +33,6 @@ import {
   RatingSummary,
   TestimonialCard,
   ExchangeLogos,
-  EquityCurve,
   Footer,
   PricingGrid,
   TechStackLogos,
@@ -43,6 +41,7 @@ import {
   EmailCapture,
   CookieConsent,
   StickyNav,
+  PerformanceDashboard,
 } from "@/components/sections";
 
 /* ──────────────────────────── Home component ──────────────────────────── */
@@ -51,7 +50,6 @@ export default function Home() {
   const [locale, setLocale] = useState<Locale>("en");
   const [exitPopupShown, setExitPopupShown] = useState(false);
   const [exitPopupDismissed, setExitPopupDismissed] = useState(false);
-  const [deposit, setDeposit] = useState(1000);
   const theme: Theme = "dark";
   const t = T[locale];
 
@@ -59,7 +57,6 @@ export default function Home() {
   const mediaSection = useInView(0.1);
   const securitySection = useInView(0.2);
   const dashboardSection = useInView(0.15);
-  const metricsSection = useInView(0.2);
   const roiSection = useInView(0.1);
   const howItWorks = useInView(0.15);
   const signalSection = useInView(0.2);
@@ -117,7 +114,7 @@ export default function Home() {
     return () => document.documentElement.removeEventListener('mouseleave', handler);
   }, [exitPopupDismissed]);
 
-  const metrics = getMetrics(t);
+
   const steps = getSteps(t);
   const features = getFeatures(t);
   const faqItems = getFaqItems(t);
@@ -152,7 +149,7 @@ export default function Home() {
         locale={locale}
         setLocale={setLocale}
         navLinks={[
-          { label: t.navPerformance, ref: metricsSection.ref },
+          { label: t.navPerformance, ref: roiSection.ref },
           { label: t.navHowItWorks, ref: howItWorks.ref },
           { label: t.navFeatures, ref: featuresSection.ref },
           { label: t.navPricing, ref: pricingSection.ref },
@@ -184,7 +181,7 @@ export default function Home() {
       <LiveTicker />
 
       {/* ─── SOCIAL PROOF STRIP ─── */}
-      <section ref={socialProofSection.ref} className="py-16 px-4">
+      <section ref={socialProofSection.ref} className="py-20 px-4 bg-card/20 border-y border-border/10">
         <div className="max-w-5xl mx-auto">
           <p className={`reveal ${socialProofSection.visible ? "visible" : ""} text-center text-muted text-sm uppercase tracking-widest font-mono mb-10`}>
             {t.trustedBy}
@@ -194,7 +191,7 @@ export default function Home() {
           <div className={`reveal reveal-delay-1 ${socialProofSection.visible ? "visible" : ""} grid grid-cols-2 md:grid-cols-4 gap-6 mb-12`}>
             {[
               { target: 150, decimals: 0, suffix: "+", label: t.socialTrades },
-              { target: 71.1, decimals: 1, suffix: "%", label: t.socialWinRate },
+              { target: 67.9, decimals: 1, suffix: "%", label: t.socialWinRate },
               { target: 99.9, decimals: 1, suffix: "%", label: t.socialUptime },
               { target: 200, decimals: 0, suffix: "+", label: t.socialSignals },
             ].map((stat) => (
@@ -230,10 +227,8 @@ export default function Home() {
       {/* ─── BENEFITS STRIP ─── */}
       <BenefitsStrip t={t} visible={mediaSection.visible} />
 
-      <SectionDivider variant="glow" />
-
       {/* ─── SECURITY & TRUST BADGES ─── */}
-      <section ref={securitySection.ref} className="py-16 px-4">
+      <section ref={securitySection.ref} className="py-20 px-4 bg-card/20 border-y border-border/10">
         <div className="max-w-5xl mx-auto">
           <p className={`reveal ${securitySection.visible ? "visible" : ""} text-center text-muted text-sm uppercase tracking-widest font-mono mb-10`}>
             {t.securityTag}
@@ -274,7 +269,7 @@ export default function Home() {
       </section>
 
       {/* ─── DASHBOARD MOCKUP ─── */}
-      <section ref={dashboardSection.ref} className="py-20 px-4">
+      <section ref={dashboardSection.ref} className="py-24 px-4">
         <div className="max-w-5xl mx-auto">
           <SectionHeading
             tag={t.dashboardTag}
@@ -286,119 +281,10 @@ export default function Home() {
         </div>
       </section>
 
-      <SectionDivider variant="dots" />
+      <SectionDivider variant="glow" />
 
-      {/* ─── METRICS ─── */}
-      <section ref={metricsSection.ref} className="py-24 px-4">
-        <div className="max-w-5xl mx-auto">
-          <SectionHeading
-            tag={t.metricsTag}
-            title={t.metricsTitle}
-            subtitle={t.metricsSubtitle}
-            visible={metricsSection.visible}
-          />
-          <div className="grid grid-cols-2 md:grid-cols-4 gap-4 md:gap-6">
-            {metrics.map((m, i) => (
-              <MetricCard key={m.label} {...m} active={metricsSection.visible} delay={i + 1} />
-            ))}
-          </div>
-          <EquityCurve label={t.equityCurveLabel} visible={metricsSection.visible} />
-
-          <p
-            className={`reveal reveal-delay-6 ${metricsSection.visible ? "visible" : ""} text-center text-muted text-sm mt-8`}
-          >
-            {t.metricsFooter} &bull; {t.updatedMonthly} &bull;{" "}
-            <a
-              href={SHEETS_URL}
-              target="_blank"
-              rel="noopener noreferrer"
-              className="text-primary hover:underline underline-offset-4"
-            >
-              {t.viewFullResults}
-            </a>
-          </p>
-        </div>
-      </section>
-
-      <SectionDivider variant="dots" />
-
-
-      {/* ─── ROI CALCULATOR ─── */}
-      <section ref={roiSection.ref} className="py-24 px-4">
-        <div className="max-w-4xl mx-auto">
-          <SectionHeading
-            tag={t.roiTag}
-            title={t.roiTitle}
-            subtitle={t.roiSubtitle}
-            visible={roiSection.visible}
-          />
-
-          {/* Deposit slider */}
-          <div
-            className={`reveal reveal-delay-1 ${roiSection.visible ? "visible" : ""} max-w-xl mx-auto mb-12`}
-          >
-            <label className="block text-sm font-mono uppercase tracking-wider text-muted mb-3 text-center">
-              {t.roiDeposit}
-            </label>
-            <div className="text-4xl font-bold text-center mb-4 text-primary">
-              {"$"}{deposit.toLocaleString("en-US")}
-            </div>
-            <input
-              type="range"
-              min={100}
-              max={50000}
-              step={100}
-              value={deposit}
-              onChange={(e) => setDeposit(Number(e.target.value))}
-              className="w-full h-2 rounded-full appearance-none cursor-pointer"
-              style={{
-                background: `linear-gradient(to right, #00D4AA ${((deposit - 100) / (50000 - 100)) * 100}%, rgba(255,255,255,0.1) ${((deposit - 100) / (50000 - 100)) * 100}%)`,
-              }}
-            />
-            <div className="flex justify-between text-xs text-muted mt-2 font-mono">
-              <span>$100</span>
-              <span>$50,000</span>
-            </div>
-          </div>
-
-          {/* Result cards */}
-          <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
-            {([
-              { label: t.roiMonth1, months: 1 },
-              { label: t.roiMonth3, months: 3 },
-              { label: t.roiMonth6, months: 6 },
-              { label: t.roiMonth12, months: 12 },
-            ] as const).map((item, i) => {
-              const result = deposit * Math.pow(1.0055, item.months);
-              const profit = result - deposit;
-              const pctGain = ((result / deposit - 1) * 100).toFixed(1);
-              return (
-                <div
-                  key={item.months}
-                  className={`reveal reveal-delay-${i + 2} ${roiSection.visible ? "visible" : ""} relative p-4 md:p-6 rounded-2xl border border-border/50 bg-background/50 backdrop-blur-sm hover:border-primary/30 transition-all text-center`}
-                >
-                  <p className="text-xs font-mono uppercase tracking-wider text-muted mb-2">
-                    {item.label}
-                  </p>
-                  <p className="text-xl sm:text-2xl md:text-3xl font-bold mb-1 truncate" style={{ color: "#00D4AA" }}>
-                    {"$"}{result.toLocaleString("en-US", { maximumFractionDigits: 0 })}
-                  </p>
-                  <p className="text-xs sm:text-sm font-semibold truncate" style={{ color: "#FFD700" }}>
-                    {`+$${profit.toLocaleString("en-US", { maximumFractionDigits: 0 })} (${pctGain}%)`}
-                  </p>
-                </div>
-              );
-            })}
-          </div>
-
-          {/* Disclaimer */}
-          <p
-            className={`reveal reveal-delay-6 ${roiSection.visible ? "visible" : ""} text-center text-xs text-muted/70 mt-8 max-w-lg mx-auto`}
-          >
-            {t.roiDisclaimer}
-          </p>
-        </div>
-      </section>
+      {/* ─── PERFORMANCE DASHBOARD (replaces old Metrics + ROI Calculator) ─── */}
+      <PerformanceDashboard t={t} visible={roiSection.visible} sectionRef={roiSection.ref} />
 
       <SectionDivider variant="dots" />
       {/* ─── HOW IT WORKS ─── */}
