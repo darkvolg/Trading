@@ -11,6 +11,46 @@ export const metadata: Metadata = {
 
 const posts = [
   {
+    slug: "best-crypto-trading-strategies-2026",
+    title: "Best Crypto Trading Strategies for 2026: Trend Following, Mean Reversion & More",
+    excerpt: "Compare the top crypto trading strategies for 2026. Learn how trend following, mean reversion, breakout, and momentum approaches work — and which delivers the best risk-adjusted returns.",
+    date: "March 24, 2026",
+    readTime: "7 min read",
+    tag: "Strategy",
+  },
+  {
+    slug: "how-to-read-crypto-trading-signals",
+    title: "How to Read Crypto Trading Signals: A Complete Beginner's Guide",
+    excerpt: "Learn how to interpret entry prices, stop-loss levels, take-profit targets, and confidence scores. Avoid the 5 most common mistakes beginners make with trading signals.",
+    date: "March 23, 2026",
+    readTime: "5 min read",
+    tag: "Education",
+  },
+  {
+    slug: "backtesting-crypto-strategies-guide",
+    title: "Backtesting Crypto Strategies: Why Historical Data Matters",
+    excerpt: "Backtesting is the engineering simulation of trading. Learn how to validate strategies against historical data, avoid overfitting, and use SQN scoring to measure results.",
+    date: "March 23, 2026",
+    readTime: "6 min read",
+    tag: "Education",
+  },
+  {
+    slug: "freqtrade-vs-3commas-vs-cornix",
+    title: "Freqtrade vs 3Commas vs Cornix: Which Trading Bot Is Right for You?",
+    excerpt: "A side-by-side comparison of three popular crypto trading bots. Features, pricing, customizability, and why we chose Freqtrade for algorithmic trading.",
+    date: "March 22, 2026",
+    readTime: "6 min read",
+    tag: "Comparison",
+  },
+  {
+    slug: "what-is-drawdown-crypto-trading",
+    title: "What Is Drawdown in Crypto Trading? How We Keep Ours at 1.42%",
+    excerpt: "Max drawdown matters more than profit. Learn why professional traders obsess over drawdown control and the techniques TrendRider uses to maintain just 1.42%.",
+    date: "March 21, 2026",
+    readTime: "5 min read",
+    tag: "Risk Management",
+  },
+  {
     slug: "why-algorithmic-trading-beats-manual",
     title: "Why AI-Powered Trading Beats Manual: Data Over Emotions",
     excerpt: "Discover why removing emotions from trading decisions leads to consistently better results. We break down the science behind AI-powered signals.",
