@@ -17,7 +17,7 @@ const jetbrainsMono = JetBrains_Mono({
 export const metadata: Metadata = {
   title: "TrendRider — Algorithmic Crypto Trading Signals",
   description:
-    "AI-powered crypto trading signals with 71% win rate, verified on-chain. BTC, ETH, SOL, BNB signals delivered via Telegram with Cornix auto-trade support.",
+    "AI-powered crypto trading signals with 67.9% win rate, verified on-chain. BTC, ETH, SOL, BNB, DOGE signals delivered via Telegram with Cornix auto-trade support.",
   keywords: [
     "crypto signals",
     "trading bot",
@@ -41,7 +41,7 @@ export const metadata: Metadata = {
   openGraph: {
     title: "TrendRider — Algorithmic Crypto Trading Signals",
     description:
-      "AI-powered crypto signals with 71% win rate. Verified results, ultra-low drawdown.",
+      "AI-powered crypto signals with 67.9% win rate. Verified results, ultra-low drawdown.",
     type: "website",
     url: "https://trendrider.net",
     siteName: "TrendRider",
@@ -51,7 +51,7 @@ export const metadata: Metadata = {
     card: "summary_large_image",
     title: "TrendRider — Algorithmic Crypto Trading Signals",
     description:
-      "AI-powered crypto signals with 71% win rate. Verified results.",
+      "AI-powered crypto signals with 67.9% win rate. Verified results.",
     creator: "@TrendRiderPro",
   },
   other: {
@@ -76,7 +76,7 @@ const faqJsonLd = {
       name: "What is TrendRider?",
       acceptedAnswer: {
         "@type": "Answer",
-        text: "TrendRider is an AI-powered algorithmic trading system built on Freqtrade. It analyzes BTC, ETH, SOL, and BNB across multiple timeframes using 15+ technical indicators combined with on-chain data to generate high-confidence trade signals.",
+        text: "TrendRider is an AI-powered algorithmic trading system built on Freqtrade. It analyzes BTC, ETH, SOL, BNB, and DOGE across multiple timeframes using 15+ technical indicators combined with on-chain data to generate high-confidence trade signals.",
       },
     },
     {
@@ -120,7 +120,7 @@ const jsonLd = {
   name: "TrendRider",
   applicationCategory: "FinanceApplication",
   description:
-    "AI-powered algorithmic crypto trading signals with 71% win rate. BTC, ETH, SOL, BNB signals via Telegram.",
+    "AI-powered algorithmic crypto trading signals with 67.9% win rate. BTC, ETH, SOL, BNB, DOGE signals via Telegram.",
   url: "https://trendrider.net",
   operatingSystem: "Telegram",
   offers: [
@@ -136,7 +136,7 @@ const jsonLd = {
       name: "Basic",
       price: "39",
       priceCurrency: "USD",
-      description: "Real-time signals, Cornix auto-trade, 4 pairs",
+      description: "Real-time signals, Cornix auto-trade, 5 pairs",
     },
     {
       "@type": "Offer",

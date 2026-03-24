@@ -71,7 +71,7 @@ export default function Article() {
           <p>Drawdown measures the largest peak-to-trough decline in your account. Most retail traders experience 20-40% drawdowns. TrendRider&apos;s max drawdown of <strong className="text-primary">1.42%</strong> is exceptionally low because of strict 6% stop-loss per trade and never risking more than 2% of portfolio per position.</p>
 
           <h2 className="text-xl font-semibold text-foreground mt-8 mb-3">SQN Score: System Quality</h2>
-          <p>The System Quality Number (SQN), developed by Van Tharp, rates trading systems on a scale. Scores above 2.5 are &ldquo;good,&rdquo; above 3.0 are &ldquo;excellent.&rdquo; TrendRider&apos;s SQN of <strong className="text-primary">3.02</strong> places it in the &ldquo;excellent&rdquo; category.</p>
+          <p>The System Quality Number (SQN), developed by Van Tharp, rates trading systems on a scale. Scores above 2.5 are &ldquo;good,&rdquo; above 3.0 are &ldquo;excellent.&rdquo; TrendRider&apos;s SQN of <strong className="text-primary">3.45</strong> places it in the &ldquo;excellent&rdquo; category.</p>
 
           <h2 className="text-xl font-semibold text-foreground mt-8 mb-3">The Complete Picture</h2>
           <div className="overflow-x-auto">
@@ -87,7 +87,7 @@ export default function Article() {
                 <tr className="border-b border-border/20"><td className="py-3">Win Rate</td><td className="text-center">45-55%</td><td className="text-center text-primary font-semibold">67.9%</td></tr>
                 <tr className="border-b border-border/20"><td className="py-3">Profit Factor</td><td className="text-center">1.0-1.5x</td><td className="text-center text-primary font-semibold">2.12x</td></tr>
                 <tr className="border-b border-border/20"><td className="py-3">Max Drawdown</td><td className="text-center">15-30%</td><td className="text-center text-primary font-semibold">1.42%</td></tr>
-                <tr><td className="py-3">SQN Score</td><td className="text-center">1.5-2.5</td><td className="text-center text-primary font-semibold">3.02</td></tr>
+                <tr><td className="py-3">SQN Score</td><td className="text-center">1.5-2.5</td><td className="text-center text-primary font-semibold">3.45</td></tr>
               </tbody>
             </table>
           </div>

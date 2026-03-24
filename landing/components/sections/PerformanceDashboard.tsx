@@ -26,7 +26,7 @@ const PERIODS = ["allTime", "12m", "6m", "3m"] as const;
 type Period = (typeof PERIODS)[number];
 
 const PERIOD_DATA: Record<Period, PeriodData> = {
-  allTime: { roi: 14.49, winRate: 67.9, maxDD: 1.42, sqn: 3.46, trades: 112, pf: 2.12 },
+  allTime: { roi: 14.49, winRate: 67.9, maxDD: 1.42, sqn: 3.45, trades: 112, pf: 2.12 },
   "12m": { roi: 9.8, winRate: 69.2, maxDD: 1.18, sqn: 3.21, trades: 78, pf: 2.31 },
   "6m": { roi: 5.1, winRate: 71.4, maxDD: 0.95, sqn: 2.87, trades: 42, pf: 2.48 },
   "3m": { roi: 2.3, winRate: 68.5, maxDD: 0.82, sqn: 2.15, trades: 19, pf: 1.95 },
