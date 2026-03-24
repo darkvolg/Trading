@@ -12,8 +12,21 @@ import sqlite3
 from datetime import datetime, timedelta, timezone
 
 import aiohttp
-from telegram import InlineKeyboardButton, InlineKeyboardMarkup, Update
-from telegram.ext import Application, CallbackQueryHandler, CommandHandler, ContextTypes
+from telegram import (
+    InlineKeyboardButton,
+    InlineKeyboardMarkup,
+    KeyboardButton,
+    ReplyKeyboardMarkup,
+    Update,
+)
+from telegram.ext import (
+    Application,
+    CallbackQueryHandler,
+    CommandHandler,
+    ContextTypes,
+    MessageHandler,
+    filters,
+)
 
 from shared_utils import calc_command, query_stats
 
@@ -310,6 +323,46 @@ async def _handle_payment_deeplink(
     )
 
 
+# ── Persistent keyboard menu ─────────────────────────────────────────────
+
+MENU_BTN_STATS = "\U0001f4ca \u0421\u0442\u0430\u0442\u0438\u0441\u0442\u0438\u043a\u0430"
+MENU_BTN_PLANS = "\U0001f4b0 \u041f\u043e\u0434\u043f\u0438\u0441\u043a\u0438"
+MENU_BTN_STATUS = "\U0001f4c8 \u041c\u043e\u0439 \u0441\u0442\u0430\u0442\u0443\u0441"
+MENU_BTN_REFER = "\U0001f517 \u0420\u0435\u0444\u0435\u0440\u0430\u043b"
+MENU_BTN_CALC = "\U0001f9ee \u041a\u0430\u043b\u044c\u043a\u0443\u043b\u044f\u0442\u043e\u0440"
+MENU_BTN_HELP = "\u2753 \u041f\u043e\u043c\u043e\u0449\u044c"
+
+
+def get_main_menu() -> ReplyKeyboardMarkup:
+    """Return persistent reply keyboard with main menu buttons."""
+    keyboard = [
+        [KeyboardButton(MENU_BTN_STATS), KeyboardButton(MENU_BTN_PLANS)],
+        [KeyboardButton(MENU_BTN_STATUS), KeyboardButton(MENU_BTN_REFER)],
+        [KeyboardButton(MENU_BTN_CALC), KeyboardButton(MENU_BTN_HELP)],
+    ]
+    return ReplyKeyboardMarkup(keyboard, resize_keyboard=True)
+
+
+async def menu_button_handler(update: Update, ctx: ContextTypes.DEFAULT_TYPE) -> None:
+    """Route persistent keyboard button presses to existing command handlers."""
+    text = (update.message.text or "").strip()
+    if text == MENU_BTN_STATS:
+        await stats_command(update, ctx)
+    elif text == MENU_BTN_PLANS:
+        await plans_command(update, ctx)
+    elif text == MENU_BTN_STATUS:
+        await status_command(update, ctx)
+    elif text == MENU_BTN_REFER:
+        await refer_command(update, ctx)
+    elif text == MENU_BTN_CALC:
+        await update.message.reply_text(
+            "\u0412\u0432\u0435\u0434\u0438\u0442\u0435: /calc <\u0434\u0435\u043f\u043e\u0437\u0438\u0442> <\u0440\u0438\u0441\u043a%>\n\u041f\u0440\u0438\u043c\u0435\u0440: /calc 1000 2",
+            reply_markup=get_main_menu(),
+        )
+    elif text == MENU_BTN_HELP:
+        await help_command(update, ctx)
+
+
 # ── /start ───────────────────────────────────────────────────────────────
 
 
@@ -379,7 +432,6 @@ async def start_command(update: Update, ctx: ContextTypes.DEFAULT_TYPE) -> None:
             [InlineKeyboardButton("View Plans", callback_data="plans")],
             [InlineKeyboardButton("My Status", callback_data="status")],
         ]
-        reply_markup = InlineKeyboardMarkup(keyboard)
 
         await update.message.reply_text(
             "*Welcome to TrendRider Signals!*\n"
@@ -393,7 +445,12 @@ async def start_command(update: Update, ctx: ContextTypes.DEFAULT_TYPE) -> None:
             "============================\n"
             "_@TrendRiderSignals_",
             parse_mode="Markdown",
-            reply_markup=reply_markup,
+            reply_markup=InlineKeyboardMarkup(keyboard),
+        )
+        # Send persistent keyboard menu as a follow-up
+        await update.message.reply_text(
+            "\u0412\u044b\u0431\u0435\u0440\u0438\u0442\u0435 \u0434\u0435\u0439\u0441\u0442\u0432\u0438\u0435 \u0438\u0437 \u043c\u0435\u043d\u044e \u043d\u0438\u0436\u0435:",
+            reply_markup=get_main_menu(),
         )
     finally:
         conn.close()
@@ -639,7 +696,9 @@ HELP_TEXT = (
 
 async def help_command(update: Update, _ctx: ContextTypes.DEFAULT_TYPE) -> None:
     """Show help message."""
-    await update.message.reply_text(HELP_TEXT, parse_mode="Markdown")
+    await update.message.reply_text(
+        HELP_TEXT, parse_mode="Markdown", reply_markup=get_main_menu()
+    )
 
 
 # ── Admin commands ───────────────────────────────────────────────────────
@@ -846,6 +905,19 @@ def main() -> None:
     app.add_handler(CommandHandler("stats", stats_command))
     app.add_handler(CommandHandler("help", help_command))
     app.add_handler(CallbackQueryHandler(callback_handler))
+
+    # Persistent keyboard menu handler (lower priority than commands)
+    menu_filter = filters.Text(
+        [
+            MENU_BTN_STATS,
+            MENU_BTN_PLANS,
+            MENU_BTN_STATUS,
+            MENU_BTN_REFER,
+            MENU_BTN_CALC,
+            MENU_BTN_HELP,
+        ]
+    )
+    app.add_handler(MessageHandler(menu_filter, menu_button_handler))
 
     # Admin commands
     app.add_handler(CommandHandler("grant", grant_command))
