@@ -3,8 +3,7 @@
 import json
 import time
 from datetime import datetime, timezone
-from pathlib import Path
-from unittest.mock import MagicMock, patch, mock_open
+from unittest.mock import MagicMock, patch
 
 import pytest
 import requests

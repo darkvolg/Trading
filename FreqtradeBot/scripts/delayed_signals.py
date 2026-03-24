@@ -18,6 +18,12 @@ import urllib.request
 import urllib.error
 from datetime import datetime, timedelta, timezone
 
+# Allow importing from strategies directory
+sys.path.insert(0, os.path.join(
+    os.path.dirname(os.path.dirname(os.path.abspath(__file__))),
+    "user_data", "strategies",
+))
+
 # ---------------------------------------------------------------------------
 # Logging
 # ---------------------------------------------------------------------------
@@ -40,8 +46,8 @@ CONFIG_PATH = os.path.join(FT_HOME, "config.json")
 DELAY_HOURS = 3
 TG_API = "https://api.telegram.org/bot{token}/sendMessage"
 
-BYBIT_REFERRAL_CODE = "0GDX5JR"
-BYBIT_REFERRAL_LINK = "https://www.bybit.com/invite?ref=" + BYBIT_REFERRAL_CODE
+# Bybit affiliate (single source of truth: trendrider_config.py)
+from trendrider_config import BYBIT_REFERRAL_LINK  # noqa: E402
 
 
 # ---------------------------------------------------------------------------

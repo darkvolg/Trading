@@ -68,47 +68,64 @@ class TestFormatEntrySignal:
 
 class TestFormatCornixSignal:
     def test_contains_exchange(self):
-        msg = format_cornix_signal("ETH/USDT:USDT", "long", 5, 2000.0, 1880.0)
+        msg = format_cornix_signal("ETH/USDT:USDT", "long", 5, 2000.0, 1880.0,
+                                   2060.0, 2100.0, 2200.0)
         assert "Exchange: Bybit" in msg
 
     def test_contains_bybit(self):
-        msg = format_cornix_signal("ETH/USDT:USDT", "long", 5, 2000.0, 1880.0)
+        msg = format_cornix_signal("ETH/USDT:USDT", "long", 5, 2000.0, 1880.0,
+                                   2060.0, 2100.0, 2200.0)
         assert "Bybit" in msg
 
     def test_pair_cleaned_to_full_ticker(self):
-        msg = format_cornix_signal("ETH/USDT:USDT", "long", 5, 2000.0, 1880.0)
+        msg = format_cornix_signal("ETH/USDT:USDT", "long", 5, 2000.0, 1880.0,
+                                   2060.0, 2100.0, 2200.0)
         # pair_clean: "ETH/USDT:USDT" -> "ETHUSDT"
         assert "ETHUSDT" in msg
         assert "/USDT:USDT" not in msg
         assert ":USDT" not in msg
 
     def test_pair_cleaned_simple(self):
-        msg = format_cornix_signal("BTC/USDT", "long", 3, 68000.0, 66500.0)
+        msg = format_cornix_signal("BTC/USDT", "long", 3, 68000.0, 66500.0,
+                                   70040.0, 71400.0, 74800.0)
         assert "BTCUSDT" in msg
         assert "/" not in msg
 
     def test_single_symbol_only(self):
         """Cornix requires exactly one symbol — no extra tickers in the message."""
-        msg = format_cornix_signal("ETH/USDT:USDT", "long", 5, 2000.0, 1880.0)
+        msg = format_cornix_signal("ETH/USDT:USDT", "long", 5, 2000.0, 1880.0,
+                                   2060.0, 2100.0, 2200.0)
         # The word USDT should only appear as part of ETHUSDT, not standalone
         assert msg.count("USDT") == 1  # only in "ETHUSDT"
 
     def test_contains_sl(self):
-        msg = format_cornix_signal("ETH/USDT:USDT", "long", 5, 2000.0, 1880.0)
+        msg = format_cornix_signal("ETH/USDT:USDT", "long", 5, 2000.0, 1880.0,
+                                   2060.0, 2100.0, 2200.0)
         assert "1880.00" in msg  # SL
 
     def test_contains_leverage(self):
-        msg = format_cornix_signal("ETH/USDT:USDT", "long", 5, 2000.0, 1880.0)
+        msg = format_cornix_signal("ETH/USDT:USDT", "long", 5, 2000.0, 1880.0,
+                                   2060.0, 2100.0, 2200.0)
         assert "5x" in msg
 
     def test_contains_side(self):
-        msg = format_cornix_signal("ETH/USDT:USDT", "long", 5, 2000.0, 1880.0)
+        msg = format_cornix_signal("ETH/USDT:USDT", "long", 5, 2000.0, 1880.0,
+                                   2060.0, 2100.0, 2200.0)
         assert "LONG" in msg
 
     def test_no_trailing_section(self):
         """New Cornix format has no Trailing Configuration section."""
-        msg = format_cornix_signal("ETH/USDT:USDT", "long", 5, 2000.0, 1880.0)
+        msg = format_cornix_signal("ETH/USDT:USDT", "long", 5, 2000.0, 1880.0,
+                                   2060.0, 2100.0, 2200.0)
         assert "Trailing" not in msg
+
+    def test_contains_tp_levels(self):
+        """Cornix needs TP lines for take-profit orders."""
+        msg = format_cornix_signal("ETH/USDT:USDT", "long", 5, 2000.0, 1880.0,
+                                   2060.0, 2100.0, 2200.0)
+        assert "TP1: 2060.00" in msg
+        assert "TP2: 2100.00" in msg
+        assert "TP3: 2200.00" in msg
 
 
 class TestFormatExitReport:

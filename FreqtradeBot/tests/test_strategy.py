@@ -9,10 +9,9 @@ Telegram messaging) are also mocked so no real I/O occurs.
 
 import sys
 import types
-import logging
 from datetime import datetime, timezone
 from pathlib import Path
-from unittest.mock import MagicMock, patch, PropertyMock, call
+from unittest.mock import MagicMock, patch
 import pytest
 import numpy as np
 import pandas as pd

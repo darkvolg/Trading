@@ -4,7 +4,6 @@ Strategy Card Generator — TrendRider
 Generates a shareable 1080x1920 PNG card with key strategy metrics.
 """
 
-import math
 import os
 from datetime import datetime
 from typing import Optional

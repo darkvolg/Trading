@@ -95,6 +95,22 @@
     "bot_name": "TrendRider_HyroTrader",
     "initial_state": "running",
     "force_entry_enable": false,
+    "protections": [
+        {
+            "method": "MaxDrawdown",
+            "lookback_period_candles": 720,
+            "trade_back_seconds": 2592000,
+            "max_allowed_drawdown": 0.10,
+            "stop_duration_candles": 1440
+        },
+        {
+            "method": "StoplossGuard",
+            "lookback_period_candles": 1440,
+            "trade_limit": 3,
+            "stop_duration_candles": 1440,
+            "only_per_pair": false
+        }
+    ],
     "internals": {
         "process_throttle_secs": 5
     }

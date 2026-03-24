@@ -573,7 +573,8 @@ class TrendRiderStrategy(IStrategy):
         self.dp.send_msg(msg, always_send=True)
 
         # Send Cornix signal
-        cornix_msg = format_cornix_signal(pair, side_str, leverage, rate, sl_price)
+        cornix_msg = format_cornix_signal(pair, side_str, leverage, rate, sl_price,
+                                         tp1_price, tp2_price, tp3_price)
         self.dp.send_msg(cornix_msg, always_send=True)
 
         # Queue for free channel

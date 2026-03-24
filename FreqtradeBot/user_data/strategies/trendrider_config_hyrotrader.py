@@ -67,9 +67,7 @@ SETUP_NAMES = {
     "rsi_bounce": "RSI Oversold Bounce",
 }
 
-# --- Bybit Affiliate ---
-BYBIT_REFERRAL_CODE = "0GDX5JR"
-BYBIT_REFERRAL_LINK = "https://www.bybit.com/invite?ref=0GDX5JR"
+# --- Bybit Affiliate (single source of truth: trendrider_config.py) ---
 
 # --- Exit Reasons ---
 EXIT_REASONS = {

@@ -266,10 +266,10 @@ def build_monthly_message(stats: dict, month_name: str, year: int) -> str:
     pair_table = "\n".join(pair_lines) if pair_lines else "  No pairs"
 
     lines = [
-        f"\U0001f4c8 *TrendRider \u2014 Monthly Report*",
+        "\U0001f4c8 *TrendRider \u2014 Monthly Report*",
         f"_{month_name} {year}_",
         "",
-        f"\U0001f4ca *Performance*",
+        "\U0001f4ca *Performance*",
         f"Trades: {stats['total']} ({stats['wins']}W / {stats['losses']}L)",
         f"Win Rate: {stats['win_rate']:.1f}%",
         f"Total P&L: {stats['pnl_usd']:+.2f} USDT ({stats['pnl_pct']:+.1f}%)",
@@ -277,10 +277,10 @@ def build_monthly_message(stats: dict, month_name: str, year: int) -> str:
         f"Worst: {worst['pair']} {worst_pct:+.1f}% ({worst_date})",
         f"Avg Duration: {avg_dur}",
         "",
-        f"\U0001f4cb *By Pair*",
+        "\U0001f4cb *By Pair*",
         pair_table,
         "",
-        f"\U0001f4c8 *Streaks*",
+        "\U0001f4c8 *Streaks*",
         f"Win streak: {stats['win_streak']}",
         f"Loss streak: {stats['loss_streak']}",
         "",
@@ -295,7 +295,7 @@ def build_no_trades_message(month_name: str, year: int) -> str:
     """Build message when no trades closed in the month."""
     today = datetime.now(timezone.utc).strftime("%Y-%m-%d")
     lines = [
-        f"\U0001f4c8 *TrendRider \u2014 Monthly Report*",
+        "\U0001f4c8 *TrendRider \u2014 Monthly Report*",
         f"_{month_name} {year}_",
         "",
         "No trades closed this month.",
