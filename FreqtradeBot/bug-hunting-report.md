@@ -41,14 +41,14 @@ Two critical issues found: a **hardcoded CryptoBot API token** committed to the 
 
 - **File**: `scripts/subscription_bot.py:44-45`
 - **Category**: Security
-- **Description**: The CryptoBot payment API token is hardcoded as a default value in the source code: `"***REDACTED***"`. This token is committed to git history and can be used by anyone to create invoices or access the CryptoBot API on your behalf.
+- **Description**: The CryptoBot payment API token is hardcoded as a default value in the source code. This token is committed to git history and can be used by anyone to create invoices or access the CryptoBot API on your behalf.
 - **Impact**: Financial loss. Anyone with repo access can use this token to create fraudulent payment invoices or steal funds.
 - **Fix**: Remove the hardcoded default immediately. Require the env var `CRYPTOBOT_API_TOKEN` without a fallback. Rotate the compromised token in the CryptoBot dashboard.
 
 ```python
 # BEFORE (vulnerable)
 CRYPTOBOT_API_TOKEN = os.getenv(
-    "CRYPTOBOT_API_TOKEN", "***REDACTED***"
+    "CRYPTOBOT_API_TOKEN", "<REDACTED_TOKEN>"
 )
 
 # AFTER (safe)
