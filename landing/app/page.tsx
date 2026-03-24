@@ -128,8 +128,20 @@ export default function Home() {
   const features = getFeatures(t);
   const faqItems = getFaqItems(t);
 
+  const faqJsonLd = JSON.stringify({
+    "@context": "https://schema.org",
+    "@type": "FAQPage",
+    name: "TrendRider FAQ",
+    mainEntity: faqItems.map((item) => ({
+      "@type": "Question",
+      name: item.q,
+      acceptedAnswer: { "@type": "Answer", text: item.a },
+    })),
+  });
+
   return (
     <div className="grid-bg relative">
+      <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: faqJsonLd }} />
       {/* Cursor glow effect */}
       <div
         ref={cursorGlowRef}

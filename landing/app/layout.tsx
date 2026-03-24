@@ -68,53 +68,6 @@ export const metadata: Metadata = {
   },
 };
 
-const faqJsonLd = {
-  "@context": "https://schema.org",
-  "@type": "FAQPage",
-  mainEntity: [
-    {
-      "@type": "Question",
-      name: "What is TrendRider?",
-      acceptedAnswer: {
-        "@type": "Answer",
-        text: "TrendRider is an AI-powered algorithmic trading system built on Freqtrade. It analyzes BTC, ETH, SOL, BNB, and DOGE across multiple timeframes using 15+ technical indicators combined with on-chain data to generate high-confidence trade signals.",
-      },
-    },
-    {
-      "@type": "Question",
-      name: "How are signals generated?",
-      acceptedAnswer: {
-        "@type": "Answer",
-        text: "Our algorithm combines 15+ technical indicators (RSI, MACD, Bollinger Bands, EMA crossovers, etc.), multi-timeframe analysis (5m, 15m, 1h, 4h), and on-chain metrics (Fear & Greed Index, funding rates, open interest) to identify high-probability setups.",
-      },
-    },
-    {
-      "@type": "Question",
-      name: "What's the track record?",
-      acceptedAnswer: {
-        "@type": "Answer",
-        text: "All trades are logged in a public Google Sheet with full transparency. Our backtested results show a 67.9% win rate, 2.12 profit factor, and just 1.42% max drawdown.",
-      },
-    },
-    {
-      "@type": "Question",
-      name: "How do I auto-trade?",
-      acceptedAnswer: {
-        "@type": "Answer",
-        text: "Connect the Cornix bot to our Telegram channel and link it to your exchange (Bybit, Binance, or OKX). Cornix will automatically execute trades based on our signals with your configured position sizing.",
-      },
-    },
-    {
-      "@type": "Question",
-      name: "Is it safe?",
-      acceptedAnswer: {
-        "@type": "Answer",
-        text: "We use strict risk management: 6% stop-loss per trade, never risking more than 2% of portfolio per position. The system has been paper-trading since March 2026 with verified results. However, all trading involves risk and past performance does not guarantee future results.",
-      },
-    },
-  ],
-};
-
 const organizationJsonLd = {
   "@context": "https://schema.org",
   "@type": "Organization",
@@ -188,10 +141,6 @@ export default function RootLayout({
         <script
           type="application/ld+json"
           dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }}
-        />
-        <script
-          type="application/ld+json"
-          dangerouslySetInnerHTML={{ __html: JSON.stringify(faqJsonLd) }}
         />
         <script
           type="application/ld+json"
