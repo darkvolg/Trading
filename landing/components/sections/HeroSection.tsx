@@ -58,13 +58,13 @@ export function HeroSection({ t, locale, setLocale, parallaxRef }: HeroSectionPr
 
       {/* Live badge — positioned at top of hero, above candles */}
       <div
-        className="absolute top-8 left-1/2 -translate-x-1/2 z-20 inline-flex items-center gap-2 px-5 py-2.5 rounded-full border border-primary-700/40 bg-primary-900/20 backdrop-blur-xl shadow-lg shadow-black/30"
+        className="absolute top-8 left-1/2 -translate-x-1/2 z-20 inline-flex items-center gap-1.5 sm:gap-2 px-3 sm:px-5 py-2 sm:py-2.5 rounded-full border border-primary-700/40 bg-primary-900/20 backdrop-blur-xl shadow-lg shadow-black/30 max-w-[calc(100vw-2rem)]"
         style={{ animation: "fadeInDown 0.6s ease-out forwards" }}
       >
-        <span className="w-2 h-2 rounded-full bg-primary-400 animate-pulse" />
-        <span className="text-sm font-mono text-primary-100 font-medium">{t.liveSince}</span>
-        <span className="w-px h-3 bg-primary-700/40" />
-        <span className="text-xs font-mono text-primary-200/70">{t.paperVerified}</span>
+        <span className="w-2 h-2 shrink-0 rounded-full bg-primary-400 animate-pulse" />
+        <span className="text-xs sm:text-sm font-mono text-primary-100 font-medium whitespace-nowrap">{t.liveSince}</span>
+        <span className="w-px h-3 bg-primary-700/40 hidden sm:block" />
+        <span className="text-[10px] sm:text-xs font-mono text-primary-200/70 hidden sm:block">{t.paperVerified}</span>
       </div>
 
       <div className="relative text-center max-w-4xl mx-auto z-10">
@@ -85,7 +85,7 @@ export function HeroSection({ t, locale, setLocale, parallaxRef }: HeroSectionPr
         </h1>
 
         <p
-          className="text-lg sm:text-xl md:text-2xl lg:text-3xl text-foreground/80 font-light mb-3 tracking-wide"
+          className="text-base sm:text-xl md:text-2xl lg:text-3xl text-foreground/80 font-light mb-3 tracking-wide px-2"
           style={{ animation: "fadeInUp 0.7s 0.35s cubic-bezier(0.16, 1, 0.3, 1) both" }}
         >
           {t.tagline}{" "}
@@ -93,7 +93,7 @@ export function HeroSection({ t, locale, setLocale, parallaxRef }: HeroSectionPr
         </p>
 
         <p
-          className="text-muted max-w-xl mx-auto mb-10 leading-relaxed text-base md:text-lg"
+          className="text-muted max-w-xl mx-auto mb-10 leading-relaxed text-sm sm:text-base md:text-lg px-2"
           style={{ animation: "fadeInUp 0.7s 0.5s cubic-bezier(0.16, 1, 0.3, 1) both" }}
         >
           {t.heroDesc}
@@ -101,7 +101,7 @@ export function HeroSection({ t, locale, setLocale, parallaxRef }: HeroSectionPr
 
         {/* Quick stats row */}
         <div
-          className="flex items-center justify-center gap-6 md:gap-10 mb-10 text-sm"
+          className="flex items-center justify-center gap-4 sm:gap-6 md:gap-10 mb-10 text-sm"
           style={{ animation: "fadeInUp 0.7s 0.6s cubic-bezier(0.16, 1, 0.3, 1) both" }}
         >
           {[
@@ -109,9 +109,9 @@ export function HeroSection({ t, locale, setLocale, parallaxRef }: HeroSectionPr
             { v: "2.12x", l: t.profitFactor },
             { v: "1.42%", l: t.maxDD },
           ].map(stat => (
-            <div key={stat.l} className="text-center">
-              <div className="font-mono font-bold text-xl text-primary">{stat.v}</div>
-              <div className="text-muted text-xs uppercase tracking-wider mt-0.5">{stat.l}</div>
+            <div key={stat.l} className="text-center min-w-0">
+              <div className="font-mono font-bold text-lg sm:text-xl text-primary">{stat.v}</div>
+              <div className="text-muted text-[10px] sm:text-xs uppercase tracking-wider mt-0.5">{stat.l}</div>
             </div>
           ))}
         </div>
@@ -186,19 +186,19 @@ export function HeroSection({ t, locale, setLocale, parallaxRef }: HeroSectionPr
         </div>
 
         {/* Social proof */}
-        <div className="flex items-center justify-center gap-6 mt-12 opacity-60" style={{ animation: "fadeInUp 0.7s 0.9s cubic-bezier(0.16, 1, 0.3, 1) both" }}>
-          <div className="flex items-center gap-2 text-xs text-muted font-mono">
-            <svg className="w-4 h-4 text-primary" fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M9 12l2 2 4-4m5.618-4.016A11.955 11.955 0 0112 2.944a11.955 11.955 0 01-8.618 3.04A12.02 12.02 0 003 9c0 5.591 3.824 10.29 9 11.622 5.176-1.332 9-6.03 9-11.622 0-1.042-.133-2.052-.382-3.016z" /></svg>
+        <div className="flex flex-wrap items-center justify-center gap-3 sm:gap-6 mt-12 opacity-60 px-2" style={{ animation: "fadeInUp 0.7s 0.9s cubic-bezier(0.16, 1, 0.3, 1) both" }}>
+          <div className="flex items-center gap-1.5 sm:gap-2 text-[10px] sm:text-xs text-muted font-mono">
+            <svg className="w-3.5 h-3.5 sm:w-4 sm:h-4 text-primary shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M9 12l2 2 4-4m5.618-4.016A11.955 11.955 0 0112 2.944a11.955 11.955 0 01-8.618 3.04A12.02 12.02 0 003 9c0 5.591 3.824 10.29 9 11.622 5.176-1.332 9-6.03 9-11.622 0-1.042-.133-2.052-.382-3.016z" /></svg>
             {t.publicTrack}
           </div>
-          <div className="w-px h-4 bg-border/50" />
-          <div className="flex items-center gap-2 text-xs text-muted font-mono">
-            <svg className="w-4 h-4 text-primary" fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M13 10V3L4 14h7v7l9-11h-7z" /></svg>
+          <div className="w-px h-4 bg-border/50 hidden sm:block" />
+          <div className="flex items-center gap-1.5 sm:gap-2 text-[10px] sm:text-xs text-muted font-mono">
+            <svg className="w-3.5 h-3.5 sm:w-4 sm:h-4 text-primary shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M13 10V3L4 14h7v7l9-11h-7z" /></svg>
             {t.algoTrading}
           </div>
-          <div className="w-px h-4 bg-border/50" />
-          <div className="flex items-center gap-2 text-xs text-muted font-mono">
-            <svg className="w-4 h-4 text-primary" fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z" /></svg>
+          <div className="w-px h-4 bg-border/50 hidden sm:block" />
+          <div className="flex items-center gap-1.5 sm:gap-2 text-[10px] sm:text-xs text-muted font-mono">
+            <svg className="w-3.5 h-3.5 sm:w-4 sm:h-4 text-primary shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z" /></svg>
             {t.openSource}
           </div>
         </div>
