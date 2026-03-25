@@ -169,9 +169,9 @@ def fetch_closed_trades(db_path: Path, last_id: int) -> list[dict[str, Any]]:
         conn.row_factory = sqlite3.Row
         cursor = conn.execute(
             """
-            SELECT id, pair, trade_direction, is_short, open_date, close_date,
+            SELECT id, pair, is_short, open_date, close_date,
                    stake_amount, open_rate, close_rate, close_profit,
-                   close_profit_abs, exit_reason, sell_reason, enter_tag,
+                   close_profit_abs, exit_reason, enter_tag,
                    leverage, is_open
             FROM trades
             WHERE id > ? AND is_open = 0 AND close_date IS NOT NULL
@@ -283,7 +283,7 @@ def format_duration(open_date_str: str, close_date_str: str) -> str:
 
 def get_direction(trade: dict[str, Any]) -> str:
     """Determine trade direction string."""
-    direction = trade.get("trade_direction", trade.get("is_short", False))
+    direction = trade.get("is_short", False)
     if isinstance(direction, bool):
         return "SHORT" if direction else "LONG"
     if isinstance(direction, int):

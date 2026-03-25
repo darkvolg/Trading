@@ -161,7 +161,7 @@ def fetch_weekly_trades(db_path: str, week_start: datetime, week_end: datetime) 
             """
             SELECT id, pair, open_date, close_date, open_rate, close_rate,
                    close_profit_abs, close_profit AS profit_ratio,
-                   stake_amount, is_open, trade_duration
+                   stake_amount, is_open
             FROM trades
             WHERE is_open = 0
               AND close_date >= ?
@@ -243,10 +243,7 @@ def compute_weekly_stats(trades: list[dict[str, Any]]) -> dict[str, Any]:
     # Average trade duration
     durations = []
     for t in trades:
-        dur = t.get("trade_duration")
-        if dur is not None and dur > 0:
-            durations.append(dur)  # in minutes
-        elif t.get("open_date") and t.get("close_date"):
+        if t.get("open_date") and t.get("close_date"):
             # Fallback: compute from dates
             try:
                 open_dt = _parse_date(t["open_date"])
