@@ -56,9 +56,9 @@ export function HeroSection({ t, locale, setLocale, parallaxRef }: HeroSectionPr
         />
       </div>
 
-      {/* Live badge — positioned at top of hero, above candles */}
+      {/* Live badge — positioned at top of hero, below nav area on mobile */}
       <div
-        className="absolute top-8 left-1/2 -translate-x-1/2 z-20 inline-flex items-center gap-1.5 sm:gap-2 px-3 sm:px-5 py-2 sm:py-2.5 rounded-full border border-primary-700/40 bg-primary-900/20 backdrop-blur-xl shadow-lg shadow-black/30 max-w-[calc(100vw-2rem)]"
+        className="absolute top-20 sm:top-8 left-1/2 -translate-x-1/2 z-10 sm:z-20 inline-flex items-center gap-1.5 sm:gap-2 px-3 sm:px-5 py-2 sm:py-2.5 rounded-full border border-primary-700/40 bg-primary-900/20 backdrop-blur-xl shadow-lg shadow-black/30 max-w-[calc(100vw-2rem)]"
         style={{ animation: "fadeInDown 0.6s ease-out forwards" }}
       >
         <span className="w-2 h-2 shrink-0 rounded-full bg-primary-400 animate-pulse" />
