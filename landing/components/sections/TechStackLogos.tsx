@@ -22,15 +22,15 @@ export function TechStackLogos({ visible, label }: { visible: boolean; label: st
         <p className={`reveal ${visible ? "visible" : ""} text-center text-muted text-[11px] uppercase tracking-[0.25em] font-mono mb-8`}>
           {label}
         </p>
-        <div className={`reveal reveal-delay-1 ${visible ? "visible" : ""} flex flex-wrap items-center justify-center gap-8 md:gap-14`}>
+        <div className={`reveal reveal-delay-1 ${visible ? "visible" : ""} flex flex-wrap items-center justify-center gap-6 sm:gap-8 md:gap-14`}>
           {stack.map((s, i) => (
-            <div key={s.name} className={`logo-glow-${i} flex items-center gap-2.5 hover:opacity-100 transition-all duration-300 hover:drop-shadow-[0_0_12px_rgba(0,212,170,0.6)] cursor-default group`}>
-              <div className="w-9 h-9 rounded-lg border border-primary/30 bg-primary/5 flex items-center justify-center text-primary/80 group-hover:text-primary group-hover:border-primary/50 group-hover:bg-primary/10 transition-all">
+            <div key={s.name} className={`logo-glow-${i} flex items-center gap-2 sm:gap-2.5 hover:opacity-100 transition-all duration-300 hover:drop-shadow-[0_0_12px_rgba(0,212,170,0.6)] cursor-default group`}>
+              <div className="w-8 h-8 sm:w-9 sm:h-9 rounded-lg border border-primary/30 bg-primary/5 flex items-center justify-center text-primary/80 group-hover:text-primary group-hover:border-primary/50 group-hover:bg-primary/10 transition-all shrink-0">
                 {s.icon}
               </div>
-              <div>
-                <span className="font-mono text-xs text-foreground/90 tracking-wider block leading-tight">{s.name}</span>
-                <span className="text-[10px] text-muted">{s.desc}</span>
+              <div className="min-w-0">
+                <span className="font-mono text-[11px] sm:text-xs text-foreground/90 tracking-wider block leading-tight">{s.name}</span>
+                <span className="text-[10px] sm:text-[11px] text-muted whitespace-nowrap">{s.desc}</span>
               </div>
             </div>
           ))}
