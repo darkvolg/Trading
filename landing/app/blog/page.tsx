@@ -2,8 +2,8 @@ import type { Metadata } from "next";
 import Link from "next/link";
 
 export const metadata: Metadata = {
-  title: "Blog — TrendRider | Crypto Trading Insights",
-  description: "Learn about AI-powered crypto trading, risk management, and signal analysis from the TrendRider team.",
+  title: "Crypto Trading Blog — Strategies & Guides | TrendRider",
+  description: "Proven crypto trading strategies, risk management guides & bot comparisons. Data-backed insights from a 67.9% win rate system. Updated for 2026.",
   alternates: {
     canonical: "https://trendrider.net/blog",
   },

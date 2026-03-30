@@ -1,8 +1,8 @@
 import type { Metadata } from "next";
 
 export const metadata: Metadata = {
-  title: "Funding Rates & Open Interest: The On-Chain Edge — TrendRider Blog",
-  description: "Funding rates and open interest reveal hidden market positioning. Learn to read these on-chain signals and spot squeezes before they happen.",
+  title: "Funding Rates & Open Interest: Predict Squeezes (2026)",
+  description: "Spot short and long squeezes before they happen. Learn to read funding rates + open interest like whales do — with 3 real trade examples.",
   alternates: {
     canonical: "https://trendrider.net/blog/funding-rates-open-interest-trading-signals",
   },
@@ -17,8 +17,8 @@ export default function Article() {
           __html: JSON.stringify({
             "@context": "https://schema.org",
             "@type": "Article",
-            "headline": "Funding Rates & Open Interest: The On-Chain Edge — TrendRider Blog",
-            "description": "Funding rates and open interest reveal hidden market positioning. Learn to read these on-chain signals and spot squeezes before they happen.",
+            "headline": "Funding Rates & Open Interest: Predict Squeezes (2026)",
+            "description": "Spot short and long squeezes before they happen. Learn to read funding rates + open interest like whales do — with 3 real trade examples.",
             "author": {
               "@type": "Person",
               "name": "TrendRider Team",
@@ -52,7 +52,7 @@ export default function Article() {
             "itemListElement": [
               { "@type": "ListItem", "position": 1, "name": "Home", "item": "https://trendrider.net" },
               { "@type": "ListItem", "position": 2, "name": "Blog", "item": "https://trendrider.net/blog" },
-              { "@type": "ListItem", "position": 3, "name": "Funding Rates & Open Interest: The On-Chain Edge — TrendRider Blog" }
+              { "@type": "ListItem", "position": 3, "name": "Funding Rates & Open Interest: Spot Squeezes Early" }
             ]
           })
         }}

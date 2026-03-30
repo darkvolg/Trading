@@ -1,8 +1,8 @@
 import type { Metadata } from "next";
 
 export const metadata: Metadata = {
-  title: "Paper Trading vs Live Trading: When to Go Live — TrendRider Blog",
-  description: "Paper trading vs live trading: learn the 4-phase transition framework, minimum sample sizes, and red flags that mean you are not ready to go live yet.",
+  title: "Paper Trading vs Live: 4-Step Readiness Checklist",
+  description: "Don't go live too early — most traders do. Use our proven 4-phase checklist to know exactly when you're ready. Includes min trade count & red flags.",
   alternates: {
     canonical: "https://trendrider.net/blog/paper-trading-vs-live-trading-when-to-switch",
   },
@@ -17,8 +17,8 @@ export default function Article() {
           __html: JSON.stringify({
             "@context": "https://schema.org",
             "@type": "Article",
-            "headline": "Paper Trading vs Live Trading: When to Go Live — TrendRider Blog",
-            "description": "Paper trading vs live trading: learn the 4-phase transition framework, minimum sample sizes, and red flags that mean you are not ready to go live yet.",
+            "headline": "Paper Trading vs Live: 4-Step Readiness Checklist",
+            "description": "Don't go live too early — most traders do. Use our proven 4-phase checklist to know exactly when you're ready. Includes min trade count & red flags.",
             "author": {
               "@type": "Person",
               "name": "TrendRider Team",
@@ -52,7 +52,7 @@ export default function Article() {
             "itemListElement": [
               { "@type": "ListItem", "position": 1, "name": "Home", "item": "https://trendrider.net" },
               { "@type": "ListItem", "position": 2, "name": "Blog", "item": "https://trendrider.net/blog" },
-              { "@type": "ListItem", "position": 3, "name": "Paper Trading vs Live Trading: When to Go Live — TrendRider Blog" }
+              { "@type": "ListItem", "position": 3, "name": "Paper vs Live Trading: When to Switch (Checklist)" }
             ]
           })
         }}

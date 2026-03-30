@@ -1,8 +1,8 @@
 import type { Metadata } from "next";
 
 export const metadata: Metadata = {
-  title: "Best Crypto Trading Strategies for 2026 — TrendRider Blog",
-  description: "Compare the top crypto trading strategies for 2026: trend following, mean reversion, breakout, and momentum. Learn which algorithmic approach delivers the best risk-adjusted returns.",
+  title: "Best Crypto Trading Strategies 2026: 7 Tested Methods",
+  description: "Compare 7 crypto strategies ranked by 10,000+ backtest trades. See which hit 67.9% win rate and why. Free strategy breakdown with real data inside.",
   alternates: {
     canonical: "https://trendrider.net/blog/best-crypto-trading-strategies-2026",
   },
@@ -17,8 +17,8 @@ export default function Article() {
           __html: JSON.stringify({
             "@context": "https://schema.org",
             "@type": "Article",
-            "headline": "Best Crypto Trading Strategies for 2026 — TrendRider Blog",
-            "description": "Compare the top crypto trading strategies for 2026: trend following, mean reversion, breakout, and momentum. Learn which algorithmic approach delivers the best risk-adjusted returns.",
+            "headline": "Best Crypto Trading Strategies 2026: 7 Tested Methods",
+            "description": "Compare 7 crypto strategies ranked by 10,000+ backtest trades. See which hit 67.9% win rate and why. Free strategy breakdown with real data inside.",
             "author": {
               "@type": "Person",
               "name": "TrendRider Team",
@@ -52,7 +52,7 @@ export default function Article() {
             "itemListElement": [
               { "@type": "ListItem", "position": 1, "name": "Home", "item": "https://trendrider.net" },
               { "@type": "ListItem", "position": 2, "name": "Blog", "item": "https://trendrider.net/blog" },
-              { "@type": "ListItem", "position": 3, "name": "Best Crypto Trading Strategies for 2026 — TrendRider Blog" }
+              { "@type": "ListItem", "position": 3, "name": "7 Best Crypto Trading Strategies for 2026 (Tested)" }
             ]
           })
         }}

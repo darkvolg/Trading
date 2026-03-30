@@ -1,8 +1,8 @@
 import type { Metadata } from "next";
 
 export const metadata: Metadata = {
-  title: "Why AI-Powered Trading Beats Manual — TrendRider Blog",
-  description: "Algorithmic trading removes fear and greed from decisions. Learn why AI-powered crypto signals achieve 67.9% win rate vs emotional manual trading.",
+  title: "Algorithmic vs Manual Trading: 5 Reasons Bots Win",
+  description: "Data proves it: algo trading hits 67.9% win rate vs 45% manual. See 5 evidence-backed reasons bots outperform humans — and how to start automating.",
   alternates: {
     canonical: "https://trendrider.net/blog/why-algorithmic-trading-beats-manual",
   },
@@ -17,8 +17,8 @@ export default function Article() {
           __html: JSON.stringify({
             "@context": "https://schema.org",
             "@type": "Article",
-            "headline": "Why AI-Powered Trading Beats Manual — TrendRider Blog",
-            "description": "Algorithmic trading removes fear and greed from decisions. Learn why AI-powered crypto signals achieve 67.9% win rate vs emotional manual trading.",
+            "headline": "Algorithmic vs Manual Trading: 5 Reasons Bots Win",
+            "description": "Data proves it: algo trading hits 67.9% win rate vs 45% manual. See 5 evidence-backed reasons bots outperform humans — and how to start automating.",
             "author": {
               "@type": "Person",
               "name": "TrendRider Team",
@@ -52,7 +52,7 @@ export default function Article() {
             "itemListElement": [
               { "@type": "ListItem", "position": 1, "name": "Home", "item": "https://trendrider.net" },
               { "@type": "ListItem", "position": 2, "name": "Blog", "item": "https://trendrider.net/blog" },
-              { "@type": "ListItem", "position": 3, "name": "Why AI-Powered Trading Beats Manual — TrendRider Blog" }
+              { "@type": "ListItem", "position": 3, "name": "Algo vs Manual Trading: Why Bots Win (67.9% WR)" }
             ]
           })
         }}

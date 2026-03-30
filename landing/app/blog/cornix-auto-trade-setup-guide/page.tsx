@@ -1,8 +1,8 @@
 import type { Metadata } from "next";
 
 export const metadata: Metadata = {
-  title: "How to Set Up Cornix Auto-Trade with TrendRider Signals — TrendRider Blog",
-  description: "Step-by-step Cornix setup guide: connect to Bybit, Binance, or OKX, configure position sizing, and auto-trade TrendRider crypto signals hands-free.",
+  title: "Cornix Setup Guide: Auto-Trade Crypto in 5 Minutes",
+  description: "Connect Cornix to Bybit or Binance step-by-step. Set up API keys, position sizing & start auto-trading signals hands-free. Complete 2026 guide.",
   alternates: {
     canonical: "https://trendrider.net/blog/cornix-auto-trade-setup-guide",
   },
@@ -17,8 +17,8 @@ export default function Article() {
           __html: JSON.stringify({
             "@context": "https://schema.org",
             "@type": "Article",
-            "headline": "How to Set Up Cornix Auto-Trade with TrendRider Signals — TrendRider Blog",
-            "description": "Step-by-step Cornix setup guide: connect to Bybit, Binance, or OKX, configure position sizing, and auto-trade TrendRider crypto signals hands-free.",
+            "headline": "Cornix Setup Guide: Auto-Trade Crypto in 5 Minutes",
+            "description": "Connect Cornix to Bybit or Binance step-by-step. Set up API keys, position sizing & start auto-trading signals hands-free. Complete 2026 guide.",
             "author": {
               "@type": "Person",
               "name": "TrendRider Team",
@@ -52,7 +52,7 @@ export default function Article() {
             "itemListElement": [
               { "@type": "ListItem", "position": 1, "name": "Home", "item": "https://trendrider.net" },
               { "@type": "ListItem", "position": 2, "name": "Blog", "item": "https://trendrider.net/blog" },
-              { "@type": "ListItem", "position": 3, "name": "How to Set Up Cornix Auto-Trade with TrendRider Signals — TrendRider Blog" }
+              { "@type": "ListItem", "position": 3, "name": "Cornix Auto-Trade Setup: 5-Minute Guide (2026)" }
             ]
           })
         }}

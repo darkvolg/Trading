@@ -1,8 +1,8 @@
 import type { Metadata } from "next";
 
 export const metadata: Metadata = {
-  title: "Fear & Greed Index: How On-Chain Sentiment Drives Crypto Signals — TrendRider Blog",
-  description: "The Crypto Fear & Greed Index measures market sentiment from 0-100. Learn how to combine it with technical analysis for better crypto trading decisions.",
+  title: "Fear & Greed Index Crypto: How to Trade It (2026)",
+  description: "Buy when others panic, sell when they're greedy. Complete guide to the 0-100 Fear & Greed Index — with 3 proven entry strategies and real examples.",
   alternates: {
     canonical: "https://trendrider.net/blog/fear-and-greed-index-crypto-trading",
   },
@@ -17,8 +17,8 @@ export default function Article() {
           __html: JSON.stringify({
             "@context": "https://schema.org",
             "@type": "Article",
-            "headline": "Fear & Greed Index: How On-Chain Sentiment Drives Crypto Signals — TrendRider Blog",
-            "description": "The Crypto Fear & Greed Index measures market sentiment from 0-100. Learn how to combine it with technical analysis for better crypto trading decisions.",
+            "headline": "Fear & Greed Index Crypto: How to Trade It (2026)",
+            "description": "Buy when others panic, sell when they're greedy. Complete guide to the 0-100 Fear & Greed Index — with 3 proven entry strategies and real examples.",
             "author": {
               "@type": "Person",
               "name": "TrendRider Team",
@@ -52,7 +52,7 @@ export default function Article() {
             "itemListElement": [
               { "@type": "ListItem", "position": 1, "name": "Home", "item": "https://trendrider.net" },
               { "@type": "ListItem", "position": 2, "name": "Blog", "item": "https://trendrider.net/blog" },
-              { "@type": "ListItem", "position": 3, "name": "Fear & Greed Index: How On-Chain Sentiment Drives Crypto Signals — TrendRider Blog" }
+              { "@type": "ListItem", "position": 3, "name": "Crypto Fear & Greed Index: Trading Guide (2026)" }
             ]
           })
         }}
