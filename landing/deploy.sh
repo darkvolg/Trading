@@ -7,7 +7,7 @@ set -euo pipefail
 
 DOMAIN="${1:-trendrider.pro}"
 REMOTE_USER="root"
-REMOTE_HOST="144.31.63.133"
+REMOTE_HOST="144.31.135.97"
 REMOTE_PORT="2222"
 REMOTE_DIR="/var/www/$DOMAIN"
 SSH_KEY="~/.ssh/senko-144"
