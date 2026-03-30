@@ -1,8 +1,8 @@
 import type { Metadata } from "next";
 
 export const metadata: Metadata = {
-  title: "The 6% Stop-Loss Rule — TrendRider Blog",
-  description: "Master the 6% stop-loss rule and 2% portfolio risk framework that keeps TrendRider's max drawdown at just 1.42%. Full risk management guide.",
+  title: "6% Stop-Loss Rule: Crypto Risk Management Guide 2026",
+  description: "The proven risk framework behind 1.42% max drawdown. Master the 6% stop-loss and 2% per-trade rules — free calculator and examples included.",
   alternates: {
     canonical: "https://trendrider.net/blog/risk-management-6-percent-stop-loss",
   },
@@ -17,8 +17,8 @@ export default function Article() {
           __html: JSON.stringify({
             "@context": "https://schema.org",
             "@type": "Article",
-            "headline": "The 6% Stop-Loss Rule — TrendRider Blog",
-            "description": "Master the 6% stop-loss rule and 2% portfolio risk framework that keeps TrendRider's max drawdown at just 1.42%. Full risk management guide.",
+            "headline": "6% Stop-Loss Rule: Crypto Risk Management Guide 2026",
+            "description": "The proven risk framework behind 1.42% max drawdown. Master the 6% stop-loss and 2% per-trade rules — free calculator and examples included.",
             "author": {
               "@type": "Person",
               "name": "TrendRider Team",
@@ -52,7 +52,7 @@ export default function Article() {
             "itemListElement": [
               { "@type": "ListItem", "position": 1, "name": "Home", "item": "https://trendrider.net" },
               { "@type": "ListItem", "position": 2, "name": "Blog", "item": "https://trendrider.net/blog" },
-              { "@type": "ListItem", "position": 3, "name": "The 6% Stop-Loss Rule — TrendRider Blog" }
+              { "@type": "ListItem", "position": 3, "name": "6% Stop-Loss Rule: Keep Drawdown Under 2% (Guide)" }
             ]
           })
         }}

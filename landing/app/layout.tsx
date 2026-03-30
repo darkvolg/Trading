@@ -15,9 +15,9 @@ const jetbrainsMono = JetBrains_Mono({
 });
 
 export const metadata: Metadata = {
-  title: "TrendRider — Algorithmic Crypto Trading Signals",
+  title: "Crypto Trading Signals — 67.9% Win Rate | TrendRider",
   description:
-    "AI-powered crypto trading signals with 67.9% win rate, verified on-chain. BTC, ETH, SOL, BNB, DOGE signals delivered via Telegram with Cornix auto-trade support.",
+    "Join 500+ traders getting AI crypto signals for BTC, ETH & SOL. Proven 67.9% win rate, only 1.42% drawdown. Auto-trade on Bybit via Cornix. Start free.",
   keywords: [
     "crypto signals",
     "trading bot",
@@ -39,9 +39,9 @@ export const metadata: Metadata = {
     },
   },
   openGraph: {
-    title: "TrendRider — Algorithmic Crypto Trading Signals",
+    title: "Crypto Trading Signals — 67.9% Win Rate | TrendRider",
     description:
-      "AI-powered crypto signals with 67.9% win rate. Verified results, ultra-low drawdown.",
+      "Join 500+ traders getting AI crypto signals. 67.9% win rate, 1.42% drawdown. Start free on Telegram.",
     type: "website",
     url: "https://trendrider.net",
     siteName: "TrendRider",
@@ -50,9 +50,9 @@ export const metadata: Metadata = {
   },
   twitter: {
     card: "summary_large_image",
-    title: "TrendRider — Algorithmic Crypto Trading Signals",
+    title: "Crypto Trading Signals — 67.9% Win Rate | TrendRider",
     description:
-      "AI-powered crypto signals with 67.9% win rate. Verified results.",
+      "Join 500+ traders getting AI crypto signals. 67.9% win rate, 1.42% drawdown. Start free on Telegram.",
     creator: "@TrendRiderPro",
   },
   other: {

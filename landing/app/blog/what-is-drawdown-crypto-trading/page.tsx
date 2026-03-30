@@ -1,8 +1,8 @@
 import type { Metadata } from "next";
 
 export const metadata: Metadata = {
-  title: "What Is Drawdown in Crypto Trading? How We Keep Ours at 1.42% — TrendRider Blog",
-  description: "Max drawdown explained: why it matters more than profit in crypto trading. Learn how TrendRider maintains a 1.42% drawdown with strict risk management techniques.",
+  title: "Max Drawdown in Crypto: How to Keep It Under 2%",
+  description: "Learn what max drawdown is and why it matters more than profit. See the 3 rules that keep our drawdown at 1.42% — with calculator and examples.",
   alternates: {
     canonical: "https://trendrider.net/blog/what-is-drawdown-crypto-trading",
   },
@@ -17,8 +17,8 @@ export default function Article() {
           __html: JSON.stringify({
             "@context": "https://schema.org",
             "@type": "Article",
-            "headline": "What Is Drawdown in Crypto Trading? How We Keep Ours at 1.42% — TrendRider Blog",
-            "description": "Max drawdown explained: why it matters more than profit in crypto trading. Learn how TrendRider maintains a 1.42% drawdown with strict risk management techniques.",
+            "headline": "Max Drawdown in Crypto: How to Keep It Under 2%",
+            "description": "Learn what max drawdown is and why it matters more than profit. See the 3 rules that keep our drawdown at 1.42% — with calculator and examples.",
             "author": {
               "@type": "Person",
               "name": "TrendRider Team",
@@ -52,7 +52,7 @@ export default function Article() {
             "itemListElement": [
               { "@type": "ListItem", "position": 1, "name": "Home", "item": "https://trendrider.net" },
               { "@type": "ListItem", "position": 2, "name": "Blog", "item": "https://trendrider.net/blog" },
-              { "@type": "ListItem", "position": 3, "name": "What Is Drawdown in Crypto Trading? How We Keep Ours at 1.42% — TrendRider Blog" }
+              { "@type": "ListItem", "position": 3, "name": "Crypto Drawdown Explained: How We Keep It at 1.42%" }
             ]
           })
         }}

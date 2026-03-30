@@ -1,8 +1,8 @@
 import type { Metadata } from "next";
 
 export const metadata: Metadata = {
-  title: "Backtesting Crypto Strategies: Why Historical Data Matters — TrendRider Blog",
-  description: "Learn why backtesting is essential for crypto trading. Understand overfitting pitfalls, SQN scoring, and how TrendRider validates strategies across 200+ historical trades.",
+  title: "Backtesting Crypto Strategies: Step-by-Step 2026 Guide",
+  description: "Backtest crypto strategies without overfitting. 200+ trade validation framework, SQN scoring & 5 pitfalls to avoid. Includes free examples.",
   alternates: {
     canonical: "https://trendrider.net/blog/backtesting-crypto-strategies-guide",
   },
@@ -17,8 +17,8 @@ export default function Article() {
           __html: JSON.stringify({
             "@context": "https://schema.org",
             "@type": "Article",
-            "headline": "Backtesting Crypto Strategies: Why Historical Data Matters — TrendRider Blog",
-            "description": "Learn why backtesting is essential for crypto trading. Understand overfitting pitfalls, SQN scoring, and how TrendRider validates strategies across 200+ historical trades.",
+            "headline": "Backtesting Crypto Strategies: Step-by-Step 2026 Guide",
+            "description": "Backtest crypto strategies without overfitting. 200+ trade validation framework, SQN scoring & 5 pitfalls to avoid. Includes free examples.",
             "author": {
               "@type": "Person",
               "name": "TrendRider Team",
@@ -52,7 +52,7 @@ export default function Article() {
             "itemListElement": [
               { "@type": "ListItem", "position": 1, "name": "Home", "item": "https://trendrider.net" },
               { "@type": "ListItem", "position": 2, "name": "Blog", "item": "https://trendrider.net/blog" },
-              { "@type": "ListItem", "position": 3, "name": "Backtesting Crypto Strategies: Why Historical Data Matters — TrendRider Blog" }
+              { "@type": "ListItem", "position": 3, "name": "Backtesting Crypto Strategies: Complete Guide (2026)" }
             ]
           })
         }}

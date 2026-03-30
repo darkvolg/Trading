@@ -1,8 +1,8 @@
 import type { Metadata } from "next";
 
 export const metadata: Metadata = {
-  title: "Multi-Timeframe Analysis: How to Read Markets on 5m, 15m, 1h, and 4h — TrendRider Blog",
-  description: "Multi-timeframe analysis combines 5m, 15m, 1h, and 4h charts to filter false signals. Learn the confluence method TrendRider uses for 67.9% win rate.",
+  title: "Multi-Timeframe Analysis: Filter 80% False Signals",
+  description: "Combine 5m, 15m, 1h & 4h charts to eliminate bad trades. The exact confluence method behind 67.9% win rate — step-by-step with chart examples.",
   alternates: {
     canonical: "https://trendrider.net/blog/multi-timeframe-analysis-explained",
   },
@@ -17,8 +17,8 @@ export default function Article() {
           __html: JSON.stringify({
             "@context": "https://schema.org",
             "@type": "Article",
-            "headline": "Multi-Timeframe Analysis: How to Read Markets on 5m, 15m, 1h, and 4h — TrendRider Blog",
-            "description": "Multi-timeframe analysis combines 5m, 15m, 1h, and 4h charts to filter false signals. Learn the confluence method TrendRider uses for 67.9% win rate.",
+            "headline": "Multi-Timeframe Analysis: Filter 80% False Signals",
+            "description": "Combine 5m, 15m, 1h & 4h charts to eliminate bad trades. The exact confluence method behind 67.9% win rate — step-by-step with chart examples.",
             "author": {
               "@type": "Person",
               "name": "TrendRider Team",
@@ -52,7 +52,7 @@ export default function Article() {
             "itemListElement": [
               { "@type": "ListItem", "position": 1, "name": "Home", "item": "https://trendrider.net" },
               { "@type": "ListItem", "position": 2, "name": "Blog", "item": "https://trendrider.net/blog" },
-              { "@type": "ListItem", "position": 3, "name": "Multi-Timeframe Analysis: How to Read Markets on 5m, 15m, 1h, and 4h — TrendRider Blog" }
+              { "@type": "ListItem", "position": 3, "name": "Multi-Timeframe Analysis: 4 Charts, 1 Signal (Guide)" }
             ]
           })
         }}

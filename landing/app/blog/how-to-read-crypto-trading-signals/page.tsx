@@ -1,8 +1,8 @@
 import type { Metadata } from "next";
 
 export const metadata: Metadata = {
-  title: "How to Read Crypto Trading Signals: A Complete Beginner's Guide — TrendRider Blog",
-  description: "Learn how to read crypto trading signals like a pro. Understand entry prices, stop-loss, take-profit targets, confidence scores, and common mistakes beginners make.",
+  title: "How to Read Crypto Signals in 5 Minutes (2026 Guide)",
+  description: "Decode entry, stop-loss & take-profit like a pro. Avoid 3 costly beginner mistakes — includes real signal examples and a free cheat sheet to download.",
   alternates: {
     canonical: "https://trendrider.net/blog/how-to-read-crypto-trading-signals",
   },
@@ -17,8 +17,8 @@ export default function Article() {
           __html: JSON.stringify({
             "@context": "https://schema.org",
             "@type": "Article",
-            "headline": "How to Read Crypto Trading Signals: A Complete Beginner's Guide — TrendRider Blog",
-            "description": "Learn how to read crypto trading signals like a pro. Understand entry prices, stop-loss, take-profit targets, confidence scores, and common mistakes beginners make.",
+            "headline": "How to Read Crypto Signals in 5 Minutes (2026 Guide)",
+            "description": "Decode entry, stop-loss & take-profit like a pro. Avoid 3 costly beginner mistakes — includes real signal examples and a free cheat sheet to download.",
             "author": {
               "@type": "Person",
               "name": "TrendRider Team",
@@ -52,7 +52,7 @@ export default function Article() {
             "itemListElement": [
               { "@type": "ListItem", "position": 1, "name": "Home", "item": "https://trendrider.net" },
               { "@type": "ListItem", "position": 2, "name": "Blog", "item": "https://trendrider.net/blog" },
-              { "@type": "ListItem", "position": 3, "name": "How to Read Crypto Trading Signals: A Complete Beginner's Guide — TrendRider Blog" }
+              { "@type": "ListItem", "position": 3, "name": "How to Read Crypto Signals: Beginner's Guide (2026)" }
             ]
           })
         }}

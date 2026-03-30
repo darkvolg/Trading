@@ -1,8 +1,8 @@
 import type { Metadata } from "next";
 
 export const metadata: Metadata = {
-  title: "Understanding Win Rate & Profit Factor — TrendRider Blog",
-  description: "Win rate alone is misleading. Learn how profit factor, drawdown, and SQN score reveal true trading system quality with real examples.",
+  title: "Win Rate vs Profit Factor: 3 Metrics That Matter (2026)",
+  description: "A 90% win rate can still lose money. Discover the 3 metrics that reveal true system quality — profit factor, drawdown & SQN — with real trade data.",
   alternates: {
     canonical: "https://trendrider.net/blog/understanding-win-rate-and-profit-factor",
   },
@@ -17,8 +17,8 @@ export default function Article() {
           __html: JSON.stringify({
             "@context": "https://schema.org",
             "@type": "Article",
-            "headline": "Understanding Win Rate & Profit Factor — TrendRider Blog",
-            "description": "Win rate alone is misleading. Learn how profit factor, drawdown, and SQN score reveal true trading system quality with real examples.",
+            "headline": "Win Rate vs Profit Factor: 3 Metrics That Matter (2026)",
+            "description": "A 90% win rate can still lose money. Discover the 3 metrics that reveal true system quality — profit factor, drawdown & SQN — with real trade data.",
             "author": {
               "@type": "Person",
               "name": "TrendRider Team",
@@ -52,7 +52,7 @@ export default function Article() {
             "itemListElement": [
               { "@type": "ListItem", "position": 1, "name": "Home", "item": "https://trendrider.net" },
               { "@type": "ListItem", "position": 2, "name": "Blog", "item": "https://trendrider.net/blog" },
-              { "@type": "ListItem", "position": 3, "name": "Understanding Win Rate & Profit Factor — TrendRider Blog" }
+              { "@type": "ListItem", "position": 3, "name": "Win Rate & Profit Factor: What Really Matters (2026)" }
             ]
           })
         }}

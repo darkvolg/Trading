@@ -1,8 +1,8 @@
 import type { Metadata } from "next";
 
 export const metadata: Metadata = {
-  title: "Freqtrade vs 3Commas vs Cornix: Which Trading Bot Is Right for You? — TrendRider Blog",
-  description: "Compare Freqtrade, 3Commas, and Cornix side by side. Features, pricing, customizability, and why we chose Freqtrade for algorithmic crypto trading.",
+  title: "Freqtrade vs 3Commas vs Cornix 2026: Best Bot Compared",
+  description: "Honest side-by-side comparison of 3 top crypto bots. Features, pricing & real performance data. Find which bot fits your strategy in 5 minutes.",
   alternates: {
     canonical: "https://trendrider.net/blog/freqtrade-vs-3commas-vs-cornix",
   },
@@ -17,8 +17,8 @@ export default function Article() {
           __html: JSON.stringify({
             "@context": "https://schema.org",
             "@type": "Article",
-            "headline": "Freqtrade vs 3Commas vs Cornix: Which Trading Bot Is Right for You? — TrendRider Blog",
-            "description": "Compare Freqtrade, 3Commas, and Cornix side by side. Features, pricing, customizability, and why we chose Freqtrade for algorithmic crypto trading.",
+            "headline": "Freqtrade vs 3Commas vs Cornix 2026: Best Bot Compared",
+            "description": "Honest side-by-side comparison of 3 top crypto bots. Features, pricing & real performance data. Find which bot fits your strategy in 5 minutes.",
             "author": {
               "@type": "Person",
               "name": "TrendRider Team",
@@ -52,7 +52,7 @@ export default function Article() {
             "itemListElement": [
               { "@type": "ListItem", "position": 1, "name": "Home", "item": "https://trendrider.net" },
               { "@type": "ListItem", "position": 2, "name": "Blog", "item": "https://trendrider.net/blog" },
-              { "@type": "ListItem", "position": 3, "name": "Freqtrade vs 3Commas vs Cornix: Which Trading Bot Is Right for You? — TrendRider Blog" }
+              { "@type": "ListItem", "position": 3, "name": "Freqtrade vs 3Commas vs Cornix: Honest Comparison" }
             ]
           })
         }}

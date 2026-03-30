@@ -1,8 +1,8 @@
 import type { Metadata } from "next";
 
 export const metadata: Metadata = {
-  title: "What Is SQN Score? Understanding System Quality Number — TrendRider Blog",
-  description: "SQN (System Quality Number) by Van Tharp rates trading systems. Learn the formula, score ranges, and why TrendRider's SQN of 3.45 ranks Excellent.",
+  title: "SQN Score Explained: Rate Your Trading System (2026)",
+  description: "Is your strategy excellent or garbage? SQN reveals it in seconds. Learn the formula, score ranges & why our 3.45 SQN = Excellent. Free calculator.",
   alternates: {
     canonical: "https://trendrider.net/blog/what-is-sqn-score-system-quality-number",
   },
@@ -17,8 +17,8 @@ export default function Article() {
           __html: JSON.stringify({
             "@context": "https://schema.org",
             "@type": "Article",
-            "headline": "What Is SQN Score? Understanding System Quality Number — TrendRider Blog",
-            "description": "SQN (System Quality Number) by Van Tharp rates trading systems. Learn the formula, score ranges, and why TrendRider's SQN of 3.45 ranks Excellent.",
+            "headline": "SQN Score Explained: Rate Your Trading System (2026)",
+            "description": "Is your strategy excellent or garbage? SQN reveals it in seconds. Learn the formula, score ranges & why our 3.45 SQN = Excellent. Free calculator.",
             "author": {
               "@type": "Person",
               "name": "TrendRider Team",
@@ -52,7 +52,7 @@ export default function Article() {
             "itemListElement": [
               { "@type": "ListItem", "position": 1, "name": "Home", "item": "https://trendrider.net" },
               { "@type": "ListItem", "position": 2, "name": "Blog", "item": "https://trendrider.net/blog" },
-              { "@type": "ListItem", "position": 3, "name": "What Is SQN Score? Understanding System Quality Number — TrendRider Blog" }
+              { "@type": "ListItem", "position": 3, "name": "SQN Score Explained: Rate Any Trading System (2026)" }
             ]
           })
         }}

@@ -1,8 +1,8 @@
 import type { Metadata } from "next";
 
 export const metadata: Metadata = {
-  title: "Position Sizing & Risk Per Trade: The 2% Rule — TrendRider Blog",
-  description: "The 2% rule is a survival mechanism, not a suggestion. Learn the position sizing formula, common mistakes, and how to size trades by account size.",
+  title: "Position Sizing Formula: The 2% Rule Explained (2026)",
+  description: "Risk over 2% per trade? You'll blow your account. Get the exact position sizing formula by account size — free calculator and 3 worked examples.",
   alternates: {
     canonical: "https://trendrider.net/blog/position-sizing-and-risk-per-trade",
   },
@@ -17,8 +17,8 @@ export default function Article() {
           __html: JSON.stringify({
             "@context": "https://schema.org",
             "@type": "Article",
-            "headline": "Position Sizing & Risk Per Trade: The 2% Rule — TrendRider Blog",
-            "description": "The 2% rule is a survival mechanism, not a suggestion. Learn the position sizing formula, common mistakes, and how to size trades by account size.",
+            "headline": "Position Sizing Formula: The 2% Rule Explained (2026)",
+            "description": "Risk over 2% per trade? You'll blow your account. Get the exact position sizing formula by account size — free calculator and 3 worked examples.",
             "author": {
               "@type": "Person",
               "name": "TrendRider Team",
@@ -52,7 +52,7 @@ export default function Article() {
             "itemListElement": [
               { "@type": "ListItem", "position": 1, "name": "Home", "item": "https://trendrider.net" },
               { "@type": "ListItem", "position": 2, "name": "Blog", "item": "https://trendrider.net/blog" },
-              { "@type": "ListItem", "position": 3, "name": "Position Sizing & Risk Per Trade: The 2% Rule — TrendRider Blog" }
+              { "@type": "ListItem", "position": 3, "name": "Position Sizing: The 2% Rule That Saves Accounts" }
             ]
           })
         }}
