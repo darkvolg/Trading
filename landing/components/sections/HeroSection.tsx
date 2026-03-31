@@ -69,7 +69,7 @@ export function HeroSection({ t, locale, setLocale, parallaxRef }: HeroSectionPr
 
       <div className="relative text-center max-w-4xl mx-auto z-10">
         {/* Headline — animated letter reveal */}
-        <h1 className="text-3xl sm:text-4xl md:text-6xl lg:text-8xl font-bold tracking-tight mb-4"
+        <h1 className="text-[1.75rem] sm:text-4xl md:text-6xl lg:text-8xl font-bold tracking-tight mb-4 mt-6 sm:mt-0"
           style={{ animation: "fadeInUp 0.7s 0.2s cubic-bezier(0.16, 1, 0.3, 1) both" }}>
           {"TrendRider".split("").map((letter, i) => (
             <span

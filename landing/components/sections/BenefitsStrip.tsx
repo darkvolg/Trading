@@ -24,10 +24,10 @@ export function BenefitsStrip({ t, visible }: { t: TStrings; visible: boolean })
     ), label: t.benefit4 },
   ];
   return (
-    <div className={`reveal ${visible ? "visible" : ""} flex flex-wrap items-center justify-center gap-6 md:gap-10 py-8`}>
+    <div className={`reveal ${visible ? "visible" : ""} grid grid-cols-2 gap-4 sm:flex sm:flex-wrap sm:items-center sm:justify-center sm:gap-6 md:gap-10 py-8 max-w-xs sm:max-w-none mx-auto`}>
       {benefits.map((b, i) => (
         <div key={i} className="flex items-center gap-2 text-primary/80">
-          <div className="w-9 h-9 rounded-full bg-primary/10 flex items-center justify-center">
+          <div className="w-9 h-9 rounded-full bg-primary/10 flex items-center justify-center shrink-0">
             {b.icon}
           </div>
           <span className="text-sm font-medium text-foreground/70">{b.label}</span>

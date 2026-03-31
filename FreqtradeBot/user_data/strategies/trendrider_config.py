@@ -53,6 +53,9 @@ SETUP_NAMES = {
     "trend_pullback": "Trend Pullback",
     "ema50_bounce": "EMA50 Bounce",
     "rsi_bounce": "RSI Oversold Bounce",
+    "ema_crossover": "EMA Crossover",
+    "bb_bounce": "Bollinger Bounce",
+    "macd_reversal": "MACD Reversal",
 }
 
 # --- Bybit Affiliate ---
@@ -69,4 +72,5 @@ EXIT_REASONS = {
     "ema_bearish_cross": "EMA bearish crossover",
     "trend_broken": "Trend broken (below EMA200)",
     "force_exit": "Force exit",
+    "time_exit_24h": "Time exit (24h, low profit)",
 }
