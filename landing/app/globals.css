@@ -87,11 +87,11 @@ body {
   50%      { opacity: 1; filter: drop-shadow(0 0 12px rgba(0, 212, 170, 0.5)); }
 }
 
-.logo-glow-0 { animation: logo-breathe 3s ease-in-out infinite; animation-delay: 0s; will-change: opacity, filter; }
-.logo-glow-1 { animation: logo-breathe 3s ease-in-out infinite; animation-delay: 0.6s; will-change: opacity, filter; }
-.logo-glow-2 { animation: logo-breathe 3s ease-in-out infinite; animation-delay: 1.2s; will-change: opacity, filter; }
-.logo-glow-3 { animation: logo-breathe 3s ease-in-out infinite; animation-delay: 1.8s; will-change: opacity, filter; }
-.logo-glow-4 { animation: logo-breathe 3s ease-in-out infinite; animation-delay: 2.4s; will-change: opacity, filter; }
+.logo-glow-0 { animation: logo-breathe 3s ease-in-out infinite; animation-delay: 0s; }
+.logo-glow-1 { animation: logo-breathe 3s ease-in-out infinite; animation-delay: 0.6s; }
+.logo-glow-2 { animation: logo-breathe 3s ease-in-out infinite; animation-delay: 1.2s; }
+.logo-glow-3 { animation: logo-breathe 3s ease-in-out infinite; animation-delay: 1.8s; }
+.logo-glow-4 { animation: logo-breathe 3s ease-in-out infinite; animation-delay: 2.4s; }
 
 @keyframes shimmer {
   0%   { background-position: -200% 0; }
@@ -118,7 +118,6 @@ body {
 
 .candle-group {
   --glow-filter: none;
-  will-change: opacity;
 }
 
 @keyframes chartLine {
@@ -200,12 +199,10 @@ body {
 
 .animate-pulse-glow {
   animation: pulse-glow 3s ease-in-out infinite;
-  will-change: box-shadow;
 }
 
 .animate-pulse-glow-gold {
   animation: pulse-glow-gold 3s ease-in-out infinite;
-  will-change: box-shadow;
 }
 
 /* ─── Scroll reveal ─── */
@@ -651,7 +648,6 @@ html.light .btn-primary {
 .chart-candle {
   animation: candleRise 0.8s ease-out forwards;
   transform-origin: bottom;
-  will-change: opacity;
 }
 
 /* ─── Scroll progress line ─── */
@@ -695,9 +691,9 @@ html.light .scroll-line {
   50% { transform: translate(35px, 35px) scale(1.15); }
 }
 
-.animate-orb-1 { animation: orbFloat1 15s ease-in-out infinite; contain: strict; will-change: transform; }
-.animate-orb-2 { animation: orbFloat2 20s ease-in-out infinite; contain: strict; will-change: transform; }
-.animate-orb-3 { animation: orbFloat3 12s ease-in-out infinite; contain: strict; will-change: transform; }
+.animate-orb-1 { animation: orbFloat1 15s ease-in-out infinite; contain: layout style; }
+.animate-orb-2 { animation: orbFloat2 20s ease-in-out infinite; contain: layout style; }
+.animate-orb-3 { animation: orbFloat3 12s ease-in-out infinite; contain: layout style; }
 
 /* ─── Scan line animation ─── */
 
@@ -710,14 +706,18 @@ html.light .scroll-line {
 
 .scan-line-animate {
   animation: scanLine 16s ease-in-out infinite;
-  will-change: top, opacity;
 }
 
 /* ─── Performance optimizations ─── */
 
-/* GPU hints only for actively animated elements */
+/* GPU hint only for the continuously-animated marquee */
 .marquee-track {
   will-change: transform;
+}
+
+/* Content containment for below-fold sections — reduces layout thrashing */
+section {
+  contain: layout style;
 }
 
 /* ─── Pricing card hover ─── */
@@ -821,11 +821,9 @@ button:focus-visible, a:focus-visible, [role="button"]:focus-visible {
   .chart-candle, .typing-dot, .word-reveal {
     animation: none !important;
   }
-  /* Remove will-change hints when animations are off */
-  .animate-orb-1, .animate-orb-2, .animate-orb-3,
-  .scan-line-animate, .chart-candle, .candle-group,
-  .logo-glow-0, .logo-glow-1, .logo-glow-2, .logo-glow-3, .logo-glow-4 {
-    will-change: auto !important;
+  /* Remove containment hints when animations are off */
+  .animate-orb-1, .animate-orb-2, .animate-orb-3 {
+    contain: none !important;
   }
 }
 
