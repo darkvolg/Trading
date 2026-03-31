@@ -655,6 +655,16 @@
       "date": "2026-04-10",
       "id": "twitter_first_review",
       "text": "Ревью первых 10 дней Twitter: какие категории постов лучше заходят, лучшее время, рост подписчиков. Скорректируй стратегию."
+    },
+    {
+      "recurring": "tuesday",
+      "id": "devto_article",
+      "text": "📝 Пора писать статью на Dev.to!\nЗайди в Claude Code и скажи: «напиши и опубликуй статью на Dev.to».\nЦель: 1 статья в неделю, 800-1200 слов.\n\nНаш аккаунт: https://dev.to/trendrider (3 статьи опубликованы)"
+    },
+    {
+      "recurring": "sunday",
+      "id": "weekly_platform_digest",
+      "text": "📊 ЕЖЕНЕДЕЛЬНЫЙ ДАЙДЖЕСТ — проверь все площадки:\n\n🔍 Google: https://search.google.com/search-console\n📰 Dev.to: https://dev.to/trendrider\n🐦 Twitter: https://x.com/home\n🤖 Reddit: https://reddit.com/u/TrendRiderPro\n🚀 Product Hunt: https://producthunt.com/posts/trendrider\n📊 Google Sheets: https://docs.google.com/spreadsheets/d/1ZWRJ0PcBSk910MZv426PrleriBnInykr3OebWXJPm-g\n🌐 Сайт: https://trendrider.net\n\nЗайди в Claude Code и скажи: «проверь статистику всех площадок» — я соберу все цифры."
     }
   ]
 }
