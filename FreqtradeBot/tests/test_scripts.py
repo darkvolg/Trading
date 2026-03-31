@@ -53,13 +53,22 @@ if "google.oauth2.service_account" not in sys.modules:
 
 @pytest.fixture
 def sample_trades():
-    """List of trade dicts resembling Freqtrade SQLite rows."""
+    """List of trade dicts resembling Freqtrade SQLite rows.
+
+    Uses relative dates (within the last 10 days) so the trades always fall
+    inside the 30-day rolling window used by query_stats.
+    """
+    now = datetime.now(timezone.utc)
+    day1 = (now - timedelta(days=10)).strftime("%Y-%m-%d")
+    day2 = (now - timedelta(days=8)).strftime("%Y-%m-%d")
+    day3 = (now - timedelta(days=5)).strftime("%Y-%m-%d")
+
     return [
         {
             "id": 1,
             "pair": "BTC/USDT:USDT",
-            "open_date": "2026-03-01 10:00:00",
-            "close_date": "2026-03-01 14:30:00",
+            "open_date": f"{day1} 10:00:00",
+            "close_date": f"{day1} 14:30:00",
             "open_rate": 64000.0,
             "close_rate": 65920.0,
             "profit_ratio": 0.03,
@@ -74,8 +83,8 @@ def sample_trades():
         {
             "id": 2,
             "pair": "ETH/USDT:USDT",
-            "open_date": "2026-03-02 08:00:00",
-            "close_date": "2026-03-02 20:00:00",
+            "open_date": f"{day2} 08:00:00",
+            "close_date": f"{day2} 20:00:00",
             "open_rate": 3500.0,
             "close_rate": 3430.0,
             "profit_ratio": -0.02,
@@ -90,8 +99,8 @@ def sample_trades():
         {
             "id": 3,
             "pair": "SOL/USDT:USDT",
-            "open_date": "2026-03-05 12:00:00",
-            "close_date": "2026-03-05 18:00:00",
+            "open_date": f"{day3} 12:00:00",
+            "close_date": f"{day3} 18:00:00",
             "open_rate": 140.0,
             "close_rate": 147.0,
             "profit_ratio": 0.05,
@@ -830,27 +839,27 @@ class TestFridayRecapFormatDateRange:
 class TestMonthlyReportComputeStreaks:
     def test_all_wins(self):
         from monthly_report import compute_streaks
-        w, l = compute_streaks([0.05, 0.03, 0.01])
-        assert w == 3
-        assert l == 0
+        wins, losses = compute_streaks([0.05, 0.03, 0.01])
+        assert wins == 3
+        assert losses == 0
 
     def test_all_losses(self):
         from monthly_report import compute_streaks
-        w, l = compute_streaks([-0.02, -0.01, -0.03])
-        assert w == 0
-        assert l == 3
+        wins, losses = compute_streaks([-0.02, -0.01, -0.03])
+        assert wins == 0
+        assert losses == 3
 
     def test_mixed(self):
         from monthly_report import compute_streaks
-        w, l = compute_streaks([0.05, 0.03, -0.02, -0.01, 0.04])
-        assert w == 2
-        assert l == 2
+        wins, losses = compute_streaks([0.05, 0.03, -0.02, -0.01, 0.04])
+        assert wins == 2
+        assert losses == 2
 
     def test_empty(self):
         from monthly_report import compute_streaks
-        w, l = compute_streaks([])
-        assert w == 0
-        assert l == 0
+        wins, losses = compute_streaks([])
+        assert wins == 0
+        assert losses == 0
 
 
 class TestMonthlyReportFormatDuration:

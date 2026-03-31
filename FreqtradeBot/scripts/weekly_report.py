@@ -434,7 +434,7 @@ def format_weekly_message(
 
     lines += [
         "",
-        f"\U0001f4ca All-Time Stats:",
+        "\U0001f4ca All-Time Stats:",
         f"\U0001f3c6 {alltime['win_rate']:.1f}% Win Rate | {alltime['total_trades']} Trades",
         f"\U0001f4b0 Total: {alltime_sign}{alltime['total_profit_pct']:.1f}%",
         "",

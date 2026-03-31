@@ -181,7 +181,7 @@ def generate_strategy_card(
 
     sorted_pairs = sorted(pairs.items(), key=lambda x: x[1], reverse=True)
     max_val = max(abs(v) for v in pairs.values()) if pairs else 1
-    bar_area_w = WIDTH - PADDING * 2 - 260  # space for label + value
+    WIDTH - PADDING * 2 - 260  # space for label + value
 
     for pair_name, pct in sorted_pairs:
         color = PRIMARY if pct >= 0 else DANGER

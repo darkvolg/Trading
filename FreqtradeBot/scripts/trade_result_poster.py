@@ -283,6 +283,12 @@ def format_duration(open_date_str: str, close_date_str: str) -> str:
 
 def get_direction(trade: dict[str, Any]) -> str:
     """Determine trade direction string."""
+    # Check trade_direction first (e.g. from API / signal data)
+    trade_dir = trade.get("trade_direction")
+    if isinstance(trade_dir, str) and trade_dir:
+        return trade_dir.upper()
+
+    # Fallback to is_short flag (from SQLite)
     direction = trade.get("is_short", False)
     if isinstance(direction, bool):
         return "SHORT" if direction else "LONG"
@@ -379,7 +385,7 @@ def format_trade_result(
     if stats.get("total_trades", 0) > 0:
         wr = stats["win_rate"]
         w = stats["wins"]
-        l = stats["losses"]
+        losses = stats["losses"]
         tp = stats["total_profit_pct"]
         tp_prefix = "+" if tp >= 0 else ""
 
@@ -388,7 +394,7 @@ def format_trade_result(
             f"\U0001f4ca *Running Stats ({STATS_PERIOD_DAYS}d):*"
         )
         lines.append(
-            f"\U0001f3c6 Win Rate: {wr:.1f}% | \U0001f4c8 {w}W / {l}L"
+            f"\U0001f3c6 Win Rate: {wr:.1f}% | \U0001f4c8 {w}W / {losses}L"
         )
         lines.append(
             f"\U0001f4b0 Total: {tp_prefix}{tp:.1f}%"
@@ -398,8 +404,8 @@ def format_trade_result(
 
     # CTA footer
     lines.append("")
-    lines.append(f"\U0001f680 Get real-time signals first!")
-    lines.append(f"\U0001f449 @TrendRiderSignals")
+    lines.append("\U0001f680 Get real-time signals first!")
+    lines.append("\U0001f449 @TrendRiderSignals")
     lines.append(f"\U0001f4c8 [Trade on Bybit]({BYBIT_REFERRAL_LINK})")
 
     return "\n".join(lines)

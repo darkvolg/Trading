@@ -245,7 +245,7 @@ class TestPopulateIndicators:
         df = self._run(strategy, ohlcv_df, metadata)
         # macdhist_prev should equal macdhist shifted by 1
         hist = df["macdhist"].dropna()
-        prev = df["macdhist_prev"].dropna()
+        df["macdhist_prev"].dropna()
         # The last value of prev equals the second-to-last value of hist
         if len(hist) > 2:
             assert abs(df["macdhist_prev"].iloc[-1] - df["macdhist"].iloc[-2]) < 1e-9
@@ -681,7 +681,7 @@ class TestPopulateExitTrend:
 
     def test_rsi_overbought_does_not_trigger_below_threshold(self, strategy, ohlcv_df, metadata):
         df = self._prep(strategy, ohlcv_df, metadata)
-        idx = len(df) - 2
+        len(df) - 2
         rsi_col = f"rsi_{strategy.rsi_period.value}"
         df[rsi_col] = 50.0  # well below exit threshold
         df = self._run(strategy, df, metadata)

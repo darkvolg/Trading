@@ -26,7 +26,7 @@ class TestAlertsDBCreation:
     def test_string_config_path(self, tmp_path):
         """Config with string path should also work."""
         config = {"user_data_dir": str(tmp_path)}
-        db = AlertsDB(config)
+        AlertsDB(config)
         assert (tmp_path / "price_alerts.db").exists()
 
 
