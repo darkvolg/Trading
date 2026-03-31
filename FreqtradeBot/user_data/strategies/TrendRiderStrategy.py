@@ -385,8 +385,6 @@ class TrendRiderStrategy(IStrategy):
 
     def populate_entry_trend(self, dataframe: DataFrame, metadata: dict) -> DataFrame:
         rsi = f"rsi_{self.rsi_period.value}"
-        ema_fast = f"ema_{self.ema_fast.value}"
-        ema_slow = f"ema_{self.ema_slow.value}"
 
         # ========== LONG ENTRIES ==========
 

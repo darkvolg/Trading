@@ -220,7 +220,7 @@ def calculate_metrics(trades: list[dict]) -> dict:
     ratios = [t["profit_ratio"] or 0 for t in trades]
 
     wins = sum(1 for r in ratios if r > 0)
-    losses = total - wins
+    total - wins
     win_rate = (wins / total) * 100 if total else 0
 
     total_pnl_usdt = sum(profits)

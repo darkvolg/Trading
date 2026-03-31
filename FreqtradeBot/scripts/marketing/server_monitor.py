@@ -446,7 +446,6 @@ def run_daily_report(server_key: str) -> None:
     log.info("Generating daily health report from %s", checker_server["name"])
 
     # Run ALL checks (both servers' perspectives merged)
-    all_checks = []
     # Senko checks
     senko_checks = [
         {"target": "senko", "type": "http", "url": "https://trendrider.net", "label": "HTTPS trendrider.net"},
