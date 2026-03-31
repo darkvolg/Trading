@@ -130,6 +130,22 @@ const posts = [
     readTime: "5 min read",
     tag: "Risk Management",
   },
+  {
+    slug: "crypto-trading-signals-telegram-guide",
+    title: "Crypto Trading Signals on Telegram: Complete Guide 2026",
+    excerpt: "Learn how to find, evaluate, and use crypto trading signals on Telegram. Compare free vs paid signal groups, spot scams, and automate signal execution.",
+    date: "March 31, 2026",
+    readTime: "12 min read",
+    tag: "Signals",
+  },
+  {
+    slug: "automated-crypto-portfolio-management",
+    title: "Automated Crypto Portfolio Management: Tools & Strategies 2026",
+    excerpt: "Discover how to automate your crypto portfolio with rebalancing bots, algorithmic trading, and risk management tools. Compare top platforms and strategies.",
+    date: "March 31, 2026",
+    readTime: "14 min read",
+    tag: "Portfolio",
+  },
 ];
 
 export default function BlogPage() {
