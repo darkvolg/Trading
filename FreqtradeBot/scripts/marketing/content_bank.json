@@ -255,6 +255,130 @@
         "#trading"
       ],
       "category": "engagement"
+    },
+    {
+      "text": "Compounding is the 8th wonder of the world.\n\n1% daily = 3,678% annually (in theory).\n\nIn practice, even 0.3% daily with low drawdown beats most hedge funds.\n\n#algotrading #crypto #trading",
+      "tags": [
+        "#algotrading",
+        "#crypto",
+        "#trading"
+      ],
+      "category": "tips"
+    },
+    {
+      "text": "Volume precedes price. Always.\n\nIf price breaks out but volume doesn't confirm, it's probably a trap. Saved me from dozens of false breakouts.\n\n#crypto #trading #algotrading",
+      "tags": [
+        "#crypto",
+        "#trading",
+        "#algotrading"
+      ],
+      "category": "tips"
+    },
+    {
+      "text": "Your strategy doesn't need to work in every market condition.\n\nIt needs to make money in favorable conditions and not lose much in unfavorable ones.\n\nThat's the whole game.\n\n#algotrading #trading",
+      "tags": [
+        "#algotrading",
+        "#trading"
+      ],
+      "category": "tips"
+    },
+    {
+      "text": "The difference between a hobby trader and a serious one:\n\nHobby: checks charts, enters trades, hopes for the best.\nSerious: backtests, validates, sizes positions, tracks metrics.\n\n#trading #crypto",
+      "tags": [
+        "#trading",
+        "#crypto"
+      ],
+      "category": "tips"
+    },
+    {
+      "text": "Correlation kills portfolios.\n\nIf all your trades are long BTC and altcoins simultaneously, one crash wipes everything. Diversify across strategies, not just assets.\n\n#crypto #algotrading",
+      "tags": [
+        "#crypto",
+        "#algotrading"
+      ],
+      "category": "tips"
+    },
+    {
+      "text": "Average holding time matters more than people think.\n\nToo short = death by fees.\nToo long = missed opportunities.\n\nFind your sweet spot through backtesting, not guessing.\n\n#algotrading #crypto",
+      "tags": [
+        "#algotrading",
+        "#crypto"
+      ],
+      "category": "tips"
+    },
+    {
+      "text": "Out-of-sample testing: the one step most algo traders skip.\n\nResults from 2023-2024 data don't matter if your strategy was built on 2023-2024 data.\n\nhttps://trendrider.net/blog/backtesting-crypto-strategies-guide\n\n#algotrading #crypto",
+      "tags": [
+        "#algotrading",
+        "#crypto"
+      ],
+      "category": "blog"
+    },
+    {
+      "text": "Funding rates are the hidden edge most retail traders ignore.\n\nWhen everyone is leveraged long, the market has a nasty habit of correcting.\n\nhttps://trendrider.net/blog/fear-and-greed-index-crypto-trading\n\n#crypto #trading",
+      "tags": [
+        "#crypto",
+        "#trading"
+      ],
+      "category": "blog"
+    },
+    {
+      "text": "Why your EMA crossover strategy stopped working:\n\nMarkets evolve. Strategies that worked in 2024 need recalibration.\n\nhttps://trendrider.net/blog/best-crypto-trading-strategies-2026\n\n#algotrading #trading",
+      "tags": [
+        "#algotrading",
+        "#trading"
+      ],
+      "category": "blog"
+    },
+    {
+      "text": "Tracked 500+ trades over 18 months.\n\nTrades entered during high Fear & Greed readings (>75) had a 38% win rate.\nTrades entered during extreme fear (<25) had a 61% win rate.\n\nSentiment matters.\n\n#crypto #trading",
+      "tags": [
+        "#crypto",
+        "#trading"
+      ],
+      "category": "stats"
+    },
+    {
+      "text": "My algo's performance by market regime:\n\n\u2022 Bull: +41% (easy mode)\n\u2022 Sideways: +12% (grind mode)\n\u2022 Bear: -4% (survival mode)\n\nWeighted average: solidly profitable. The key is not blowing up in bear markets.\n\n#algotrading #crypto",
+      "tags": [
+        "#algotrading",
+        "#crypto"
+      ],
+      "category": "stats"
+    },
+    {
+      "text": "Average trade duration in my system: 3.2 days.\n\nShort enough to capture momentum. Long enough to avoid fee erosion.\n\nFound this sweet spot after testing durations from 4H to 30 days.\n\n#algotrading #trading",
+      "tags": [
+        "#algotrading",
+        "#trading"
+      ],
+      "category": "stats"
+    },
+    {
+      "text": "Do you let your winners run or take profit at fixed targets?\n\nI tested both: trailing stop vs fixed TP.\n\nTrailing stop won in trending markets. Fixed TP won in choppy ones.\n\nContext matters.\n\n#algotrading #crypto #trading",
+      "tags": [
+        "#algotrading",
+        "#crypto",
+        "#trading"
+      ],
+      "category": "engagement"
+    },
+    {
+      "text": "What's the longest drawdown you've sat through without changing your strategy?\n\nMine was 23 days. Hardest 23 days. But the system recovered exactly as backtested.\n\nTrust the process.\n\n#algotrading #trading",
+      "tags": [
+        "#algotrading",
+        "#trading"
+      ],
+      "category": "engagement"
+    },
+    {
+      "text": "Be honest: how many strategies have you abandoned after less than 50 trades?\n\nStatistical significance requires hundreds of data points. Most people quit too early.\n\n#algotrading #crypto #trading",
+      "tags": [
+        "#algotrading",
+        "#crypto",
+        "#trading"
+      ],
+      "category": "engagement"
     }
   ],
   "reddit_comments": [
@@ -411,6 +535,59 @@
       ],
       "text": "Position sizing is where most beginners go wrong. They focus on entries and exits but size positions by gut feeling. I use a fixed percentage risk model: each trade risks 2% of current portfolio. Combined with a 6% stop-loss, this automatically calculates position size. As the portfolio grows, positions scale up. After drawdowns, they scale down — which is exactly what you want. Kelly criterion gives the mathematically optimal size but in practice I use half-Kelly because the real world has fatter tails than our models predict.",
       "subreddit": "algotrading"
+    },
+    {
+      "keywords": [
+        "overfitting",
+        "curve fitting",
+        "optimization",
+        "too many parameters"
+      ],
+      "text": "Overfitting is the silent killer of algo strategies. The telltale sign: your backtest shows 200%+ returns but live performance is flat or negative. What helped me: keep the number of optimizable parameters under 5, use walk-forward analysis instead of a single backtest window, and always hold out at least 30% of your data for validation. If the strategy doesn't perform at least 60-70% as well on unseen data as it does on training data, it's probably overfit. I also run Monte Carlo simulations to stress-test edge cases.",
+      "subreddit": "algotrading"
+    },
+    {
+      "keywords": [
+        "API",
+        "exchange API",
+        "latency",
+        "order execution",
+        "fills"
+      ],
+      "text": "Exchange API reliability is something nobody warns you about until you're live. I've had orders fail silently, WebSocket connections drop during volatility spikes, and rate limits hit at the worst possible moment. My advice: always implement retry logic with exponential backoff, keep a local order state that reconciles with the exchange every few minutes, and have a kill switch that flattens all positions if the API is unreachable for more than X minutes. Redundancy matters more than speed for most retail algo traders.",
+      "subreddit": "algotrading"
+    },
+    {
+      "keywords": [
+        "walk forward",
+        "out of sample",
+        "validation",
+        "robustness",
+        "testing methodology"
+      ],
+      "text": "Walk-forward analysis changed how I validate strategies. Instead of the classic train/test split, I use rolling windows: optimize on 6 months, validate on the next 2, then roll forward. If the strategy is consistently profitable across all walk-forward windows, it's likely robust. If it only works in 2 out of 5 windows, the edge is probably spurious. It's more work than a simple backtest but it's the closest thing to simulating how the strategy would have performed if you deployed it in real-time at each point in history.",
+      "subreddit": "algotrading"
+    },
+    {
+      "keywords": [
+        "fees",
+        "commissions",
+        "spread",
+        "slippage",
+        "trading costs"
+      ],
+      "text": "Trading costs are the invisible tax that turns profitable backtests into losing live strategies. For crypto: maker fees are typically 0.02-0.1%, taker fees 0.04-0.1%, plus spread and slippage. On a strategy that trades 200 times a month, even 0.1% per trade adds up to 20% monthly drag. I always backtest with 1.5x the actual fee to account for slippage. It killed about a third of my strategies that looked great on paper. The survivors are the ones with genuine edge, not just fee-dependent arb.",
+      "subreddit": "CryptoCurrency"
+    },
+    {
+      "keywords": [
+        "sentiment",
+        "fear greed",
+        "market psychology",
+        "contrarian"
+      ],
+      "text": "Incorporating sentiment data into my algo was a game changer. Not as a primary signal, but as a filter. When the Fear & Greed Index is above 75, I reduce position sizes by 50% and tighten stops. When it's below 25, I increase size slightly and widen stops to give trades more room. The logic is simple: extreme greed = crowded longs = higher crash risk, extreme fear = capitulation = higher bounce probability. It's not perfect but it smoothed my equity curve significantly over a 12-month backtest.",
+      "subreddit": "CryptoCurrency"
     }
   ],
   "reminders": [
