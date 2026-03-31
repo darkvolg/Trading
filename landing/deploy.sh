@@ -10,13 +10,13 @@ REMOTE_USER="root"
 REMOTE_HOST="144.31.135.97"
 REMOTE_PORT="2222"
 REMOTE_DIR="/var/www/$DOMAIN"
-SSH_KEY="~/.ssh/senko-144"
+SSH_KEY="~/.ssh/senko_deploy"
 
 # VPN proxy (vpn-b) — required, direct SSH doesn't work
 VPN_HOST="84.201.178.73"
-VPN_PORT="2222"
+VPN_PORT="22"
 VPN_USER="yc-user"
-VPN_KEY="~/.ssh/yc-vpn"
+VPN_KEY="~/.ssh/yandex_vpn"
 
 PROXY_CMD="ssh -i $VPN_KEY -p $VPN_PORT -o StrictHostKeyChecking=no -W %h:%p $VPN_USER@$VPN_HOST"
 SSH_CMD="ssh -o ProxyCommand=\"$PROXY_CMD\" -i $SSH_KEY -p $REMOTE_PORT -o StrictHostKeyChecking=no $REMOTE_USER@$REMOTE_HOST"
