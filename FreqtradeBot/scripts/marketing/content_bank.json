@@ -1,0 +1,483 @@
+{
+  "twitter_posts": [
+    {
+      "text": "Stop chasing pumps. The best trades are the ones your algorithm finds while you sleep.\n\nPatience + automation = consistency.\n\n#algotrading #crypto #trading",
+      "tags": [
+        "#algotrading",
+        "#crypto",
+        "#trading"
+      ],
+      "category": "tips"
+    },
+    {
+      "text": "Risk management rule I never break: no single trade risks more than 2% of my portfolio.\n\nSurvival > profits. Always.\n\n#algotrading #crypto #trading",
+      "tags": [
+        "#algotrading",
+        "#crypto",
+        "#trading"
+      ],
+      "category": "tips"
+    },
+    {
+      "text": "Your win rate doesn't matter as much as you think.\n\n40% win rate + 3:1 reward-to-risk = very profitable.\n\nStop optimizing for wins. Optimize for expectancy.\n\n#algotrading #crypto",
+      "tags": [
+        "#algotrading",
+        "#crypto"
+      ],
+      "category": "tips"
+    },
+    {
+      "text": "Multi-timeframe analysis changed everything for me.\n\nDaily for trend direction. 4H for entries. 1H for fine-tuning.\n\nOne timeframe = one perspective. Not enough.\n\n#algotrading #trading",
+      "tags": [
+        "#algotrading",
+        "#trading"
+      ],
+      "category": "tips"
+    },
+    {
+      "text": "The 6% stop-loss isn't arbitrary.\n\nToo tight = stopped out by noise.\nToo wide = unnecessary drawdown.\n\n6% balances both. Backtested across 500+ trades.\n\n#crypto #algotrading",
+      "tags": [
+        "#crypto",
+        "#algotrading"
+      ],
+      "category": "tips"
+    },
+    {
+      "text": "Drawdowns aren't failures. They're the cost of doing business in trading.\n\nWhat matters: how deep, how long, and whether your system recovers.\n\n#trading #crypto #algotrading",
+      "tags": [
+        "#trading",
+        "#crypto",
+        "#algotrading"
+      ],
+      "category": "tips"
+    },
+    {
+      "text": "Backtesting tip: if your strategy looks too good, it probably is.\n\nOverfitting is the #1 killer of algo strategies. Out-of-sample testing is mandatory.\n\n#algotrading #crypto",
+      "tags": [
+        "#algotrading",
+        "#crypto"
+      ],
+      "category": "tips"
+    },
+    {
+      "text": "EMA crossovers alone won't make you money in 2026.\n\nBut EMA + RSI divergence + volume confirmation + proper risk management? That's a system.\n\n#algotrading #trading #crypto",
+      "tags": [
+        "#algotrading",
+        "#trading",
+        "#crypto"
+      ],
+      "category": "tips"
+    },
+    {
+      "text": "Paper trading isn't optional. It's where you learn if your strategy survives real market conditions without risking capital.\n\nSkip it at your own risk.\n\n#algotrading #crypto",
+      "tags": [
+        "#algotrading",
+        "#crypto"
+      ],
+      "category": "tips"
+    },
+    {
+      "text": "The best indicator isn't RSI, MACD, or Bollinger Bands.\n\nIt's confluence. When multiple indicators agree, the probability shifts in your favor.\n\n#trading #algotrading #crypto",
+      "tags": [
+        "#trading",
+        "#algotrading",
+        "#crypto"
+      ],
+      "category": "tips"
+    },
+    {
+      "text": "Why most crypto trading strategies fail (and how to fix yours):\n\nhttps://trendrider.net/blog/best-crypto-trading-strategies-2026\n\n#crypto #algotrading #trading",
+      "tags": [
+        "#crypto",
+        "#algotrading",
+        "#trading"
+      ],
+      "category": "blog"
+    },
+    {
+      "text": "I wrote about why a 6% stop-loss works better than tight stops in crypto.\n\nVolatility demands room to breathe.\n\nhttps://trendrider.net/blog/risk-management-6-percent-stop-loss\n\n#crypto #trading",
+      "tags": [
+        "#crypto",
+        "#trading"
+      ],
+      "category": "blog"
+    },
+    {
+      "text": "Drawdown is the metric nobody talks about until it's too late.\n\nHere's what every trader needs to know:\n\nhttps://trendrider.net/blog/what-is-drawdown-crypto-trading\n\n#algotrading #crypto",
+      "tags": [
+        "#algotrading",
+        "#crypto"
+      ],
+      "category": "blog"
+    },
+    {
+      "text": "Freqtrade vs 3Commas vs Cornix — honest comparison from someone who tested all three.\n\nhttps://trendrider.net/blog/freqtrade-vs-3commas-vs-cornix\n\n#algotrading #crypto #freqtrade",
+      "tags": [
+        "#algotrading",
+        "#crypto",
+        "#freqtrade"
+      ],
+      "category": "blog"
+    },
+    {
+      "text": "Why algorithmic trading beats manual trading — and it's not just about speed.\n\nhttps://trendrider.net/blog/why-algorithmic-trading-beats-manual\n\n#algotrading #crypto #trading",
+      "tags": [
+        "#algotrading",
+        "#crypto",
+        "#trading"
+      ],
+      "category": "blog"
+    },
+    {
+      "text": "Win rate is overrated. Profit factor tells the real story.\n\nhttps://trendrider.net/blog/understanding-win-rate-and-profit-factor\n\n#trading #crypto #algotrading",
+      "tags": [
+        "#trading",
+        "#crypto",
+        "#algotrading"
+      ],
+      "category": "blog"
+    },
+    {
+      "text": "SQN score: the metric that separates good strategies from great ones.\n\nMost traders have never heard of it.\n\nhttps://trendrider.net/blog/what-is-sqn-score-system-quality-number\n\n#algotrading #trading",
+      "tags": [
+        "#algotrading",
+        "#trading"
+      ],
+      "category": "blog"
+    },
+    {
+      "text": "Backtesting done right: the complete guide to validating your crypto strategy.\n\nhttps://trendrider.net/blog/backtesting-crypto-strategies-guide\n\n#algotrading #crypto #trading",
+      "tags": [
+        "#algotrading",
+        "#crypto",
+        "#trading"
+      ],
+      "category": "blog"
+    },
+    {
+      "text": "Fear & Greed Index: a contrarian signal hiding in plain sight.\n\nhttps://trendrider.net/blog/fear-and-greed-index-crypto-trading\n\n#crypto #bitcoin #trading",
+      "tags": [
+        "#crypto",
+        "#bitcoin",
+        "#trading"
+      ],
+      "category": "blog"
+    },
+    {
+      "text": "Multi-timeframe analysis explained: why one chart isn't enough.\n\nhttps://trendrider.net/blog/multi-timeframe-analysis-explained\n\n#algotrading #crypto #trading",
+      "tags": [
+        "#algotrading",
+        "#crypto",
+        "#trading"
+      ],
+      "category": "blog"
+    },
+    {
+      "text": "127% annual return backtested. Sharpe ratio 2.34. Max drawdown under 20%.\n\nNot promises — historical data from 500+ trades across multiple market conditions.\n\n#algotrading #crypto",
+      "tags": [
+        "#algotrading",
+        "#crypto"
+      ],
+      "category": "stats"
+    },
+    {
+      "text": "My bot's numbers after full backtesting:\n\n• Sortino ratio: 4.12\n• SQN score: 3.8\n• Profit factor: 2.1+\n\nNot cherry-picked. Full dataset, all trades included.\n\n#algotrading #crypto #trading",
+      "tags": [
+        "#algotrading",
+        "#crypto",
+        "#trading"
+      ],
+      "category": "stats"
+    },
+    {
+      "text": "Manual traders average 30-50% annually if they're good.\n\nAlgorithmic systems remove emotion, run 24/7, and scale without burnout.\n\nThe gap compounds over time.\n\n#algotrading #crypto",
+      "tags": [
+        "#algotrading",
+        "#crypto"
+      ],
+      "category": "stats"
+    },
+    {
+      "text": "6% stop-loss across 500+ backtested trades:\n\n• Average winner: 3.2x the average loser\n• Recovery from drawdown: ~14 days\n• Longest losing streak: 5 trades\n\nRisk management works.\n\n#crypto #trading",
+      "tags": [
+        "#crypto",
+        "#trading"
+      ],
+      "category": "stats"
+    },
+    {
+      "text": "BTC buy & hold in a bear market: -60%.\nAlgo trading with proper risk mgmt: controlled drawdowns under 20%.\n\nYou don't need to beat the market every day. Just survive the bad ones.\n\n#bitcoin #algotrading",
+      "tags": [
+        "#bitcoin",
+        "#algotrading"
+      ],
+      "category": "stats"
+    },
+    {
+      "text": "What's your biggest challenge with algo trading?\n\n1. Building the strategy\n2. Backtesting properly\n3. Managing risk\n4. Staying disciplined\n\n#algotrading #crypto #trading",
+      "tags": [
+        "#algotrading",
+        "#crypto",
+        "#trading"
+      ],
+      "category": "engagement"
+    },
+    {
+      "text": "Hot take: most \"trading signals\" channels are just selling hope.\n\nIf the strategy works, why sell signals instead of trading it?\n\nAgree or disagree?\n\n#crypto #trading",
+      "tags": [
+        "#crypto",
+        "#trading"
+      ],
+      "category": "engagement"
+    },
+    {
+      "text": "If you could only use 2 indicators for the rest of your trading career, which would you pick?\n\nMine: EMA (trend) + RSI (momentum)\n\n#algotrading #trading #crypto",
+      "tags": [
+        "#algotrading",
+        "#trading",
+        "#crypto"
+      ],
+      "category": "engagement"
+    },
+    {
+      "text": "Unpopular opinion: a 45% win rate strategy can be more profitable than a 70% win rate strategy.\n\nIt all comes down to risk:reward ratio.\n\nChange my mind.\n\n#trading #algotrading",
+      "tags": [
+        "#trading",
+        "#algotrading"
+      ],
+      "category": "engagement"
+    },
+    {
+      "text": "What made you switch from manual to algorithmic trading?\n\nFor me it was the 3 AM candle that wiped a week of gains while I was sleeping.\n\nNever again.\n\n#algotrading #crypto #trading",
+      "tags": [
+        "#algotrading",
+        "#crypto",
+        "#trading"
+      ],
+      "category": "engagement"
+    }
+  ],
+  "reddit_comments": [
+    {
+      "keywords": [
+        "backtesting",
+        "backtest",
+        "historical data",
+        "testing strategy"
+      ],
+      "text": "Backtesting is essential but it's easy to fool yourself. A few things I learned the hard way: always use out-of-sample data (split your dataset into training and validation periods), account for slippage and fees (they eat into profits more than you think), and watch out for look-ahead bias. I run my backtests across different market regimes — bull, bear, and sideways — to make sure the strategy isn't just optimized for one condition. My current setup handles about 500+ trades in backtesting which gives a decent sample size for statistical significance.",
+      "subreddit": "algotrading"
+    },
+    {
+      "keywords": [
+        "risk management",
+        "stop loss",
+        "position size",
+        "risk per trade"
+      ],
+      "text": "After years of tweaking, I settled on a 6% stop-loss for crypto. Here's why: anything tighter gets stopped out by normal volatility (crypto moves 3-5% on a regular Tuesday), and anything wider means you're holding losers too long. Combined with 2% risk per trade and proper position sizing, it keeps drawdowns manageable. The key insight was that risk management isn't about avoiding losses — it's about making sure no single loss can derail your account.",
+      "subreddit": "algotrading"
+    },
+    {
+      "keywords": [
+        "strategy",
+        "indicators",
+        "EMA",
+        "RSI",
+        "MACD",
+        "technical analysis"
+      ],
+      "text": "I use a multi-indicator approach: EMA for trend direction, RSI for momentum/overbought-oversold conditions, MACD for confirmation, and Bollinger Bands for volatility context. No single indicator is reliable on its own — confluence is what gives you an edge. The real improvement came when I added multi-timeframe analysis: daily for the overall trend, 4H for entry zones. Eliminated a lot of false signals that way.",
+      "subreddit": "algotrading"
+    },
+    {
+      "keywords": [
+        "drawdown",
+        "losing streak",
+        "recovery",
+        "max drawdown"
+      ],
+      "text": "Drawdowns are inevitable — the question is whether your system recovers from them predictably. I track max drawdown, average drawdown duration, and recovery time. My bot's worst drawdown was around 18%, and it recovered within about 2 weeks. The mental shift that helped: treat drawdowns as the \"cost of doing business\" rather than failures. If your backtested max drawdown is 15%, expect to see 20% live. Always add a buffer.",
+      "subreddit": "algotrading"
+    },
+    {
+      "keywords": [
+        "freqtrade",
+        "bot framework",
+        "open source",
+        "trading bot"
+      ],
+      "text": "I've been using Freqtrade for about a year and it's genuinely impressive for an open-source project. The strategy development workflow is solid: write your strategy in Python, backtest with historical data, paper trade, then go live. The community is active and the documentation is decent. Main downsides: the learning curve is steep if you're not comfortable with Python, and setting up proper data feeds takes some work. But once it's running, it's rock solid.",
+      "subreddit": "algotrading"
+    },
+    {
+      "keywords": [
+        "paper trading",
+        "simulation",
+        "demo",
+        "live trading"
+      ],
+      "text": "I paper traded for 3 months before going live, and I'd recommend at least 2 months minimum. Here's what paper trading revealed that backtesting didn't: order fill differences (slippage is real), API timeout handling, and how my strategy behaved during high-volatility news events. The psychological benefit is huge too — by the time I went live, I'd already seen drawdowns and recovery cycles, so I didn't panic at the first red day.",
+      "subreddit": "algotrading"
+    },
+    {
+      "keywords": [
+        "profit factor",
+        "win rate",
+        "expectancy",
+        "performance metrics"
+      ],
+      "text": "Win rate alone is misleading. I focus on three metrics: profit factor (total wins / total losses — anything above 1.5 is solid), SQN score (measures system quality over a large sample), and Sortino ratio (like Sharpe but only penalizes downside volatility). My current strategy runs about a 2.1 profit factor with a Sortino of 4.12, which I'm happy with. The SQN score of 3.8 tells me the system is genuinely robust rather than just lucky on a small sample.",
+      "subreddit": "algotrading"
+    },
+    {
+      "keywords": [
+        "building bot",
+        "how to start",
+        "beginner",
+        "first bot"
+      ],
+      "text": "Starting out with algo trading, I'd recommend this path: 1) Learn a framework (Freqtrade if Python, Hummingbot if you want market making). 2) Start with a simple strategy — even a basic EMA crossover. 3) Backtest extensively before adding complexity. 4) Paper trade for 2-3 months. 5) Start live with small capital. The biggest mistake I see is people jumping to complex ML strategies before understanding basic market mechanics. Simple strategies with good risk management beat complicated ones with poor risk management every time.",
+      "subreddit": "algotrading"
+    },
+    {
+      "keywords": [
+        "Sharpe ratio",
+        "Sortino",
+        "risk adjusted",
+        "return"
+      ],
+      "text": "Sharpe ratio is useful but limited for crypto since returns aren't normally distributed. I prefer Sortino ratio because it only penalizes downside deviation — upside volatility is a feature, not a bug. My strategy's Sharpe is 2.34 and Sortino is 4.12, which tells me most of the volatility is on the upside. For context, anything above 2.0 Sharpe is considered excellent in traditional finance. In crypto you need higher because the baseline volatility is wild.",
+      "subreddit": "algotrading"
+    },
+    {
+      "keywords": [
+        "multi timeframe",
+        "timeframes",
+        "which timeframe",
+        "1h 4h daily"
+      ],
+      "text": "Multi-timeframe analysis was the single biggest improvement to my strategy. Before: trading on 1H charts only, getting chopped up by noise. After: using daily candles for trend direction, 4H for entry zones, 1H for fine-tuning. The logic is simple — don't take long entries when the daily trend is down, no matter how good the 1H setup looks. Eliminated about 30% of losing trades just with this filter. The tricky part is implementing it in code without look-ahead bias.",
+      "subreddit": "algotrading"
+    },
+    {
+      "keywords": [
+        "funding rate",
+        "open interest",
+        "sentiment",
+        "on-chain"
+      ],
+      "text": "Funding rates and open interest are underused signals in algo trading. When funding is extremely positive (everyone's leveraged long), it often precedes a correction. I built a bot that factors this in as a filter — if funding rate exceeds a threshold, it tightens entries or avoids new longs entirely. It's not a standalone signal, but as a confirmation layer it's reduced false entries during euphoric tops. The data is freely available from most exchanges' APIs.",
+      "subreddit": "algotrading"
+    },
+    {
+      "keywords": [
+        "automation",
+        "manual vs algo",
+        "emotional trading",
+        "discipline"
+      ],
+      "text": "The main advantage of algo trading isn't speed — it's discipline. My bot doesn't revenge trade after a loss, doesn't move stop losses because it \"feels\" like the trade will recover, and doesn't skip entries because of fear. I backtested manually executing my own strategy for a month and found I deviated from the rules about 20% of the time. Those deviations cost me roughly 15% of potential profit. The algorithm follows the rules 100% of the time, 24/7.",
+      "subreddit": "algotrading"
+    },
+    {
+      "keywords": [
+        "crypto",
+        "volatility",
+        "market",
+        "bitcoin",
+        "altcoins"
+      ],
+      "text": "Crypto's volatility is a double-edged sword for algo trading. On one hand, bigger moves = bigger opportunities. On the other, stop losses need to be wider, position sizes smaller, and your strategy needs to handle 10%+ daily swings without breaking. I use a 6% stop-loss which might seem wide in stocks but is actually conservative in crypto. The key is adapting your strategy to the asset class rather than applying stock market rules to a 24/7 market.",
+      "subreddit": "CryptoCurrency"
+    },
+    {
+      "keywords": [
+        "3commas",
+        "cornix",
+        "signal bot",
+        "copy trading",
+        "alternatives"
+      ],
+      "text": "I tried 3Commas and Cornix before building my own system. They're fine for following signals, but you're dependent on someone else's strategy and paying monthly fees regardless of performance. Building my own bot with Freqtrade took more upfront effort but I control every parameter, can backtest properly, and don't pay subscription fees. The tradeoff is time investment — took about 3 months to get a strategy I was confident in. If you just want to follow signals, those platforms work. If you want to understand and control your trading, build your own.",
+      "subreddit": "algotrading"
+    },
+    {
+      "keywords": [
+        "position sizing",
+        "Kelly criterion",
+        "money management",
+        "capital allocation"
+      ],
+      "text": "Position sizing is where most beginners go wrong. They focus on entries and exits but size positions by gut feeling. I use a fixed percentage risk model: each trade risks 2% of current portfolio. Combined with a 6% stop-loss, this automatically calculates position size. As the portfolio grows, positions scale up. After drawdowns, they scale down — which is exactly what you want. Kelly criterion gives the mathematically optimal size but in practice I use half-Kelly because the real world has fatter tails than our models predict.",
+      "subreddit": "algotrading"
+    }
+  ],
+  "reminders": [
+    {
+      "date": "2026-04-06",
+      "id": "alternativeto",
+      "text": "Добавь TrendRider на AlternativeTo как альтернативу 3Commas, Cornix и CryptoHopper. Подготовь описание, скриншоты и ссылку на trendrider.net."
+    },
+    {
+      "date": "2026-04-15",
+      "id": "ph_stats_check",
+      "text": "Проверь статистику Product Hunt (2 недели после запуска): upvotes, комментарии, переходы. Сделай скриншот для месячного отчёта."
+    },
+    {
+      "recurring": "monday",
+      "id": "gsc_check",
+      "text": "Зайди в Claude Code и запусти проверку GSC: показы, клики, CTR, позиции. Запроси индексацию новых страниц. Сравни с прошлой неделей."
+    },
+    {
+      "recurring": "wednesday",
+      "id": "medium_article",
+      "text": "Зайди в Claude Code и напиши статью на Medium про алготрейдинг или крипто-стратегию. Добавь ссылку на trendrider.net. Цель: 800-1200 слов."
+    },
+    {
+      "recurring": "friday",
+      "id": "reddit_engagement",
+      "text": "Зайди в Claude Code и проверь Reddit: карма, ответы на наши комменты. Найди 1-2 новых поста в r/algotrading для комментирования."
+    },
+    {
+      "recurring": "sunday",
+      "id": "weekly_analytics",
+      "text": "Еженедельная аналитика: трафик, GSC показы, Reddit просмотры, Twitter охват. Запиши тренды и скорректируй стратегию."
+    },
+    {
+      "recurring": "1st",
+      "id": "monthly_report",
+      "text": "Месячный обзор всех площадок: AlternativeTo, Product Hunt, Medium, Twitter, Reddit, Hacker News. Собери статистику, обнови отчёты, спланируй контент на следующий месяц."
+    },
+    {
+      "recurring": "daily",
+      "id": "telegram_activity",
+      "text": "Проверь канал @TrendRiderFree: новые подписчики, вопросы. Если были сильные движения на рынке — выложи обновление."
+    },
+    {
+      "recurring": "tuesday",
+      "id": "twitter_post",
+      "text": "Автопилот опубликовал твит. Зайди и проверь реакции на предыдущие посты. Если нужно — зайди в Claude Code и добавь ещё."
+    },
+    {
+      "recurring": "thursday",
+      "id": "twitter_post_2",
+      "text": "Автопилот опубликовал твит #2 за неделю. Проверь ответы и quote tweets на предыдущие посты."
+    },
+    {
+      "recurring": "saturday",
+      "id": "blog_seo_check",
+      "text": "Проверь позиции блога в Google по целевым ключевикам. Если есть новые посты — отправь на индексацию."
+    },
+    {
+      "date": "2026-04-01",
+      "id": "bing_webmaster_check",
+      "text": "Проверь Bing Webmaster и Яндекс Вебмастер: статус индексации, ошибки краулинга. Отправь новые URL если нужно."
+    },
+    {
+      "date": "2026-04-10",
+      "id": "twitter_first_review",
+      "text": "Ревью первых 10 дней Twitter: какие категории постов лучше заходят, лучшее время, рост подписчиков. Скорректируй стратегию."
+    }
+  ]
+}
