@@ -146,6 +146,22 @@ const posts = [
     readTime: "14 min read",
     tag: "Portfolio",
   },
+  {
+    slug: "how-to-automate-crypto-trading-freqtrade-2026",
+    title: "How to Automate Crypto Trading with Freqtrade in 2026",
+    excerpt: "Step-by-step Freqtrade tutorial: install, configure, connect to Bybit, build a strategy, backtest, optimize, and go live. The complete setup guide for algorithmic crypto trading.",
+    date: "April 1, 2026",
+    readTime: "11 min read",
+    tag: "Guide",
+  },
+  {
+    slug: "ema-crossover-strategy-crypto-guide",
+    title: "EMA Crossover Strategy for Crypto: Complete Guide",
+    excerpt: "Learn how to trade EMA crossovers in crypto. Covers fast/slow EMA selection, RSI and volume filters, multi-timeframe confirmation, and how to combine moving averages for consistent profits.",
+    date: "April 1, 2026",
+    readTime: "12 min read",
+    tag: "Strategy",
+  },
 ];
 
 export default function BlogPage() {
