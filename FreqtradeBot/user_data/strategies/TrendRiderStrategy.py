@@ -483,12 +483,12 @@ class TrendRiderStrategy(IStrategy):
             ["enter_long", "enter_tag"]
         ] = (1, "ema_crossover")
 
-        # === LONG 5: Bollinger Band Bounce ===
+        # === LONG 5: Bollinger Band Bounce (loosened: RSI<45, vol>0.3x, within 0.5% of BB lower) ===
         conditions_bb = [
-            dataframe["close"].shift(1) < dataframe["bb_lower"].shift(1),  # prev candle below BB lower
-            dataframe["close"] > dataframe["bb_lower"],                     # current candle above BB lower (bounce)
-            dataframe[rsi] < 40,
-            dataframe["volume_ratio"] > 0.5,
+            dataframe["close"] <= dataframe["bb_lower"] * 1.005,           # close within 0.5% of BB lower
+            dataframe["close"] > dataframe["open"],                         # bullish candle (bounce)
+            dataframe[rsi] < 45,
+            dataframe["volume_ratio"] > 0.3,
             dataframe["volume"] > 0,
             dataframe["btc_rsi_1h"] > BTC_RSI_LONG_MIN,
             dataframe["fng_value"] >= FNG_HEALTHY_MIN,
@@ -501,14 +501,16 @@ class TrendRiderStrategy(IStrategy):
             ["enter_long", "enter_tag"]
         ] = (1, "bb_bounce")
 
-        # === LONG 6: MACD Histogram Reversal ===
+        # === LONG 6: MACD Histogram Reversal (tightened: RSI 40-60, EMA200 filter, volume 0.8x) ===
         conditions_macd = [
             (dataframe["macdhist"] > 0) &
             (dataframe["macdhist"].shift(1) <= 0),  # histogram crossed above zero
             dataframe["close"] > dataframe["ema_50"],
-            dataframe[rsi] > 35,
-            dataframe[rsi] < 65,
+            dataframe["close"] > dataframe["ema_200"],  # confirm uptrend
+            dataframe[rsi] > 40,
+            dataframe[rsi] < 60,
             dataframe["adx"] > 15,
+            dataframe["volume_ratio"] > 0.8,            # volume confirmation
             dataframe["volume"] > 0,
             dataframe["btc_rsi_1h"] > BTC_RSI_LONG_MIN,
             dataframe["fng_value"] >= FNG_HEALTHY_MIN,
@@ -547,9 +549,9 @@ class TrendRiderStrategy(IStrategy):
             ["exit_long", "exit_tag"]
         ] = (1, "ema_bearish_cross")
 
-        # EXIT 3: Price drops below EMA200 (trend broken)
+        # EXIT 3: Price drops below EMA200 by 1%+ (trend broken, softened to avoid premature exits)
         dataframe.loc[
-            (dataframe["close"] < dataframe["ema_200"]) &
+            (dataframe["close"] < dataframe["ema_200"] * 0.99) &
             (dataframe["close"].shift(1) >= dataframe["ema_200"].shift(1)) &
             (dataframe["volume"] > 0),
             ["exit_long", "exit_tag"]
