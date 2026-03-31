@@ -77,15 +77,15 @@ class TrendRiderStrategy(IStrategy):
         "ema_fast": 9,
         "ema_slow": 16,
         "rsi_period": 16,
-        "rsi_pullback_low": 40,
-        "rsi_pullback_high": 58,
-        "rsi_bounce": 30,
-        "adx_threshold": 27,
-        "volume_factor": 1.014,
+        "rsi_pullback_low": 30,
+        "rsi_pullback_high": 65,
+        "rsi_bounce": 35,
+        "adx_threshold": 18,
+        "volume_factor": 0.7,
     }
 
     sell_params = {
-        "rsi_exit": 82,
+        "rsi_exit": 78,
     }
 
     # --- HyperOpt Parameters ---
@@ -176,7 +176,7 @@ class TrendRiderStrategy(IStrategy):
         ema_slow_key = f"ema_{self.ema_slow.value}"
         if ema_slow_key in dataframe.columns:
             dataframe["pullback_to_ema"] = (
-                (dataframe["low"] <= dataframe[ema_slow_key] * 1.01) &
+                (dataframe["low"] <= dataframe[ema_slow_key] * 1.02) &
                 (dataframe["close"] > dataframe[ema_slow_key]) &
                 (dataframe["close"] > dataframe["open"])  # Bullish candle
             ).astype(int)
@@ -341,6 +341,60 @@ class TrendRiderStrategy(IStrategy):
             reduce(lambda x, y: x & y, conditions_rsi),
             ["enter_long", "enter_tag"]
         ] = (1, "rsi_bounce")
+
+        # === LONG 4: EMA Crossover (golden cross on fast EMAs) ===
+        ema_fast_key = f"ema_{self.ema_fast.value}"
+        ema_slow_key = f"ema_{self.ema_slow.value}"
+        conditions_ema_cross = [
+            (dataframe[ema_fast_key] > dataframe[ema_slow_key]) &
+            (dataframe[ema_fast_key].shift(1) <= dataframe[ema_slow_key].shift(1)),  # crossed above
+            dataframe[rsi] > 40,
+            dataframe[rsi] < 75,
+            dataframe["close"] > dataframe["ema_200"],
+            dataframe["volume_ratio"] > 0.5,
+            dataframe["volume"] > 0,
+            dataframe["btc_rsi_1h"] > 35,
+            dataframe["fng_value"] >= 25,
+            dataframe["fng_value"] <= 85,
+        ]
+        dataframe.loc[
+            reduce(lambda x, y: x & y, conditions_ema_cross),
+            ["enter_long", "enter_tag"]
+        ] = (1, "ema_crossover")
+
+        # === LONG 5: Bollinger Band Bounce ===
+        conditions_bb = [
+            dataframe["close"].shift(1) < dataframe["bb_lower"].shift(1),  # prev candle below BB lower
+            dataframe["close"] > dataframe["bb_lower"],                     # current candle above BB lower (bounce)
+            dataframe[rsi] < 40,
+            dataframe["volume_ratio"] > 0.5,
+            dataframe["volume"] > 0,
+            dataframe["btc_rsi_1h"] > 35,
+            dataframe["fng_value"] >= 25,
+            dataframe["fng_value"] <= 85,
+        ]
+        dataframe.loc[
+            reduce(lambda x, y: x & y, conditions_bb),
+            ["enter_long", "enter_tag"]
+        ] = (1, "bb_bounce")
+
+        # === LONG 6: MACD Histogram Reversal ===
+        conditions_macd = [
+            (dataframe["macdhist"] > 0) &
+            (dataframe["macdhist"].shift(1) <= 0),  # histogram crossed above zero
+            dataframe["close"] > dataframe["ema_50"],
+            dataframe[rsi] > 35,
+            dataframe[rsi] < 65,
+            dataframe["adx"] > 15,
+            dataframe["volume"] > 0,
+            dataframe["btc_rsi_1h"] > 35,
+            dataframe["fng_value"] >= 25,
+            dataframe["fng_value"] <= 85,
+        ]
+        dataframe.loc[
+            reduce(lambda x, y: x & y, conditions_macd),
+            ["enter_long", "enter_tag"]
+        ] = (1, "macd_reversal")
 
         return dataframe
 
@@ -525,6 +579,14 @@ class TrendRiderStrategy(IStrategy):
         else:
             return "Trending Bear (High Vol)" if high_vol else "Trending Bear"
 
+    def custom_exit(self, pair: str, trade, current_time: datetime,
+                    current_rate: float, current_profit: float, **kwargs):
+        """Time-based exit: close after 24 candles (24h) if profit < 1%."""
+        duration_hours = (current_time - trade.open_date_utc).total_seconds() / 3600
+        if duration_hours >= 24 and current_profit < 0.01:
+            return "time_exit_24h"
+        return None
+
     def confirm_trade_entry(self, pair: str, order_type: str, amount: float, rate: float,
                            time_in_force: str, current_time: datetime, entry_tag: str | None,
                            side: str, **kwargs) -> bool:
@@ -545,6 +607,9 @@ class TrendRiderStrategy(IStrategy):
             "trend_pullback": "Pullback to EMA in uptrend, bounce with volume confirmation",
             "ema50_bounce": "Deep pullback to EMA50, bounce with rising MACD",
             "rsi_bounce": "RSI oversold, bounce from lower Bollinger in bull market",
+            "ema_crossover": "EMA9 crossed above EMA16, golden cross with trend confirmation",
+            "bb_bounce": "Price bounced from lower Bollinger Band with oversold RSI",
+            "macd_reversal": "MACD histogram turned positive, momentum shift above EMA50",
         }
         reason = reasons.get(entry_tag, entry_tag or "Signal")
 
@@ -614,6 +679,7 @@ class TrendRiderStrategy(IStrategy):
             "ema_bearish_cross": "EMA bearish crossover",
             "trend_broken": "Trend broken (below EMA200)",
             "force_exit": "Force exit",
+            "time_exit_24h": "Time exit (24h, low profit)",
         }
         reason_text = exit_reasons.get(exit_reason, exit_reason)
 

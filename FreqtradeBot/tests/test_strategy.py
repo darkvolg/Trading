@@ -386,7 +386,16 @@ class TestPopulateEntryTrend:
         df["volume"] = 1.0
         df["btc_rsi_1h"] = 50.0
         df["fng_value"] = 50.0
-        df["macdhist"] = 0.0
+        df["macdhist"] = 0.001  # small positive to avoid zero-crossing triggers
+        # Ensure close < ema_50 and ema_200 to block new signal triggers in neutral state
+        df["ema_50"] = df["close"] * 2
+        df["ema_200"] = df["close"] * 2
+        # Neutralize EMA fast/slow crossover: set them equal
+        for period in range(5, 31):
+            df[f"ema_{period}"] = df["close"]
+        # Ensure close is within BB bands (no BB bounce triggers)
+        df["bb_lower"] = df["close"] * 0.5
+        df["bb_upper"] = df["close"] * 1.5
         return df
 
     def _run_entry(self, strategy, df, metadata):

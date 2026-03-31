@@ -98,15 +98,15 @@ class TrendRiderStrategy(IStrategy):
         "ema_fast": 9,
         "ema_slow": 16,
         "rsi_period": 16,
-        "rsi_pullback_low": 40,
-        "rsi_pullback_high": 58,
-        "rsi_bounce": 30,
-        "adx_threshold": 27,
-        "volume_factor": 1.014,
+        "rsi_pullback_low": 30,
+        "rsi_pullback_high": 65,
+        "rsi_bounce": 35,
+        "adx_threshold": 18,
+        "volume_factor": 0.7,
     }
 
     sell_params = {
-        "rsi_exit": 82,
+        "rsi_exit": 78,
     }
 
     # --- HyperOpt Parameters ---
@@ -271,7 +271,7 @@ class TrendRiderStrategy(IStrategy):
         ema_slow_key = f"ema_{self.ema_slow.value}"
         if ema_slow_key in dataframe.columns:
             dataframe["pullback_to_ema"] = (
-                (dataframe["low"] <= dataframe[ema_slow_key] * 1.01) &
+                (dataframe["low"] <= dataframe[ema_slow_key] * 1.02) &
                 (dataframe["close"] > dataframe[ema_slow_key]) &
                 (dataframe["close"] > dataframe["open"])  # Bullish candle
             ).astype(int)
@@ -461,6 +461,66 @@ class TrendRiderStrategy(IStrategy):
             ["enter_long", "enter_tag"]
         ] = (1, "rsi_bounce")
 
+        # === LONG 4: EMA Crossover (golden cross on fast EMAs) ===
+        ema_fast_key = f"ema_{self.ema_fast.value}"
+        ema_slow_key = f"ema_{self.ema_slow.value}"
+        conditions_ema_cross = [
+            (dataframe[ema_fast_key] > dataframe[ema_slow_key]) &
+            (dataframe[ema_fast_key].shift(1) <= dataframe[ema_slow_key].shift(1)),  # crossed above
+            dataframe[rsi] > 40,
+            dataframe[rsi] < 75,
+            dataframe["close"] > dataframe["ema_200"],
+            dataframe["volume_ratio"] > 0.5,
+            dataframe["volume"] > 0,
+            dataframe["btc_rsi_1h"] > BTC_RSI_LONG_MIN,
+            dataframe["fng_value"] >= FNG_HEALTHY_MIN,
+            dataframe["fng_value"] <= FNG_HEALTHY_MAX,
+        ]
+        if self.dp and self.dp.runmode.value in ('live', 'dry_run'):
+            conditions_ema_cross.append(dataframe['funding_extreme'] == 0)
+        dataframe.loc[
+            reduce(lambda x, y: x & y, conditions_ema_cross),
+            ["enter_long", "enter_tag"]
+        ] = (1, "ema_crossover")
+
+        # === LONG 5: Bollinger Band Bounce ===
+        conditions_bb = [
+            dataframe["close"].shift(1) < dataframe["bb_lower"].shift(1),  # prev candle below BB lower
+            dataframe["close"] > dataframe["bb_lower"],                     # current candle above BB lower (bounce)
+            dataframe[rsi] < 40,
+            dataframe["volume_ratio"] > 0.5,
+            dataframe["volume"] > 0,
+            dataframe["btc_rsi_1h"] > BTC_RSI_LONG_MIN,
+            dataframe["fng_value"] >= FNG_HEALTHY_MIN,
+            dataframe["fng_value"] <= FNG_HEALTHY_MAX,
+        ]
+        if self.dp and self.dp.runmode.value in ('live', 'dry_run'):
+            conditions_bb.append(dataframe['funding_extreme'] == 0)
+        dataframe.loc[
+            reduce(lambda x, y: x & y, conditions_bb),
+            ["enter_long", "enter_tag"]
+        ] = (1, "bb_bounce")
+
+        # === LONG 6: MACD Histogram Reversal ===
+        conditions_macd = [
+            (dataframe["macdhist"] > 0) &
+            (dataframe["macdhist"].shift(1) <= 0),  # histogram crossed above zero
+            dataframe["close"] > dataframe["ema_50"],
+            dataframe[rsi] > 35,
+            dataframe[rsi] < 65,
+            dataframe["adx"] > 15,
+            dataframe["volume"] > 0,
+            dataframe["btc_rsi_1h"] > BTC_RSI_LONG_MIN,
+            dataframe["fng_value"] >= FNG_HEALTHY_MIN,
+            dataframe["fng_value"] <= FNG_HEALTHY_MAX,
+        ]
+        if self.dp and self.dp.runmode.value in ('live', 'dry_run'):
+            conditions_macd.append(dataframe['funding_extreme'] == 0)
+        dataframe.loc[
+            reduce(lambda x, y: x & y, conditions_macd),
+            ["enter_long", "enter_tag"]
+        ] = (1, "macd_reversal")
+
         return dataframe
 
     def populate_exit_trend(self, dataframe: DataFrame, metadata: dict) -> DataFrame:
@@ -496,6 +556,14 @@ class TrendRiderStrategy(IStrategy):
         ] = (1, "trend_broken")
 
         return dataframe
+
+    def custom_exit(self, pair: str, trade, current_time: datetime,
+                    current_rate: float, current_profit: float, **kwargs):
+        """Time-based exit: close after 24 candles (24h) if profit < 1%."""
+        duration_hours = (current_time - trade.open_date_utc).total_seconds() / 3600
+        if duration_hours >= 24 and current_profit < 0.01:
+            return "time_exit_24h"
+        return None
 
     def confirm_trade_entry(self, pair: str, order_type: str, amount: float, rate: float,
                            time_in_force: str, current_time: datetime, entry_tag: str | None,
