@@ -131,11 +131,15 @@ export default function RootLayout({
       className={`dark ${inter.variable} ${jetbrainsMono.variable} antialiased`}
     >
       <head>
-        {/* Google Analytics */}
-        <script async src="https://www.googletagmanager.com/gtag/js?id=G-TJBTZ0Y6DL" />
+        {/* Preconnect to critical origins */}
+        <link rel="preconnect" href="https://fonts.googleapis.com" />
+        <link rel="preconnect" href="https://fonts.gstatic.com" crossOrigin="anonymous" />
+        <link rel="dns-prefetch" href="https://www.googletagmanager.com" />
+        {/* Google Analytics — deferred to not block rendering */}
         <script
           dangerouslySetInnerHTML={{
-            __html: `window.dataLayer=window.dataLayer||[];function gtag(){dataLayer.push(arguments);}gtag('js',new Date());gtag('config','G-TJBTZ0Y6DL');`,
+            __html: `window.dataLayer=window.dataLayer||[];function gtag(){dataLayer.push(arguments);}gtag('js',new Date());gtag('config','G-TJBTZ0Y6DL');
+(function(){var s=document.createElement('script');s.async=true;s.src='https://www.googletagmanager.com/gtag/js?id=G-TJBTZ0Y6DL';document.head.appendChild(s);})();`,
           }}
         />
         <script
