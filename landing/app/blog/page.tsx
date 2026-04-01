@@ -11,6 +11,22 @@ export const metadata: Metadata = {
 
 const posts = [
   {
+    slug: "crypto-trading-risk-management-complete-guide-2026",
+    title: "Crypto Trading Risk Management: The Complete 2026 Guide",
+    excerpt: "Master position sizing, stop-loss optimization, and portfolio-level risk controls. Learn the exact risk management framework behind our 1.42% max drawdown across 15 trading pairs.",
+    date: "April 1, 2026",
+    readTime: "11 min read",
+    tag: "Risk Management",
+  },
+  {
+    slug: "best-crypto-trading-pairs-for-bots-2026",
+    title: "How to Choose the Best Crypto Trading Pairs for Your Bot in 2026",
+    excerpt: "Not all crypto pairs are equal for algorithmic trading. Learn how to evaluate liquidity, volatility, spread, and correlation to pick optimal pairs for your trading bot.",
+    date: "April 1, 2026",
+    readTime: "10 min read",
+    tag: "Guide",
+  },
+  {
     slug: "multi-indicator-scoring-system-crypto",
     title: "Multi-Indicator Scoring Systems: How to Combine RSI, MACD & Bollinger Bands",
     excerpt: "Learn how to build a multi-indicator scoring system that combines RSI, MACD, Bollinger Bands, and ADX into a single confidence score. Real data: 67.9% win rate vs ~40% with single indicators.",
