@@ -162,6 +162,22 @@ const posts = [
     readTime: "12 min read",
     tag: "Strategy",
   },
+  {
+    slug: "crypto-day-trading-strategies-2026",
+    title: "Crypto Day Trading Strategies That Actually Work in 2026",
+    excerpt: "The 5 best day trading strategies for crypto in 2026. From EMA/MACD momentum to Bollinger Band bounces, learn what actually works with real backtest data and risk management rules.",
+    date: "April 1, 2026",
+    readTime: "10 min read",
+    tag: "Strategy",
+  },
+  {
+    slug: "bitcoin-trading-strategies-complete-guide-2026",
+    title: "Bitcoin Trading Strategies for 2026: A Complete Playbook",
+    excerpt: "Master BTC trading with trend-following, mean reversion, and on-chain strategies. Covers 200 EMA filtering, RSI extremes, funding rate signals, and risk management specific to Bitcoin.",
+    date: "April 1, 2026",
+    readTime: "11 min read",
+    tag: "Education",
+  },
 ];
 
 export default function BlogPage() {
