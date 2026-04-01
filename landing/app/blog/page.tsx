@@ -11,6 +11,30 @@ export const metadata: Metadata = {
 
 const posts = [
   {
+    slug: "multi-indicator-scoring-system-crypto",
+    title: "Multi-Indicator Scoring Systems: How to Combine RSI, MACD & Bollinger Bands",
+    excerpt: "Learn how to build a multi-indicator scoring system that combines RSI, MACD, Bollinger Bands, and ADX into a single confidence score. Real data: 67.9% win rate vs ~40% with single indicators.",
+    date: "April 1, 2026",
+    readTime: "9 min read",
+    tag: "Strategy",
+  },
+  {
+    slug: "stop-loss-strategies-crypto-trading-2026",
+    title: "Stop Loss Strategies for Crypto Trading: Fixed vs Trailing vs ATR-Based [2026 Comparison]",
+    excerpt: "Compare 4 stop-loss methods across 10,000+ crypto trades. Fixed %, trailing, ATR-based, and time-based exits ranked by win rate, drawdown, and profit factor. See which TrendRider uses and why.",
+    date: "April 1, 2026",
+    readTime: "9 min read",
+    tag: "Risk Management",
+  },
+  {
+    slug: "building-profitable-crypto-trading-system-2026",
+    title: "How to Build a Profitable Crypto Trading System in 2026: A Step-by-Step Framework",
+    excerpt: "A 7-step framework from edge definition to live execution. Covers multi-indicator scoring, walk-forward backtesting, risk management, and scaling into live trading with real data: 67.9% win rate, 1.42% max DD.",
+    date: "April 1, 2026",
+    readTime: "10 min read",
+    tag: "Guide",
+  },
+  {
     slug: "best-crypto-trading-strategies-2026",
     title: "Best Crypto Trading Strategies for 2026: Trend Following, Mean Reversion & More",
     excerpt: "Compare the top crypto trading strategies for 2026. Learn how trend following, mean reversion, breakout, and momentum approaches work — and which delivers the best risk-adjusted returns.",

@@ -48,7 +48,7 @@ export function HeroSection({ t, locale, setLocale, parallaxRef }: HeroSectionPr
       }} />
 
       {/* Language toggle in hero — visible before navbar appears */}
-      <div className="absolute top-10 right-6 sm:top-8 sm:right-8 z-20 flex items-center gap-2">
+      <div className="absolute top-6 right-6 sm:top-8 sm:right-8 z-20 flex items-center gap-2">
         <LanguageToggle
           locale={locale}
           setLocale={setLocale}
@@ -58,7 +58,7 @@ export function HeroSection({ t, locale, setLocale, parallaxRef }: HeroSectionPr
 
       {/* Live badge — positioned at top of hero, below nav area on mobile */}
       <div
-        className="absolute top-20 sm:top-8 left-1/2 -translate-x-1/2 z-10 sm:z-20 inline-flex items-center gap-1.5 sm:gap-2 px-3 sm:px-5 py-2 sm:py-2.5 rounded-full border border-primary-700/40 bg-primary-900/20 backdrop-blur-xl shadow-lg shadow-black/30 max-w-[calc(100vw-2rem)]"
+        className="absolute top-16 sm:top-8 left-1/2 -translate-x-1/2 z-20 inline-flex items-center gap-1.5 sm:gap-2 px-3 sm:px-5 py-2 sm:py-2.5 rounded-full border border-primary-700/40 bg-primary-900/20 backdrop-blur-xl shadow-lg shadow-black/30 max-w-[calc(100vw-2rem)]"
         style={{ animation: "fadeInDown 0.6s ease-out forwards" }}
       >
         <span className="w-2 h-2 shrink-0 rounded-full bg-primary-400 animate-pulse" />
@@ -69,7 +69,7 @@ export function HeroSection({ t, locale, setLocale, parallaxRef }: HeroSectionPr
 
       <div className="relative text-center max-w-4xl mx-auto z-10">
         {/* Headline — animated letter reveal */}
-        <h1 className="text-[1.75rem] sm:text-4xl md:text-6xl lg:text-8xl font-bold tracking-tight mb-4 mt-6 sm:mt-0"
+        <h1 className="text-[1.75rem] sm:text-4xl md:text-6xl lg:text-8xl font-bold tracking-tight mb-4 mt-24 sm:mt-0"
           style={{ animation: "fadeInUp 0.7s 0.2s cubic-bezier(0.16, 1, 0.3, 1) both" }}>
           {"TrendRider".split("").map((letter, i) => (
             <span
