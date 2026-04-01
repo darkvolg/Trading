@@ -55,7 +55,7 @@ class TrendRiderStrategy(IStrategy):
     }
 
     # --- Stoploss: WIDE for crypto volatility ---
-    stoploss = -0.06           # 6% default
+    stoploss = -0.035          # 3.5% (was -0.06, tightened: deep SL ate profits)
     use_custom_stoploss = False
 
     # --- Trailing Stop: WIDE ---
@@ -461,33 +461,33 @@ class TrendRiderStrategy(IStrategy):
             ["enter_long", "enter_tag"]
         ] = (1, "rsi_bounce")
 
-        # === LONG 4: EMA Crossover (golden cross on fast EMAs) ===
-        ema_fast_key = f"ema_{self.ema_fast.value}"
-        ema_slow_key = f"ema_{self.ema_slow.value}"
-        conditions_ema_cross = [
-            (dataframe[ema_fast_key] > dataframe[ema_slow_key]) &
-            (dataframe[ema_fast_key].shift(1) <= dataframe[ema_slow_key].shift(1)),  # crossed above
-            dataframe[rsi] > 40,
-            dataframe[rsi] < 75,
-            dataframe["close"] > dataframe["ema_200"],
-            dataframe["volume_ratio"] > 0.5,
-            dataframe["volume"] > 0,
-            dataframe["btc_rsi_1h"] > BTC_RSI_LONG_MIN,
-            dataframe["fng_value"] >= FNG_HEALTHY_MIN,
-            dataframe["fng_value"] <= FNG_HEALTHY_MAX,
-        ]
-        if self.dp and self.dp.runmode.value in ('live', 'dry_run'):
-            conditions_ema_cross.append(dataframe['funding_extreme'] == 0)
-        dataframe.loc[
-            reduce(lambda x, y: x & y, conditions_ema_cross),
-            ["enter_long", "enter_tag"]
-        ] = (1, "ema_crossover")
+        # === LONG 4: EMA Crossover — DISABLED (0% win rate in March 2026 backtest, 4 trades all losses) ===
+        # ema_fast_key = f"ema_{self.ema_fast.value}"
+        # ema_slow_key = f"ema_{self.ema_slow.value}"
+        # conditions_ema_cross = [
+        #     (dataframe[ema_fast_key] > dataframe[ema_slow_key]) &
+        #     (dataframe[ema_fast_key].shift(1) <= dataframe[ema_slow_key].shift(1)),
+        #     dataframe[rsi] > 40,
+        #     dataframe[rsi] < 75,
+        #     dataframe["close"] > dataframe["ema_200"],
+        #     dataframe["volume_ratio"] > 0.5,
+        #     dataframe["volume"] > 0,
+        #     dataframe["btc_rsi_1h"] > BTC_RSI_LONG_MIN,
+        #     dataframe["fng_value"] >= FNG_HEALTHY_MIN,
+        #     dataframe["fng_value"] <= FNG_HEALTHY_MAX,
+        # ]
+        # if self.dp and self.dp.runmode.value in ('live', 'dry_run'):
+        #     conditions_ema_cross.append(dataframe['funding_extreme'] == 0)
+        # dataframe.loc[
+        #     reduce(lambda x, y: x & y, conditions_ema_cross),
+        #     ["enter_long", "enter_tag"]
+        # ] = (1, "ema_crossover")
 
         # === LONG 5: Bollinger Band Bounce (loosened: RSI<45, vol>0.3x, within 0.5% of BB lower) ===
         conditions_bb = [
             dataframe["close"] <= dataframe["bb_lower"] * 1.005,           # close within 0.5% of BB lower
             dataframe["close"] > dataframe["open"],                         # bullish candle (bounce)
-            dataframe[rsi] < 45,
+            dataframe[rsi] < 35,                                           # tightened from 45 (50% WR, negative avg)
             dataframe["volume_ratio"] > 0.3,
             dataframe["volume"] > 0,
             dataframe["btc_rsi_1h"] > BTC_RSI_LONG_MIN,
