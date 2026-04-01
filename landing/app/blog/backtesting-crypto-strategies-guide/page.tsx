@@ -1,8 +1,8 @@
 import type { Metadata } from "next";
 
 export const metadata: Metadata = {
-  title: "Backtesting Crypto Strategies: Step-by-Step 2026 Guide",
-  description: "Backtest crypto strategies without overfitting. 200+ trade validation framework, SQN scoring & 5 pitfalls to avoid. Includes free examples.",
+  title: "How to Backtest Crypto Strategies Without Overfitting [2026 Framework]",
+  description: "90% of backtests are overfit. Our 200+ trade validation framework with SQN scoring catches it. Step-by-step guide with 5 common pitfalls to avoid.",
   alternates: {
     canonical: "https://trendrider.net/blog/backtesting-crypto-strategies-guide",
   },
@@ -17,7 +17,7 @@ export default function Article() {
           __html: JSON.stringify({
             "@context": "https://schema.org",
             "@type": "Article",
-            "headline": "Backtesting Crypto Strategies: Step-by-Step 2026 Guide",
+            "headline": "How to Backtest Crypto Strategies Without Overfitting [2026 Framework]",
             "description": "Backtest crypto strategies without overfitting. 200+ trade validation framework, SQN scoring & 5 pitfalls to avoid. Includes free examples.",
             "author": {
               "@type": "Person",

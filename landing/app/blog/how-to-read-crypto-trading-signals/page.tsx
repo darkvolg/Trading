@@ -1,8 +1,8 @@
 import type { Metadata } from "next";
 
 export const metadata: Metadata = {
-  title: "How to Read Crypto Signals in 5 Minutes (2026 Guide)",
-  description: "Decode entry, stop-loss & take-profit like a pro. Avoid 3 costly beginner mistakes — includes real signal examples and a free cheat sheet to download.",
+  title: "How to Read Crypto Trading Signals Like a Pro [Free Cheat Sheet]",
+  description: "Entry, stop-loss, take-profit — decoded in 5 minutes. Avoid 3 mistakes that cost beginners $1000+. Includes real signal examples and free PDF cheat sheet.",
   alternates: {
     canonical: "https://trendrider.net/blog/how-to-read-crypto-trading-signals",
   },
@@ -17,7 +17,7 @@ export default function Article() {
           __html: JSON.stringify({
             "@context": "https://schema.org",
             "@type": "Article",
-            "headline": "How to Read Crypto Signals in 5 Minutes (2026 Guide)",
+            "headline": "How to Read Crypto Trading Signals Like a Pro [Free Cheat Sheet]",
             "description": "Decode entry, stop-loss & take-profit like a pro. Avoid 3 costly beginner mistakes — includes real signal examples and a free cheat sheet to download.",
             "author": {
               "@type": "Person",

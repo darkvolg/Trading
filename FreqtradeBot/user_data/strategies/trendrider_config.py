@@ -38,7 +38,7 @@ TP3_PCT = 0.10   # +10%
 
 # --- Confidence ---
 CONFIDENCE_MAX_SCORE = 17.5
-CONFIDENCE_MIN_DEFAULT = 5
+CONFIDENCE_MIN_DEFAULT = 4  # was 5, lowered: rejected 70% of signals
 CONFIDENCE_MIN_BEAR = 6
 
 # --- Estimated Hold Time ---
