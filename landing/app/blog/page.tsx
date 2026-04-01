@@ -13,18 +13,18 @@ const posts = [
   {
     slug: "crypto-trading-risk-management-complete-guide-2026",
     title: "Crypto Trading Risk Management: The Complete 2026 Guide",
-    excerpt: "Master position sizing, stop-loss optimization, and portfolio-level risk controls. Learn the exact risk management framework behind our 1.42% max drawdown across 15 trading pairs.",
+    excerpt: "Master crypto risk management with position sizing, stop-loss placement, portfolio allocation, drawdown control, and trading psychology. Real data from a system with 1.42% max drawdown and 67.9% win rate.",
     date: "April 1, 2026",
-    readTime: "11 min read",
+    readTime: "12 min read",
     tag: "Risk Management",
   },
   {
     slug: "best-crypto-trading-pairs-for-bots-2026",
     title: "How to Choose the Best Crypto Trading Pairs for Your Bot in 2026",
-    excerpt: "Not all crypto pairs are equal for algorithmic trading. Learn how to evaluate liquidity, volatility, spread, and correlation to pick optimal pairs for your trading bot.",
+    excerpt: "Find the best crypto trading pairs for algorithmic bots. Learn how to evaluate liquidity, volatility, spread, and correlation to build a profitable pair selection framework with real backtest data.",
     date: "April 1, 2026",
-    readTime: "10 min read",
-    tag: "Guide",
+    readTime: "11 min read",
+    tag: "Strategy",
   },
   {
     slug: "multi-indicator-scoring-system-crypto",
