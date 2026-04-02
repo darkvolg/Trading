@@ -1,15 +1,15 @@
 #!/bin/bash
-# Deploy TrendRider landing to Senko VPS (144.31.63.133)
+# Deploy TrendRider landing to Senko VPS (144.31.135.97)
 # Usage: bash deploy.sh [domain]
 # Example: bash deploy.sh trendrider.pro
 
 set -euo pipefail
 
-DOMAIN="${1:-trendrider.pro}"
+DOMAIN="${1:-trendrider.net}"
 REMOTE_USER="root"
 REMOTE_HOST="144.31.135.97"
 REMOTE_PORT="2222"
-REMOTE_DIR="/var/www/$DOMAIN"
+REMOTE_DIR="/var/www/trendrider"
 SSH_KEY="~/.ssh/senko_deploy"
 
 # VPN proxy (vpn-b) — required, direct SSH doesn't work
