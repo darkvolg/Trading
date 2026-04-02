@@ -11,6 +11,22 @@ export const metadata: Metadata = {
 
 const posts = [
   {
+    slug: "crypto-trading-bot-profitability-real-numbers-2026",
+    title: "Crypto Trading Bot Profitability: Real Numbers and What to Expect in 2026",
+    excerpt: "Honest breakdown of crypto trading bot returns with real data. Covers realistic monthly expectations, hidden costs, when bots lose money, and how to evaluate if your bot is actually profitable.",
+    date: "April 2, 2026",
+    readTime: "14 min read",
+    tag: "Strategy",
+  },
+  {
+    slug: "ai-vs-rule-based-crypto-trading-bots-2026",
+    title: "AI vs Rule-Based Crypto Trading Bots: Which Performs Better in 2026?",
+    excerpt: "Balanced comparison of AI/ML trading bots vs rule-based systems. Covers transparency, cost, complexity, real-world performance data, and why rule-based often wins for retail traders.",
+    date: "April 2, 2026",
+    readTime: "11 min read",
+    tag: "Comparison",
+  },
+  {
     slug: "how-to-backtest-crypto-trading-strategy-2026",
     title: "How to Backtest a Crypto Trading Strategy: Complete Guide 2026",
     excerpt: "Learn how to backtest crypto trading strategies step by step. Covers data selection, walk-forward analysis, overfitting prevention, and interpreting results with real examples from 10,000+ trades.",
