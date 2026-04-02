@@ -11,6 +11,22 @@ export const metadata: Metadata = {
 
 const posts = [
   {
+    slug: "build-crypto-trading-bot-from-scratch-2026",
+    title: "How to Build a Crypto Trading Bot from Scratch in 2026: Complete Beginner Guide",
+    excerpt: "Step-by-step tutorial to build your own crypto trading bot. Covers Python setup, Freqtrade framework, strategy coding, backtesting, and live deployment on Bybit. No prior experience needed.",
+    date: "April 2, 2026",
+    readTime: "15 min read",
+    tag: "Tutorial",
+  },
+  {
+    slug: "crypto-market-making-bot-strategy-2026",
+    title: "Crypto Market Making Bot Strategy: How Market Makers Profit in 2026",
+    excerpt: "How market making bots capture spread profit in crypto. Covers bid-ask mechanics, inventory risk, Hummingbot setup, and why trend following outperforms market making for most retail traders.",
+    date: "April 2, 2026",
+    readTime: "11 min read",
+    tag: "Strategy",
+  },
+  {
     slug: "crypto-trading-bot-profitability-real-numbers-2026",
     title: "Crypto Trading Bot Profitability: Real Numbers and What to Expect in 2026",
     excerpt: "Honest breakdown of crypto trading bot returns with real data. Covers realistic monthly expectations, hidden costs, when bots lose money, and how to evaluate if your bot is actually profitable.",
