@@ -57,6 +57,57 @@ export default function Article() {
           })
         }}
       />
+      <script
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{
+          __html: JSON.stringify({
+            "@context": "https://schema.org",
+            "@type": "FAQPage",
+            "mainEntity": [
+              {
+                "@type": "Question",
+                "name": "What is a good max drawdown for crypto trading?",
+                "acceptedAnswer": {
+                  "@type": "Answer",
+                  "text": "A good max drawdown for crypto trading is under 10%, which is the threshold most prop trading firms require. Professional algorithmic systems aim for under 5%. TrendRider maintains a max drawdown of just 1.42%, providing over 7x safety margin against typical prop firm limits."
+                }
+              },
+              {
+                "@type": "Question",
+                "name": "How do you calculate max drawdown?",
+                "acceptedAnswer": {
+                  "@type": "Answer",
+                  "text": "Max drawdown is calculated as (Peak Value - Trough Value) / Peak Value × 100%. For example, if your account peaks at $10,000 and drops to $8,500 before recovering, your max drawdown is 15%. It measures the largest decline from any peak to subsequent trough in your equity curve."
+                }
+              },
+              {
+                "@type": "Question",
+                "name": "What causes high drawdown in crypto trading?",
+                "acceptedAnswer": {
+                  "@type": "Answer",
+                  "text": "High drawdown is typically caused by four factors: no stop-loss discipline, excessive leverage (20x-50x), oversized positions risking 10-20% per trade, and correlated positions across multiple altcoins. A 50% drawdown requires a 100% gain just to break even, making recovery increasingly difficult."
+                }
+              },
+              {
+                "@type": "Question",
+                "name": "How to reduce drawdown in a crypto portfolio?",
+                "acceptedAnswer": {
+                  "@type": "Answer",
+                  "text": "Reduce drawdown by implementing fixed stop-losses on every trade (e.g., 6%), limiting risk to 1-2% of capital per trade, using multi-timeframe confirmation to filter false signals, and adding regime detection to reduce trading during uncertain markets. These combined techniques keep TrendRider's drawdown at 1.42%."
+                }
+              },
+              {
+                "@type": "Question",
+                "name": "What is the difference between drawdown and loss?",
+                "acceptedAnswer": {
+                  "@type": "Answer",
+                  "text": "A loss is the negative result of a single trade, while drawdown measures the cumulative decline from a peak in your account equity to the lowest point before recovery. You can have individual winning trades during a drawdown period. Max drawdown reflects the worst-case scenario across your entire trading history, not just one trade."
+                }
+              }
+            ]
+          })
+        }}
+      />
     <div className="min-h-screen bg-background text-foreground">
       <article className="max-w-3xl mx-auto px-4 py-20">
         <a href="/blog" className="text-primary text-sm hover:underline mb-8 inline-block">&larr; Back to blog</a>

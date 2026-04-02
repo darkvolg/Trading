@@ -11,6 +11,30 @@ export const metadata: Metadata = {
 
 const posts = [
   {
+    slug: "freqtrade-setup-tutorial-beginners-2026",
+    title: "Freqtrade Tutorial 2026: Complete Setup Guide [67.9% Win Rate Strategy]",
+    excerpt: "Step-by-step guide to setting up Freqtrade with Bybit. From installation to live trading in under 1 hour. Includes a complete RSI+EMA strategy template.",
+    date: "April 2, 2026",
+    readTime: "12 min read",
+    tag: "Tutorial",
+  },
+  {
+    slug: "how-to-avoid-overfitting-crypto-trading",
+    title: "How to Avoid Overfitting in Crypto Trading Strategies [7 Proven Methods]",
+    excerpt: "90% of crypto strategies fail live because they're overfit. Learn 7 proven methods — walk-forward analysis, Monte Carlo simulation, SQN validation & more — to build strategies that actually work in real markets.",
+    date: "April 2, 2026",
+    readTime: "12 min read",
+    tag: "Education",
+  },
+  {
+    slug: "crypto-trading-bot-vs-copy-trading-2026",
+    title: "Crypto Trading Bot vs Copy Trading: Which Earns More in 2026?",
+    excerpt: "We compared trading bots vs copy trading across 10,000+ trades. Bots hit 67.9% win rate vs 40-55% for copy traders. Full breakdown with costs, control, transparency & real performance data.",
+    date: "April 2, 2026",
+    readTime: "9 min read",
+    tag: "Comparison",
+  },
+  {
     slug: "crypto-trading-risk-management-complete-guide-2026",
     title: "Crypto Trading Risk Management: The Complete 2026 Guide",
     excerpt: "Master crypto risk management with position sizing, stop-loss placement, portfolio allocation, drawdown control, and trading psychology. Real data from a system with 1.42% max drawdown and 67.9% win rate.",
