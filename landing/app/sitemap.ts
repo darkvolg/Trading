@@ -162,6 +162,18 @@ export default function sitemap(): MetadataRoute.Sitemap {
       priority: 0.6,
     },
     {
+      url: `${baseUrl}/blog/how-to-avoid-overfitting-crypto-trading`,
+      lastModified: new Date(),
+      changeFrequency: "monthly",
+      priority: 0.6,
+    },
+    {
+      url: `${baseUrl}/blog/crypto-trading-bot-vs-copy-trading-2026`,
+      lastModified: new Date(),
+      changeFrequency: "monthly",
+      priority: 0.6,
+    },
+    {
       url: `${baseUrl}/blog/crypto-trading-risk-management-complete-guide-2026`,
       lastModified: new Date(),
       changeFrequency: "monthly",
@@ -169,6 +181,12 @@ export default function sitemap(): MetadataRoute.Sitemap {
     },
     {
       url: `${baseUrl}/blog/best-crypto-trading-pairs-for-bots-2026`,
+      lastModified: new Date(),
+      changeFrequency: "monthly",
+      priority: 0.6,
+    },
+    {
+      url: `${baseUrl}/blog/freqtrade-setup-tutorial-beginners-2026`,
       lastModified: new Date(),
       changeFrequency: "monthly",
       priority: 0.6,
