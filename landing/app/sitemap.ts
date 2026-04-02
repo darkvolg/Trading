@@ -186,6 +186,18 @@ export default function sitemap(): MetadataRoute.Sitemap {
       priority: 0.6,
     },
     {
+      url: `${baseUrl}/blog/how-to-backtest-crypto-trading-strategy-2026`,
+      lastModified: new Date(),
+      changeFrequency: "monthly",
+      priority: 0.6,
+    },
+    {
+      url: `${baseUrl}/blog/top-5-mistakes-beginner-algo-traders`,
+      lastModified: new Date(),
+      changeFrequency: "monthly",
+      priority: 0.6,
+    },
+    {
       url: `${baseUrl}/blog/freqtrade-setup-tutorial-beginners-2026`,
       lastModified: new Date(),
       changeFrequency: "monthly",

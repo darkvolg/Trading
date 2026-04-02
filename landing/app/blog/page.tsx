@@ -11,6 +11,22 @@ export const metadata: Metadata = {
 
 const posts = [
   {
+    slug: "how-to-backtest-crypto-trading-strategy-2026",
+    title: "How to Backtest a Crypto Trading Strategy: Complete Guide 2026",
+    excerpt: "Learn how to backtest crypto trading strategies step by step. Covers data selection, walk-forward analysis, overfitting prevention, and interpreting results with real examples from 10,000+ trades.",
+    date: "April 2, 2026",
+    readTime: "12 min read",
+    tag: "Education",
+  },
+  {
+    slug: "top-5-mistakes-beginner-algo-traders",
+    title: "Top 5 Mistakes Beginner Algo Traders Make (And How to Avoid Them)",
+    excerpt: "The 5 most common mistakes that destroy beginner algo traders: overfitting, ignoring fees, no risk management, over-optimizing, and skipping paper trading. Learn how to avoid each one with real examples.",
+    date: "April 2, 2026",
+    readTime: "10 min read",
+    tag: "Education",
+  },
+  {
     slug: "freqtrade-setup-tutorial-beginners-2026",
     title: "Freqtrade Tutorial 2026: Complete Setup Guide [67.9% Win Rate Strategy]",
     excerpt: "Step-by-step guide to setting up Freqtrade with Bybit. From installation to live trading in under 1 hour. Includes a complete RSI+EMA strategy template.",
