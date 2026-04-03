@@ -11,6 +11,22 @@ export const metadata: Metadata = {
 
 const posts = [
   {
+    slug: "crypto-trading-mistakes-beginners-2026",
+    title: "Top 10 Crypto Trading Mistakes That Cost Beginners $10,000+ in 2026",
+    excerpt: "Avoid the 10 most expensive crypto trading mistakes beginners make. Real examples with dollar losses for each one: emotional trading, no stop-loss, overleveraging, FOMO, and more. Proven fixes included.",
+    date: "April 2, 2026",
+    readTime: "16 min read",
+    tag: "Education",
+  },
+  {
+    slug: "freqtrade-vs-hummingbot-vs-ccxt-2026",
+    title: "Freqtrade vs Hummingbot vs CCXT: Best Open-Source Crypto Bot Framework 2026",
+    excerpt: "Detailed comparison of the 3 top open-source crypto bot tools. Covers features, exchanges, backtesting, strategy types, community, and which framework wins for trend following, market making, or custom bots.",
+    date: "April 2, 2026",
+    readTime: "14 min read",
+    tag: "Comparison",
+  },
+  {
     slug: "build-crypto-trading-bot-from-scratch-2026",
     title: "How to Build a Crypto Trading Bot from Scratch in 2026: Complete Beginner Guide",
     excerpt: "Step-by-step tutorial to build your own crypto trading bot. Covers Python setup, Freqtrade framework, strategy coding, backtesting, and live deployment on Bybit. No prior experience needed.",

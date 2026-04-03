@@ -1,8 +1,8 @@
 import type { Metadata } from "next";
 
 export const metadata: Metadata = {
-  title: "Max Drawdown Explained: How We Keep Ours at 1.42% [Calculator Inside]",
-  description: "Most traders ignore drawdown until it wipes them out. Here are the 3 rules that keep our max drawdown at 1.42% — with free calculator and real examples.",
+  title: "What Is Drawdown in Crypto? 3 Rules to Keep It Under 2%",
+  description: "90% of traders blow up from drawdown they never tracked. See the 3 rules that keep ours at 1.42% across 500+ trades. Free calculator included.",
   alternates: {
     canonical: "https://trendrider.net/blog/what-is-drawdown-crypto-trading",
   },
@@ -17,8 +17,8 @@ export default function Article() {
           __html: JSON.stringify({
             "@context": "https://schema.org",
             "@type": "Article",
-            "headline": "Max Drawdown Explained: How We Keep Ours at 1.42% [Calculator Inside]",
-            "description": "Learn what max drawdown is and why it matters more than profit. See the 3 rules that keep our drawdown at 1.42% — with calculator and examples.",
+            "headline": "What Is Drawdown in Crypto? 3 Rules to Keep It Under 2%",
+            "description": "90% of traders blow up from drawdown they never tracked. See the 3 rules that keep ours at 1.42% across 500+ trades. Free calculator included.",
             "author": {
               "@type": "Person",
               "name": "TrendRider Team",
