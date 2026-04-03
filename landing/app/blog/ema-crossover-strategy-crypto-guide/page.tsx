@@ -1,8 +1,8 @@
 import type { Metadata } from "next";
 
 export const metadata: Metadata = {
-  title: "EMA Crossover Strategy for Crypto: Complete Guide 2026 | TrendRider",
-  description: "Learn how to trade EMA crossovers in crypto markets. This complete guide covers fast/slow EMA selection, RSI and volume filters, entry/exit rules, and how to combine moving averages for consistent profits.",
+  title: "EMA Crossover Strategy Crypto: 67.9% Win Rate",
+  description: "Proven EMA crossover setup with exact entry/exit rules. RSI + volume filters included. Backtested on 500+ trades with real results.",
   alternates: {
     canonical: "https://trendrider.net/blog/ema-crossover-strategy-crypto-guide",
   },
@@ -17,8 +17,8 @@ export default function Article() {
           __html: JSON.stringify({
             "@context": "https://schema.org",
             "@type": "Article",
-            "headline": "EMA Crossover Strategy for Crypto: Complete Guide 2026",
-            "description": "Learn how to trade EMA crossovers in crypto markets. Complete guide covering fast/slow EMA selection, RSI and volume filters, entry/exit rules, and multi-indicator combinations.",
+            "headline": "EMA Crossover Strategy Crypto: 67.9% Win Rate",
+            "description": "Proven EMA crossover setup with exact entry/exit rules. RSI + volume filters included. Backtested on 500+ trades with real results.",
             "author": {
               "@type": "Person",
               "name": "TrendRider Team",
@@ -52,7 +52,7 @@ export default function Article() {
             "itemListElement": [
               { "@type": "ListItem", "position": 1, "name": "Home", "item": "https://trendrider.net" },
               { "@type": "ListItem", "position": 2, "name": "Blog", "item": "https://trendrider.net/blog" },
-              { "@type": "ListItem", "position": 3, "name": "EMA Crossover Strategy for Crypto: Complete Guide 2026" }
+              { "@type": "ListItem", "position": 3, "name": "EMA Crossover Strategy Crypto: 67.9% Win Rate" }
             ]
           })
         }}

@@ -48,14 +48,14 @@ class TrendRiderStrategy(IStrategy):
 
     # --- ROI: Wide, let winners run ---
     minimal_roi = {
-        "0": 0.229,     # 22.9% immediate (hyperopt 2026-03-23)
+        "0": 0.30,      # 30% immediate (widened for better R:R)
         "124": 0.136,   # 13.6% after ~2h
-        "290": 0.044,   # 4.4% after ~5h
+        "290": 0.06,    # 6% after ~5h (widened for better R:R)
         "764": 0,       # breakeven after ~12.7h
     }
 
     # --- Stoploss: WIDE for crypto volatility ---
-    stoploss = -0.035          # 3.5% (was -0.06, tightened: deep SL ate profits)
+    stoploss = -0.05           # 5% (was -0.035, too tight with 3x leverage)
     use_custom_stoploss = False
 
     # --- Trailing Stop: WIDE ---
@@ -98,10 +98,10 @@ class TrendRiderStrategy(IStrategy):
         "ema_fast": 9,
         "ema_slow": 16,
         "rsi_period": 16,
-        "rsi_pullback_low": 30,
-        "rsi_pullback_high": 65,
+        "rsi_pullback_low": 25,
+        "rsi_pullback_high": 70,
         "rsi_bounce": 35,
-        "adx_threshold": 18,
+        "adx_threshold": 15,
         "volume_factor": 0.7,
     }
 
@@ -113,11 +113,11 @@ class TrendRiderStrategy(IStrategy):
     ema_fast = IntParameter(5, 15, default=9, space="buy")
     ema_slow = IntParameter(15, 30, default=21, space="buy")
     rsi_period = IntParameter(10, 20, default=14, space="buy")
-    rsi_pullback_low = IntParameter(30, 48, default=40, space="buy")
-    rsi_pullback_high = IntParameter(52, 65, default=58, space="buy")
+    rsi_pullback_low = IntParameter(25, 48, default=40, space="buy")
+    rsi_pullback_high = IntParameter(52, 70, default=58, space="buy")
     rsi_bounce = IntParameter(25, 35, default=30, space="buy")
     rsi_exit = IntParameter(72, 85, default=78, space="sell")
-    adx_threshold = IntParameter(20, 35, default=25, space="buy")
+    adx_threshold = IntParameter(15, 35, default=25, space="buy")
     volume_factor = DecimalParameter(1.0, 2.5, default=1.3, space="buy")
 
     # --- Leverage: fixed 3x (adaptive tested, worse results) ---
@@ -487,7 +487,7 @@ class TrendRiderStrategy(IStrategy):
         conditions_bb = [
             dataframe["close"] <= dataframe["bb_lower"] * 1.005,           # close within 0.5% of BB lower
             dataframe["close"] > dataframe["open"],                         # bullish candle (bounce)
-            dataframe[rsi] < 35,                                           # tightened from 45 (50% WR, negative avg)
+            dataframe[rsi] < 40,                                           # loosened from 35 to generate more trades
             dataframe["volume_ratio"] > 0.3,
             dataframe["volume"] > 0,
             dataframe["btc_rsi_1h"] > BTC_RSI_LONG_MIN,
@@ -507,9 +507,10 @@ class TrendRiderStrategy(IStrategy):
             (dataframe["macdhist"].shift(1) <= 0),  # histogram crossed above zero
             dataframe["close"] > dataframe["ema_50"],
             dataframe["close"] > dataframe["ema_200"],  # confirm uptrend
-            dataframe[rsi] > 40,
+            dataframe[rsi] > 45,
             dataframe[rsi] < 60,
-            dataframe["adx"] > 15,
+            dataframe["adx"] > 20,
+            dataframe["is_bull_4h"] == 1,
             dataframe["volume_ratio"] > 0.8,            # volume confirmation
             dataframe["volume"] > 0,
             dataframe["btc_rsi_1h"] > BTC_RSI_LONG_MIN,
