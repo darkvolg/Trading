@@ -1,8 +1,8 @@
 import type { Metadata } from "next";
 
 export const metadata: Metadata = {
-  title: "7 Crypto Trading Strategies With 67.9% Win Rate [2026 Backtest Data]",
-  description: "We backtested 10,000+ trades across 7 strategies. One hit 67.9% win rate with 1.42% drawdown. Full data, code examples & free breakdown inside.",
+  title: "7 Best Crypto Trading Strategies 2026 (67.9% Win Rate)",
+  description: "We backtested 10,000+ trades — #1 strategy hit 67.9% win rate with only 1.42% drawdown. See full rankings, real data & free setup guide inside.",
   alternates: {
     canonical: "https://trendrider.net/blog/best-crypto-trading-strategies-2026",
   },
@@ -17,8 +17,8 @@ export default function Article() {
           __html: JSON.stringify({
             "@context": "https://schema.org",
             "@type": "Article",
-            "headline": "7 Crypto Trading Strategies With 67.9% Win Rate [2026 Backtest Data]",
-            "description": "Compare 7 crypto strategies ranked by 10,000+ backtest trades. See which hit 67.9% win rate and why. Free strategy breakdown with real data inside.",
+            "headline": "7 Best Crypto Trading Strategies 2026 (67.9% Win Rate)",
+            "description": "We backtested 10,000+ trades — #1 strategy hit 67.9% win rate with only 1.42% drawdown. See full rankings, real data & free setup guide inside.",
             "author": {
               "@type": "Person",
               "name": "TrendRider Team",
