@@ -125,7 +125,7 @@ export default function Article() {
             <li><strong className="text-foreground">Portfolio heat limit</strong> — TrendRider tracks the total risk across all open positions. If combined exposure exceeds a threshold, new signals are held until existing trades close.</li>
             <li><strong className="text-foreground">Confidence-adjusted sizing</strong> — Higher confidence signals receive slightly larger allocations (up to 2%), while lower confidence signals are sized down to 1-1.5%. This tilts capital toward the highest-probability setups.</li>
           </ul>
-          <p>The result is a maximum drawdown of just <strong className="text-primary">1.42%</strong> across all tracked trades — proof that disciplined sizing works.</p>
+          <p>The result is a maximum drawdown of just <strong className="text-primary">1.42%</strong> across all tracked trades — proof that disciplined sizing works alongside the <a href="/blog/best-crypto-trading-strategies-2026" className="text-primary hover:underline">profitable crypto trading strategies</a> TrendRider deploys.</p>
 
           <h2 className="text-xl font-semibold text-foreground mt-8 mb-3">Quick Reference: Position Sizing by Account Size</h2>
           <div className="overflow-x-auto">

@@ -104,7 +104,7 @@ export default function Article() {
             <li><strong className="text-foreground">73&ndash;82%</strong> &mdash; High confidence. Multiple timeframes and indicators confirm the setup. Standard position size.</li>
             <li><strong className="text-foreground">83&ndash;90%+</strong> &mdash; Very high confidence. Strong multi-timeframe alignment with supporting on-chain data. These are the highest-conviction trades.</li>
           </ul>
-          <p>The key insight is that confidence scores help you with <strong className="text-foreground">position sizing</strong>. You don&apos;t need to skip lower-confidence signals entirely &mdash; just allocate less capital to them. This way, you capture more opportunities while managing risk proportionally.</p>
+          <p>The key insight is that confidence scores help you with <strong className="text-foreground">position sizing</strong>. You don&apos;t need to skip lower-confidence signals entirely &mdash; just allocate less capital to them. This way, you capture more opportunities while managing risk proportionally, as laid out in our <a href="/blog/best-crypto-trading-strategies-2026" className="text-primary hover:underline">best crypto trading strategies</a> guide.</p>
 
           <h2 className="text-xl font-semibold text-foreground mt-8 mb-3">5 Common Mistakes Beginners Make</h2>
           <ul className="list-disc pl-6 space-y-2">

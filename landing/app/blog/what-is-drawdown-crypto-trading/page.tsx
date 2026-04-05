@@ -147,7 +147,7 @@ export default function Article() {
               </tbody>
             </table>
           </div>
-          <p>This is why professional traders obsess over drawdown control. A strategy that makes 200% in a year but has a 60% drawdown is far more dangerous than one that makes 40% with a 5% drawdown. The first strategy will eventually blow up; the second will compound reliably for years.</p>
+          <p>This is why professional traders obsess over drawdown control. A strategy that makes 200% in a year but has a 60% drawdown is far more dangerous than one that makes 40% with a 5% drawdown — an axiom that shapes every approach in our <a href="/blog/best-crypto-trading-strategies-2026" className="text-primary hover:underline">best crypto trading strategies</a> guide. The first strategy will eventually blow up; the second will compound reliably for years.</p>
 
           <h2 className="text-xl font-semibold text-foreground mt-8 mb-3">Types of Drawdown</h2>
           <ul className="list-disc pl-6 space-y-2">

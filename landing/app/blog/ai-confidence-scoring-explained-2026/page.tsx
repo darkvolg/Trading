@@ -141,7 +141,7 @@ export default function Article() {
             <p className="text-xs text-muted mt-3">Aggregate win rate across all published signals: 67.9%</p>
           </div>
 
-          <p>The pattern is monotonic: more confirming indicators → higher realized win rate. A 10/12 signal is not just &ldquo;a bit better&rdquo; than a 7/12 — it&apos;s materially more likely to hit targets.</p>
+          <p>The pattern is monotonic: more confirming indicators → higher realized win rate. A 10/12 signal is not just &ldquo;a bit better&rdquo; than a 7/12 — it&apos;s materially more likely to hit targets. This is why confidence scoring pairs naturally with the <a href="/blog/best-crypto-trading-strategies-2026" className="text-primary hover:underline">67.9% win rate trading strategies</a> we document across the full system.</p>
 
           <h2 className="text-xl font-semibold text-foreground mt-8 mb-3">TrendRider&apos;s 12-Point Scoring Breakdown</h2>
           <p>Here&apos;s exactly what TrendRider&apos;s AI measures, category by category, across the 5 monitored pairs (BTC, ETH, SOL, BNB, DOGE).</p>

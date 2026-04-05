@@ -77,7 +77,7 @@ export default function Article() {
           <p>We never risk more than 2% of total portfolio value on any single trade. If your portfolio is $10,000, no trade risks more than $200. This means even a string of 5 consecutive losses only costs 10% — painful but recoverable.</p>
 
           <h2 className="text-xl font-semibold text-foreground mt-8 mb-3">Rule 3: Multi-Target Take Profits</h2>
-          <p>Every signal has 3 take-profit levels with position scaling:</p>
+          <p>Every signal has 3 take-profit levels with position scaling, matching the structure used across our <a href="/blog/best-crypto-trading-strategies-2026" className="text-primary hover:underline">best crypto trading strategies</a>:</p>
           <ul className="list-disc pl-6 space-y-2">
             <li><strong className="text-foreground">TP1 (30% of position)</strong> — Conservative target, usually 3-4% above entry. Locks in profit early.</li>
             <li><strong className="text-foreground">TP2 (40% of position)</strong> — Mid-range target, 5-7%. Where most of the profit comes from.</li>

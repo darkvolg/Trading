@@ -243,7 +243,7 @@ export default function Article() {
             Freqtrade: The Best All-Round Framework for Retail Traders
           </h2>
           <p className="mb-4 leading-relaxed text-gray-300">
-            Freqtrade is a complete, battle-tested trading framework built specifically for directional crypto trading &mdash; trend following, momentum, mean reversion, and hybrid strategies. It handles everything from data download to live execution, with a built-in backtesting engine, hyperparameter optimizer, and Telegram bot for monitoring.
+            Freqtrade is a complete, battle-tested trading framework built specifically for directional crypto trading &mdash; trend following, momentum, mean reversion, and hybrid strategies. It handles everything from data download to live execution, with a built-in backtesting engine, hyperparameter optimizer, and Telegram bot for monitoring. For playbook ideas, see our <a href="/blog/best-crypto-trading-strategies-2026" className="text-cyan-400 underline decoration-cyan-400/30 hover:text-cyan-300">complete guide to crypto trading strategies</a>.
           </p>
           <p className="mb-4 leading-relaxed text-gray-300">
             <strong className="text-white">What Freqtrade excels at:</strong>

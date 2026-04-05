@@ -137,7 +137,7 @@ export default function Article() {
           </ul>
 
           <h2 className="text-xl font-semibold text-foreground mt-8 mb-3">Step 4: Configure Position Sizing</h2>
-          <p>This is the most important step for risk management. In Cornix settings:</p>
+          <p>This is the most important step for risk management, and it applies to any of the <a href="/blog/best-crypto-trading-strategies-2026" className="text-primary hover:underline">best crypto trading strategies</a> you might automate. In Cornix settings:</p>
           <ul className="list-disc pl-6 space-y-2">
             <li><strong className="text-foreground">Position size method</strong> &mdash; We recommend &ldquo;Percentage of balance&rdquo; set to 1-3% per trade. This aligns with TrendRider&apos;s risk management philosophy.</li>
             <li><strong className="text-foreground">Leverage</strong> &mdash; TrendRider signals specify leverage. You can set Cornix to &ldquo;Follow signal&rdquo; or cap it at your comfort level (we suggest 3-5x max for beginners).</li>

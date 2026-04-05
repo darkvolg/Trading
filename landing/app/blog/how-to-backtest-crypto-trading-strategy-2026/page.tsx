@@ -202,7 +202,7 @@ export default function Article() {
             <li><strong className="text-foreground">Filters</strong> &mdash; Conditions that prevent trading. Example: &ldquo;Don&apos;t trade when BTC daily RSI is below 20 (crash conditions).&rdquo;</li>
             <li><strong className="text-foreground">Timeframe</strong> &mdash; Which candle interval to use (5m, 15m, 1h, 4h, 1d).</li>
           </ol>
-          <p>TrendRider&apos;s strategy uses a <a href="/blog/multi-indicator-scoring-system-crypto" className="text-primary hover:underline">multi-indicator scoring system</a> that combines RSI, MACD, Bollinger Bands, ADX, and volume into a single confidence score. Each indicator contributes a weighted vote, and only signals above a threshold trigger trades. This approach was refined through hundreds of backtesting iterations.</p>
+          <p>TrendRider&apos;s strategy uses a <a href="/blog/multi-indicator-scoring-system-crypto" className="text-primary hover:underline">multi-indicator scoring system</a> that combines RSI, MACD, Bollinger Bands, ADX, and volume into a single confidence score. Each indicator contributes a weighted vote, and only signals above a threshold trigger trades — one of several approaches catalogued in our <a href="/blog/best-crypto-trading-strategies-2026" className="text-primary hover:underline">proven crypto trading strategies</a> guide. This approach was refined through hundreds of backtesting iterations.</p>
 
           {/* --- Section 5 --- */}
           <h2 className="text-xl font-semibold text-foreground mt-8 mb-3">Step 4: Run Your First Backtest</h2>

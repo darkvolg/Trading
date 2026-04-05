@@ -262,7 +262,7 @@ export default function Article() {
               bots need ultra-low latency and often compete with institutional HFT
               firms. Swing trading bots (4h-1d timeframes) face less competition and
               lower fee impact. TrendRider operates on 15m-4h timeframes, balancing
-              trade frequency with execution quality.
+              trade frequency with execution quality — see the full breakdown of <a href="/blog/best-crypto-trading-strategies-2026" className="text-primary hover:underline">profitable crypto trading strategies</a> by timeframe.
             </li>
             <li>
               <strong className="text-white">Capital Size</strong> &mdash; Larger
