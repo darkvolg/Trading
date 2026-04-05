@@ -11,6 +11,22 @@ export const metadata: Metadata = {
 
 const posts = [
   {
+    slug: "ai-crypto-trading-signals-how-they-work-2026",
+    title: "AI Crypto Trading Signals: How They Work in 2026",
+    excerpt: "Deep dive into how AI crypto trading signals work: technical indicators, on-chain data, sentiment analysis, and 12-point confidence scoring. Real data from 10,000+ backtested trades with 67.9% win rate across BTC, ETH, SOL, BNB, DOGE.",
+    date: "April 5, 2026",
+    readTime: "12 min read",
+    tag: "AI Trading",
+  },
+  {
+    slug: "ai-confidence-scoring-explained-2026",
+    title: "AI Confidence Scoring Explained: Why 10/10 Signals Win More",
+    excerpt: "How AI confidence scoring works in crypto signals. TrendRider's 12-point scale breakdown, win rate by confidence level, and how to size positions from 6/12 to 12/12 for compounding returns.",
+    date: "April 5, 2026",
+    readTime: "11 min read",
+    tag: "AI Trading",
+  },
+  {
     slug: "crypto-trading-mistakes-beginners-2026",
     title: "Top 10 Crypto Trading Mistakes That Cost Beginners $10,000+ in 2026",
     excerpt: "Avoid the 10 most expensive crypto trading mistakes beginners make. Real examples with dollar losses for each one: emotional trading, no stop-loss, overleveraging, FOMO, and more. Proven fixes included.",
