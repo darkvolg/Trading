@@ -39,6 +39,6 @@ jobs:
           sudo make install
           cd ..
       - name: Install dependencies
-        run: pip install pytest requests numpy pandas python-telegram-bot TA-Lib ccxt
+        run: pip install pytest pytest-asyncio requests numpy pandas matplotlib python-telegram-bot TA-Lib ccxt
       - name: Run tests
-        run: python -m pytest FreqtradeBot/tests/ --tb=short -q
+        run: python -m pytest FreqtradeBot/tests/ --tb=short -q --asyncio-mode=auto
