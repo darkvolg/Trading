@@ -315,7 +315,7 @@ def build_message(results: list[dict], fng: dict, open_pos: int,
     lines.append("*Market Summary:*")
     lines.append(f"  BTC trend: {btc_dom} | Active signals: waiting")
     lines.append("================================")
-    lines.append("_TrendRider Algo | @TrendRiderSignals_")
+    lines.append("_TrendRider AI | @TrendRiderSignals_")
 
     return "\n".join(lines)
 

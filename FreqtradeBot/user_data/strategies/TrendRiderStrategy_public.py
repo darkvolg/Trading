@@ -658,7 +658,7 @@ class TrendRiderStrategy(IStrategy):
             f"*Market:* {market_ctx}\n\n"
             f"*Why:* {reason}\n"
             f"{'='*28}\n"
-            f"_TrendRider Algo_"
+            f"_TrendRider AI_"
         )
         self.dp.send_msg(msg, always_send=True)
 
@@ -711,7 +711,7 @@ class TrendRiderStrategy(IStrategy):
             f"*Reason:* {reason_text}\n"
             f"*Max price:* `{trade.max_rate:.2f}`\n"
             f"{'='*25}\n"
-            f"_TrendRider Algo_"
+            f"_TrendRider AI_"
         )
 
         self.dp.send_msg(msg, always_send=True)

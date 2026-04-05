@@ -189,7 +189,7 @@ def build_weekly_message(week: dict, running: dict) -> str:
 
     lines.append(sep)
     lines.append(f"Full history: {GOOGLE_SHEET_URL}")
-    lines.append("TrendRider Algo | @TrendRiderSignals")
+    lines.append("TrendRider AI | @TrendRiderSignals")
 
     return "\n".join(lines)
 
@@ -220,7 +220,7 @@ def build_quiet_message(running: dict) -> str:
 
     lines.append(sep)
     lines.append(f"Full history: {GOOGLE_SHEET_URL}")
-    lines.append("TrendRider Algo | @TrendRiderSignals")
+    lines.append("TrendRider AI | @TrendRiderSignals")
 
     return "\n".join(lines)
 
