@@ -165,7 +165,7 @@ def build_oi_alert(pair: str, oi: float, change_pct: float) -> str:
         f"This often precedes volatile moves.\n"
         f"Stay alert for breakout signals.\n"
         f"========================\n"
-        f"TrendRider Algo | @TrendRiderSignals"
+        f"TrendRider AI | @TrendRiderSignals"
     )
 
 
@@ -188,7 +188,7 @@ def build_funding_alert(pair: str, rate: float, extreme: bool) -> str:
         f"This indicates {bias}.\n"
         f"Watch for potential liquidation cascade.\n"
         f"{'=' * 32}\n"
-        f"TrendRider Algo | @TrendRiderSignals"
+        f"TrendRider AI | @TrendRiderSignals"
     )
 
 

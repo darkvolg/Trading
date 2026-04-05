@@ -86,7 +86,7 @@ def format_entry_signal(signal_num: int, pair: str, side_str: str, leverage: int
     vol_indicator = "\u2705" if vol_ratio > 1.0 else "\u26a0\ufe0f"
 
     return (
-        f"*TRENDRIDER SIGNAL #{signal_num:03d}*\n"
+        f"*TRENDRIDER AI SIGNAL #{signal_num:03d}*\n"
         f"{'='*28}\n"
         f"*{pair}* | {side_emoji} *{side_str}* | {leverage}x\n"
         f"*Setup:* {setup_name}\n"
@@ -94,7 +94,7 @@ def format_entry_signal(signal_num: int, pair: str, side_str: str, leverage: int
         f"\U0001f3af *Entry Zone:* `{entry_low:.2f}` - `{entry_high:.2f}` USDT\n"
         f"\U0001f6e1 *Stop Loss:* `{sl_price:.2f}` ({stoploss_pct*100:+.1f}%)\n"
         f"  R:R = 1:{rr_ratio:.1f}\n\n"
-        f"*Confidence:* {conf_level} ({conf_numeric}/10)\n"
+        f"*AI Confidence:* {conf_level} ({conf_numeric}/10)\n"
         f"  {conf_bar}\n"
         f"  {', '.join(conf_details)}\n\n"
         f"*Regime:* {regime}\n"
@@ -108,7 +108,7 @@ def format_entry_signal(signal_num: int, pair: str, side_str: str, leverage: int
         f"*Why:* {reason}\n"
         f"{'='*28}\n"
         f"\U0001f4c8 [Trade on Bybit]({BYBIT_REFERRAL_LINK})\n"
-        f"_TrendRider Algo | @TrendRiderSignals_"
+        f"_TrendRider AI | @TrendRiderSignals_"
     )
 
 
@@ -220,7 +220,7 @@ def format_exit_footer(stats_line: str) -> str:
     footer += (
         f"{'='*28}\n"
         f"[Full Trade History](https://docs.google.com/spreadsheets/d/1ZWRJ0PcBSk910MZv426PrleriBnInykr3OebWXJPm-g)\n"
-        f"_TrendRider Algo | @TrendRiderSignals_"
+        f"_TrendRider AI | @TrendRiderSignals_"
     )
     return footer
 

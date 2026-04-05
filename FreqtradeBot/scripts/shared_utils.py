@@ -46,7 +46,7 @@ def query_stats(db_path: str) -> str:
         return (
             "*TRENDRIDER STATS*\n============================\n"
             "No trades yet. Bot is monitoring markets.\n"
-            "============================\n_TrendRider Algo | @TrendRiderSignals_"
+            "============================\n_TrendRider AI | @TrendRiderSignals_"
         )
 
     total = len(rows)
@@ -112,7 +112,7 @@ def query_stats(db_path: str) -> str:
     lines += [
         "",
         "============================",
-        "_TrendRider Algo | @TrendRiderSignals_",
+        "_TrendRider AI | @TrendRiderSignals_",
     ]
     return "\n".join(lines)
 

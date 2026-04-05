@@ -1,5 +1,5 @@
 """
-TrendRider Confidence — signal scoring, market regime detection, market context.
+TrendRider AI Confidence — AI-powered signal scoring, market regime detection, market context.
 """
 
 import logging

@@ -206,7 +206,7 @@ def build_message(results: list[dict], fng_value: int, fng_label: str) -> str:
 
     lines.append("")
     lines.append("=====================================")
-    lines.append("TrendRider Algo | @TrendRiderSignals")
+    lines.append("TrendRider AI | @TrendRiderSignals")
 
     return "\n".join(lines)
 

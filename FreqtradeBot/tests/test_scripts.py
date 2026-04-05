@@ -276,7 +276,7 @@ class TestDailyDigestBuildMessage:
         assert "Fear & Greed: 55" in msg
         assert "BTC/USDT" in msg
         assert "OI CHANGES" in msg
-        assert "TrendRider Algo" in msg
+        assert "TrendRider AI" in msg
 
     def test_error_pair_shows_unavailable(self):
         results = [{"symbol": "SOL/USDT", "error": True}]
