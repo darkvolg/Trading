@@ -124,7 +124,7 @@ export default function Article() {
           <p><strong className="text-foreground">Important:</strong> Always start with <code className="text-primary">&quot;dry_run&quot;: true</code>. This runs the bot in paper trading mode where it simulates trades without placing real orders. Only switch to <code className="text-primary">false</code> after you&apos;ve verified your strategy performs as expected in dry-run for at least 2&ndash;4 weeks.</p>
 
           <h2 className="text-xl font-semibold text-foreground mt-8 mb-3">Step 4: Choose or Build a Strategy</h2>
-          <p>Freqtrade strategies are Python classes that define entry and exit logic using technical indicators. The framework provides several sample strategies, but you&apos;ll want to customize or build your own. A basic strategy structure looks like this:</p>
+          <p>Freqtrade strategies are Python classes that define entry and exit logic using technical indicators. The framework provides several sample strategies, but you&apos;ll want to customize or build your own — our roundup of the <a href="/blog/best-crypto-trading-strategies-2026" className="text-primary hover:underline">best crypto trading strategies</a> is a good starting point. A basic strategy structure looks like this:</p>
           <div className="p-4 rounded-xl bg-card/50 border border-border/50 font-mono text-sm">
             <p className="text-primary"># user_data/strategies/MyStrategy.py</p>
             <p>from freqtrade.strategy import IStrategy</p>

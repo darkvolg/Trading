@@ -119,7 +119,7 @@ export default function Article() {
 
           {/* --- Section 2 --- */}
           <h2 className="text-xl font-semibold text-foreground mt-8 mb-3">Position Sizing: The Foundation of Crypto Risk Management</h2>
-          <p>Position sizing answers the most important question in trading: &ldquo;How much should I put into this trade?&rdquo; Get it wrong, and no amount of technical analysis will save you. Get it right, and even a mediocre strategy becomes profitable over time.</p>
+          <p>Position sizing answers the most important question in trading: &ldquo;How much should I put into this trade?&rdquo; Get it wrong, and no amount of technical analysis will save you. Get it right, and even a mediocre strategy becomes profitable over time — and when combined with the <a href="/blog/best-crypto-trading-strategies-2026" className="text-primary hover:underline">best crypto trading strategies</a>, the compounding becomes significant.</p>
 
           <h3 className="text-lg font-medium text-foreground mt-6 mb-2">The 1-2% Rule</h3>
           <p>The most widely accepted position sizing rule is simple: never risk more than 1-2% of your total portfolio on a single trade. If your account is $10,000, your maximum risk per trade is $100-$200. This doesn&apos;t mean you only invest $200 &mdash; it means the <em>potential loss</em> if your stop-loss triggers is capped at $200.</p>

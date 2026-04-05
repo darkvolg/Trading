@@ -80,7 +80,7 @@ export default function Article() {
           </ul>
 
           <h2 className="text-xl font-semibold text-foreground mt-8 mb-3">The Algorithmic Advantage</h2>
-          <p>An algorithm doesn&apos;t feel fear. It doesn&apos;t get greedy. It executes the same strategy with the same precision whether the market is up 20% or down 30%. This consistency is what produces a 67.9% win rate over hundreds of trades.</p>
+          <p>An algorithm doesn&apos;t feel fear. It doesn&apos;t get greedy. It executes the same strategy with the same precision whether the market is up 20% or down 30%. This consistency is what produces a 67.9% win rate over hundreds of trades — see the full playbook in our <a href="/blog/best-crypto-trading-strategies-2026" className="text-primary hover:underline">67.9% win rate trading strategies</a>.</p>
           <p>TrendRider&apos;s algorithm analyzes 15+ technical indicators across 4 timeframes (5m, 15m, 1h, 4h), cross-references on-chain data (Fear &amp; Greed Index, funding rates, open interest), and generates signals only when multiple confirmation criteria align.</p>
 
           <h2 className="text-xl font-semibold text-foreground mt-8 mb-3">Real Numbers, Real Transparency</h2>

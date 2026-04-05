@@ -116,7 +116,7 @@ export default function Article() {
             <li><strong className="text-foreground">System A</strong> &mdash; 85% win rate, but winners average +0.5R while losers average -3R. Net expectancy is negative. SQN: 0.8.</li>
             <li><strong className="text-foreground">System B</strong> &mdash; 55% win rate, but winners average +2.5R while losers average -1R. Net expectancy is strongly positive. SQN: 3.1.</li>
           </ul>
-          <p>System A looks spectacular on the surface. System B looks mediocre. But System B will make you money over time, while System A will slowly bleed your account dry. SQN captures this reality in a single number.</p>
+          <p>System A looks spectacular on the surface. System B looks mediocre. But System B will make you money over time, while System A will slowly bleed your account dry. SQN captures this reality in a single number &mdash; one reason we rank the <a href="/blog/best-crypto-trading-strategies-2026" className="text-primary hover:underline">top crypto trading strategies for 2026</a> by SQN, not win rate.</p>
 
           <h2 className="text-xl font-semibold text-foreground mt-8 mb-3">How TrendRider Achieves an SQN of 3.45</h2>
           <p>TrendRider&apos;s algorithm is engineered for consistency above all else. Here&apos;s what contributes to our &ldquo;Excellent&rdquo; SQN rating:</p>

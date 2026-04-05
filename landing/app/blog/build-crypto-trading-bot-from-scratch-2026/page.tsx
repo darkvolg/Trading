@@ -183,7 +183,7 @@ export default function Article() {
             </table>
           </div>
           <p className="mb-4 leading-relaxed text-gray-300">
-            We strongly recommend <strong className="text-white">Freqtrade</strong> for most builders. It handles exchange connectivity, order execution, backtesting, and optimization out of the box while giving you full control over strategy logic in Python. It is free, open-source, and used by thousands of traders worldwide.
+            We strongly recommend <strong className="text-white">Freqtrade</strong> for most builders. It handles exchange connectivity, order execution, backtesting, and optimization out of the box while giving you full control over strategy logic in Python — you can adapt any of the <a href="/blog/best-crypto-trading-strategies-2026" className="text-primary hover:underline">top crypto trading strategies for 2026</a> directly into Freqtrade. It is free, open-source, and used by thousands of traders worldwide.
           </p>
           <p className="mb-4 leading-relaxed text-gray-300">
             If you want a deeper comparison,{" "}

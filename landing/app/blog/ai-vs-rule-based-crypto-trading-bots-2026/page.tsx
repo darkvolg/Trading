@@ -143,7 +143,7 @@ export default function Article() {
               Rule-based bots have been the backbone of algorithmic trading since the 1980s. The approach is proven across every asset class: equities, forex, commodities, and now crypto. While the specific indicators and parameters change, the fundamental principle remains the same &mdash; <strong className="text-white">codify what works, test it rigorously, and let the machine execute without emotion</strong>.
             </p>
             <p className="mb-4 leading-relaxed text-gray-300">
-              A typical rule-based crypto strategy might combine trend-following indicators (EMA crossovers, ADX) with momentum oscillators (RSI, Stochastic) and volume confirmation. The strategy scores each indicator, sums the signals, and only enters a trade when the combined score exceeds a threshold. This multi-indicator approach reduces false signals and provides robustness across different market conditions.
+              A typical rule-based crypto strategy might combine trend-following indicators (EMA crossovers, ADX) with momentum oscillators (RSI, Stochastic) and volume confirmation. The strategy scores each indicator, sums the signals, and only enters a trade when the combined score exceeds a threshold. This multi-indicator approach reduces false signals and provides robustness across different market conditions — see our <a href="/blog/best-crypto-trading-strategies-2026" className="text-primary hover:underline">complete guide to crypto trading strategies</a> for the full framework.
             </p>
             <p className="mb-4 leading-relaxed text-gray-300">
               The key characteristics of rule-based bots:

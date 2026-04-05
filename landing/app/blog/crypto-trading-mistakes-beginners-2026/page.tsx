@@ -215,7 +215,7 @@ export default function Article() {
             A trader backtests a strategy showing 30% annual returns. Looks great. They go live &mdash; and the strategy makes 8% instead. What happened? The backtest did not account for the 0.075% maker/taker fees on Bybit, 8-hour funding rates on perpetual contracts, and slippage on entries and exits.
           </p>
           <p className="mb-4 leading-relaxed text-gray-300">
-            <strong className="text-white">Why it happens:</strong> Fees seem small in isolation. But a strategy that makes 150 trades per month at 0.15% total cost per trade (entry + exit + funding) pays 22.5% annually in transaction costs. That turns a 30% gross return into a 7.5% net return.
+            <strong className="text-white">Why it happens:</strong> Fees seem small in isolation. But a strategy that makes 150 trades per month at 0.15% total cost per trade (entry + exit + funding) pays 22.5% annually in transaction costs. That turns a 30% gross return into a 7.5% net return. The <a href="/blog/best-crypto-trading-strategies-2026" className="text-cyan-400 underline decoration-cyan-400/30 hover:text-cyan-300">best crypto trading strategies</a> factor fee drag into the edge calculation from the start.
           </p>
           <p className="mb-4 leading-relaxed text-gray-300">
             <strong className="text-white">Typical cost:</strong> $1,500&ndash;$5,000 per year for active traders, depending on frequency and exchange fee tier.

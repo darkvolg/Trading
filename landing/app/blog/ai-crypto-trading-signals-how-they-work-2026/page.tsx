@@ -187,7 +187,7 @@ export default function Article() {
           <p>Because AI rules are code, they can be backtested against years of historical data. TrendRider&apos;s strategy has 10,000+ simulated trades with these verified metrics: 67.9% win rate, 2.12 profit factor, 1.42% maximum drawdown, 3.45 SQN score. Manual trading offers no such proof. See <a href="/blog/backtesting-crypto-strategies-guide" className="text-primary hover:underline">backtesting crypto strategies</a> for more context.</p>
 
           <h2 className="text-xl font-semibold text-foreground mt-8 mb-3">Real Example: A TrendRider AI Signal Walkthrough</h2>
-          <p>Here&apos;s what an AI signal looks like in practice. This is a real TrendRider output format:</p>
+          <p>Here&apos;s what an AI signal looks like in practice, drawn from the <a href="/blog/best-crypto-trading-strategies-2026" className="text-primary hover:underline">best crypto trading strategies</a> we publish publicly. This is a real TrendRider output format:</p>
 
           <div className="bg-card/50 border border-border/50 rounded-xl p-6 my-6 font-mono text-sm">
             <p className="text-primary font-semibold mb-3">TrendRider AI Signal</p>

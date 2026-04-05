@@ -74,7 +74,7 @@ export default function Article() {
           <p>Win rate is simply the percentage of trades that close in profit. TrendRider&apos;s 67.9% win rate means that roughly 7 out of 10 trades hit at least one take-profit target. But this number only tells part of the story.</p>
 
           <h2 className="text-xl font-semibold text-foreground mt-8 mb-3">Profit Factor: The Real Metric</h2>
-          <p>Profit factor = gross profit / gross loss. A profit factor of 1.0 means you&apos;re breaking even. Anything above 2.0 is considered excellent. TrendRider&apos;s profit factor of <strong className="text-primary">2.12x</strong> means for every $1 lost, we make $2.12 in profit.</p>
+          <p>Profit factor = gross profit / gross loss. A profit factor of 1.0 means you&apos;re breaking even. Anything above 2.0 is considered excellent. TrendRider&apos;s profit factor of <strong className="text-primary">2.12x</strong> means for every $1 lost, we make $2.12 in profit — a result of the <a href="/blog/best-crypto-trading-strategies-2026" className="text-primary hover:underline">67.9% win rate trading strategies</a> layered into every signal.</p>
 
           <h2 className="text-xl font-semibold text-foreground mt-8 mb-3">Maximum Drawdown: Risk Control</h2>
           <p>Drawdown measures the largest peak-to-trough decline in your account. Most retail traders experience 20-40% drawdowns. TrendRider&apos;s max drawdown of <strong className="text-primary">1.42%</strong> is exceptionally low because of strict 6% stop-loss per trade and never risking more than 2% of portfolio per position.</p>
