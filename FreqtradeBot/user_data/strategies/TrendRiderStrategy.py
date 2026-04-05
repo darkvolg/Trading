@@ -55,7 +55,7 @@ class TrendRiderStrategy(IStrategy):
     }
 
     # --- Stoploss: WIDE for crypto volatility ---
-    stoploss = -0.05           # 5% (was -0.035, too tight with 3x leverage)
+    stoploss = -0.035          # V3: tightened from -0.05 for defensive cut (backtest: MaxDD 4.08%→1.12%)
     use_custom_stoploss = False
 
     # --- Trailing Stop: WIDE ---
@@ -106,7 +106,7 @@ class TrendRiderStrategy(IStrategy):
     }
 
     sell_params = {
-        "rsi_exit": 78,
+        "rsi_exit": 82,
     }
 
     # --- HyperOpt Parameters ---
@@ -550,10 +550,10 @@ class TrendRiderStrategy(IStrategy):
             ["exit_long", "exit_tag"]
         ] = (1, "ema_bearish_cross")
 
-        # EXIT 3: Price drops below EMA200 by 1%+ (trend broken, softened to avoid premature exits)
+        # EXIT 3: Price drops 3%+ below EMA200 for 2 consecutive candles (V3: was 1% single-candle, too noisy)
         dataframe.loc[
-            (dataframe["close"] < dataframe["ema_200"] * 0.99) &
-            (dataframe["close"].shift(1) >= dataframe["ema_200"].shift(1)) &
+            (dataframe["close"] < dataframe["ema_200"] * 0.97) &
+            (dataframe["close"].shift(1) < dataframe["ema_200"].shift(1) * 0.97) &
             (dataframe["volume"] > 0),
             ["exit_long", "exit_tag"]
         ] = (1, "trend_broken")
@@ -562,8 +562,10 @@ class TrendRiderStrategy(IStrategy):
 
     def custom_exit(self, pair: str, trade, current_time: datetime,
                     current_rate: float, current_profit: float, **kwargs):
-        """Time-based exit: close after 24 candles (24h) if profit < 1%."""
+        """Time-based exits: V3 adds early loss cut (4h/-3%) before 24h timeout."""
         duration_hours = (current_time - trade.open_date_utc).total_seconds() / 3600
+        if duration_hours >= 4 and current_profit < -0.03:
+            return "early_loss_cut"
         if duration_hours >= 24 and current_profit < 0.01:
             return "time_exit_24h"
         return None
