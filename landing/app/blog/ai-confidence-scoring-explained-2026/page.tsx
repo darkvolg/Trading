@@ -116,7 +116,8 @@ export default function Article() {
           <span className="text-xs text-muted">April 5, 2026</span>
           <span className="text-xs text-muted">&bull; 11 min read</span>
         </div>
-        <h1 className="text-3xl md:text-4xl font-bold mb-8 tracking-tight">AI Confidence Scoring Explained: Why 10/10 Signals Win More</h1>
+        <h1 className="text-3xl md:text-4xl font-bold mb-6 tracking-tight">AI Confidence Scoring Explained: Why 10/10 Signals Win More</h1>
+        <img src="/blog-heroes/ai-confidence-scoring-explained-2026.png" alt="AI Confidence Scoring - circular confidence gauge with technical indicator icons" className="w-full rounded-xl border border-border mb-8" loading="eager" />
 
         <div className="space-y-6 text-muted leading-relaxed">
           <p>A confidence score of 10/12 sits next to most TrendRider signals, but very few traders actually understand what the number means — or how to use it. That&apos;s a shame, because confidence scoring is the single most useful feature of modern AI signals. It tells you exactly how strong a trade setup is, lets you size positions intelligently, and filters out the noise that wrecks most retail accounts.</p>
