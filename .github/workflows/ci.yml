@@ -28,6 +28,6 @@ jobs:
           cache: pip
           cache-dependency-path: .github/workflows/ci.yml
       - name: Install dependencies
-        run: pip install pytest requests numpy pandas
+        run: pip install pytest requests numpy pandas python-telegram-bot
       - name: Run tests
         run: python -m pytest FreqtradeBot/tests/ --tb=short -q
