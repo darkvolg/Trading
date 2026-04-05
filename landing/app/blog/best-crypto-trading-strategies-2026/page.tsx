@@ -1,8 +1,8 @@
 import type { Metadata } from "next";
 
 export const metadata: Metadata = {
-  title: "7 Best Crypto Trading Strategies 2026 [Tested]",
-  description: "10,000+ backtested trades reveal the #1 strategy: 67.9% win rate, 1.42% drawdown. Full rankings with real P&L data and free setup guide.",
+  title: "7 Best Crypto Trading Strategies 2026 (67.9% Win Rate)",
+  description: "10,000+ backtested trades, 67.9% win rate, 1.42% drawdown. See the #1 ranked strategy with live P&L proof. Free Telegram signals + setup guide.",
   alternates: {
     canonical: "https://trendrider.net/blog/best-crypto-trading-strategies-2026",
   },

@@ -11,6 +11,22 @@ export const metadata: Metadata = {
 
 const posts = [
   {
+    slug: "advanced-crypto-trading-strategies-2026",
+    title: "Advanced Crypto Trading Strategies for 2026 (Pro Edition)",
+    excerpt: "Advanced crypto trading strategies for 2026: market regime detection, multi-indicator confluence scoring, funding rate arbitrage, delta-neutral setups, portfolio heat management, and dynamic position sizing.",
+    date: "April 5, 2026",
+    readTime: "13 min read",
+    tag: "Advanced",
+  },
+  {
+    slug: "altcoin-trading-strategies-2026",
+    title: "7 Altcoin Trading Strategies That Actually Work in 2026",
+    excerpt: "7 altcoin trading strategies for 2026: BTC dominance gating, alt season momentum, volume divergence, multi-timeframe confluence, catalyst plays, correlation rotation, and oversold mean reversion on SOL, BNB, DOGE, OP.",
+    date: "April 5, 2026",
+    readTime: "12 min read",
+    tag: "Strategy",
+  },
+  {
     slug: "ai-crypto-trading-signals-how-they-work-2026",
     title: "AI Crypto Trading Signals: How They Work in 2026",
     excerpt: "Deep dive into how AI crypto trading signals work: technical indicators, on-chain data, sentiment analysis, and 12-point confidence scoring. Real data from 10,000+ backtested trades with 67.9% win rate across BTC, ETH, SOL, BNB, DOGE.",
