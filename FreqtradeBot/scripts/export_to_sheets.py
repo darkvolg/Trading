@@ -431,7 +431,7 @@ def update_dashboard(sh: gspread.Spreadsheet, trades: list[dict]) -> None:
         [metrics["worst_trade"]],
         [metrics["avg_duration"]],
     ]
-    dash.update(f"B5:B{5 + len(metric_values) - 1}", metric_values, value_input_option="USER_ENTERED")
+    dash.update(values=metric_values, range_name=f"B5:B{5 + len(metric_values) - 1}", value_input_option="USER_ENTERED")
 
     # Color P&L cells: green if positive, red if negative
     pnl_usdt = metrics["total_pnl_usdt"]
@@ -454,8 +454,8 @@ def update_dashboard(sh: gspread.Spreadsheet, trades: list[dict]) -> None:
         # Write new monthly data
         end_row = monthly_data_start + len(monthly_rows) - 1
         dash.update(
-            f"A{monthly_data_start}:G{end_row}",
-            monthly_rows,
+            values=monthly_rows,
+            range_name=f"A{monthly_data_start}:G{end_row}",
             value_input_option="USER_ENTERED",
         )
 
@@ -471,7 +471,7 @@ def update_dashboard(sh: gspread.Spreadsheet, trades: list[dict]) -> None:
 
     # Update timestamp in row 2
     now_str = datetime.now(timezone.utc).strftime("%Y-%m-%d %H:%M UTC")
-    dash.update("A2", [[f"Last updated: {now_str}  |  View only"]], value_input_option="USER_ENTERED")
+    dash.update(values=[[f"Last updated: {now_str}  |  View only"]], range_name="A2", value_input_option="USER_ENTERED")
 
     print(f"Dashboard updated: {metrics['total_trades']} trades, P&L ${metrics['total_pnl_usdt']:+.2f}")
 
