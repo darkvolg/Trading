@@ -2,7 +2,7 @@ import type { Metadata } from "next";
 
 export const metadata: Metadata = {
   title: "Freqtrade vs 3Commas vs Cornix 2026 [Real Test]",
-  description: "6-month real money test: the free bot beat both paid ones. Side-by-side pricing, features, and ROI comparison with actual P&L results.",
+  description: "We tested Freqtrade, 3Commas & Cornix for 6 months with real money. The free bot won. Full pricing, features & ROI comparison table inside.",
   alternates: {
     canonical: "https://trendrider.net/blog/freqtrade-vs-3commas-vs-cornix",
   },
@@ -18,7 +18,7 @@ export default function Article() {
             "@context": "https://schema.org",
             "@type": "Article",
             "headline": "Freqtrade vs 3Commas vs Cornix 2026 [Real Test]",
-            "description": "6-month real money test: the free bot beat both paid ones. Side-by-side pricing, features, and ROI comparison with actual P&L results.",
+            "description": "We tested Freqtrade, 3Commas & Cornix for 6 months with real money. The free bot won. Full pricing, features & ROI comparison table inside.",
             "author": {
               "@type": "Person",
               "name": "TrendRider Team",

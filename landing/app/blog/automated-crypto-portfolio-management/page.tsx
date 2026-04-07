@@ -1,8 +1,8 @@
 import type { Metadata } from "next";
 
 export const metadata: Metadata = {
-  title: "Automated Crypto Portfolio Management 2026 [Free]",
-  description: "Set up automated crypto trading in 30 min. 5 bots compared with real ROI data. Copy our +41% portfolio setup free. Step-by-step guide.",
+  title: "Automated Crypto Portfolio Management 2026 [Free Guide]",
+  description: "Set up automated crypto portfolio management in 30 min. 5 bot platforms compared with real ROI. Copy our +41% strategy free. Step-by-step.",
   alternates: {
     canonical: "https://trendrider.net/blog/automated-crypto-portfolio-management",
   },
@@ -17,8 +17,8 @@ export default function Article() {
           __html: JSON.stringify({
             "@context": "https://schema.org",
             "@type": "Article",
-            "headline": "Automated Crypto Portfolio Management 2026 [Free]",
-            "description": "Set up automated crypto trading in 30 min. 5 bots compared with real ROI data. Copy our +41% portfolio setup free. Step-by-step guide.",
+            "headline": "Automated Crypto Portfolio Management 2026 [Free Guide]",
+            "description": "Set up automated crypto portfolio management in 30 min. 5 bot platforms compared with real ROI. Copy our +41% strategy free. Step-by-step.",
             "author": {
               "@type": "Person",
               "name": "TrendRider Team",
