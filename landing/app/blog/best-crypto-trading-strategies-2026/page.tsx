@@ -168,8 +168,17 @@ export default function Article() {
           </ul>
           <p>This combination delivers a 67.9% win rate with an SQN of 3.45 (rated &ldquo;Excellent&rdquo;) and a maximum drawdown of just 1.42%. The key insight is that no single strategy works in all market conditions &mdash; but a well-designed hybrid system can adapt and perform consistently across cycles.</p>
 
+          <h2 className="text-xl font-semibold text-foreground mt-8 mb-3">5. Dollar Cost Averaging (DCA)</h2>
+          <p>DCA is the most underrated algorithmic strategy in crypto. Rather than trying to time one perfect entry, DCA spreads purchases across multiple intervals &mdash; buying more when prices dip and less during peaks. When combined with technical indicators like RSI and EMA filters, bot-driven DCA consistently outperforms fixed-schedule manual buying by 2&ndash;4% annually.</p>
+          <ul className="list-disc pl-6 space-y-2">
+            <li><strong className="text-foreground">Strengths</strong> &mdash; Reduces timing risk, lowers average entry price in volatile markets, emotionally easier to execute</li>
+            <li><strong className="text-foreground">Weaknesses</strong> &mdash; Slower capital deployment, underperforms lump-sum in strong bull trends, requires patience over months</li>
+            <li><strong className="text-foreground">Best for</strong> &mdash; Long-term accumulators, risk-averse traders, automated bot systems</li>
+          </ul>
+          <p>For a complete breakdown of how to implement DCA with a trading bot &mdash; including Freqtrade setup, entry conditions, and real backtest results &mdash; see our <a href="/blog/dca-bot-strategy-crypto-complete-guide-2026" className="text-primary hover:underline">DCA bot strategy guide</a>.</p>
+
           <h2 className="text-xl font-semibold text-foreground mt-8 mb-3">Which Strategy Should You Choose?</h2>
-          <p>If you&apos;re trading manually, pick one strategy that matches your personality and risk tolerance. Trend following rewards patience; mean reversion rewards discipline; breakout trading rewards decisiveness; momentum rewards speed.</p>
+          <p>If you&apos;re trading manually, pick one strategy that matches your personality and risk tolerance. Trend following rewards patience; mean reversion rewards discipline; breakout trading rewards decisiveness; momentum rewards speed. And if you want the lowest-stress approach with proven long-term results, <a href="/blog/dca-bot-strategy-crypto-complete-guide-2026" className="text-primary hover:underline">DCA with a bot</a> removes timing anxiety entirely.</p>
           <p>If you&apos;re using an algorithmic system, the best approach is a hybrid that adapts to market conditions. That&apos;s exactly what TrendRider provides &mdash; a system that has been backtested across bull markets, bear markets, and everything in between, with every trade logged transparently.</p>
 
           <div className="mt-10 p-6 rounded-2xl border border-primary/20 bg-primary/5 text-center">

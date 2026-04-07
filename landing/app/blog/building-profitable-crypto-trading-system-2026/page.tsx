@@ -103,6 +103,7 @@ export default function Article() {
             <li><strong className="text-foreground">Systematic edges</strong> &mdash; Trend-following across multiple timeframes has been profitable in every asset class for over a century. In crypto, where trends tend to be stronger and longer than in traditional markets, this edge is amplified.</li>
           </ul>
           <p>TrendRider&apos;s edge combines systematic trend following with on-chain sentiment filtering. The core hypothesis: <em>when a strong technical trend aligns with favorable on-chain conditions (neutral-to-positive funding, rising open interest, sentiment not at extremes), the probability of trend continuation increases significantly.</em> This hypothesis is testable, measurable, and has been validated across 18+ months of backtesting data.</p>
+          <p>Another powerful edge worth considering is <a href="/blog/dca-bot-strategy-crypto-complete-guide-2026" className="text-primary hover:underline">Dollar Cost Averaging (DCA) with bot execution</a>. By buying at regular intervals with condition-based adjustments, DCA exploits crypto&apos;s volatility mathematically &mdash; lowering your average entry price while eliminating the need to time the market perfectly.</p>
           <p>The key test for any edge: can you state it in one sentence, and does it hold up when you change the date range by six months?</p>
 
           {/* Step 2 */}

@@ -96,12 +96,6 @@ export default function sitemap(): MetadataRoute.Sitemap {
       priority: 0.6,
     },
     {
-      url: `${baseUrl}/blog/how-to-read-crypto-trading-signals`,
-      lastModified: new Date(),
-      changeFrequency: "monthly",
-      priority: 0.6,
-    },
-    {
       url: `${baseUrl}/blog/backtesting-crypto-strategies-guide`,
       lastModified: new Date(),
       changeFrequency: "monthly",

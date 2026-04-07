@@ -165,9 +165,9 @@ export default function Article() {
         <div className="mt-16 pt-10 border-t border-border/30">
           <h2 className="text-xl font-semibold text-foreground mb-6">Related Articles</h2>
           <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
-            <a href="/blog/how-to-read-crypto-trading-signals" className="p-4 rounded-xl border border-border/50 bg-card/30 hover:border-primary/30 hover:bg-card/50 transition-all">
-              <span className="text-xs text-primary font-mono uppercase tracking-widest">Education</span>
-              <p className="text-sm font-medium text-foreground mt-2">How to Read Crypto Trading Signals: A Complete Beginner&apos;s Guide</p>
+            <a href="/blog/how-to-read-crypto-trading-signals-2026" className="p-4 rounded-xl border border-border/50 bg-card/30 hover:border-primary/30 hover:bg-card/50 transition-all">
+              <span className="text-xs text-primary font-mono uppercase tracking-widest">Guide</span>
+              <p className="text-sm font-medium text-foreground mt-2">How to Read Crypto Trading Signals: Complete Guide for 2026</p>
             </a>
             <a href="/blog/cornix-auto-trade-setup-guide" className="p-4 rounded-xl border border-border/50 bg-card/30 hover:border-primary/30 hover:bg-card/50 transition-all">
               <span className="text-xs text-primary font-mono uppercase tracking-widest">Guide</span>
