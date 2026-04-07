@@ -1,8 +1,8 @@
 import type { Metadata } from "next";
 
 export const metadata: Metadata = {
-  title: "Crypto Trading Signals Telegram 2026: Scam Guide",
-  description: "83% of Telegram crypto signal groups are scams. 5 red flags to spot them, 3 legit channels compared, and how to automate signals free.",
+  title: "Crypto Trading Signals Telegram 2026: Scam or Legit?",
+  description: "83% of Telegram signal groups are scams — here's how to spot them. We compare 3 legit channels and show how to automate signals for free.",
   alternates: {
     canonical: "https://trendrider.net/blog/crypto-trading-signals-telegram-guide",
   },
@@ -17,8 +17,8 @@ export default function Article() {
           __html: JSON.stringify({
             "@context": "https://schema.org",
             "@type": "Article",
-            "headline": "Crypto Trading Signals Telegram 2026: Scam Guide",
-            "description": "83% of Telegram crypto signal groups are scams. 5 red flags to spot them, 3 legit channels compared, and how to automate signals free.",
+            "headline": "Crypto Trading Signals Telegram 2026: Scam or Legit?",
+            "description": "83% of Telegram signal groups are scams — here's how to spot them. We compare 3 legit channels and show how to automate signals for free.",
             "author": {
               "@type": "Person",
               "name": "TrendRider Team",

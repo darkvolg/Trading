@@ -1,8 +1,8 @@
 import type { Metadata } from "next";
 
 export const metadata: Metadata = {
-  title: "EMA Crossover Strategy Crypto: 67.9% Win Rate",
-  description: "Proven EMA crossover setup with exact entry/exit rules. RSI + volume filters included. Backtested on 500+ trades with real results.",
+  title: "EMA Crossover Strategy Crypto 2026 — 67.9% Win Rate",
+  description: "Step-by-step EMA crossover strategy with exact entry, exit & stop-loss rules. RSI + volume filters boost win rate to 67.9%. Free bot config included.",
   alternates: {
     canonical: "https://trendrider.net/blog/ema-crossover-strategy-crypto-guide",
   },
@@ -17,8 +17,8 @@ export default function Article() {
           __html: JSON.stringify({
             "@context": "https://schema.org",
             "@type": "Article",
-            "headline": "EMA Crossover Strategy Crypto: 67.9% Win Rate",
-            "description": "Proven EMA crossover setup with exact entry/exit rules. RSI + volume filters included. Backtested on 500+ trades with real results.",
+            "headline": "EMA Crossover Strategy Crypto 2026 — 67.9% Win Rate",
+            "description": "Step-by-step EMA crossover strategy with exact entry, exit & stop-loss rules. RSI + volume filters boost win rate to 67.9%. Free bot config included.",
             "author": {
               "@type": "Person",
               "name": "TrendRider Team",
