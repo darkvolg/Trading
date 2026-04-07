@@ -2,7 +2,7 @@ import type { Metadata } from "next";
 
 export const metadata: Metadata = {
   title: "7 Altcoin Trading Strategies That Work in 2026",
-  description: "7 altcoin trading strategies for 2026: alt season timing, BTC dominance correlation, volume divergence, momentum plays, multi-timeframe confluence. Real data from 67.9% win rate system.",
+  description: "7 altcoin strategies that hit 67.9% win rate in 2026. Alt season timing, BTC dominance gating, volume divergence. Real data from 10,000+ trades.",
   alternates: {
     canonical: "https://trendrider.net/blog/altcoin-trading-strategies-2026",
   },

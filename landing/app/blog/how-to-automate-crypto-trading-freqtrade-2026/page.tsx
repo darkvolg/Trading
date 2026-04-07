@@ -2,7 +2,7 @@ import type { Metadata } from "next";
 
 export const metadata: Metadata = {
   title: "How to Automate Crypto Trading with Freqtrade in 2026 | TrendRider",
-  description: "Step-by-step Freqtrade tutorial for 2026. Learn how to set up automated crypto trading, configure strategies, connect to Bybit, and run backtests with this complete setup guide.",
+  description: "Automate your crypto trading in 30 minutes with Freqtrade. Connect to Bybit, configure strategies & run backtests. Complete 2026 guide with code.",
   alternates: {
     canonical: "https://trendrider.net/blog/how-to-automate-crypto-trading-freqtrade-2026",
   },

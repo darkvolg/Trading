@@ -2,7 +2,7 @@ import type { Metadata } from "next";
 
 export const metadata: Metadata = {
   title: "Top 5 Mistakes Beginner Algo Traders Make (And How to Avoid Them) | TrendRider",
-  description: "The 5 most common mistakes that destroy beginner algo traders: overfitting, ignoring fees, no risk management, over-optimizing, and skipping paper trading. Learn how to avoid each one with real examples.",
+  description: "These 5 mistakes cost beginner algo traders thousands. Overfitting, hidden fees, no risk rules. Real loss examples + how to fix each one fast.",
   alternates: {
     canonical: "https://trendrider.net/blog/top-5-mistakes-beginner-algo-traders",
   },

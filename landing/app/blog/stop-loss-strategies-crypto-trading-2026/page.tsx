@@ -2,7 +2,7 @@ import type { Metadata } from "next";
 
 export const metadata: Metadata = {
   title: "Stop Loss Strategies for Crypto Trading: Fixed vs Trailing vs ATR-Based [2026 Comparison]",
-  description: "Compare 4 stop-loss methods across 10,000+ crypto trades. Fixed %, trailing, ATR-based, and time-based exits ranked by win rate, drawdown, and profit factor. See which TrendRider uses and why.",
+  description: "We tested 4 stop-loss methods on 10,000+ trades. Fixed %, trailing, ATR & time-based exits ranked by profit factor. See the winner with real data.",
   alternates: {
     canonical: "https://trendrider.net/blog/stop-loss-strategies-crypto-trading-2026",
   },

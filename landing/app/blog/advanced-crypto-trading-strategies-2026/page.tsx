@@ -2,7 +2,7 @@ import type { Metadata } from "next";
 
 export const metadata: Metadata = {
   title: "Advanced Crypto Trading Strategies 2026 [Pro Traders]",
-  description: "Advanced crypto trading strategies for 2026: market regime detection, multi-indicator confluence scoring, funding rate arbitrage, delta-neutral setups, dynamic position sizing & portfolio heat.",
+  description: "6 advanced crypto strategies pros use in 2026: regime detection, funding rate arbitrage, delta-neutral setups. Backtested on 10,000+ trades.",
   alternates: {
     canonical: "https://trendrider.net/blog/advanced-crypto-trading-strategies-2026",
   },

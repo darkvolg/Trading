@@ -2,7 +2,7 @@ import type { Metadata } from "next";
 
 export const metadata: Metadata = {
   title: "AI vs Rule-Based Crypto Trading Bots: Which Performs Better in 2026?",
-  description: "We compare AI/ML trading bots against rule-based algorithmic systems across transparency, performance, cost, and reliability. Data-backed analysis with real-world results for retail crypto traders.",
+  description: "AI bots vs rule-based bots: we tested both over 10,000+ trades. One hit 67.9% win rate at $0 cost. See the surprising winner and real P&L data.",
   alternates: {
     canonical: "https://trendrider.net/blog/ai-vs-rule-based-crypto-trading-bots-2026",
   },

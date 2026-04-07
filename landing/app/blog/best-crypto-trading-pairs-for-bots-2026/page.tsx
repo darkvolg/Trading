@@ -2,7 +2,7 @@ import type { Metadata } from "next";
 
 export const metadata: Metadata = {
   title: "How to Choose the Best Crypto Trading Pairs for Your Bot in 2026 | TrendRider",
-  description: "Find the best crypto trading pairs for algorithmic bots. Learn how to evaluate liquidity, volatility, spread, and correlation to build a profitable pair selection framework.",
+  description: "Wrong pairs = dead bot. Our 4-factor scoring ranks the top 15 crypto pairs for algo trading by liquidity, volatility & spread. Free selection framework.",
   alternates: {
     canonical: "https://trendrider.net/blog/best-crypto-trading-pairs-for-bots-2026",
   },

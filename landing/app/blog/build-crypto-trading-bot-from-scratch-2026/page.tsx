@@ -2,7 +2,7 @@ import type { Metadata } from "next";
 
 export const metadata: Metadata = {
   title: "How to Build a Crypto Trading Bot from Scratch in 2026: Complete Beginner Guide",
-  description: "Step-by-step tutorial to build your own crypto trading bot in 2026. Covers Python setup, Freqtrade framework, strategy coding, backtesting, and live deployment on Bybit. No prior experience needed.",
+  description: "Build your first crypto trading bot in under 2 hours. Python + Freqtrade + Bybit, zero experience needed. Free code templates included.",
   alternates: {
     canonical: "https://trendrider.net/blog/build-crypto-trading-bot-from-scratch-2026",
   },

@@ -2,7 +2,7 @@ import type { Metadata } from "next";
 
 export const metadata: Metadata = {
   title: "Multi-Indicator Scoring Systems: How to Combine RSI, MACD & Bollinger Bands",
-  description: "Learn how to build a multi-indicator scoring system that combines RSI, MACD, Bollinger Bands, and ADX into a single confidence score. Real data: 67.9% win rate vs ~40% with single indicators.",
+  description: "Single indicators = 40% win rate. Our multi-indicator scoring system hits 67.9%. Combine RSI, MACD, Bollinger & ADX into one confidence score.",
   alternates: {
     canonical: "https://trendrider.net/blog/multi-indicator-scoring-system-crypto",
   },

@@ -2,7 +2,7 @@ import type { Metadata } from "next";
 
 export const metadata: Metadata = {
   title: "Freqtrade Tutorial 2026: Complete Setup Guide [67.9% Win Rate Strategy]",
-  description: "Step-by-step Freqtrade setup guide for beginners in 2026. Install via Docker, connect Bybit, build your first RSI+EMA strategy, backtest 10,000+ trades, and go live in under 1 hour.",
+  description: "Set up Freqtrade in under 1 hour. Docker install, Bybit connection, RSI+EMA strategy, 10,000+ trade backtest. Zero-to-live beginner guide for 2026.",
   alternates: {
     canonical: "https://trendrider.net/blog/freqtrade-setup-tutorial-beginners-2026",
   },
