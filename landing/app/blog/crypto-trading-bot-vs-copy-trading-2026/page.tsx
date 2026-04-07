@@ -2,7 +2,7 @@ import type { Metadata } from "next";
 
 export const metadata: Metadata = {
   title: "Crypto Trading Bot vs Copy Trading: Which Earns More in 2026? [67.9% Win Rate Data]",
-  description: "We compared trading bots vs copy trading across 10,000+ trades. Bots hit 67.9% win rate vs 40-55% for copy traders. Full breakdown with costs, control & real performance data.",
+  description: "Bots vs copy trading: 67.9% win rate vs 40-55%. We compared both across 10,000+ trades with real costs and P&L. Clear winner revealed.",
   alternates: {
     canonical: "https://trendrider.net/blog/crypto-trading-bot-vs-copy-trading-2026",
   },

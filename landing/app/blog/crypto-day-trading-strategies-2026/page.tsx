@@ -2,7 +2,7 @@ import type { Metadata } from "next";
 
 export const metadata: Metadata = {
   title: "Crypto Day Trading Strategies That Actually Work in 2026 | TrendRider",
-  description: "Discover the 5 best crypto day trading strategies for 2026. From EMA/MACD momentum to RSI divergence scalping and Bollinger Band bounces — real techniques with backtested results, risk management rules, and tools you need.",
+  description: "5 crypto day trading strategies with backtested results for 2026. EMA/MACD momentum, RSI scalping, Bollinger bounces. Exact entry rules + risk management.",
   alternates: {
     canonical: "https://trendrider.net/blog/crypto-day-trading-strategies-2026",
   },

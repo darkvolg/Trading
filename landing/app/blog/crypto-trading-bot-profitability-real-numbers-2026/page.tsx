@@ -2,7 +2,7 @@ import type { Metadata } from "next";
 
 export const metadata: Metadata = {
   title: "Crypto Trading Bot Profitability: Real Numbers & What to Expect [2026]",
-  description: "Honest breakdown of crypto trading bot profitability with real backtest data. 67.9% win rate, 1.42% max drawdown. Learn realistic returns, hidden costs, and when bots lose money.",
+  description: "Are crypto bots actually profitable? Real data: 67.9% win rate, 1.42% drawdown. Honest breakdown of returns, hidden costs & when bots lose money.",
   alternates: {
     canonical: "https://trendrider.net/blog/crypto-trading-bot-profitability-real-numbers-2026",
   },

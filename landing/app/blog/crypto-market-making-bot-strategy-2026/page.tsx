@@ -2,7 +2,7 @@ import type { Metadata } from "next";
 
 export const metadata: Metadata = {
   title: "Crypto Market Making Bot Strategy: How Market Makers Profit in 2026",
-  description: "Learn how crypto market making bots capture spread profit in 2026. Covers bid-ask mechanics, inventory risk, Hummingbot setup, and why trend following outperforms market making for retail traders.",
+  description: "Market making bots sound profitable but most retail traders lose money. See real spread data, Hummingbot setup, and why trend following wins.",
   alternates: {
     canonical: "https://trendrider.net/blog/crypto-market-making-bot-strategy-2026",
   },

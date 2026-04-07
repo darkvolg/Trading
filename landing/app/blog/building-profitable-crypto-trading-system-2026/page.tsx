@@ -2,7 +2,7 @@ import type { Metadata } from "next";
 
 export const metadata: Metadata = {
   title: "How to Build a Profitable Crypto Trading System in 2026 [Step-by-Step]",
-  description: "A 7-step framework to build a profitable crypto trading system from scratch. Covers edge definition, backtesting, risk management, and going live. Real data: 67.9% win rate, 1.42% max DD.",
+  description: "7-step framework to build a profitable crypto system. From edge definition to going live. Real result: 67.9% win rate, 1.42% max drawdown.",
   alternates: {
     canonical: "https://trendrider.net/blog/building-profitable-crypto-trading-system-2026",
   },

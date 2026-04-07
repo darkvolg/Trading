@@ -2,7 +2,7 @@ import type { Metadata } from "next";
 
 export const metadata: Metadata = {
   title: "How to Backtest a Crypto Trading Strategy: Complete Guide 2026 | TrendRider",
-  description: "Learn how to backtest crypto trading strategies step by step. Covers data selection, walk-forward analysis, overfitting prevention, and interpreting results with real examples from 10,000+ trades.",
+  description: "Backtest crypto strategies the right way. Walk-forward analysis, overfitting traps to avoid, and how to read results. Real examples from 10,000+ trades.",
   alternates: {
     canonical: "https://trendrider.net/blog/how-to-backtest-crypto-trading-strategy-2026",
   },

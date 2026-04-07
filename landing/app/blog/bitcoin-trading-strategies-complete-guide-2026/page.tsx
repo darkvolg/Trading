@@ -2,7 +2,7 @@ import type { Metadata } from "next";
 
 export const metadata: Metadata = {
   title: "Bitcoin Trading Strategies for 2026: A Complete Playbook | TrendRider",
-  description: "Master Bitcoin trading in 2026 with trend-following, mean reversion, and on-chain strategies. Learn BTC-specific risk management, position sizing, and how to build a profitable BTC-only trading system.",
+  description: "5 Bitcoin trading strategies that actually work in 2026. Trend-following, mean reversion & on-chain setups with real backtest data. Build a BTC-only system.",
   alternates: {
     canonical: "https://trendrider.net/blog/bitcoin-trading-strategies-complete-guide-2026",
   },

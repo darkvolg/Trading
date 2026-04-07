@@ -2,7 +2,7 @@ import type { Metadata } from "next";
 
 export const metadata: Metadata = {
   title: "Crypto Trading Risk Management: The Complete 2026 Guide | TrendRider",
-  description: "Master crypto risk management with position sizing, stop-loss placement, portfolio allocation, and drawdown control. Real data from a system with 1.42% max drawdown and 67.9% win rate.",
+  description: "Keep drawdown under 2% like the pros. Position sizing, stop-loss placement & portfolio rules from a system with 1.42% max DD. Free calculator.",
   alternates: {
     canonical: "https://trendrider.net/blog/crypto-trading-risk-management-complete-guide-2026",
   },
