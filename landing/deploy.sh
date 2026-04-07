@@ -47,7 +47,7 @@ echo ""
 
 # Step 4: Set permissions + reload nginx
 echo "[4/4] Setting permissions & reloading nginx..."
-eval $SSH_CMD "chown -R www-data:www-data $REMOTE_DIR && /usr/sbin/nginx -t && systemctl reload nginx"
+eval $SSH_CMD "chown -R www-data:www-data $REMOTE_DIR && nginx -t && systemctl reload nginx"
 echo ""
 
 echo "=== Done! ==="
