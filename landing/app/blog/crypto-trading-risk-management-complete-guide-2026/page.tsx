@@ -285,7 +285,7 @@ export default function Article() {
           <p>We&apos;ve analyzed hundreds of failed trading accounts, and the same mistakes appear again and again:</p>
           <ul className="list-disc pl-6 space-y-2">
             <li><strong className="text-foreground">No stop-loss</strong> &mdash; The #1 account killer. Every trade without a stop-loss is an uncapped liability. One black swan event erases months of gains.</li>
-            <li><strong className="text-foreground">Averaging down</strong> &mdash; Adding to losing positions is a form of denial. If the trade is wrong, accept it and move on. TrendRider never averages down.</li>
+            <li><strong className="text-foreground">Averaging down blindly</strong> &mdash; Adding to losing positions without a plan is a form of denial. If the trade is wrong, accept it and move on. Note: this is different from a disciplined <a href="/blog/dca-bot-strategy-crypto-complete-guide-2026" className="text-primary hover:underline">DCA bot strategy</a> that uses predefined rules and technical conditions to scale into positions &mdash; that&apos;s systematic, not emotional.</li>
             <li><strong className="text-foreground">All-in trades</strong> &mdash; Putting 50-100% of your account in a single position. Even if you&apos;re right 9 times, the 10th wipes you out.</li>
             <li><strong className="text-foreground">Ignoring correlation</strong> &mdash; Five &ldquo;diversified&rdquo; altcoin longs are not diversified if they all dump together when BTC drops.</li>
             <li><strong className="text-foreground">Over-leveraging</strong> &mdash; Using 20-50x leverage because the exchange allows it. Just because you can doesn&apos;t mean you should.</li>
