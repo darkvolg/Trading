@@ -87,6 +87,9 @@ REDDIT_KEYWORDS = [
 
 REDDIT_SUBREDDIT = "algotrading"
 
+BLOG_MANIFEST_PATH = SCRIPT_DIR / "blog_manifest.json"
+SITE_URL = "https://trendrider.net"
+
 # ---------------------------------------------------------------------------
 # State management
 # ---------------------------------------------------------------------------
@@ -117,6 +120,22 @@ def save_state(state: dict) -> None:
         )
     except OSError as e:
         log.error("Failed to save state: %s", e)
+
+
+def load_blog_manifest() -> list:
+    """Load blog manifest JSON. Returns list of article dicts or empty list."""
+    if not BLOG_MANIFEST_PATH.exists():
+        log.error("Blog manifest not found at %s", BLOG_MANIFEST_PATH)
+        return []
+    try:
+        data = json.loads(BLOG_MANIFEST_PATH.read_text(encoding="utf-8"))
+        if isinstance(data, list):
+            return data
+        log.error("Blog manifest is not a JSON array")
+        return []
+    except (json.JSONDecodeError, OSError) as e:
+        log.error("Failed to load blog manifest: %s", e)
+        return []
 
 
 def load_content_bank() -> dict:
@@ -300,7 +319,15 @@ def _extract_composio_result(response: dict) -> dict | list | None:
     for item in content:
         if item.get("type") == "text":
             try:
-                return json.loads(item["text"])
+                parsed = json.loads(item["text"])
+                # Unwrap Composio multi-execute envelope
+                if isinstance(parsed, dict) and "data" in parsed:
+                    results = parsed.get("data", {}).get("results", [])
+                    if results and isinstance(results, list):
+                        resp0 = results[0].get("response", {}); inner = resp0.get("data") or resp0.get("data_preview") or {}
+                        if inner:
+                            return inner
+                return parsed
             except (json.JSONDecodeError, KeyError):
                 return item
     return result
@@ -308,7 +335,8 @@ def _extract_composio_result(response: dict) -> dict | list | None:
 
 def _fetch_recent_posts(subreddit: str, sort: str = "new", limit: int = 20) -> list:
     """Fetch recent posts from a subreddit via Composio."""
-    resp = _composio_mcp_call("REDDIT_FETCH_SUBREDDIT_POSTS", {
+    resp = _composio_mcp_call("REDDIT_SEARCH_ACROSS_SUBREDDITS", {
+        "search_query": "crypto trading bot algotrading strategy",
         "subreddit": subreddit,
         "sort": sort,
         "limit": limit,
@@ -329,7 +357,9 @@ def _fetch_recent_posts(subreddit: str, sort: str = "new", limit: int = 20) -> l
 def _pick_matching_post(posts: list, keywords: list[str]) -> dict | None:
     """Find the first post whose title or body matches any keyword."""
     for post in posts:
-        p = post.get("data", post) if isinstance(post, dict) else post
+        if not isinstance(post, dict):
+            continue
+        p = post.get("data", post)
         title = (p.get("title", "") or "").lower()
         body = (p.get("selftext", "") or "").lower()
         combined = f"{title} {body}"
@@ -353,22 +383,19 @@ def reddit_comment(comment_text: str) -> bool:
         log.error("Could not fetch any posts from r/%s", REDDIT_SUBREDDIT)
         return False
 
-    matched = _pick_matching_post(posts, REDDIT_KEYWORDS)
+    # Strict filter: only real in-sub posts, no cross-sub fallback
+    in_sub = []
+    for _post in posts:
+        if not isinstance(_post, dict):
+            continue
+        _p = _post.get("data", _post)
+        if not isinstance(_p, dict):
+            continue
+        if (_p.get("subreddit", "") or "").lower() == REDDIT_SUBREDDIT.lower():
+            in_sub.append(_p)
+    matched = _pick_matching_post(in_sub, REDDIT_KEYWORDS)
     if not matched:
-        log.warning(
-            "No posts matched keywords in r/%s (%d posts checked). "
-            "Falling back to first post.",
-            REDDIT_SUBREDDIT, len(posts),
-        )
-        # Use the first post with more than 0 comments as fallback
-        for post in posts:
-            p = post.get("data", post) if isinstance(post, dict) else post
-            if p.get("num_comments", 0) >= 0:
-                matched = p
-                break
-
-    if not matched:
-        log.error("No suitable post found at all")
+        log.warning("No r/%s posts matched (%d in-sub checked). Skipping.", REDDIT_SUBREDDIT, len(in_sub))
         return False
 
     post_id = matched.get("id", matched.get("name", ""))
@@ -581,6 +608,161 @@ def handle_remind(state: dict, content_bank: dict) -> dict:
     return send_reminders(state, content_bank)
 
 
+def handle_devto(state: dict, content_bank: dict) -> dict:
+    """Publish next blog article to Dev.to from blog manifest."""
+    manifest = load_blog_manifest()
+    if not manifest:
+        log.error("Blog manifest is empty, nothing to publish")
+        return state
+
+    today_str = datetime.now(timezone.utc).strftime("%Y-%m-%d")
+
+    if state.get("last_devto") == today_str:
+        log.info("Already published to Dev.to today (%s), skipping", today_str)
+        return state
+
+    published = state.get("devto_published", [])
+    article = None
+    for entry in manifest:
+        if entry["slug"] not in published:
+            article = entry
+            break
+
+    if article is None:
+        log.info("All %d blog articles already published to Dev.to", len(manifest))
+        return state
+
+    slug = article["slug"]
+    title = article["title"]
+    summary = article["summary"]
+    tags = article.get("tags", [])[:4]
+    canonical_url = f"{SITE_URL}/blog/{slug}"
+
+    body_markdown = (
+        f"*Originally published at [trendrider.net]({canonical_url})*\n\n"
+        f"# {title}\n\n"
+        f"{summary}\n\n"
+        f"## Key Takeaways\n\n"
+        f"This article covers {summary[0].lower() + summary[1:]} "
+        f"Read the full analysis with charts, data tables, and real backtest results.\n\n"
+        f"**[Read the full article on TrendRider →]({canonical_url})**\n\n"
+        f"---\n\n"
+        f"*TrendRider AI is a free algorithmic crypto trading system with 67.9% "
+        f"backtested win rate. [Join our Telegram](https://t.me/trendrider_signals) "
+        f"for free signals.*\n\n"
+        f"---\n\n"
+        f"**Did you find this useful?** Hit the ❤️ button and drop a comment — "
+        f"I'd love to hear what strategies you're running or what topics "
+        f"you want me to cover next!"
+    )
+
+    log.info("Publishing to Dev.to: '%s' (slug=%s)", title, slug)
+
+    resp = _composio_mcp_call("DEVTO_CREATE_ARTICLE", {
+        "title": title,
+        "body_markdown": body_markdown,
+        "tags": tags,
+        "published": True,
+        "canonical_url": canonical_url,
+    })
+    data = _extract_composio_result(resp)
+
+    if data and isinstance(data, dict) and data.get("id"):
+        devto_url = data.get("url", data.get("canonical_url", ""))
+        log.info("Dev.to article published: %s (id=%s)", devto_url, data.get("id"))
+        published.append(slug)
+        state["devto_published"] = published
+        state["last_devto"] = today_str
+        _send_telegram(
+            f"\u2705 Dev.to: опубликована статья '{title}'\n{devto_url}"
+        )
+    else:
+        log.error("Dev.to publish failed for '%s': %s", title, data)
+        _send_telegram(f"\u274c Dev.to: ошибка публикации '{title}'")
+
+    return state
+
+
+def handle_linkedin(state: dict, content_bank: dict) -> dict:
+    """Post next blog article to LinkedIn from blog manifest."""
+    manifest = load_blog_manifest()
+    if not manifest:
+        log.error("Blog manifest is empty, nothing to publish")
+        return state
+
+    today_str = datetime.now(timezone.utc).strftime("%Y-%m-%d")
+
+    if state.get("last_linkedin") == today_str:
+        log.info("Already posted to LinkedIn today (%s), skipping", today_str)
+        return state
+
+    published = state.get("linkedin_published", [])
+    article = None
+    for entry in manifest:
+        if entry["slug"] not in published:
+            article = entry
+            break
+
+    if article is None:
+        log.info("All %d blog articles already posted to LinkedIn", len(manifest))
+        return state
+
+    slug = article["slug"]
+    title = article["title"]
+    summary = article["summary"]
+    canonical_url = f"{SITE_URL}/blog/{slug}"
+
+    author_urn = state.get("linkedin_author_urn", "")
+    if not author_urn:
+        log.info("Fetching LinkedIn profile to get author URN...")
+        resp = _composio_mcp_call("LINKEDIN_GET_MY_INFO", {})
+        data = _extract_composio_result(resp)
+        if data and isinstance(data, dict):
+            person_id = data.get("sub", data.get("id", ""))
+            if person_id:
+                author_urn = f"urn:li:person:{person_id}"
+                state["linkedin_author_urn"] = author_urn
+                log.info("LinkedIn author URN: %s", author_urn)
+            else:
+                log.error("Could not extract person ID from LinkedIn: %s", data)
+                _send_telegram("\u274c LinkedIn: не удалось получить author URN")
+                return state
+        else:
+            log.error("Failed to fetch LinkedIn profile info")
+            _send_telegram("\u274c LinkedIn: не удалось получить профиль")
+            return state
+
+    commentary = (
+        f"{title}\n\n"
+        f"{summary}\n\n"
+        f"Read more: {canonical_url}\n\n"
+        f"#algotrading #crypto #trading #fintech"
+    )[:3000]
+
+    log.info("Posting to LinkedIn: '%s' (slug=%s)", title, slug)
+
+    resp = _composio_mcp_call("LINKEDIN_CREATE_LINKED_IN_POST", {
+        "author": author_urn,
+        "commentary": commentary,
+        "visibility": "PUBLIC",
+        "lifecycleState": "PUBLISHED",
+    })
+    data = _extract_composio_result(resp)
+
+    if data and isinstance(data, dict) and (data.get("id") or data.get("activity") or data.get("x_restli_id")):
+        post_id = data.get("id", data.get("activity", data.get("x_restli_id", "")))
+        log.info("LinkedIn post published (id=%s)", post_id)
+        published.append(slug)
+        state["linkedin_published"] = published
+        state["last_linkedin"] = today_str
+        _send_telegram(f"\u2705 LinkedIn: опубликован пост '{title}'")
+    else:
+        log.error("LinkedIn post failed for '%s': %s", title, data)
+        _send_telegram(f"\u274c LinkedIn: ошибка публикации '{title}'")
+
+    return state
+
+
 # ---------------------------------------------------------------------------
 # Main
 # ---------------------------------------------------------------------------
@@ -602,9 +784,17 @@ def main() -> None:
         "--remind", action="store_true",
         help="Send due Telegram reminders",
     )
+    parser.add_argument(
+        "--devto", action="store_true",
+        help="Publish next article to Dev.to",
+    )
+    parser.add_argument(
+        "--linkedin", action="store_true",
+        help="Post next article to LinkedIn",
+    )
     args = parser.parse_args()
 
-    if not any([args.twitter, args.reddit, args.remind]):
+    if not any([args.twitter, args.reddit, args.remind, args.devto, args.linkedin]):
         parser.print_help()
         sys.exit(1)
 
@@ -624,6 +814,14 @@ def main() -> None:
     if args.remind:
         log.info("--- Mode: Remind ---")
         state = handle_remind(state, content_bank)
+
+    if args.devto:
+        log.info("--- Mode: Dev.to ---")
+        state = handle_devto(state, content_bank)
+
+    if args.linkedin:
+        log.info("--- Mode: LinkedIn ---")
+        state = handle_linkedin(state, content_bank)
 
     save_state(state)
     log.info("=== Marketing Autopilot finished ===")
