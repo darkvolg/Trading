@@ -362,12 +362,13 @@ class TrendRiderStrategy(IStrategy):
             ["enter_long", "enter_tag"]
         ] = (1, "ema_crossover")
 
-        # === LONG 5: Bollinger Band Bounce (loosened: RSI<45, vol>0.3x, within 0.5% of BB lower) ===
+        # === LONG 5: Bollinger Band Bounce (V4: tightened vol 0.3→0.7, added ADX>18) ===
         conditions_bb = [
             dataframe["close"] <= dataframe["bb_lower"] * 1.005,           # close within 0.5% of BB lower
             dataframe["close"] > dataframe["open"],                         # bullish candle (bounce)
             dataframe[rsi] < 45,
-            dataframe["volume_ratio"] > 0.3,
+            dataframe["volume_ratio"] > 0.7,                                # V4: was 0.3, filter weak bounces
+            dataframe["adx"] > 18,                                          # V4: trend strength filter
             dataframe["volume"] > 0,
             dataframe["btc_rsi_1h"] > 35,
             dataframe["fng_value"] >= 25,
@@ -431,6 +432,16 @@ class TrendRiderStrategy(IStrategy):
             (dataframe["volume"] > 0),
             ["exit_long", "exit_tag"]
         ] = (1, "trend_broken")
+
+        # EXIT 4 (V4): Trend early warning — RSI overbought reversal near EMA200
+        # Catches trend exhaustion before price breaks support, saving avg -3% vs trend_broken
+        dataframe.loc[
+            (dataframe["close"] < dataframe["ema_200"] * 0.995) &  # within 0.5% of breaking
+            (dataframe[rsi] > 72) &                                  # exhausted
+            (dataframe["macdhist"] < dataframe["macdhist"].shift(1)) & # momentum dropping
+            (dataframe["volume"] > 0),
+            ["exit_long", "exit_tag"]
+        ] = (1, "trend_early_warning")
 
         return dataframe
 
@@ -583,9 +594,25 @@ class TrendRiderStrategy(IStrategy):
 
     def custom_exit(self, pair: str, trade, current_time: datetime,
                     current_rate: float, current_profit: float, **kwargs):
-        """Time-based exit: close after 24 candles (24h) if profit < 1%."""
+        """V4 cascading early exit — stop bleeding before 24h timeout.
+
+        Real dry-run data (51 trades): time_exit_24h cost -$13.01 across 9 trades,
+        avg -2.85% loss after holding full 24h. Cascade catches losers earlier:
+        - 2h: cut if -1.5% (already broken thesis)
+        - 4h: cut if red (no recovery momentum)
+        - 8h: cut if not at +0.5% (dead trade)
+        - 16h: cut if not at +1% (final mercy)
+        """
         duration_hours = (current_time - trade.open_date_utc).total_seconds() / 3600
-        if duration_hours >= 24 and current_profit < 0.01:
+        if duration_hours >= 2 and current_profit < -0.015:
+            return "early_loss_cut_2h"
+        if duration_hours >= 4 and current_profit < 0:
+            return "early_loss_cut_4h"
+        if duration_hours >= 8 and current_profit < 0.005:
+            return "early_loss_cut_8h"
+        if duration_hours >= 16 and current_profit < 0.01:
+            return "early_loss_cut_16h"
+        if duration_hours >= 24:
             return "time_exit_24h"
         return None
 
