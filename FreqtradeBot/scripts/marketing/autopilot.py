@@ -683,6 +683,104 @@ def handle_devto(state: dict, content_bank: dict) -> dict:
     return state
 
 
+
+def handle_hashnode(state: dict, content_bank: dict) -> dict:
+    """Publish next blog article to Hashnode from blog manifest (direct GraphQL API)."""
+    token = os.environ.get("HASHNODE_TOKEN", "")
+    pub_id = os.environ.get("HASHNODE_PUBLICATION_ID", "")
+    if not token or not pub_id:
+        log.error("HASHNODE_TOKEN or HASHNODE_PUBLICATION_ID missing")
+        return state
+
+    manifest = load_blog_manifest()
+    if not manifest:
+        log.error("Blog manifest is empty, nothing to publish")
+        return state
+
+    today_str = datetime.now(timezone.utc).strftime("%Y-%m-%d")
+    if state.get("last_hashnode") == today_str:
+        log.info("Already published to Hashnode today (%s), skipping", today_str)
+        return state
+
+    published = state.get("hashnode_published", [])
+    article = None
+    for entry in manifest:
+        if entry["slug"] not in published:
+            article = entry
+            break
+    if article is None:
+        log.info("All %d blog articles already published to Hashnode", len(manifest))
+        return state
+
+    slug = article["slug"]
+    title = article["title"]
+    summary = article["summary"]
+    tags = article.get("tags", [])[:5]
+    canonical_url = f"{SITE_URL}/blog/{slug}"
+    cover_url = f"{SITE_URL}/blog-heroes/{slug}.webp"
+
+    content_md = (
+        f"> *Originally published at [trendrider.net]({canonical_url})*\n\n"
+        f"{summary}\n\n"
+        f"## What You Will Learn\n\n"
+        f"This article breaks down the complete strategy with real backtest data, "
+        f"exact entry/exit rules, and Python code examples you can run today.\n\n"
+        f"**[Read the full article on TrendRider \u2192]({canonical_url})**\n\n"
+        f"---\n\n"
+        f"TrendRider is a free algorithmic crypto trading system with 67.9% "
+        f"backtested win rate. [Join Telegram](https://t.me/trendrider_signals) "
+        f"for free signals, or check the [live dashboard]({SITE_URL})."
+    )
+
+    tags_input = [{"slug": t.lower().replace(" ", "-"), "name": t} for t in tags]
+
+    mutation = """
+    mutation PublishPost($input: PublishPostInput!) {
+      publishPost(input: $input) {
+        post { id url slug }
+      }
+    }
+    """
+    variables = {
+        "input": {
+            "publicationId": pub_id,
+            "title": title,
+            "contentMarkdown": content_md,
+            "slug": slug,
+            "tags": tags_input,
+            "coverImageOptions": {"coverImageURL": cover_url},
+            "originalArticleURL": canonical_url,
+        }
+    }
+
+    log.info("Publishing to Hashnode: %s (slug=%s)", title, slug)
+    try:
+        resp = requests.post(
+            "https://gql.hashnode.com/",
+            headers={"Authorization": token, "Content-Type": "application/json"},
+            json={"query": mutation, "variables": variables},
+            timeout=60,
+        )
+        data = resp.json()
+        if "errors" in data:
+            log.error("Hashnode publish failed: %s", data["errors"])
+            _send_telegram(f"\u274c Hashnode: \u043e\u0448\u0438\u0431\u043a\u0430 '{title}'")
+            return state
+        post = data.get("data", {}).get("publishPost", {}).get("post", {})
+        post_url = post.get("url", "")
+        log.info("Hashnode published: %s (id=%s)", post_url, post.get("id"))
+        published.append(slug)
+        state["hashnode_published"] = published
+        state["last_hashnode"] = today_str
+        _send_telegram(f"\u2705 Hashnode: \u043e\u043f\u0443\u0431\u043b\u0438\u043a\u043e\u0432\u0430\u043d\u0430 '{title}'\n{post_url}")
+    except Exception as e:
+        log.exception("Hashnode publish exception")
+        _send_telegram(f"\u274c Hashnode: exception '{title}': {str(e)[:200]}")
+
+    return state
+
+
+
 def handle_linkedin(state: dict, content_bank: dict) -> dict:
     """Post next blog article to LinkedIn from blog manifest."""
     manifest = load_blog_manifest()
@@ -792,9 +890,13 @@ def main() -> None:
         "--linkedin", action="store_true",
         help="Post next article to LinkedIn",
     )
+    parser.add_argument(
+        "--hashnode", action="store_true",
+        help="Publish next article to Hashnode",
+    )
     args = parser.parse_args()
 
-    if not any([args.twitter, args.reddit, args.remind, args.devto, args.linkedin]):
+    if not any([args.twitter, args.reddit, args.remind, args.devto, args.linkedin, args.hashnode]):
         parser.print_help()
         sys.exit(1)
 
@@ -822,6 +924,10 @@ def main() -> None:
     if args.linkedin:
         log.info("--- Mode: LinkedIn ---")
         state = handle_linkedin(state, content_bank)
+
+    if args.hashnode:
+        log.info("--- Mode: Hashnode ---")
+        state = handle_hashnode(state, content_bank)
 
     save_state(state)
     log.info("=== Marketing Autopilot finished ===")
