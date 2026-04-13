@@ -717,7 +717,15 @@ def handle_hashnode(state: dict, content_bank: dict) -> dict:
     summary = article["summary"]
     tags = article.get("tags", [])[:5]
     canonical_url = f"{SITE_URL}/blog/{slug}"
-    cover_url = f"{SITE_URL}/blog-heroes/{slug}.webp"
+    # Auto-detect hero image extension from filesystem (.webp, .png, .jpg)
+    heroes_dir = Path("/var/www/trendrider/blog-heroes")
+    cover_url = None
+    for ext in (".webp", ".png", ".jpg", ".jpeg"):
+        if (heroes_dir / f"{slug}{ext}").exists():
+            cover_url = f"{SITE_URL}/blog-heroes/{slug}{ext}"
+            break
+    if not cover_url:
+        log.warning("No hero image found for %s, publishing without cover", slug)
 
     content_md = (
         f"> *Originally published at [trendrider.net]({canonical_url})*\n\n"
@@ -741,17 +749,17 @@ def handle_hashnode(state: dict, content_bank: dict) -> dict:
       }
     }
     """
-    variables = {
-        "input": {
-            "publicationId": pub_id,
-            "title": title,
-            "contentMarkdown": content_md,
-            "slug": slug,
-            "tags": tags_input,
-            "coverImageOptions": {"coverImageURL": cover_url},
-            "originalArticleURL": canonical_url,
-        }
+    input_data = {
+        "publicationId": pub_id,
+        "title": title,
+        "contentMarkdown": content_md,
+        "slug": slug,
+        "tags": tags_input,
+        "originalArticleURL": canonical_url,
     }
+    if cover_url:
+        input_data["coverImageOptions"] = {"coverImageURL": cover_url}
+    variables = {"input": input_data}
 
     log.info("Publishing to Hashnode: %s (slug=%s)", title, slug)
     try:
