@@ -151,10 +151,10 @@ export default function Article() {
             <p>It requires discipline. Beginners often struggle with the low win rate and the psychological pressure of consecutive losses. We recommend starting with a simulator or paper trading on TrendRider to understand the drawdown characteristics before deploying real capital.</p>
           </div>
 
-            <div className="mt-12 p-6 border border-primary/30 rounded-lg bg-primary/5">
+            <div className="mt-12 p-6 border border-border rounded-lg bg-card/50">
               <p className="text-foreground font-semibold mb-2">Ready to automate your crypto trading?</p>
-              <p className="mb-4">TrendRider runs a 67.9% win-rate algorithmic strategy on Bybit futures. Free Telegram signals, optional paid tiers.</p>
-              <a href="/" className="inline-block px-5 py-2 bg-primary text-primary-foreground font-semibold rounded hover:bg-primary/90 transition">Get Free Signals &rarr;</a>
+              <p className="mb-4 text-sm">TrendRider runs a 67.9% win-rate algorithmic strategy on Bybit futures. Free Telegram signals, optional paid tiers.</p>
+              <a href="/" className="text-primary text-sm hover:underline">Get free signals &rarr;</a>
             </div>
           </div>
         </article>
