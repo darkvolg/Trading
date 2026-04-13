@@ -33,10 +33,6 @@ export const metadata: Metadata = {
   metadataBase: new URL("https://trendrider.net"),
   alternates: {
     canonical: "https://trendrider.net",
-    languages: {
-      "en": "/",
-      "ru": "/ru",
-    },
   },
   openGraph: {
     title: "Crypto Trading Signals — 67.9% Win Rate | TrendRider",
