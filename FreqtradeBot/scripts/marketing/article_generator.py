@@ -35,7 +35,7 @@ REPO_ROOT = Path("/opt/trendrider-repo")
 LANDING = REPO_ROOT / "landing"
 BLOG_DIR = LANDING / "app" / "blog"
 HEROES_DIR = LANDING / "public" / "blog-heroes"
-TOPICS_FILE = REPO_ROOT / "FreqtradeBot" / "scripts" / "marketing" / "topics_queue.json"
+TOPICS_FILE = Path("/opt/freqtrade/scripts/marketing/topics_queue.json")
 MANIFEST_FILE = Path("/opt/freqtrade/scripts/marketing/blog_manifest.json")
 WEB_ROOT = Path("/var/www/trendrider")
 LOG_FILE = Path("/var/log/article_generator.log")
@@ -478,7 +478,8 @@ export default function Article() {{
             <span className="text-xs text-muted">{today_human}</span>
             <span className="text-xs text-muted">&bull; {topic.get('read_min', 11)} min read</span>
           </div>
-          <h1 className="text-3xl md:text-4xl font-bold mb-8 tracking-tight">{topic['title']}</h1>
+          <h1 className="text-3xl md:text-4xl font-bold mb-6 tracking-tight">{topic['title']}</h1>
+          <img src="/blog-heroes/{slug}.webp" alt="{title_escaped}" className="w-full rounded-xl border border-border mb-8" loading="eager" />
 
           <div className="space-y-6 text-muted leading-relaxed">
 {intro_paragraphs}
@@ -487,10 +488,10 @@ export default function Article() {{
             <h2 className="text-xl font-semibold text-foreground mt-10 mb-3">Frequently Asked Questions</h2>
 {faqs_str}
 
-            <div className="mt-12 p-6 border border-primary/30 rounded-lg bg-primary/5">
+            <div className="mt-12 p-6 border border-border rounded-lg bg-card/50">
               <p className="text-foreground font-semibold mb-2">Ready to automate your crypto trading?</p>
-              <p className="mb-4">TrendRider runs a 67.9% win-rate algorithmic strategy on Bybit futures. Free Telegram signals, optional paid tiers.</p>
-              <a href="/" className="inline-block px-5 py-2 bg-primary text-primary-foreground font-semibold rounded hover:bg-primary/90 transition">Get Free Signals &rarr;</a>
+              <p className="mb-4 text-sm">TrendRider runs a 67.9% win-rate algorithmic strategy on Bybit futures. Free Telegram signals, optional paid tiers.</p>
+              <a href="/" className="text-primary text-sm hover:underline">Get free signals &rarr;</a>
             </div>
           </div>
         </article>
