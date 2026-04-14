@@ -538,16 +538,74 @@ def send_reminders(state: dict, content_bank: dict) -> dict:
 # ---------------------------------------------------------------------------
 
 
-def handle_twitter(state: dict, content_bank: dict) -> dict:
-    """Post next tweet from content bank."""
-    tweets = content_bank.get("twitter_posts", [])
-    if not tweets:
-        log.error("No twitter_posts in content bank")
-        return state
+LIVE_STATS_PATH = Path("/var/www/trendrider/api/live-stats.json")
 
+
+def build_live_stats_tweet() -> str | None:
+    """Build a build-in-public tweet from /live stats JSON. Returns None on failure."""
+    try:
+        data = json.loads(LIVE_STATS_PATH.read_text())
+    except Exception as e:
+        log.warning("Live stats read failed: %s", e)
+        return None
+
+    try:
+        balance = data["current_balance"]
+        pnl_abs = data["pnl_abs"]
+        pnl_pct = data["pnl_pct"]
+        wr = data["win_rate_pct"]
+        wins = data["wins"]
+        losses = data["losses"]
+        closed = data["closed_trades"]
+        first = data.get("first_trade_date", "")
+
+        # Day counter since first trade
+        days = ""
+        if first:
+            try:
+                first_dt = datetime.fromisoformat(first.replace(" ", "T")[:19])
+                days_n = (datetime.now(timezone.utc).replace(tzinfo=None) - first_dt).days
+                days = f" — Day {days_n}" if days_n > 0 else ""
+            except Exception:
+                pass
+
+        # Exit breakdown: find best and worst
+        breakdown = data.get("exit_breakdown", [])
+        best = max(breakdown, key=lambda e: e["total_abs"], default=None)
+        worst = min(breakdown, key=lambda e: e["total_abs"], default=None)
+
+        sign = "+" if pnl_abs >= 0 else ""
+        lines = [
+            f"📊 TrendRider bot{days}",
+            "",
+            f"Balance: ${balance:.2f} ({sign}{pnl_pct:.2f}%)",
+            f"WR: {wr:.1f}% ({wins}W/{losses}L, {closed} trades)",
+        ]
+        if best and best["total_abs"] > 0:
+            lines.append(f"Best exit: {best['exit_reason']} +${best['total_abs']:.2f}")
+        if worst and worst["total_abs"] < 0:
+            lines.append(f"Worst exit: {worst['exit_reason']} -${abs(worst['total_abs']):.2f}")
+        lines += [
+            "",
+            "Raw sqlite, no filter:",
+            "https://trendrider.net/live",
+            "",
+            "#freqtrade #algotrading",
+        ]
+        tweet = "\n".join(lines)
+        if len(tweet) > 280:
+            # Drop best/worst lines if too long
+            tweet = "\n".join([lines[0], "", lines[2], lines[3], "", "https://trendrider.net/live", "", "#freqtrade #algotrading"])
+        return tweet
+    except Exception as e:
+        log.error("Live stats tweet build failed: %s", e)
+        return None
+
+
+def handle_twitter(state: dict, content_bank: dict) -> dict:
+    """Post tweet: prefer live bot stats (build-in-public), fall back to static rotation."""
     today_str = datetime.now(timezone.utc).strftime("%Y-%m-%d")
     last = state.get("last_twitter", "")
-    # Allow 2 tweets per day (morning + evening) by tracking count
     today_count = state.get("twitter_today_count", 0)
     if last == today_str and today_count >= 2:
         log.info("Already posted 2 tweets today (%s), skipping", today_str)
@@ -555,17 +613,33 @@ def handle_twitter(state: dict, content_bank: dict) -> dict:
     if last != today_str:
         today_count = 0
 
+    # Try live stats first (Proof-of-Income strategy)
+    live_tweet = build_live_stats_tweet()
+    if live_tweet:
+        log.info("Posting live stats tweet (%d chars): %s", len(live_tweet), live_tweet[:100])
+        if twitter_post(live_tweet):
+            state["last_twitter"] = today_str
+            state["twitter_today_count"] = today_count + 1
+            log.info("Live stats tweet posted successfully")
+            return state
+        log.error("Live stats tweet failed, falling back to static rotation")
+
+    # Fallback: static rotation from content bank
+    tweets = content_bank.get("twitter_posts", [])
+    if not tweets:
+        log.error("No twitter_posts in content bank and live stats unavailable")
+        return state
+
     idx = state.get("twitter_index", 0) % len(tweets)
     tweet_obj = tweets[idx]
     tweet_text = tweet_obj["text"] if isinstance(tweet_obj, dict) else str(tweet_obj)
 
-    log.info("Posting tweet #%d (of %d): %s", idx + 1, len(tweets), tweet_text[:80])
+    log.info("Posting static tweet #%d (of %d): %s", idx + 1, len(tweets), tweet_text[:80])
 
     if twitter_post(tweet_text):
         state["twitter_index"] = (idx + 1) % len(tweets)
         state["last_twitter"] = today_str
         state["twitter_today_count"] = today_count + 1
-        log.info("Twitter index advanced to %d", state["twitter_index"])
     else:
         log.error("Tweet posting failed, index stays at %d", idx)
 
