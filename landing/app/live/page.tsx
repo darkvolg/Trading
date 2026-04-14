@@ -301,9 +301,12 @@ export default function LivePage() {
           <p>
             This page shows real-time data from a paper-trading bot running Freqtrade on Bybit futures.
             Numbers are unfiltered — losing trades included. Data updates hourly from bot sqlite.
+            The strategy is open-source on <a href="https://github.com/darkvolg/trendrider-strategy" className="text-slate-400 hover:text-slate-200 underline" rel="noopener" target="_blank">GitHub</a>.
           </p>
           <p>First trade: {stats.first_trade_date ? fmtDate(stats.first_trade_date) : "n/a"}</p>
           <p>
+            <a href="https://github.com/darkvolg/trendrider-strategy" className="text-slate-500 hover:text-slate-300" rel="noopener" target="_blank">Strategy on GitHub</a>{" "}
+            ·{" "}
             <a href="/blog" className="text-slate-500 hover:text-slate-300">Blog</a>{" "}
             ·{" "}
             <a href="https://t.me/TrendRiderSignals" className="text-slate-500 hover:text-slate-300">Telegram</a>
