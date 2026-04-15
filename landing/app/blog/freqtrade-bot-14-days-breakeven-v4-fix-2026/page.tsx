@@ -1,4 +1,5 @@
 import type { Metadata } from "next";
+import { EmailCaptureInline } from "@/components/sections/EmailCaptureInline";
 
 export const metadata: Metadata = {
   title: "13 Days, 48 Trades, Breakeven. Then I Fixed One Thing. | TrendRider",
@@ -60,6 +61,17 @@ export default function Article() {
             <p>
               This post is the honest story of what happened, every trade, every exit reason, the bug I spent four days missing, and why I&apos;m now open-sourcing the strategy. SQLite dump and MIT-licensed code are at the end. No marketing filter, no cherry-picked screenshots.
             </p>
+
+            <div className="mt-6 p-4 border border-border/60 rounded-lg bg-card/20 text-sm">
+              <p className="mb-2">
+                <strong className="text-foreground">TL;DR if you just want the working stuff:</strong>
+              </p>
+              <ul className="list-disc pl-5 space-y-1">
+                <li>Free MIT strategy: <a href="https://github.com/darkvolg/trendrider-strategy" target="_blank" rel="noopener" className="text-primary hover:underline">github.com/darkvolg/trendrider-strategy</a></li>
+                <li>Live bot SQLite (reads every 60s): <a href="/live" className="text-primary hover:underline">trendrider.net/live</a></li>
+                <li>Tuned params + 30-day backtest report + setup guide ($19 Pro Pack): <a href="#pro-pack" className="text-primary hover:underline">jump to buy section ↓</a></li>
+              </ul>
+            </div>
 
             <h2 className="text-xl font-semibold text-foreground mt-10 mb-3">The setup</h2>
             <ul className="list-disc pl-6 space-y-2 my-4">
@@ -202,6 +214,16 @@ TOTAL                  47       -$0.49`}</code></pre>
               I also ran V5 (hard breakeven exit at 0% after 6h) and V6 (relaxed 4h threshold at &minus;0.5%). Both underperformed V4. The 4h/&minus;1.5% + 2h/&minus;2.5% cascade turned out to be the local optimum on my data.
             </p>
 
+            <div className="mt-6 p-5 border border-primary/20 rounded-lg bg-card/20 text-sm">
+              <p className="text-foreground font-semibold mb-1">Want to skip the tuning yourself?</p>
+              <p className="mb-3">
+                The exact hyperopt parameters running live right now &mdash; including the tuned ROI table, trailing stop offsets, ADX threshold, EMA periods and RSI zones &mdash; are in the <a href="#pro-pack" className="text-primary hover:underline">Pro Pack below</a>. Backtest reproduction is refundable.
+              </p>
+              <p className="text-xs text-muted">
+                Or keep reading for the live deployment and 8-hour forward test &darr;
+              </p>
+            </div>
+
             <h2 className="text-xl font-semibold text-foreground mt-10 mb-3">The deploy</h2>
             <p>
               April 13, 17:27 UTC. I restarted the Freqtrade process with V4 loaded. No other changes. Same pairs, same balance, same 6% stoploss, same confidence threshold.
@@ -271,13 +293,49 @@ TOTAL                  47       -$0.49`}</code></pre>
               <li><strong className="text-foreground">V5 candidate:</strong> volume-aware cascade &mdash; tighter thresholds in high-vol regimes, looser in low-vol. Hypothesis is that the current V4 is too tight when BTC realized vol collapses. I&apos;ll backtest before shipping.</li>
             </ul>
 
+            <h2 className="text-xl font-semibold text-foreground mt-10 mb-3" id="why-trust">Why trust this?</h2>
+            <p>
+              You don&apos;t know me. I could be lying about every number in this post. Here are the five reasons you shouldn&apos;t take anything on faith &mdash; and shouldn&apos;t have to.
+            </p>
+            <ol className="list-decimal pl-6 space-y-3 my-4">
+              <li>
+                <strong className="text-foreground">The full strategy is MIT on GitHub.</strong> Not a snippet. Not pseudocode. The exact 745-line <code className="text-foreground bg-card/50 px-1 rounded">TrendRiderStrategy.py</code> the live bot runs, with no stubbed logic. Clone it, read every line, run your own backtest:{" "}
+                <a href="https://github.com/darkvolg/trendrider-strategy" target="_blank" rel="noopener" className="text-primary hover:underline">github.com/darkvolg/trendrider-strategy</a>.
+              </li>
+              <li>
+                <strong className="text-foreground">The live bot SQLite is public.</strong> Not a screenshot. Not a curated chart. The actual <code className="text-foreground bg-card/50 px-1 rounded">tradesv3.dryrun.sqlite</code> file the bot writes to, piped to a JSON endpoint every 60 seconds. Losing trades visible, exit reasons visible, equity curve visible. If I edit a number in this post tomorrow, the dashboard will contradict it within a minute:{" "}
+                <a href="/live" className="text-primary hover:underline">trendrider.net/live</a>.
+              </li>
+              <li>
+                <strong className="text-foreground">Third-party validation in progress.</strong> I opened <a href="https://github.com/freqtrade/freqtrade-strategies/pull/334" target="_blank" rel="noopener" className="text-primary hover:underline">PR #334</a> to the official <code className="text-foreground bg-card/50 px-1 rounded">freqtrade/freqtrade-strategies</code> repo (5k⭐, maintained by the Freqtrade team). If the PR merges, the Freqtrade maintainers verified the strategy is legitimate. If it doesn&apos;t merge, you&apos;ll see the review comments there.
+              </li>
+              <li>
+                <strong className="text-foreground">30-day reproducibility refund.</strong> If the backtest numbers in the Pro Pack&apos;s <code className="text-foreground bg-card/50 px-1 rounded">BACKTEST-REPORT.md</code> don&apos;t reproduce on your setup within &plusmn;5% tolerance, full refund. No &quot;support tickets,&quot; no &quot;contact us&quot; runaround &mdash; email me your backtest output and I&apos;ll refund from the same CryptoBot wallet.
+              </li>
+              <li>
+                <strong className="text-foreground">The base strategy costs you $0.</strong> You can run the open-source version right now, reproduce the 30-day backtest, verify the win rate and drawdown, and only then decide if the tuned Pro Pack parameters are worth $19 to skip your own hyperopt run. The free version isn&apos;t a trial &mdash; it&apos;s the strategy.
+              </li>
+            </ol>
+
+            <h2 className="text-xl font-semibold text-foreground mt-10 mb-3">About the author</h2>
+            <p>
+              Hi, I&apos;m <strong className="text-foreground">darkvolg</strong>. I build and run the bot publicly at <a href="https://trendrider.net" className="text-primary hover:underline">trendrider.net</a>. The live dashboard, this blog, the open-source strategy, the PR to freqtrade-strategies, the daily build-in-public tweets from{" "}
+              <a href="https://twitter.com/trendrider" target="_blank" rel="noopener" className="text-primary hover:underline">@trendrider</a>{" "}
+              &mdash; all from the same person. If you email or DM with a question, I&apos;m the one who answers.
+            </p>
+            <p>
+              I&apos;m not a hedge fund quant. I&apos;m a developer who got tired of &quot;crypto signal&quot; channels that hide their losers and ship strategies in screenshot form. This bot is the experiment of doing the opposite: every number public, every loss in the open, every fix documented here with the SQLite that proves or disproves it.
+            </p>
+
             <div className="mt-12 p-6 border border-primary/30 rounded-lg bg-card/30">
               <p className="text-foreground font-semibold mb-2">⭐ Open-source strategy (free, MIT)</p>
               <p className="mb-4 text-sm">The exact Freqtrade strategy powering the live bot is on GitHub. MIT license, fully reproducible backtests. Star it if you find it useful.</p>
               <a href="https://github.com/darkvolg/trendrider-strategy" target="_blank" rel="noopener" className="text-primary text-sm hover:underline">Star on GitHub &rarr;</a>
             </div>
 
-            <div className="mt-6 p-6 border border-emerald-500/30 rounded-lg bg-emerald-950/20">
+            <EmailCaptureInline />
+
+            <div id="pro-pack" className="mt-6 p-6 border border-emerald-500/30 rounded-lg bg-emerald-950/20">
               <p className="text-foreground font-semibold mb-2">💎 V4 Pro Pack — $19 USDT / TON / USDC</p>
               <p className="mb-2 text-sm">
                 The base strategy is free forever. The <strong className="text-foreground">Pro Pack</strong> adds what&apos;s tuned and measured: production hyperopt parameters (the exact ones running on the live bot), a 30-day backtest report (V3 vs V4 comparison, per-pair breakdown, profit factor / Sharpe / drawdown), a setup guide, and the full version changelog from V1 to V4.
