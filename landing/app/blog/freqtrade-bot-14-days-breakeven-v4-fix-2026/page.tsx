@@ -272,9 +272,33 @@ TOTAL                  47       -$0.49`}</code></pre>
             </ul>
 
             <div className="mt-12 p-6 border border-primary/30 rounded-lg bg-card/30">
-              <p className="text-foreground font-semibold mb-2">⭐ Open-source strategy</p>
+              <p className="text-foreground font-semibold mb-2">⭐ Open-source strategy (free, MIT)</p>
               <p className="mb-4 text-sm">The exact Freqtrade strategy powering the live bot is on GitHub. MIT license, fully reproducible backtests. Star it if you find it useful.</p>
               <a href="https://github.com/darkvolg/trendrider-strategy" target="_blank" rel="noopener" className="text-primary text-sm hover:underline">Star on GitHub &rarr;</a>
+            </div>
+
+            <div className="mt-6 p-6 border border-emerald-500/30 rounded-lg bg-emerald-950/20">
+              <p className="text-foreground font-semibold mb-2">💎 V4 Pro Pack — $19 USDT / TON / USDC</p>
+              <p className="mb-2 text-sm">
+                The base strategy is free forever. The <strong className="text-foreground">Pro Pack</strong> adds what&apos;s tuned and measured: production hyperopt parameters (the exact ones running on the live bot), a 30-day backtest report (V3 vs V4 comparison, per-pair breakdown, profit factor / Sharpe / drawdown), a setup guide, and the full version changelog from V1 to V4.
+              </p>
+              <ul className="list-disc pl-5 space-y-1 my-3 text-sm">
+                <li><code className="text-foreground bg-card/50 px-1 rounded">v4_hyperopt_params.json</code> &mdash; drop-in production params</li>
+                <li><code className="text-foreground bg-card/50 px-1 rounded">BACKTEST-REPORT.md</code> &mdash; 30 days, reproducible</li>
+                <li><code className="text-foreground bg-card/50 px-1 rounded">SETUP-GUIDE.md</code> &mdash; end-to-end walkthrough</li>
+                <li><code className="text-foreground bg-card/50 px-1 rounded">CHANGELOG.md</code> &mdash; V1 &rarr; V4 with what changed and why</li>
+              </ul>
+              <p className="mb-4 text-sm">
+                <strong className="text-foreground">Refund guaranteed</strong> within 30 days if the backtest numbers don&apos;t reproduce on your setup (&plusmn;5% tolerance). Paid in USDT / TON / USDC via <a href="https://t.me/CryptoBot" target="_blank" rel="noopener" className="text-primary hover:underline">@CryptoBot</a>. After payment, leave your Telegram @username or email as the invoice comment &mdash; I&apos;ll DM you the zip within 24 hours.
+              </p>
+              <a
+                href="https://t.me/CryptoBot?start=IVNZsppFp1Kr"
+                target="_blank"
+                rel="noopener"
+                className="inline-flex items-center gap-2 px-4 py-2 rounded-md bg-emerald-500 hover:bg-emerald-400 text-slate-950 font-semibold text-sm transition-colors"
+              >
+                Buy Pro Pack &mdash; $19 via @CryptoBot &rarr;
+              </a>
             </div>
 
             <p className="text-xs text-muted mt-12 italic">
