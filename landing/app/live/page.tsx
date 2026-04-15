@@ -169,6 +169,18 @@ export default function LivePage() {
           <p className="mt-2 text-slate-400 text-sm">
             {stats.strategy} · {stats.mode} · raw data from sqlite, no marketing filter
           </p>
+          <a
+            href="https://github.com/darkvolg/trendrider-strategy"
+            target="_blank"
+            rel="noopener"
+            className="mt-4 inline-flex items-center gap-2 px-3 py-1.5 rounded-md bg-slate-900 border border-slate-700 hover:border-emerald-500/50 hover:bg-slate-800 text-sm text-slate-200 transition-colors"
+          >
+            <svg viewBox="0 0 16 16" width="16" height="16" fill="currentColor" aria-hidden="true">
+              <path d="M8 .25a.75.75 0 0 1 .673.418l1.882 3.815 4.21.612a.75.75 0 0 1 .416 1.279l-3.046 2.97.719 4.192a.75.75 0 0 1-1.088.791L8 12.347l-3.766 1.98a.75.75 0 0 1-1.088-.79l.72-4.194L.818 6.374a.75.75 0 0 1 .416-1.28l4.21-.611L7.327.668A.75.75 0 0 1 8 .25Z" />
+            </svg>
+            <span className="font-medium">Star the strategy on GitHub</span>
+            <span className="text-slate-500">— open-source, MIT</span>
+          </a>
         </header>
 
         <section className="grid grid-cols-2 sm:grid-cols-4 gap-3 mb-8">
