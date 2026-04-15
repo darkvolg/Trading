@@ -368,7 +368,21 @@ export default function BlogPage() {
       <div className="max-w-4xl mx-auto px-4 py-20">
         <a href="/" className="text-primary text-sm hover:underline mb-8 inline-block">&larr; Back to home</a>
         <h1 className="text-4xl font-bold mb-4 gradient-text">Blog</h1>
-        <p className="text-muted mb-12 text-lg">Insights on AI-powered trading, risk management, and crypto signals.</p>
+        <p className="text-muted mb-6 text-lg">Insights on AI-powered trading, risk management, and crypto signals.</p>
+
+        <a
+          href="https://github.com/darkvolg/trendrider-strategy"
+          target="_blank"
+          rel="noopener"
+          className="mb-12 inline-flex items-center gap-2 px-4 py-2 rounded-lg border border-primary/30 bg-card/50 hover:border-primary/60 hover:bg-card/80 text-sm transition-all group"
+        >
+          <svg viewBox="0 0 16 16" width="16" height="16" fill="currentColor" aria-hidden="true">
+            <path d="M8 .25a.75.75 0 0 1 .673.418l1.882 3.815 4.21.612a.75.75 0 0 1 .416 1.279l-3.046 2.97.719 4.192a.75.75 0 0 1-1.088.791L8 12.347l-3.766 1.98a.75.75 0 0 1-1.088-.79l.72-4.194L.818 6.374a.75.75 0 0 1 .416-1.28l4.21-.611L7.327.668A.75.75 0 0 1 8 .25Z" />
+          </svg>
+          <span className="font-medium group-hover:text-primary transition-colors">Star the strategy on GitHub</span>
+          <span className="text-muted text-xs">— open-source, MIT</span>
+        </a>
+
 
         <div className="space-y-6">
           {posts.map((post) => (
