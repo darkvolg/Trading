@@ -11,6 +11,14 @@ export const metadata: Metadata = {
 
 const posts = [
   {
+    slug: "freqtrade-bot-14-days-breakeven-v4-fix-2026",
+    title: "13 Days, 48 Trades, Breakeven. Then I Fixed One Thing.",
+    excerpt: "Honest Freqtrade post-mortem with every trade, every exit reason, and the V4 cascading loss cut that turned a breakeven run around in 8 hours. SQLite dump and open-source code included.",
+    date: "April 15, 2026",
+    readTime: "12 min read",
+    tag: "Build in public",
+  },
+  {
     slug: "crypto-swing-trading-strategies-2026",
     title: "Crypto Swing Trading Strategies 2026: 5 Best Setups With Exact Rules",
     excerpt: "5 battle-tested swing trading strategies with exact entry, exit & stop-loss rules. EMA pullback, RSI divergence, S/R bounce, breakout, and Fibonacci — backtested on 500+ trades across BTC, ETH, SOL.",
