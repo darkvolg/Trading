@@ -324,7 +324,8 @@ def _extract_composio_result(response: dict) -> dict | list | None:
                 if isinstance(parsed, dict) and "data" in parsed:
                     results = parsed.get("data", {}).get("results", [])
                     if results and isinstance(results, list):
-                        resp0 = results[0].get("response", {}); inner = resp0.get("data") or resp0.get("data_preview") or {}
+                        resp0 = results[0].get("response", {})
+                        inner = resp0.get("data") or resp0.get("data_preview") or {}
                         if inner:
                             return inner
                 return parsed
