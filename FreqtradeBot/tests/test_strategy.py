@@ -750,14 +750,14 @@ class TestPopulateExitTrend:
 
     # --- trend_broken ---
 
-    def test_trend_broken_triggers_when_price_drops_below_ema200(self, strategy, ohlcv_df, metadata):
+    def test_trend_broken_triggers_when_both_candles_below_threshold(self, strategy, ohlcv_df, metadata):
+        """trend_broken fires when both current and previous close < ema_200 * 0.97."""
         df = self._prep(strategy, ohlcv_df, metadata)
         idx = len(df) - 2
-        # Current: close < ema_200
+        # Both candles well below ema_200 * 0.97 = 97.0 threshold
         df.loc[idx, "close"] = 80.0
         df.loc[idx, "ema_200"] = 100.0
-        # Previous: close >= ema_200
-        df.loc[idx - 1, "close"] = 101.0
+        df.loc[idx - 1, "close"] = 85.0
         df.loc[idx - 1, "ema_200"] = 100.0
         df.loc[idx, "volume"] = 500.0
 
@@ -765,14 +765,14 @@ class TestPopulateExitTrend:
         assert df.loc[idx, "exit_long"] == 1
         assert df.loc[idx, "exit_tag"] == "trend_broken"
 
-    def test_trend_broken_not_triggered_when_already_below_ema200(self, strategy, ohlcv_df, metadata):
-        """trend_broken only fires on the crossing candle, not while staying below."""
+    def test_trend_broken_not_triggered_when_previous_above_threshold(self, strategy, ohlcv_df, metadata):
+        """trend_broken requires both candles below ema_200 * 0.97; previous above = no trigger."""
         df = self._prep(strategy, ohlcv_df, metadata)
         idx = len(df) - 2
-        # Both current and previous candle below ema_200 — no cross
+        # Current below threshold, but previous above it (99 > 97)
         df.loc[idx, "close"] = 80.0
         df.loc[idx, "ema_200"] = 100.0
-        df.loc[idx - 1, "close"] = 85.0
+        df.loc[idx - 1, "close"] = 99.0
         df.loc[idx - 1, "ema_200"] = 100.0
         df.loc[idx, "volume"] = 500.0
 

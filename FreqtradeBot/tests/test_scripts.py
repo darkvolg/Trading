@@ -513,7 +513,9 @@ class TestExportToSheetsCalculateMonthly:
         from export_to_sheets import calculate_monthly
         rows = calculate_monthly(sample_trades)
         assert len(rows) == 1
-        assert rows[0][0] == "2026-03"
+        # sample_trades uses relative dates (now - 10/8/5 days), so month depends on current date
+        expected_month = (datetime.now(timezone.utc) - timedelta(days=10)).strftime("%Y-%m")
+        assert rows[0][0] == expected_month
         assert rows[0][1] == "3"
 
     def test_multiple_months(self):
