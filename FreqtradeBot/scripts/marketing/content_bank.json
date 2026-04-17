@@ -379,6 +379,36 @@
         "#trading"
       ],
       "category": "engagement"
+    },
+    {
+      "text": "Open-sourced my Freqtrade strategy today.\n\n66% WR live trading, cascading early-loss-cut, MIT license.\n\n⭐ https://github.com/darkvolg/trendrider-strategy\n\n#algotrading #opensource #freqtrade",
+      "tags": ["#algotrading", "#opensource", "#freqtrade"],
+      "category": "star_cta"
+    },
+    {
+      "text": "No paywall. No subscription. No bullshit.\n\nMy full Freqtrade strategy on GitHub — fork it, improve it, ship it.\n\n⭐ https://github.com/darkvolg/trendrider-strategy\n\n#algotrading #crypto #opensource",
+      "tags": ["#algotrading", "#crypto", "#opensource"],
+      "category": "star_cta"
+    },
+    {
+      "text": "If you're building algo-trading strategies, a star costs nothing but helps devs like me a lot.\n\nTrendRider strategy repo: https://github.com/darkvolg/trendrider-strategy\n\n⭐ = 1 motivation unit\n\n#buildinpublic #algotrading",
+      "tags": ["#buildinpublic", "#algotrading"],
+      "category": "star_cta"
+    },
+    {
+      "text": "Week in review: live bot at 65% WR, strategy code is public, docs are clean.\n\nTake it. Modify it. Trade with it.\n\n⭐ https://github.com/darkvolg/trendrider-strategy\n\n#crypto #algotrading #freqtrade",
+      "tags": ["#crypto", "#algotrading", "#freqtrade"],
+      "category": "star_cta"
+    },
+    {
+      "text": "Every time my bot closes a winning trade, I remember the strategy is open-source.\n\n⭐ Star the repo if you learn something: https://github.com/darkvolg/trendrider-strategy\n\n#algotrading #opensource #crypto",
+      "tags": ["#algotrading", "#opensource", "#crypto"],
+      "category": "star_cta"
+    },
+    {
+      "text": "Public GitHub repo > paid course.\n\nReal strategy. Real trades. Real code.\n\n⭐ https://github.com/darkvolg/trendrider-strategy\n\n#algotrading #opensource #freqtrade",
+      "tags": ["#algotrading", "#opensource", "#freqtrade"],
+      "category": "star_cta"
     }
   ],
   "reddit_comments": [

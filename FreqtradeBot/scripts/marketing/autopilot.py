@@ -324,8 +324,7 @@ def _extract_composio_result(response: dict) -> dict | list | None:
                 if isinstance(parsed, dict) and "data" in parsed:
                     results = parsed.get("data", {}).get("results", [])
                     if results and isinstance(results, list):
-                        resp0 = results[0].get("response", {})
-                        inner = resp0.get("data") or resp0.get("data_preview") or {}
+                        resp0 = results[0].get("response", {}); inner = resp0.get("data") or resp0.get("data_preview") or {}
                         if inner:
                             return inner
                 return parsed
@@ -335,24 +334,28 @@ def _extract_composio_result(response: dict) -> dict | list | None:
 
 
 def _fetch_recent_posts(subreddit: str, sort: str = "new", limit: int = 20) -> list:
-    """Fetch recent posts from a subreddit via Composio."""
-    resp = _composio_mcp_call("REDDIT_SEARCH_ACROSS_SUBREDDITS", {
-        "search_query": "crypto trading bot algotrading strategy",
+    """Fetch recent posts from a subreddit via Composio.
+
+    Uses REDDIT_RETRIEVE_REDDIT_POST (per-subreddit fetch) instead of the
+    cross-sub search endpoint, which had a ~50% miss rate on r/algotrading.
+    Response shape: {kind: "Listing", data: {children: [{data: {...}, kind: "t3"}, ...]}}
+    """
+    resp = _composio_mcp_call("REDDIT_RETRIEVE_REDDIT_POST", {
         "subreddit": subreddit,
         "sort": sort,
-        "limit": limit,
+        "max_results": min(limit, 100),
     })
     data = _extract_composio_result(resp)
     if not data:
         return []
 
-    posts = []
     if isinstance(data, dict):
-        posts = data.get("posts", data.get("data", {}).get("children", []))
-    elif isinstance(data, list):
-        posts = data
-
-    return posts
+        inner = data.get("data", data)
+        children = inner.get("children", []) if isinstance(inner, dict) else []
+        return children if isinstance(children, list) else []
+    if isinstance(data, list):
+        return data
+    return []
 
 
 def _pick_matching_post(posts: list, keywords: list[str]) -> dict | None:
@@ -591,12 +594,14 @@ def build_live_stats_tweet() -> str | None:
             "Raw sqlite, no filter:",
             "https://trendrider.net/live",
             "",
+            "⭐ github.com/darkvolg/trendrider-strategy",
+            "",
             "#freqtrade #algotrading",
         ]
         tweet = "\n".join(lines)
         if len(tweet) > 280:
             # Drop best/worst lines if too long
-            tweet = "\n".join([lines[0], "", lines[2], lines[3], "", "https://trendrider.net/live", "", "#freqtrade #algotrading"])
+            tweet = "\n".join([lines[0], "", lines[2], lines[3], "", "https://trendrider.net/live", "", "⭐ github.com/darkvolg/trendrider-strategy"])
         return tweet
     except Exception as e:
         log.error("Live stats tweet build failed: %s", e)
@@ -864,6 +869,114 @@ def handle_hashnode(state: dict, content_bank: dict) -> dict:
 
 
 
+def handle_medium(state: dict, content_bank: dict) -> dict:
+    """Publish next blog article to Medium via Integration Token API."""
+    token = os.environ.get("MEDIUM_TOKEN", "")
+    if not token:
+        log.error("MEDIUM_TOKEN missing")
+        return state
+
+    manifest = load_blog_manifest()
+    if not manifest:
+        log.error("Blog manifest is empty, nothing to publish")
+        return state
+
+    today_str = datetime.now(timezone.utc).strftime("%Y-%m-%d")
+    if state.get("last_medium") == today_str:
+        log.info("Already published to Medium today (%s), skipping", today_str)
+        return state
+
+    published = state.get("medium_published", [])
+    article = None
+    for entry in manifest:
+        if entry["slug"] not in published:
+            article = entry
+            break
+    if article is None:
+        log.info("All %d blog articles already published to Medium", len(manifest))
+        return state
+
+    slug = article["slug"]
+    title = article["title"]
+    summary = article["summary"]
+    tags = article.get("tags", [])[:5]
+    canonical_url = f"{SITE_URL}/blog/{slug}"
+
+    # Resolve userId via GET /v1/me (cached in state)
+    user_id = state.get("medium_user_id", "")
+    if not user_id:
+        try:
+            me_resp = requests.get(
+                "https://api.medium.com/v1/me",
+                headers={"Authorization": f"Bearer {token}", "Accept": "application/json"},
+                timeout=30,
+            )
+            user_id = me_resp.json().get("data", {}).get("id", "")
+            if not user_id:
+                log.error("Medium /v1/me failed: %s", me_resp.text[:300])
+                return state
+            state["medium_user_id"] = user_id
+        except Exception as e:
+            log.exception("Medium userId resolve failed")
+            _send_telegram(f"❌ Medium: userId resolve failed: {str(e)[:200]}")
+            return state
+
+    content_md = (
+        f"> *Originally published at [trendrider.net]({canonical_url})*\n\n"
+        f"{summary}\n\n"
+        f"## What You Will Learn\n\n"
+        f"This article breaks down the complete strategy with real backtest data, "
+        f"exact entry/exit rules, and Python code examples you can run today.\n\n"
+        f"**[Read the full article on TrendRider →]({canonical_url})**\n\n"
+        f"---\n\n"
+        f"TrendRider is a free algorithmic crypto trading system with 67.9% "
+        f"backtested win rate. The open-source Freqtrade strategy is on "
+        f"[GitHub](https://github.com/darkvolg/trendrider-strategy) — star it if useful. "
+        f"Live bot stats: [{SITE_URL}/live]({SITE_URL}/live)."
+    )
+
+    payload = {
+        "title": title,
+        "contentFormat": "markdown",
+        "content": f"# {title}\n\n{content_md}",
+        "tags": tags,
+        "canonicalUrl": canonical_url,
+        "publishStatus": "public",
+    }
+
+    log.info("Publishing to Medium: %s (slug=%s)", title, slug)
+    try:
+        resp = requests.post(
+            f"https://api.medium.com/v1/users/{user_id}/posts",
+            headers={
+                "Authorization": f"Bearer {token}",
+                "Content-Type": "application/json",
+                "Accept": "application/json",
+                "Accept-Charset": "utf-8",
+            },
+            json=payload,
+            timeout=60,
+        )
+        data = resp.json()
+        if resp.status_code not in (200, 201) or "errors" in data:
+            log.error("Medium publish failed (%s): %s", resp.status_code, data)
+            _send_telegram(f"❌ Medium: ошибка '{title}'")
+            return state
+        post = data.get("data", {})
+        post_url = post.get("url", "")
+        log.info("Medium published: %s (id=%s)", post_url, post.get("id"))
+        published.append(slug)
+        state["medium_published"] = published
+        state["last_medium"] = today_str
+        _send_telegram(f"✅ Medium: опубликована '{title}'\n{post_url}")
+    except Exception as e:
+        log.exception("Medium publish exception")
+        _send_telegram(f"❌ Medium: exception '{title}': {str(e)[:200]}")
+
+    return state
+
+
+
 def handle_linkedin(state: dict, content_bank: dict) -> dict:
     """Post next blog article to LinkedIn from blog manifest."""
     manifest = load_blog_manifest()
@@ -977,9 +1090,13 @@ def main() -> None:
         "--hashnode", action="store_true",
         help="Publish next article to Hashnode",
     )
+    parser.add_argument(
+        "--medium", action="store_true",
+        help="Publish next article to Medium",
+    )
     args = parser.parse_args()
 
-    if not any([args.twitter, args.reddit, args.remind, args.devto, args.linkedin, args.hashnode]):
+    if not any([args.twitter, args.reddit, args.remind, args.devto, args.linkedin, args.hashnode, args.medium]):
         parser.print_help()
         sys.exit(1)
 
@@ -1011,6 +1128,10 @@ def main() -> None:
     if args.hashnode:
         log.info("--- Mode: Hashnode ---")
         state = handle_hashnode(state, content_bank)
+
+    if args.medium:
+        log.info("--- Mode: Medium ---")
+        state = handle_medium(state, content_bank)
 
     save_state(state)
     log.info("=== Marketing Autopilot finished ===")
