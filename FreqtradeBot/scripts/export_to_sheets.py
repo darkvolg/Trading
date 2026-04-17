@@ -309,7 +309,8 @@ def calculate_monthly(trades: list[dict]) -> list[list[str]]:
         win_pct = round((wins / count) * 100, 1) if count else 0
         pnl_usdt = round(sum(t["profit_abs"] or 0 for t in mt), 2)
         pnl_pct = round(sum((t["profit_ratio"] or 0) * 100 for t in mt), 2)
-        rows.append([month, str(count), str(wins), str(losses), f"{win_pct}", f"{pnl_usdt:+.2f}", f"{pnl_pct:+.2f}"])
+        # Leading space forces Sheets to treat "+N" values as text (not formula)
+        rows.append([month, str(count), str(wins), str(losses), f"{win_pct}", f" {pnl_usdt:+.2f}", f" {pnl_pct:+.2f}"])
 
     return rows
 
@@ -423,7 +424,7 @@ def update_dashboard(sh: gspread.Spreadsheet, trades: list[dict]) -> None:
         [str(metrics["total_trades"])],
         [f'{metrics["win_rate"]}%'],
         [f'${metrics["total_pnl_usdt"]:+.2f}'],
-        [f'{metrics["total_pnl_pct"]:+.2f}%'],
+        [f' {metrics["total_pnl_pct"]:+.2f}%'],  # leading space: avoid Sheets formula parsing
         [f'{metrics["max_drawdown_pct"]:.2f}%'],
         [str(metrics["profit_factor"])],
         [str(metrics["sqn"])],
