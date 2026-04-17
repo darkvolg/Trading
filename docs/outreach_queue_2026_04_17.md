@@ -2,6 +2,13 @@
 
 **Goal**: 3-5 referring domains в ближайшие 14 дней → сдвинуть индексацию (0/50 → 20+/50).
 
+## ✅ Already executed (2026-04-17 session)
+
+- ✅ **Gmail drafts** for CryptoPotato / Altcoin Buzz / BeInCrypto — ready in user's Gmail drafts folder (see `display_url` in session log)
+- ✅ **PR #26** → SpiralDevelopment/Awesome-Crypto-Trading (190⭐) — https://github.com/SpiralDevelopment/Awesome-Crypto-Trading/pull/26
+- ✅ **PR #45** → paperswithbacktest/awesome-systematic-trading (7.9k⭐) — https://github.com/paperswithbacktest/awesome-systematic-trading/pull/45
+- ✅ Both PRs added to `pr_monitor.py` for automatic Telegram status updates
+
 **Approach**: высокая персонализация, короткие письма, value-first.
 
 **Success metrics**:
