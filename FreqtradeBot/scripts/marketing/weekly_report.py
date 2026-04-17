@@ -300,10 +300,10 @@ def main() -> int:
     prev_hn = prev.get("hn", {})
 
     lines = [
-        f"📊 <b>TrendRider Weekly Report</b>",
+        "📊 <b>TrendRider Weekly Report</b>",
         f"🗓 {start_s} → {end_s}",
         "",
-        f"<b>🔍 Google Search</b>",
+        "<b>🔍 Google Search</b>",
         f"Clicks: {fmt_delta(gsc['clicks'], prev_gsc.get('clicks'))}",
         f"Impressions: {fmt_delta(gsc['impressions'], prev_gsc.get('impressions'))}",
         f"CTR: {fmt_delta(gsc['ctr'], prev_gsc.get('ctr'), '%')}",
@@ -326,7 +326,7 @@ def main() -> int:
         f"Articles: {dt['articles']}  •  Reactions: {fmt_delta(dt['reactions'], prev_dt.get('reactions'))}",
         f"Comments: {fmt_delta(dt['comments'], prev_dt.get('comments'))}",
         "",
-        f"<b>🚀 Show HN</b>",
+        "<b>🚀 Show HN</b>",
         f"Score: {fmt_delta(hn['score'], prev_hn.get('score'))}  •  Comments: {hn['comments']}",
         f"Front page rank: {hn['rank'] or 'не на FP'}",
         "",
