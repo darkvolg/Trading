@@ -1,6 +1,7 @@
 "use client";
 
 import { useEffect, useState } from "react";
+import { EmailCaptureInline } from "@/components/sections/EmailCaptureInline";
 
 type ExitBreakdown = {
   exit_reason: string;
@@ -308,6 +309,15 @@ export default function LivePage() {
             </table>
           </div>
         </section>
+
+        <div className="mb-8">
+          <EmailCaptureInline
+            heading="Get free monthly backtest report"
+            subheading="Every month I publish a full V4 backtest update — per-pair breakdown, new trades, equity curve. Drop your email and I'll send it directly. Free, no spam."
+            ctaLabel="Send me the report"
+            tag="live-page"
+          />
+        </div>
 
         <footer className="text-xs text-slate-600 border-t border-slate-800 pt-4 mt-8 space-y-1">
           <p>

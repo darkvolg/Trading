@@ -483,13 +483,21 @@ export default function Article() {{
 {intro_paragraphs}
 {sections_str}
 
+            <div className="my-8 p-4 border border-primary/20 rounded-lg bg-card/20 flex items-center gap-4 text-sm">
+              <span className="text-2xl">⭐</span>
+              <div>
+                <p className="text-foreground font-medium mb-1">TrendRider strategy is open-source (MIT)</p>
+                <p className="text-muted">Real trades, real numbers, every exit reason public. <a href="https://github.com/darkvolg/trendrider-strategy" target="_blank" rel="noopener" className="text-primary hover:underline">Star on GitHub</a> — it helps others find it.</p>
+              </div>
+            </div>
+
             <h2 className="text-xl font-semibold text-foreground mt-10 mb-3">Frequently Asked Questions</h2>
 {faqs_str}
 
-            <div className="mt-12 p-6 border border-border rounded-lg bg-card/50">
-              <p className="text-foreground font-semibold mb-2">Ready to automate your crypto trading?</p>
-              <p className="mb-4 text-sm">TrendRider runs a 67.9% win-rate algorithmic strategy on Bybit futures. Free Telegram signals, optional paid tiers.</p>
-              <a href="/" className="text-primary text-sm hover:underline">Get free signals &rarr;</a>
+            <div className="mt-12 p-6 border border-primary/30 rounded-lg bg-card/30">
+              <p className="text-foreground font-semibold mb-2">⭐ Open-source Freqtrade strategy (free, MIT)</p>
+              <p className="mb-4 text-sm">The strategy powering TrendRider&apos;s live bot is on GitHub — MIT license, reproducible backtests, every trade public at <a href="https://trendrider.net/live" className="text-primary hover:underline">trendrider.net/live</a>. Star it if you find it useful.</p>
+              <a href="https://github.com/darkvolg/trendrider-strategy" target="_blank" rel="noopener" className="text-primary text-sm hover:underline">⭐ Star on GitHub &rarr;</a>
             </div>
           </div>
         </article>
