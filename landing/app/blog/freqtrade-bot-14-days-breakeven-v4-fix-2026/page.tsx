@@ -29,6 +29,7 @@ export default function Article() {
             },
             datePublished: "2026-04-15",
             dateModified: "2026-04-15",
+            image: "https://trendrider.net/blog-heroes/freqtrade-bot-14-days-breakeven-v4-fix-2026.png",
             mainEntityOfPage: {
               "@type": "WebPage",
               "@id": "https://trendrider.net/blog/freqtrade-bot-14-days-breakeven-v4-fix-2026",
@@ -47,6 +48,7 @@ export default function Article() {
           <h1 className="text-3xl md:text-4xl font-bold mb-6 tracking-tight">
             13 Days, 48 Trades, Breakeven. Then I Fixed One Thing. Here&apos;s Every Trade.
           </h1>
+          <img src="/blog-heroes/freqtrade-bot-14-days-breakeven-v4-fix-2026.png" alt="Freqtrade bot 13 days breakeven, then V4 cascading exit fix — real SQLite trade data" className="w-full rounded-xl border border-border mb-8" loading="eager" />
 
           <div className="space-y-6 text-muted leading-relaxed">
             <p>
@@ -69,7 +71,7 @@ export default function Article() {
               <ul className="list-disc pl-5 space-y-1">
                 <li>Free MIT strategy: <a href="https://github.com/darkvolg/trendrider-strategy" target="_blank" rel="noopener" className="text-primary hover:underline">github.com/darkvolg/trendrider-strategy</a></li>
                 <li>Live bot SQLite (reads every 60s): <a href="/live" className="text-primary hover:underline">trendrider.net/live</a></li>
-                <li>Tuned params + 30-day backtest report + setup guide ($19 Pro Pack): <a href="#pro-pack" className="text-primary hover:underline">jump to buy section ↓</a></li>
+                <li>⭐ <a href="https://github.com/darkvolg/trendrider-strategy" target="_blank" rel="noopener" className="text-primary hover:underline">Star the strategy on GitHub</a> — free, MIT, 1 click</li>
               </ul>
             </div>
 
@@ -215,12 +217,15 @@ TOTAL                  47       -$0.49`}</code></pre>
             </p>
 
             <div className="mt-6 p-5 border border-primary/20 rounded-lg bg-card/20 text-sm">
-              <p className="text-foreground font-semibold mb-1">Want to skip the tuning yourself?</p>
+              <p className="text-foreground font-semibold mb-1">⭐ The strategy is open-source — star it if this is useful</p>
               <p className="mb-3">
-                The exact hyperopt parameters running live right now &mdash; including the tuned ROI table, trailing stop offsets, ADX threshold, EMA periods and RSI zones &mdash; are in the <a href="#pro-pack" className="text-primary hover:underline">Pro Pack below</a>. Backtest reproduction is refundable.
+                The full code (V4 with cascading early-exit) is on GitHub under MIT license. Free forever. If you find it useful, a star helps others discover it &mdash; and pushes it into the awesome-quant lists.
               </p>
-              <p className="text-xs text-muted">
-                Or keep reading for the live deployment and 8-hour forward test &darr;
+              <a href="https://github.com/darkvolg/trendrider-strategy" target="_blank" rel="noopener" className="inline-block px-4 py-2 bg-primary/10 border border-primary/30 rounded text-primary hover:bg-primary/20 font-medium">
+                ⭐ Star on GitHub →
+              </a>
+              <p className="text-xs text-muted mt-3">
+                Keep reading for the live deployment and 8-hour forward test &darr;
               </p>
             </div>
 
