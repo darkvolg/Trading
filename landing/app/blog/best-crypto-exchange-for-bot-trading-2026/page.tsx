@@ -1,8 +1,8 @@
 import type { Metadata } from "next";
 
 export const metadata: Metadata = {
-  title: "Best Crypto Exchange for Bot Trading in 2026 (Bybit vs Binance vs OKX)",
-  description: "Compare Bybit, Binance, OKX, Kraken & Coinbase for bot trading. API limits, fees, Freqtrade support — see why TrendRider chose Bybit.",
+  title: "Best Crypto Exchange for Bot Trading 2026: Bybit vs Binance vs OKX Compared",
+  description: "Comparison of Bybit, Binance, OKX, Kraken, and Coinbase for algorithmic bot trading: API rate limits, maker/taker fees, Freqtrade/CCXT support, funding rates.",
   alternates: {
     canonical: "https://trendrider.net/blog/best-crypto-exchange-for-bot-trading-2026",
   },
