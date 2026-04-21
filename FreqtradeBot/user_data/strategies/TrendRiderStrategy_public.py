@@ -25,12 +25,16 @@ logger = logging.getLogger(__name__)
 class TrendRiderStrategy(IStrategy):
     INTERFACE_VERSION = 3
 
-    # --- ROI: Hyperopt-optimized (2026-03-23, 5 pairs) ---
+    # --- ROI (V6: tightened ladder to catch peak-crash pattern) ---
+    # Diagnostic showed 10/15 losers peaked at +1..+3% then crashed to -2..-5%.
+    # Previous ROI (22.9% immediate, 13.6% at 2h) was practically unreachable on 1h crypto —
+    # trades peaked below ROI then drifted into loss. New ladder realistic for 1h timeframe:
     minimal_roi = {
-        "0": 0.229,     # 22.9% immediate
-        "124": 0.136,   # 13.6% after ~2h
-        "290": 0.044,   # 4.4% after ~5h
-        "764": 0,       # breakeven after ~12.7h
+        "0": 0.05,      # 5% if immediate (caught breakout)
+        "60": 0.03,     # 3% after 1h
+        "180": 0.015,   # 1.5% after 3h — catches the +1-3% peaks before reversal
+        "360": 0.008,   # 0.8% after 6h
+        "720": 0,       # breakeven after 12h (was 12.7h)
     }
 
     # --- Stoploss: WIDE for crypto volatility ---
@@ -80,8 +84,8 @@ class TrendRiderStrategy(IStrategy):
         "rsi_pullback_low": 30,
         "rsi_pullback_high": 65,
         "rsi_bounce": 35,
-        "adx_threshold": 18,
-        "volume_factor": 0.7,
+        "adx_threshold": 20,    # V6: was 18 — require minimum trend strength
+        "volume_factor": 1.3,   # V6: was 0.7 — require meaningful volume (hyperopt consistently finds 1.3-1.6)
     }
 
     sell_params = {
@@ -323,14 +327,15 @@ class TrendRiderStrategy(IStrategy):
             ["enter_long", "enter_tag"]
         ] = (1, "ema50_bounce")
 
-        # === LONG 3: RSI Oversold Bounce ===
+        # === LONG 3: RSI Oversold Bounce (V6: added ADX filter + unified volume threshold) ===
         conditions_rsi = [
             dataframe["close"] > dataframe["ema_200"],
             dataframe[rsi].shift(1) < self.rsi_bounce.value,
             dataframe[rsi] > self.rsi_bounce.value,
             dataframe["close"] > dataframe["bb_lower"],
             dataframe["close"] > dataframe["open"],
-            dataframe["volume_ratio"] > 0.8,
+            dataframe["adx"] > self.adx_threshold.value,        # V6: trend strength gate
+            dataframe["volume_ratio"] > self.volume_factor.value, # V6: was hardcoded 0.8
             dataframe["obv"] > dataframe["obv_ema"],
             dataframe["volume"] > 0,
             dataframe["btc_rsi_1h"] > 35,
@@ -345,13 +350,15 @@ class TrendRiderStrategy(IStrategy):
         # === LONG 4: EMA Crossover (golden cross on fast EMAs) ===
         ema_fast_key = f"ema_{self.ema_fast.value}"
         ema_slow_key = f"ema_{self.ema_slow.value}"
+        # V6: added ADX filter + unified volume threshold (was hardcoded 0.5 — too loose)
         conditions_ema_cross = [
             (dataframe[ema_fast_key] > dataframe[ema_slow_key]) &
             (dataframe[ema_fast_key].shift(1) <= dataframe[ema_slow_key].shift(1)),  # crossed above
             dataframe[rsi] > 40,
             dataframe[rsi] < 75,
             dataframe["close"] > dataframe["ema_200"],
-            dataframe["volume_ratio"] > 0.5,
+            dataframe["adx"] > self.adx_threshold.value,         # V6: trend strength gate
+            dataframe["volume_ratio"] > self.volume_factor.value, # V6: was hardcoded 0.5
             dataframe["volume"] > 0,
             dataframe["btc_rsi_1h"] > 35,
             dataframe["fng_value"] >= 25,
