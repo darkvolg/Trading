@@ -15,8 +15,13 @@ ENV required: GLM_API_KEY, GLM_BASE_URL, GLM_MODEL, COMPOSIO_API_KEY, TG_TOKEN, 
 import os
 import sys
 import json
+try:
+    import json_repair
+except ImportError:
+    json_repair = None
 import logging
 import subprocess
+import time
 import re
 from pathlib import Path
 from datetime import datetime, timezone
@@ -130,7 +135,7 @@ Output ONLY valid JSON. No markdown wrapper, no preamble. Schema:
   ]
 }
 
-Paragraphs must be 2-4 sentences. Use `<a href="/blog/existing-slug">anchor text</a>` for internal links (use existing TrendRider slugs if relevant). Escape apostrophes as &apos; and ampersands as &amp; and em-dash as &mdash;.
+Paragraphs must be 2-4 sentences. Do NOT include any HTML tags, anchor links, or hyperlinks inside paragraph string values. Use plain text only. (HTML inside JSON string values breaks parsing). Escape apostrophes as &apos; and ampersands as &amp; and em-dash as &mdash;.
 
 Minimum: 6-8 sections, 10+ total paragraphs, 5 FAQs. Aim for ~1800-2400 words total."""
 
@@ -192,16 +197,26 @@ Return ONLY the JSON — no markdown, no ```json blocks, no preamble. Start with
         try:
             parsed = json.loads(cleaned)
             log.info("Cleanup succeeded")
-        except json.JSONDecodeError:
+        except json.JSONDecodeError as e2:
             # Last resort: strip all control chars and try again
             cleaned2 = re.sub(r'[\x00-\x1f\x7f](?![nrt"\\])', ' ', text)
             try:
                 parsed = json.loads(cleaned2)
                 log.info("Control char cleanup succeeded")
             except json.JSONDecodeError as e3:
-                log.error(f"GLM returned invalid JSON: {e3}")
-                log.error(f"Raw (last 800 chars near error): {text[max(0, e3.pos - 200):e3.pos + 200]}")
-                raise
+                log.warning(f"Standard cleanup failed: {e3}. Trying json_repair library...")
+                if json_repair is not None:
+                    try:
+                        parsed = json_repair.loads(text)
+                        log.info("json_repair succeeded")
+                    except Exception as e4:
+                        log.error(f"json_repair also failed: {e4}")
+                        log.error(f"Raw (last 800 chars near error): {text[max(0, e3.pos - 200):e3.pos + 200]}")
+                        raise e3
+                else:
+                    log.error(f"GLM returned invalid JSON: {e3}")
+                    log.error(f"Raw (last 800 chars near error): {text[max(0, e3.pos - 200):e3.pos + 200]}")
+                    raise
     log.info(f"GLM returned: {len(parsed.get('sections', []))} sections, {len(parsed.get('faqs', []))} FAQs")
     return parsed
 
@@ -232,6 +247,7 @@ def generate_hero_image(topic: dict) -> str | None:
                 draw.rectangle([x, y, x + 4, y + 1], fill=(r, g, b))
 
         # Geometric grid overlay (cyan subtle lines)
+        grid_color = (6, 182, 212, 30)
         for i in range(0, W, 80):
             draw.line([(i, 0), (i, H)], fill=(6, 60, 80), width=1)
         for i in range(0, H, 80):
@@ -343,6 +359,19 @@ def generate_hero_image(topic: dict) -> str | None:
 
 
 # ---------- Step 4: Render page.tsx ----------
+def _jsx_escape(s):
+    """Escape JSX-dangerous chars in text content. Preserves pre-escaped entities."""
+    if s is None:
+        return ""
+    out = str(s)
+    # Escape & first but keep existing entities (e.g., &amp;, &mdash;, &quot;)
+    out = re.sub(r"&(?!(?:amp|lt|gt|quot|apos|mdash|ndash|hellip|#\d+|#x[0-9a-fA-F]+);)", "&amp;", out)
+    out = out.replace("<", "&lt;").replace(">", "&gt;")
+    # Curly braces would be parsed as JSX expression boundaries
+    out = out.replace("{", "&#123;").replace("}", "&#125;")
+    return out
+
+
 def render_page_tsx(topic: dict, article: dict, image_filename: str | None) -> str:
     slug = topic["slug"]
     today = datetime.now(timezone.utc).strftime("%Y-%m-%d")
@@ -357,19 +386,19 @@ def render_page_tsx(topic: dict, article: dict, image_filename: str | None) -> s
     sections_jsx = []
     for s in article.get("sections", []):
         heading = s.get("heading", "").replace('"', '&quot;')
-        block = f'\n          <h2 className="text-xl font-semibold text-foreground mt-8 mb-3">{heading}</h2>'
+        block = f'\n          <h2 className="text-xl font-semibold text-foreground mt-8 mb-3">{_jsx_escape(heading)}</h2>'
         for p in s.get("paragraphs", []):
-            block += f'\n          <p>{p}</p>'
+            block += f'\n          <p>{_jsx_escape(p)}</p>'
         lst = s.get("list")
         if lst:
-            items = "\n".join(f'            <li>{li}</li>' for li in lst)
+            items = "\n".join(f'            <li>{_jsx_escape(li)}</li>' for li in lst)
             block += f'\n          <ul className="list-disc pl-6 space-y-2 my-4">\n{items}\n          </ul>'
         tbl = s.get("table")
         if tbl:
-            headers = "".join(f'<th className="text-left p-2 border border-border">{h}</th>' for h in tbl.get("headers", []))
+            headers = "".join(f'<th className="text-left p-2 border border-border">{_jsx_escape(h)}</th>' for h in tbl.get("headers", []))
             rows_html = ""
             for row in tbl.get("rows", []):
-                cells = "".join(f'<td className="p-2 border border-border">{c}</td>' for c in row)
+                cells = "".join(f'<td className="p-2 border border-border">{_jsx_escape(c)}</td>' for c in row)
                 rows_html += f'                <tr>{cells}</tr>'
             block += (
                 '\n          <div className="overflow-x-auto my-6">'
@@ -383,7 +412,7 @@ def render_page_tsx(topic: dict, article: dict, image_filename: str | None) -> s
     sections_str = "".join(sections_jsx)
 
     intro_paragraphs = "\n".join(
-        f'          <p>{p}</p>' for p in article.get("intro_paragraphs", [])
+        f'          <p>{_jsx_escape(p)}</p>' for p in article.get("intro_paragraphs", [])
     )
 
     # FAQs JSON-LD
@@ -396,8 +425,8 @@ def render_page_tsx(topic: dict, article: dict, image_filename: str | None) -> s
     for f in article.get("faqs", []):
         faq_jsx_items.append(
             f'\n          <div className="border-l-2 border-primary/40 pl-4 my-4">'
-            f'\n            <p className="font-semibold text-foreground mb-2">{f["q"]}</p>'
-            f'\n            <p>{f["a"]}</p>'
+            f'\n            <p className="font-semibold text-foreground mb-2">{_jsx_escape(f["q"])}</p>'
+            f'\n            <p>{_jsx_escape(f["a"])}</p>'
             f'\n          </div>'
         )
     faqs_str = "".join(faq_jsx_items)
@@ -483,21 +512,19 @@ export default function Article() {{
 {intro_paragraphs}
 {sections_str}
 
-            <div className="my-8 p-4 border border-primary/20 rounded-lg bg-card/20 flex items-center gap-4 text-sm">
-              <span className="text-2xl">⭐</span>
-              <div>
-                <p className="text-foreground font-medium mb-1">TrendRider strategy is open-source (MIT)</p>
-                <p className="text-muted">Real trades, real numbers, every exit reason public. <a href="https://github.com/darkvolg/trendrider-strategy" target="_blank" rel="noopener" className="text-primary hover:underline">Star on GitHub</a> — it helps others find it.</p>
-              </div>
-            </div>
-
             <h2 className="text-xl font-semibold text-foreground mt-10 mb-3">Frequently Asked Questions</h2>
 {faqs_str}
 
-            <div className="mt-12 p-6 border border-primary/30 rounded-lg bg-card/30">
-              <p className="text-foreground font-semibold mb-2">⭐ Open-source Freqtrade strategy (free, MIT)</p>
-              <p className="mb-4 text-sm">The strategy powering TrendRider&apos;s live bot is on GitHub — MIT license, reproducible backtests, every trade public at <a href="https://trendrider.net/live" className="text-primary hover:underline">trendrider.net/live</a>. Star it if you find it useful.</p>
-              <a href="https://github.com/darkvolg/trendrider-strategy" target="_blank" rel="noopener" className="text-primary text-sm hover:underline">⭐ Star on GitHub &rarr;</a>
+            <div className="mt-12 p-6 border border-border rounded-lg bg-card/50">
+              <p className="text-foreground font-semibold mb-2">Ready to automate your crypto trading?</p>
+              <p className="mb-4 text-sm">TrendRider runs a 67.9% win-rate algorithmic strategy on Bybit futures. Free Telegram signals, optional paid tiers.</p>
+              <a href="/" className="text-primary text-sm hover:underline">Get free signals &rarr;</a>
+            </div>
+
+            <div className="mt-6 p-6 border border-primary/30 rounded-lg bg-card/30">
+              <p className="text-foreground font-semibold mb-2">⭐ Open-source strategy</p>
+              <p className="mb-4 text-sm">The exact Freqtrade strategy powering the live bot is on GitHub. MIT license, fully reproducible backtests. Star it if you find it useful.</p>
+              <a href="https://github.com/darkvolg/trendrider-strategy" target="_blank" rel="noopener" className="text-primary text-sm hover:underline">Star on GitHub &rarr;</a>
             </div>
           </div>
         </article>
