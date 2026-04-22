@@ -21,7 +21,6 @@ except ImportError:
     json_repair = None
 import logging
 import subprocess
-import time
 import re
 from pathlib import Path
 from datetime import datetime, timezone
@@ -197,7 +196,7 @@ Return ONLY the JSON — no markdown, no ```json blocks, no preamble. Start with
         try:
             parsed = json.loads(cleaned)
             log.info("Cleanup succeeded")
-        except json.JSONDecodeError as e2:
+        except json.JSONDecodeError:
             # Last resort: strip all control chars and try again
             cleaned2 = re.sub(r'[\x00-\x1f\x7f](?![nrt"\\])', ' ', text)
             try:
@@ -247,7 +246,6 @@ def generate_hero_image(topic: dict) -> str | None:
                 draw.rectangle([x, y, x + 4, y + 1], fill=(r, g, b))
 
         # Geometric grid overlay (cyan subtle lines)
-        grid_color = (6, 182, 212, 30)
         for i in range(0, W, 80):
             draw.line([(i, 0), (i, H)], fill=(6, 60, 80), width=1)
         for i in range(0, H, 80):
