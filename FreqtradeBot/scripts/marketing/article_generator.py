@@ -431,6 +431,9 @@ def render_page_tsx(topic: dict, article: dict, image_filename: str | None) -> s
 
     title_escaped = topic['title'].replace('"', '\\"')
     desc_escaped = topic['description'].replace('"', '\\"')
+    title_jsx = _jsx_escape(topic['title'])
+    category_jsx = _jsx_escape(topic['category'])
+    title_attr = _jsx_escape(topic['title']).replace('"', '&quot;')
 
     article_jsonld = json.dumps({
         "@context": "https://schema.org",
@@ -499,12 +502,12 @@ export default function Article() {{
         <article className="max-w-3xl mx-auto px-4 py-20">
           <a href="/blog" className="text-primary text-sm hover:underline mb-8 inline-block">&larr; Back to blog</a>
           <div className="flex items-center gap-3 mb-4">
-            <span className="px-3 py-1 text-[10px] font-mono uppercase tracking-widest text-primary border border-primary/30 rounded-full">{topic['category']}</span>
+            <span className="px-3 py-1 text-[10px] font-mono uppercase tracking-widest text-primary border border-primary/30 rounded-full">{category_jsx}</span>
             <span className="text-xs text-muted">{today_human}</span>
             <span className="text-xs text-muted">&bull; {topic.get('read_min', 11)} min read</span>
           </div>
-          <h1 className="text-3xl md:text-4xl font-bold mb-6 tracking-tight">{topic['title']}</h1>
-          <img src="/blog-heroes/{slug}.webp" alt="{title_escaped}" className="w-full rounded-xl border border-border mb-8" loading="eager" />
+          <h1 className="text-3xl md:text-4xl font-bold mb-6 tracking-tight">{title_jsx}</h1>
+          <img src="/blog-heroes/{slug}.webp" alt="{title_attr}" className="w-full rounded-xl border border-border mb-8" loading="eager" />
 
           <div className="space-y-6 text-muted leading-relaxed">
 {intro_paragraphs}
