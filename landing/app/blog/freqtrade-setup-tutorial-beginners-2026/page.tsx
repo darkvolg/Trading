@@ -1,8 +1,8 @@
 import type { Metadata } from "next";
 
 export const metadata: Metadata = {
-  title: "Freqtrade Setup Guide 2026: Docker Install, Python & Exchange Config",
-  description: "Step-by-step Freqtrade 2026 installation: Docker setup, Python 3.10+ requirements, Bybit/Binance API config, Telegram notifications. Full beginner walkthrough.",
+  title: "Freqtrade Tutorial 2026: From Zero to Live Trading Bot",
+  description: "Install Freqtrade, connect Bybit, run your first backtest, and go live — all in one session. Complete 2026 guide for beginners, no prior bot experience.",
   alternates: {
     canonical: "https://trendrider.net/blog/freqtrade-setup-tutorial-beginners-2026",
   },
@@ -18,7 +18,7 @@ export default function Article() {
             "@context": "https://schema.org",
             "@type": "Article",
             "headline": "Freqtrade Tutorial 2026: Complete Setup Guide for Beginners",
-            "description": "Step-by-step Freqtrade setup guide for beginners. Install via Docker, connect Bybit, build your first strategy, backtest, and go live in under 1 hour.",
+            "description": "Install Freqtrade, connect Bybit, run your first backtest, and go live — all in one session. Complete 2026 guide for beginners, no prior bot experience.",
             "author": {
               "@type": "Person",
               "name": "TrendRider Team",
