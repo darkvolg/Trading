@@ -1,7 +1,7 @@
 import type { Metadata } from "next";
 
 export const metadata: Metadata = {
-  title: "How to Avoid Overfitting in Crypto Trading Strategies [7 Proven Methods]",
+  title: "Overfitting in Crypto Trading: Why 90% of Strategies Fail",
   description: "90% of crypto strategies are overfit. 7 proven methods to detect it: walk-forward analysis, Monte Carlo, SQN validation. Stop losing money live.",
   alternates: {
     canonical: "https://trendrider.net/blog/how-to-avoid-overfitting-crypto-trading",
