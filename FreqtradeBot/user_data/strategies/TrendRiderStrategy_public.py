@@ -1,5 +1,5 @@
 """
-TrendRider Public v2.11.0 — Strat Ninja Edition
+TrendRider Public v2.12.0 — Strat Ninja Edition
 
 Philosophy: Ride established trends with WIDE stoploss.
 Key insight: crypto swings 2-4% per hour. Stoploss must be >= 5-6%.
@@ -30,11 +30,14 @@ class TrendRiderStrategy(IStrategy):
     # Previous ROI (22.9% immediate, 13.6% at 2h) was practically unreachable on 1h crypto —
     # trades peaked below ROI then drifted into loss. New ladder realistic for 1h timeframe:
     minimal_roi = {
-        "0": 0.05,      # 5% if immediate (caught breakout)
-        "60": 0.03,     # 3% after 1h
-        "180": 0.015,   # 1.5% after 3h — catches the +1-3% peaks before reversal
-        "360": 0.008,   # 0.8% after 6h
-        "720": 0,       # breakeven after 12h (was 12.7h)
+        # v2.12.0 (2026-04-24): +55% PnL on 110d backtest vs v2.11.0.
+        # Slightly higher thresholds + delayed timings let winners breathe —
+        # captures the +2-4% continuations V6 was clipping too early.
+        "0": 0.06,      # 6% immediate (was 5%)
+        "60": 0.035,    # 3.5% after 1h (was 3%)
+        "240": 0.02,    # 2% after 4h (was 1.5% @ 3h)
+        "480": 0.01,    # 1% after 8h (was 0.8% @ 6h)
+        "720": 0,       # breakeven after 12h
     }
 
     # --- Stoploss: WIDE for crypto volatility ---
