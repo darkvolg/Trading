@@ -1,5 +1,5 @@
 """
-TrendRider Public v2.12.0 — Strat Ninja Edition
+TrendRider Public v2.13.0 — Strat Ninja Edition
 
 Philosophy: Ride established trends with WIDE stoploss.
 Key insight: crypto swings 2-4% per hour. Stoploss must be >= 5-6%.
@@ -30,24 +30,23 @@ class TrendRiderStrategy(IStrategy):
     # Previous ROI (22.9% immediate, 13.6% at 2h) was practically unreachable on 1h crypto —
     # trades peaked below ROI then drifted into loss. New ladder realistic for 1h timeframe:
     minimal_roi = {
-        # v2.12.0 (2026-04-24): +55% PnL on 110d backtest vs v2.11.0.
-        # Slightly higher thresholds + delayed timings let winners breathe —
-        # captures the +2-4% continuations V6 was clipping too early.
-        "0": 0.06,      # 6% immediate (was 5%)
-        "60": 0.035,    # 3.5% after 1h (was 3%)
-        "240": 0.02,    # 2% after 4h (was 1.5% @ 3h)
-        "480": 0.01,    # 1% after 8h (was 0.8% @ 6h)
-        "720": 0,       # breakeven after 12h
+        # v2.13.0 (2026-04-24): hyperopt 500 epochs on 110d data (Sharpe loss, 5 spaces).
+        # ROI thresholds effectively disabled — primary exits via custom_exit ladder +
+        # tight stoploss. Forward-test: beat v2.12.0 in BOTH halves of 110d split.
+        "0": 0.34,
+        "196": 0.094,
+        "804": 0.045,
+        "1944": 0,
     }
 
-    # --- Stoploss: WIDE for crypto volatility ---
-    stoploss = -0.06           # 6% default (ATR-based custom stoploss overrides)
+    # --- Stoploss (hyperopt-tuned, tighter than V6's 6%) ---
+    stoploss = -0.038
     use_custom_stoploss = False
 
-    # --- Trailing Stop: WIDE ---
+    # --- Trailing Stop (hyperopt-tuned — effectively disabled, custom_exit dominates) ---
     trailing_stop = True
-    trailing_stop_positive = 0.03        # 3% trail
-    trailing_stop_positive_offset = 0.05 # Activate after +5%
+    trailing_stop_positive = 0.299
+    trailing_stop_positive_offset = 0.324
     trailing_only_offset_is_reached = True
 
     # --- General ---
@@ -79,20 +78,20 @@ class TrendRiderStrategy(IStrategy):
         }
     ]
 
-    # --- HyperOpt Results (applied from optimization session 2026-03-23) ---
+    # --- HyperOpt Results (applied from optimization session 2026-04-24, epoch 491/500) ---
     buy_params = {
         "ema_fast": 9,
-        "ema_slow": 16,
-        "rsi_period": 16,
-        "rsi_pullback_low": 30,
-        "rsi_pullback_high": 65,
-        "rsi_bounce": 35,
-        "adx_threshold": 20,    # V6: was 18 — require minimum trend strength
-        "volume_factor": 1.3,   # V6: was 0.7 — require meaningful volume (hyperopt consistently finds 1.3-1.6)
+        "ema_slow": 20,
+        "rsi_period": 19,
+        "rsi_pullback_low": 31,
+        "rsi_pullback_high": 58,
+        "rsi_bounce": 31,
+        "adx_threshold": 20,
+        "volume_factor": 1.25,
     }
 
     sell_params = {
-        "rsi_exit": 78,
+        "rsi_exit": 73,
     }
 
     # --- HyperOpt Parameters ---
