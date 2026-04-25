@@ -312,8 +312,8 @@ export default function LivePage() {
 
         <div className="mb-8">
           <EmailCaptureInline
-            heading="Get free monthly backtest report"
-            subheading="Every month I publish a full V4 backtest update — per-pair breakdown, new trades, equity curve. Drop your email and I'll send it directly. Free, no spam."
+            heading="Get free monthly performance report"
+            subheading="Every month I publish a full performance update — per-pair breakdown, new trades, equity curve, hyperopt findings. Drop your email and I'll send it directly. Free, no spam."
             ctaLabel="Send me the report"
             tag="live-page"
           />
