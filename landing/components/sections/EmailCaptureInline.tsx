@@ -25,12 +25,10 @@ export function EmailCaptureInline({
     setStatus("loading");
     setErrorMsg("");
     try {
-      const res = await fetch("https://connect.mailerlite.com/api/subscribers", {
+      // Same-origin proxy via nginx — token stays server-side, no CORS issue
+      const res = await fetch("/api/subscribe", {
         method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-          Authorization: `Bearer ${process.env.NEXT_PUBLIC_MAILERLITE_TOKEN}`,
-        },
+        headers: { "Content-Type": "application/json" },
         body: JSON.stringify({
           email,
           fields: { source: tag },
