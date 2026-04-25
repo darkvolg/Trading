@@ -2,7 +2,7 @@ import type { Metadata } from "next";
 
 export const metadata: Metadata = {
   title: "Multi-Indicator Scoring Systems: How to Combine RSI, MACD & Bollinger Bands",
-  description: "Single indicators = 40% win rate. Our multi-indicator scoring system hits 67.9%. Combine RSI, MACD, Bollinger & ADX into one confidence score.",
+  description: "Single indicators = 40% win rate. Our multi-indicator scoring system hits documented WR (see /live). Combine RSI, MACD, Bollinger & ADX into one confidence score.",
   alternates: {
     canonical: "https://trendrider.net/blog/multi-indicator-scoring-system-crypto",
   },
@@ -18,7 +18,7 @@ export default function Article() {
             "@context": "https://schema.org",
             "@type": "Article",
             "headline": "Multi-Indicator Scoring Systems: How to Combine RSI, MACD & Bollinger Bands",
-            "description": "Build a multi-indicator scoring system that combines RSI, MACD, Bollinger Bands, and ADX into one confidence score. 67.9% win rate vs ~40% with single indicators.",
+            "description": "Build a multi-indicator scoring system that combines RSI, MACD, Bollinger Bands, and ADX into one confidence score. documented backtest win rate (current value on /live) vs ~40% with single indicators.",
             "author": {
               "@type": "Person",
               "name": "TrendRider Team",
@@ -69,7 +69,7 @@ export default function Article() {
 
         <div className="space-y-6 text-muted leading-relaxed">
           <p>Every crypto trader has experienced this: RSI says &ldquo;oversold,&rdquo; so you buy &mdash; and the price keeps dropping. Or MACD flashes a bullish crossover, you enter long, and the market immediately reverses. Single indicators are inherently noisy. They were designed to capture one dimension of price action, and the crypto market is ruthlessly multi-dimensional.</p>
-          <p>The solution isn&apos;t to find a &ldquo;perfect&rdquo; indicator. It doesn&apos;t exist. The solution is to build a <strong className="text-foreground">scoring system</strong> that combines multiple indicators into a single confidence score, only taking trades when several independent signals agree. This is exactly how TrendRider&apos;s algorithm achieves a 67.9% win rate &mdash; and in this article, we&apos;ll break down the exact framework, indicator by indicator.</p>
+          <p>The solution isn&apos;t to find a &ldquo;perfect&rdquo; indicator. It doesn&apos;t exist. The solution is to build a <strong className="text-foreground">scoring system</strong> that combines multiple indicators into a single confidence score, only taking trades when several independent signals agree. This is exactly how TrendRider&apos;s algorithm achieves a documented backtest win rate (current value on /live) &mdash; and in this article, we&apos;ll break down the exact framework, indicator by indicator.</p>
 
           <h2 className="text-xl font-semibold text-foreground mt-8 mb-3">Why Single Indicators Fail in Crypto</h2>
           <p>Before building a scoring system, it&apos;s important to understand <em>why</em> relying on any single indicator leads to mediocre results. Every technical indicator has a fundamental weakness:</p>
@@ -155,7 +155,7 @@ export default function Article() {
           <p>But the scoring system doesn&apos;t stop at the primary timeframe. TrendRider applies this same scoring logic across <strong className="text-foreground">four timeframes</strong> (5m, 15m, 1h, and 4h), requiring alignment not just across indicators but across temporal perspectives. A signal that scores 5 on the 15-minute chart but only 2 on the 1-hour chart is treated differently than one that scores 5 on both. For more on how multi-timeframe confirmation works, read our <a href="/blog/multi-timeframe-analysis-explained" className="text-primary hover:underline">Multi-Timeframe Analysis guide</a>.</p>
 
           <h2 className="text-xl font-semibold text-foreground mt-8 mb-3">Real Data: Scoring System vs. Single Indicators</h2>
-          <p>Theory is nice, but what do the numbers actually say? We <a href="/blog/backtesting-crypto-strategies-guide" className="text-primary hover:underline">backtested</a> single-indicator strategies against our multi-indicator scoring system across 10,000+ trades on BTC, ETH, SOL, and 10 major altcoins from January 2024 through March 2026.</p>
+          <p>Theory is nice, but what do the numbers actually say? We <a href="/blog/backtesting-crypto-strategies-guide" className="text-primary hover:underline">backtested</a> single-indicator strategies against our multi-indicator scoring system across thousands of simulated trades on BTC, ETH, SOL, and 10 major altcoins from January 2024 through March 2026.</p>
           <p><strong className="text-foreground">Single-indicator results (15m timeframe):</strong></p>
           <ul className="list-disc pl-6 space-y-2">
             <li>RSI alone (30/70 threshold): <strong className="text-foreground">38.2% win rate</strong>, profit factor 0.87 (net losing)</li>
@@ -165,13 +165,13 @@ export default function Article() {
           </ul>
           <p><strong className="text-foreground">Multi-indicator scoring system (threshold 4+):</strong></p>
           <ul className="list-disc pl-6 space-y-2">
-            <li>Win rate: <strong className="text-foreground">67.9%</strong></li>
+            <li>Win rate: <strong className="text-foreground">documented WR (see /live)</strong></li>
             <li>Profit factor: <strong className="text-foreground">2.14</strong></li>
-            <li>Max drawdown: <strong className="text-foreground">1.42%</strong></li>
-            <li>SQN score: <strong className="text-foreground">3.45</strong> (rated &ldquo;Excellent&rdquo;)</li>
+            <li>Max drawdown: <strong className="text-foreground">low single-digit (see /live)</strong></li>
+            <li>SQN score: <strong className="text-foreground">see /live</strong> (rated &ldquo;Excellent&rdquo;)</li>
             <li>Average trade duration: 4.2 hours</li>
           </ul>
-          <p>The improvement is dramatic: from ~40% win rate with single indicators to 67.9% with the scoring system &mdash; the kind of edge documented across our <a href="/blog/best-crypto-trading-strategies-2026" className="text-primary hover:underline">67.9% win rate trading strategies</a>. But perhaps more importantly, the profit factor jumps from near 1.0 (breakeven) to 2.14, meaning winners are on average twice the size of losers. And maximum drawdown drops from 8&ndash;15% (typical for single-indicator strategies) to just 1.42%.</p>
+          <p>The improvement is dramatic: from ~40% win rate with single indicators to documented WR (see /live) with the scoring system &mdash; the kind of edge documented across our <a href="/blog/best-crypto-trading-strategies-2026" className="text-primary hover:underline">best crypto trading strategies</a>. But perhaps more importantly, the profit factor jumps from near 1.0 (breakeven) to 2.14, meaning winners are on average twice the size of losers. And maximum drawdown drops from 8&ndash;15% (typical for single-indicator strategies) to just low single-digit (see /live).</p>
           <p>The scoring system achieves this by being <em>extremely selective</em>. It takes fewer trades than any single indicator would &mdash; roughly 40% fewer signals &mdash; but the trades it does take have dramatically higher quality. This is the fundamental trade-off: frequency for accuracy. For a deeper look at the metrics that matter, see our guide on <a href="/blog/understanding-win-rate-and-profit-factor" className="text-primary hover:underline">understanding win rate and profit factor</a>.</p>
 
           <h2 className="text-xl font-semibold text-foreground mt-8 mb-3">Building Your Own Scoring System: Practical Tips</h2>
@@ -194,7 +194,7 @@ export default function Article() {
 
           <h2 className="text-xl font-semibold text-foreground mt-8 mb-3">Conclusion</h2>
           <p>Single indicators are tools, not strategies. A hammer is useful, but you wouldn&apos;t build a house with just a hammer. The same logic applies to trading: RSI, MACD, Bollinger Bands, and ADX are each powerful in their domain, but their real power emerges when combined into a structured scoring system.</p>
-          <p>The data is clear: multi-indicator scoring with a minimum confidence threshold of 4+ points delivers a 67.9% win rate compared to ~40% with any single indicator. It reduces drawdown from double digits to 1.42%. And it turns marginally profitable strategies into systems with a 2.14 profit factor.</p>
+          <p>The data is clear: multi-indicator scoring with a minimum confidence threshold of 4+ points delivers a documented backtest win rate (current value on /live) compared to ~40% with any single indicator. It reduces drawdown from double digits to low single-digit (see /live). And it turns marginally profitable strategies into systems with a 2.14 profit factor.</p>
           <p>Whether you build your own scoring system or use one that&apos;s already been built and battle-tested, the principle is the same: <strong className="text-foreground">require confluence before committing capital</strong>. Your win rate &mdash; and your portfolio &mdash; will thank you.</p>
 
           <div className="mt-10 p-6 rounded-2xl border border-primary/20 bg-primary/5 text-center">

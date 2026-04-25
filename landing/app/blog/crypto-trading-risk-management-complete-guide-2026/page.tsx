@@ -2,7 +2,7 @@ import type { Metadata } from "next";
 
 export const metadata: Metadata = {
   title: "Crypto Risk Management 2026: Keep Drawdown Under 2%",
-  description: "Keep drawdown under 2% like the pros. Position sizing, stop-loss placement & portfolio rules from a system with 1.42% max DD. Free calculator.",
+  description: "Keep drawdown under 2% like the pros. Position sizing, stop-loss placement & portfolio rules from a system with low max DD (see /live). Free calculator.",
   alternates: {
     canonical: "https://trendrider.net/blog/crypto-trading-risk-management-complete-guide-2026",
   },
@@ -18,7 +18,7 @@ export default function Article() {
             "@context": "https://schema.org",
             "@type": "Article",
             "headline": "Crypto Trading Risk Management: The Complete 2026 Guide",
-            "description": "Master crypto risk management with position sizing, stop-loss placement, portfolio allocation, and drawdown control. Real data from a system with 1.42% max drawdown.",
+            "description": "Master crypto risk management with position sizing, stop-loss placement, portfolio allocation, and drawdown control. Real data from a system with low max drawdown (see /live).",
             "author": {
               "@type": "Person",
               "name": "TrendRider Team",
@@ -107,7 +107,7 @@ export default function Article() {
 
         <div className="space-y-6 text-muted leading-relaxed">
           <p>Every successful trader has one thing in common: they obsess over risk management before they obsess over returns. In crypto, where a single coin can drop 30% in hours and an entire market can halve in weeks, managing trading risk isn&apos;t just important &mdash; it&apos;s the difference between a career and a cautionary tale.</p>
-          <p>This guide covers everything you need to build a professional-grade crypto risk management framework in 2026. We&apos;ll walk through position sizing, stop-loss placement, portfolio allocation, correlation management, drawdown control, and the psychological discipline that ties it all together. Along the way, we&apos;ll share real data from TrendRider&apos;s system &mdash; which maintains a <strong className="text-foreground">1.42% maximum drawdown</strong> and a <strong className="text-foreground">67.9% win rate</strong> across 15 trading pairs.</p>
+          <p>This guide covers everything you need to build a professional-grade crypto risk management framework in 2026. We&apos;ll walk through position sizing, stop-loss placement, portfolio allocation, correlation management, drawdown control, and the psychological discipline that ties it all together. Along the way, we&apos;ll share real data from TrendRider&apos;s system &mdash; which maintains a <strong className="text-foreground">low maximum drawdown (see /live)</strong> and a <strong className="text-foreground">documented backtest win rate (current value on /live)</strong> across 15 trading pairs.</p>
           <p>Whether you trade manually, use signals, or run an algorithmic bot, these principles apply universally. Let&apos;s start with the foundation.</p>
 
           {/* --- Section 1 --- */}
@@ -160,7 +160,7 @@ export default function Article() {
           <p>Place stops below recent swing lows (for longs) or above recent swing highs (for shorts). This approach respects market structure and places stops where the trade thesis would genuinely be invalidated. The risk is that structure-based stops can be very wide during trending markets with distant swing points, leading to oversized risk.</p>
 
           <h3 className="text-lg font-medium text-foreground mt-6 mb-2">The TrendRider Approach: Hybrid Stops</h3>
-          <p>Our system combines ATR-based calculation with a hard maximum cap of 6%. The ATR component adapts to current volatility, while the 6% cap prevents any single trade from becoming too costly. If the ATR-based stop would be wider than 6%, we either skip the trade or reduce position size further. This hybrid approach is a key reason our <a href="/blog/what-is-drawdown-crypto-trading" className="text-primary hover:underline">maximum drawdown stays at 1.42%</a>.</p>
+          <p>Our system combines ATR-based calculation with a hard maximum cap of 6%. The ATR component adapts to current volatility, while the 6% cap prevents any single trade from becoming too costly. If the ATR-based stop would be wider than 6%, we either skip the trade or reduce position size further. This hybrid approach is a key reason our <a href="/blog/what-is-drawdown-crypto-trading" className="text-primary hover:underline">maximum drawdown stays at low single-digit (see /live)</a>.</p>
 
           {/* --- Section 4 --- */}
           <h2 className="text-xl font-semibold text-foreground mt-8 mb-3">Portfolio-Level Risk Controls</h2>
@@ -211,7 +211,7 @@ export default function Article() {
               </tbody>
             </table>
           </div>
-          <p>TrendRider&apos;s 1.42% max drawdown means recovery requires just a 1.44% gain &mdash; often achievable in a single winning trade. This is why we prioritize drawdown control above all other metrics. A system that never puts you in a deep hole never forces you to take excessive risk to climb out.</p>
+          <p>TrendRider&apos;s low max drawdown (see /live) means recovery requires just a 1.44% gain &mdash; often achievable in a single winning trade. This is why we prioritize drawdown control above all other metrics. A system that never puts you in a deep hole never forces you to take excessive risk to climb out.</p>
 
           <h3 className="text-lg font-medium text-foreground mt-6 mb-2">Reducing Position Size During Drawdowns</h3>
           <p>One of the most effective drawdown management techniques is dynamic position sizing based on current drawdown levels. Here&apos;s a framework:</p>
@@ -233,7 +233,7 @@ export default function Article() {
             <p>Expectancy = (0.679 &times; $3.50) - (0.321 &times; $2.10) = $2.377 - $0.674 = +$1.70 per $1 risked</p>
           </div>
           <p>A positive expectancy means your system makes money over time. But the key insight is that expectancy depends on <em>both</em> win rate and risk/reward ratio. You can have a positive expectancy with a low win rate if your winners are much larger than your losers (trend-following), or with a moderate risk/reward if your win rate is high enough (mean reversion).</p>
-          <p>TrendRider targets a minimum 1:1.5 risk/reward ratio on every trade. With our 67.9% win rate, this produces a strong positive expectancy. We skip signals that don&apos;t meet this threshold, even if the technical setup looks attractive.</p>
+          <p>TrendRider targets a minimum 1:1.5 risk/reward ratio on every trade. With our documented backtest win rate (current value on /live), this produces a strong positive expectancy. We skip signals that don&apos;t meet this threshold, even if the technical setup looks attractive.</p>
 
           {/* --- Section 7 --- */}
           <h2 className="text-xl font-semibold text-foreground mt-8 mb-3">Leverage and Margin: The Risk Multiplier</h2>
@@ -264,7 +264,7 @@ export default function Article() {
 
           <h3 className="text-lg font-medium text-foreground mt-6 mb-2">Why Algorithmic Trading Solves Psychology</h3>
           <p>This is one of the strongest arguments for <a href="/blog/why-algorithmic-trading-beats-manual" className="text-primary hover:underline">algorithmic trading</a>. A bot doesn&apos;t move stop-losses, doesn&apos;t revenge trade, doesn&apos;t skip entries because of fear, and doesn&apos;t overtrade because of greed. Every trade follows the exact risk management rules programmed into it.</p>
-          <p>TrendRider&apos;s <a href="/blog/how-to-automate-crypto-trading-freqtrade-2026" className="text-primary hover:underline">Freqtrade-based system</a> enforces all the rules in this guide automatically. Stop-losses are placed before the trade opens. Position sizes are calculated programmatically. No emotional override is possible. This is why our 1.42% drawdown is consistent &mdash; it&apos;s not dependent on human discipline in the heat of the moment.</p>
+          <p>TrendRider&apos;s <a href="/blog/how-to-automate-crypto-trading-freqtrade-2026" className="text-primary hover:underline">Freqtrade-based system</a> enforces all the rules in this guide automatically. Stop-losses are placed before the trade opens. Position sizes are calculated programmatically. No emotional override is possible. This is why our low single-digit (see /live) drawdown is consistent &mdash; it&apos;s not dependent on human discipline in the heat of the moment.</p>
 
           {/* --- Section 9 --- */}
           <h2 className="text-xl font-semibold text-foreground mt-8 mb-3">Building Your Risk Management Checklist</h2>
@@ -301,7 +301,7 @@ export default function Article() {
             <li><strong className="text-foreground">System level:</strong> Multi-indicator confidence scoring filters out low-probability trades. Only signals scoring above the threshold are taken.</li>
             <li><strong className="text-foreground">Execution level:</strong> All rules enforced algorithmically through <a href="/blog/how-to-automate-crypto-trading-freqtrade-2026" className="text-primary hover:underline">Freqtrade</a>, eliminating human error and emotional override.</li>
           </ul>
-          <p>The result: <strong className="text-foreground">67.9% win rate, 2.12 profit factor, 1.42% maximum drawdown</strong> across extensive backtesting. These numbers aren&apos;t magic &mdash; they&apos;re the natural outcome of rigorous, systematic risk management applied consistently over thousands of trades.</p>
+          <p>The result: <strong className="text-foreground">documented backtest win rate (current value on /live), positive profit factor (see /live), low maximum drawdown (see /live)</strong> across extensive backtesting. These numbers aren&apos;t magic &mdash; they&apos;re the natural outcome of rigorous, systematic risk management applied consistently over thousands of trades.</p>
 
           {/* --- CTA --- */}
           <div className="mt-10 p-6 rounded-2xl border border-primary/20 bg-primary/5 text-center">
@@ -330,7 +330,7 @@ export default function Article() {
           <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
             <a href="/blog/risk-management-6-percent-stop-loss" className="p-4 rounded-xl border border-border/50 bg-card/30 hover:border-primary/30 hover:bg-card/50 transition-all">
               <span className="text-xs text-primary font-mono uppercase tracking-widest">Risk Management</span>
-              <p className="text-sm font-medium text-foreground mt-2">The 6% Stop-Loss Rule: How We Keep Drawdown at 1.42%</p>
+              <p className="text-sm font-medium text-foreground mt-2">The 6% Stop-Loss Rule: How We Keep Drawdown at low single-digit (see /live)</p>
             </a>
             <a href="/blog/position-sizing-and-risk-per-trade" className="p-4 rounded-xl border border-border/50 bg-card/30 hover:border-primary/30 hover:bg-card/50 transition-all">
               <span className="text-xs text-primary font-mono uppercase tracking-widest">Risk Management</span>

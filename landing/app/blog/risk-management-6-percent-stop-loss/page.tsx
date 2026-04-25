@@ -2,7 +2,7 @@ import type { Metadata } from "next";
 
 export const metadata: Metadata = {
   title: "6% Stop-Loss Rule: Crypto Risk Management Guide 2026",
-  description: "The proven risk framework behind 1.42% max drawdown. Master the 6% stop-loss and 2% per-trade rules — free calculator and examples included.",
+  description: "The proven risk framework behind low max drawdown (see /live). Master the 6% stop-loss and 2% per-trade rules — free calculator and examples included.",
   alternates: {
     canonical: "https://trendrider.net/blog/risk-management-6-percent-stop-loss",
   },
@@ -18,7 +18,7 @@ export default function Article() {
             "@context": "https://schema.org",
             "@type": "Article",
             "headline": "6% Stop-Loss Rule: Crypto Risk Management Guide 2026",
-            "description": "The proven risk framework behind 1.42% max drawdown. Master the 6% stop-loss and 2% per-trade rules — free calculator and examples included.",
+            "description": "The proven risk framework behind low max drawdown (see /live). Master the 6% stop-loss and 2% per-trade rules — free calculator and examples included.",
             "author": {
               "@type": "Person",
               "name": "TrendRider Team",
@@ -65,7 +65,7 @@ export default function Article() {
           <span className="text-xs text-muted">March 10, 2026</span>
           <span className="text-xs text-muted">&bull; 6 min read</span>
         </div>
-        <h1 className="text-3xl md:text-4xl font-bold mb-8 tracking-tight">The 6% Stop-Loss Rule: How We Keep Drawdown at 1.42%</h1>
+        <h1 className="text-3xl md:text-4xl font-bold mb-8 tracking-tight">The 6% Stop-Loss Rule: How We Keep Drawdown at low single-digit (see /live)</h1>
 
         <div className="space-y-6 text-muted leading-relaxed">
           <p>The number one reason traders blow their accounts isn&apos;t bad entries — it&apos;s poor risk management. A single trade without a stop-loss can wipe out months of profits. Here&apos;s the exact framework TrendRider uses to protect capital.</p>
@@ -87,8 +87,8 @@ export default function Article() {
           <h2 className="text-xl font-semibold text-foreground mt-8 mb-3">Rule 4: No Averaging Down</h2>
           <p>TrendRider never adds to losing positions. If a trade hits the stop-loss, it closes. No exceptions. No &ldquo;dollar-cost averaging into a trade.&rdquo; This single rule prevents the catastrophic losses that destroy accounts.</p>
 
-          <h2 className="text-xl font-semibold text-foreground mt-8 mb-3">The Result: 1.42% Max Drawdown</h2>
-          <p>These four rules combined produce a maximum drawdown of just 1.42% across all backtested trades. For comparison, the average retail trader experiences 20-40% drawdowns. Professional hedge funds target 10-15%. Our 1.42% is in a different league entirely.</p>
+          <h2 className="text-xl font-semibold text-foreground mt-8 mb-3">The Result: low single-digit (see /live) Max Drawdown</h2>
+          <p>These four rules combined produce a maximum drawdown of just low single-digit (see /live) across all backtested trades. For comparison, the average retail trader experiences 20-40% drawdowns. Professional hedge funds target 10-15%. Our low single-digit (see /live) is in a different league entirely.</p>
 
           <h2 className="text-xl font-semibold text-foreground mt-8 mb-3">Why This Matters for You</h2>
           <p>With Cornix auto-trade, these risk management rules are enforced automatically. You don&apos;t need discipline — the algorithm handles it. Every stop-loss is placed before the trade opens. Every take-profit scales exactly as designed.</p>

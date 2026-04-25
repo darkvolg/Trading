@@ -332,17 +332,17 @@ export default function Article() {
 
           <h2 className="text-xl font-semibold text-foreground mt-8 mb-3">Beyond Basics: TrendRider Strategy</h2>
           <p>The RSI + EMA strategy above is a great starting point, but production-grade trading requires more sophistication. <a href="/blog/best-crypto-trading-strategies-2026" className="text-primary hover:underline">Advanced strategies</a> combine multiple indicators, multi-timeframe analysis, dynamic risk management, and market regime detection.</p>
-          <p>That&apos;s exactly what <strong className="text-foreground">TrendRider</strong> does. Our strategy combines 8 technical indicators across 3 timeframes with adaptive position sizing. The results from 10,000+ backtested trades:</p>
+          <p>That&apos;s exactly what <strong className="text-foreground">TrendRider</strong> does. Our strategy combines 8 technical indicators across 3 timeframes with adaptive position sizing. The results from thousands of simulated trades:</p>
           <ul className="list-disc pl-6 space-y-2">
-            <li><strong className="text-foreground">67.9% win rate</strong> &mdash; Nearly 7 out of 10 trades are profitable</li>
-            <li><strong className="text-foreground">1.42% max drawdown</strong> &mdash; Extremely conservative risk management</li>
-            <li><strong className="text-foreground">SQN score 3.45</strong> &mdash; Rated &ldquo;Excellent&rdquo; by Van Tharp&apos;s framework</li>
+            <li><strong className="text-foreground">documented backtest win rate (current value on /live)</strong> &mdash; Nearly 7 out of 10 trades are profitable</li>
+            <li><strong className="text-foreground">low max drawdown (see /live)</strong> &mdash; Extremely conservative risk management</li>
+            <li><strong className="text-foreground">SQN score see /live</strong> &mdash; Rated &ldquo;Excellent&rdquo; by Van Tharp&apos;s framework</li>
             <li><strong className="text-foreground">5-minute setup</strong> &mdash; Just plug in your Bybit API keys and start</li>
           </ul>
 
           <div className="mt-8 p-6 rounded-xl border border-primary/30 bg-primary/5 text-center">
             <p className="text-foreground font-semibold text-lg mb-2">Skip the trial and error. Trade with a proven strategy.</p>
-            <p className="text-muted mb-4">TrendRider is built on Freqtrade with 67.9% win rate and 10,000+ backtested trades. Free tier available &mdash; no credit card required.</p>
+            <p className="text-muted mb-4">TrendRider is built on Freqtrade with documented backtest win rate (current value on /live) and thousands of simulated trades. Free tier available &mdash; no credit card required.</p>
             <a href="/#pricing" className="inline-block px-6 py-3 bg-primary text-primary-foreground rounded-lg font-semibold hover:opacity-90 transition-opacity">Get Started Free &rarr;</a>
           </div>
 

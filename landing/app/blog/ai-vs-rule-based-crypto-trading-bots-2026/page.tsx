@@ -2,7 +2,7 @@ import type { Metadata } from "next";
 
 export const metadata: Metadata = {
   title: "AI vs Rule-Based Crypto Trading Bots: Which Performs Better in 2026?",
-  description: "AI bots vs rule-based bots: we tested both over 10,000+ trades. One hit 67.9% win rate at $0 cost. See the surprising winner and real P&L data.",
+  description: "AI bots vs rule-based bots: we tested both over thousands of simulated trades. One hit documented backtest win rate (current value on /live) at $0 cost. See the surprising winner and real P&L data.",
   alternates: {
     canonical: "https://trendrider.net/blog/ai-vs-rule-based-crypto-trading-bots-2026",
   },
@@ -69,7 +69,7 @@ export default function Article() {
                 "name": "Are AI trading bots more profitable than rule-based bots?",
                 "acceptedAnswer": {
                   "@type": "Answer",
-                  "text": "Not necessarily. While AI trading bots can adapt to changing market conditions, they are prone to overfitting and require massive datasets to train properly. Rule-based bots with well-designed strategies consistently outperform most AI bots for retail traders. Backtested rule-based systems like TrendRider achieve a 67.9% win rate with transparent, auditable logic — something most AI bots cannot match in reliability."
+                  "text": "Not necessarily. While AI trading bots can adapt to changing market conditions, they are prone to overfitting and require massive datasets to train properly. Rule-based bots with well-designed strategies consistently outperform most AI bots for retail traders. Backtested rule-based systems like TrendRider achieve a documented backtest win rate (current value on /live) with transparent, auditable logic — something most AI bots cannot match in reliability."
                 }
               },
               {
@@ -304,7 +304,7 @@ export default function Article() {
               At TrendRider, we chose the <strong className="text-white">rule-based approach with adaptive elements</strong> &mdash; and the results speak for themselves. Our system is built on Freqtrade, one of the most battle-tested open-source trading frameworks, and uses a multi-indicator scoring system with over 10 technical indicators across multiple timeframes.
             </p>
             <p className="mb-4 leading-relaxed text-gray-300">
-              Every signal is transparent. Every trade can be traced back to specific indicator conditions. Our backtesting covers years of market data with walk-forward analysis, realistic slippage, and proper out-of-sample validation. The result: a <strong className="text-white">67.9% win rate</strong> with controlled drawdown and a positive profit factor.
+              Every signal is transparent. Every trade can be traced back to specific indicator conditions. Our backtesting covers years of market data with walk-forward analysis, realistic slippage, and proper out-of-sample validation. The result: a <strong className="text-white">documented backtest win rate (current value on /live)</strong> with controlled drawdown and a positive profit factor.
             </p>
             <p className="mb-4 leading-relaxed text-gray-300">
               We incorporate adaptive elements where they add proven value &mdash; dynamic position sizing based on volatility, market regime filters that adjust aggressiveness, and continuous performance monitoring that flags when market conditions deviate from historical norms. But these adaptations are rule-governed, not black-box ML.

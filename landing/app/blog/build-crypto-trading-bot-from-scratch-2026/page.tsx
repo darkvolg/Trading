@@ -101,7 +101,7 @@ export default function Article() {
                 "name": "Can I build a trading bot that beats the market?",
                 "acceptedAnswer": {
                   "@type": "Answer",
-                  "text": "Yes, but most attempts fail. Studies show that only 10-20% of algorithmic strategies consistently outperform buy-and-hold. The key factors for success are: proper risk management (never risk more than 1-2% per trade), rigorous backtesting across multiple market conditions, avoiding overfitting, and maintaining realistic expectations. Systems like TrendRider achieve 67.9% win rate through multi-indicator scoring and strict drawdown control."
+                  "text": "Yes, but most attempts fail. Studies show that only 10-20% of algorithmic strategies consistently outperform buy-and-hold. The key factors for success are: proper risk management (never risk more than 1-2% per trade), rigorous backtesting across multiple market conditions, avoiding overfitting, and maintaining realistic expectations. Systems like TrendRider achieve documented backtest win rate (current value on /live) through multi-indicator scoring and strict drawdown control."
                 }
               }
             ]
@@ -280,7 +280,7 @@ cd freqtrade
             >
               Our guide to multi-indicator scoring systems
             </a>{" "}
-            explains how combining RSI, MACD, Bollinger Bands, and ADX into a confidence score pushed our win rate to 67.9%.
+            explains how combining RSI, MACD, Bollinger Bands, and ADX into a confidence score pushed our win rate to documented WR (see /live).
           </p>
 
           <h2 className="mt-12 mb-4 text-2xl font-semibold text-white">
@@ -316,7 +316,7 @@ freqtrade backtesting --strategy MyFirstStrategy \\
               <strong className="text-white">Trade Count</strong> &mdash; You need 100+ trades for statistical significance. A strategy with 15 trades and 80% win rate proves nothing.
             </li>
             <li>
-              <strong className="text-white">SQN Score</strong> &mdash; System Quality Number above 2.5 indicates a robust system. Above 3.0 is excellent. TrendRider scores 3.45 across 10,000+ trades.
+              <strong className="text-white">SQN Score</strong> &mdash; System Quality Number above 2.5 indicates a robust system. Above 3.0 is excellent. TrendRider scores see /live across thousands of simulated trades.
             </li>
           </ol>
 
@@ -522,7 +522,7 @@ docker run -d --name freqtrade \\
             </table>
           </div>
           <p className="mb-4 leading-relaxed text-gray-300">
-            For reference, TrendRider achieves a <strong className="text-white">67.9% win rate with 1.42% maximum drawdown</strong> after 18+ months of development and 10,000+ backtested trades. That level of performance takes iteration, not luck.
+            For reference, TrendRider achieves a <strong className="text-white">documented backtest win rate (current value on /live) with low maximum drawdown (see /live)</strong> after 18+ months of development and thousands of simulated trades. That level of performance takes iteration, not luck.
           </p>
 
           <h2 className="mt-12 mb-4 text-2xl font-semibold text-white">
@@ -539,7 +539,7 @@ docker run -d --name freqtrade \\
             >
               TrendRider&apos;s performance dashboard
             </a>{" "}
-            &mdash; 67.9% win rate, 1.42% max drawdown, and 3.45 SQN score across 10,000+ trades. Every metric is transparent and verifiable.
+            &mdash; documented backtest win rate (current value on /live), low max drawdown (see /live), and solid SQN (see /live) across thousands of simulated trades. Every metric is transparent and verifiable.
           </p>
 
           {/* CTA Section */}
@@ -548,7 +548,7 @@ docker run -d --name freqtrade \\
               Skip Months of Development
             </h3>
             <p className="mb-6 text-gray-400">
-              TrendRider gives you a proven system with 67.9% win rate, battle-tested across 10,000+ trades. See real performance data &mdash; no inflated claims.
+              TrendRider gives you a proven system with documented backtest win rate (current value on /live), battle-tested across thousands of simulated trades. See real performance data &mdash; no inflated claims.
             </p>
             <a
               href="https://trendrider.net/"

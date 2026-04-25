@@ -2,7 +2,7 @@ import type { Metadata } from "next";
 
 export const metadata: Metadata = {
   title: "Best Crypto Day Trading Strategies for 2026 (Ranked by Backtested Profit)",
-  description: "Seven crypto day trading strategies compared on 10,000+ backtested trades. Win rates, drawdowns, and code snippets for each. Start simple, scale to complex.",
+  description: "Seven crypto day trading strategies compared on thousands of simulated trades. Win rates, drawdowns, and code snippets for each. Start simple, scale to complex.",
   alternates: {
     canonical: "https://trendrider.net/blog/best-crypto-trading-strategies-2026",
   },
@@ -17,8 +17,8 @@ export default function Article() {
           __html: JSON.stringify({
             "@context": "https://schema.org",
             "@type": "Article",
-            "headline": "Best Crypto Day Trading Strategies 2026 — 67.9% Win Rate",
-            "description": "7 proven crypto day trading strategies for beginners & pros. 10,000+ backtested trades, 67.9% win rate. Ranked by profitability with free setup guide.",
+            "headline": "Best Crypto Day Trading Strategies 2026 — Documented Win Rate",
+            "description": "7 proven crypto day trading strategies for beginners & pros. thousands of simulated trades, documented backtest win rate (current value on /live). Ranked by profitability with free setup guide.",
             "author": {
               "@type": "Person",
               "name": "TrendRider Team",
@@ -69,7 +69,7 @@ export default function Article() {
                 "name": "What is the best crypto trading strategy for beginners in 2026?",
                 "acceptedAnswer": {
                   "@type": "Answer",
-                  "text": "For beginners, trend following is the most reliable crypto trading strategy in 2026. It uses indicators like EMA crossovers and MACD to identify market direction, requiring less screen time than scalping. Combined with proper risk management, trend following can achieve a 67.9% win rate with controlled drawdown."
+                  "text": "For beginners, trend following is the most reliable crypto trading strategy in 2026. It uses indicators like EMA crossovers and MACD to identify market direction, requiring less screen time than scalping. Combined with proper risk management, trend following can achieve a verifiable win rate with controlled drawdown."
                 }
               },
               {
@@ -77,7 +77,7 @@ export default function Article() {
                 "name": "How much can you make with crypto trading bots?",
                 "acceptedAnswer": {
                   "@type": "Answer",
-                  "text": "Returns vary based on strategy, market conditions, and capital deployed. A well-backtested trading bot like TrendRider has demonstrated consistent performance with a 67.9% win rate and SQN score of 3.45 (rated \"Excellent\"). Realistic monthly returns for algorithmic systems range from 3-15%, depending on risk settings and market volatility."
+                  "text": "Returns vary based on strategy, market conditions, and capital deployed. A well-backtested trading bot like TrendRider has demonstrated consistent performance with a documented backtest win rate (current value on /live) and SQN score of see /live (rated \"Excellent\"). Realistic monthly returns for algorithmic systems range from 3-15%, depending on risk settings and market volatility."
                 }
               },
               {
@@ -85,7 +85,7 @@ export default function Article() {
                 "name": "What win rate is considered good for crypto trading?",
                 "acceptedAnswer": {
                   "@type": "Answer",
-                  "text": "A win rate above 55% is considered good for crypto trading, while anything above 65% is excellent. TrendRider achieves a 67.9% win rate across 10,000+ backtested trades. However, win rate alone doesn't determine profitability — risk-reward ratio and drawdown control are equally important."
+                  "text": "A win rate above 55% is considered good for crypto trading, while anything above 65% is excellent. TrendRider achieves a documented backtest win rate (current value on /live) across thousands of simulated trades. However, win rate alone doesn't determine profitability — risk-reward ratio and drawdown control are equally important."
                 }
               },
               {
@@ -101,7 +101,7 @@ export default function Article() {
                 "name": "How to choose the right crypto trading strategy?",
                 "acceptedAnswer": {
                   "@type": "Answer",
-                  "text": "Choose a strategy that matches your risk tolerance and time commitment. Trend following suits patient traders, mean reversion works for active scalpers, and breakout trading fits those who prefer clear entry/exit rules. The most effective approach in 2026 is a hybrid system that combines multiple strategies with regime detection, achieving lower drawdown (1.42%) and higher consistency."
+                  "text": "Choose a strategy that matches your risk tolerance and time commitment. Trend following suits patient traders, mean reversion works for active scalpers, and breakout trading fits those who prefer clear entry/exit rules. The most effective approach in 2026 is a hybrid system that combines multiple strategies with regime detection, achieving lower drawdown (low single-digit (see /live)) and higher consistency."
                 }
               }
             ]
@@ -166,7 +166,7 @@ export default function Article() {
             <li><strong className="text-foreground">Regime detection</strong> &mdash; ADX and volatility metrics identify whether the market is trending or ranging, adjusting signal sensitivity accordingly</li>
             <li><strong className="text-foreground">On-chain overlay</strong> &mdash; Fear &amp; Greed Index, funding rates, and open interest data add a macro-sentiment layer that filters out low-conviction setups</li>
           </ul>
-          <p>This combination delivers a 67.9% win rate with an SQN of 3.45 (rated &ldquo;Excellent&rdquo;) and a maximum drawdown of just 1.42%. The key insight is that no single strategy works in all market conditions &mdash; but a well-designed hybrid system can adapt and perform consistently across cycles.</p>
+          <p>This combination delivers a documented backtest win rate (current value on /live) with an solid SQN (see /live) (rated &ldquo;Excellent&rdquo;) and a maximum drawdown of just low single-digit (see /live). The key insight is that no single strategy works in all market conditions &mdash; but a well-designed hybrid system can adapt and perform consistently across cycles.</p>
 
           <h2 className="text-xl font-semibold text-foreground mt-8 mb-3">5. Dollar Cost Averaging (DCA)</h2>
           <p>DCA is the most underrated algorithmic strategy in crypto. Rather than trying to time one perfect entry, DCA spreads purchases across multiple intervals &mdash; buying more when prices dip and less during peaks. When combined with technical indicators like RSI and EMA filters, bot-driven DCA consistently outperforms fixed-schedule manual buying by 2&ndash;4% annually.</p>
@@ -198,7 +198,7 @@ export default function Article() {
             </a>
             <a href="/blog/what-is-drawdown-crypto-trading" className="p-4 rounded-xl border border-border/50 bg-card/30 hover:border-primary/30 hover:bg-card/50 transition-all">
               <span className="text-xs text-primary font-mono uppercase tracking-widest">Risk Management</span>
-              <p className="text-sm font-medium text-foreground mt-2">What Is Drawdown in Crypto Trading? How We Keep Ours at 1.42%</p>
+              <p className="text-sm font-medium text-foreground mt-2">What Is Drawdown in Crypto Trading? How We Keep Ours at low single-digit (see /live)</p>
             </a>
             <a href="/blog/backtesting-crypto-strategies-guide" className="p-4 rounded-xl border border-border/50 bg-card/30 hover:border-primary/30 hover:bg-card/50 transition-all">
               <span className="text-xs text-primary font-mono uppercase tracking-widest">Education</span>

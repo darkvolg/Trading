@@ -4,11 +4,12 @@ import { TELEGRAM_URL, TELEGRAM_BOT_URL } from "./constants";
 
 /* ──────────────────────────── dynamic data builders ──────────────────────────── */
 
+// Numbers are illustrative; verified backtest + live stats are published on /live.
 export const getMetrics = (t: TStrings) => [
-  { label: t.winRate, value: 67.9, suffix: "%", decimals: 1, barWidth: 67.9 },
-  { label: t.maxDrawdown, value: 1.42, suffix: "%", decimals: 2, barWidth: 14.2 },
-  { label: t.profitFactor, value: 2.12, suffix: "x", decimals: 2, barWidth: 70.7 },
-  { label: t.sqnScore, value: 3.45, suffix: "", decimals: 2, barWidth: 86.3 },
+  { label: t.winRate, value: 53, suffix: "%", decimals: 1, barWidth: 53 },
+  { label: t.maxDrawdown, value: 4.5, suffix: "%", decimals: 2, barWidth: 45 },
+  { label: t.profitFactor, value: 1.6, suffix: "x", decimals: 2, barWidth: 53 },
+  { label: t.sqnScore, value: 2.1, suffix: "", decimals: 2, barWidth: 52 },
 ];
 
 export const getStepIcons = () => [

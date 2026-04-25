@@ -118,17 +118,9 @@ export function HeroSection({ t, locale, setLocale, parallaxRef }: HeroSectionPr
           <div className="inline-flex items-center gap-1.5 px-2.5 py-0.5 mb-3 rounded-full border border-muted/30 text-[10px] font-mono uppercase tracking-widest text-muted">
             {t.backtestLabel}
           </div>
-          <div className="flex items-center justify-center gap-4 sm:gap-6 md:gap-10 text-sm">
-            {[
-              { v: "67.9%", l: t.winRate },
-              { v: "2.12x", l: t.profitFactor },
-              { v: "1.42%", l: t.maxDD },
-            ].map(stat => (
-              <div key={stat.l} className="text-center min-w-0">
-                <div className="font-mono font-bold text-lg sm:text-xl text-primary">{stat.v}</div>
-                <div className="text-muted text-[10px] sm:text-xs uppercase tracking-wider mt-0.5">{stat.l}</div>
-              </div>
-            ))}
+          <div className="flex items-center justify-center text-sm text-muted">
+            <span className="font-mono">Real numbers (backtest + live) published on </span>
+            <a href="/live" className="font-mono font-bold text-primary ml-1 hover:underline">/live</a>
           </div>
           <a href="/live" className="mt-3 text-xs text-primary/80 hover:text-primary transition-colors underline-offset-4 hover:underline">
             {t.seeLivePerformance}

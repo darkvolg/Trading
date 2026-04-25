@@ -15,9 +15,9 @@ const jetbrainsMono = JetBrains_Mono({
 });
 
 export const metadata: Metadata = {
-  title: "Crypto Trading Signals — 67.9% Win Rate | TrendRider",
+  title: "Crypto Trading Signals — Verified Backtest & Live Stats | TrendRider",
   description:
-    "Join 500+ traders getting AI crypto signals for BTC, ETH & SOL. Proven 67.9% win rate, only 1.42% drawdown. Auto-trade on Bybit via Cornix. Start free.",
+    "Join 500+ traders getting AI crypto signals for BTC, ETH & SOL. Documented backtest stats on /live. Auto-trade on Bybit via Cornix. Start free.",
   keywords: [
     "crypto signals",
     "trading bot",
@@ -35,9 +35,9 @@ export const metadata: Metadata = {
     canonical: "https://trendrider.net",
   },
   openGraph: {
-    title: "Crypto Trading Signals — 67.9% Win Rate | TrendRider",
+    title: "Crypto Trading Signals — Verified Backtest & Live Stats | TrendRider",
     description:
-      "Join 500+ traders getting AI crypto signals. 67.9% win rate, 1.42% drawdown. Start free on Telegram.",
+      "Join 500+ traders getting AI crypto signals. Real backtest + live numbers on /live. Start free on Telegram.",
     type: "website",
     url: "https://trendrider.net",
     siteName: "TrendRider",
@@ -46,9 +46,9 @@ export const metadata: Metadata = {
   },
   twitter: {
     card: "summary_large_image",
-    title: "Crypto Trading Signals — 67.9% Win Rate | TrendRider",
+    title: "Crypto Trading Signals — Verified Backtest & Live Stats | TrendRider",
     description:
-      "Join 500+ traders getting AI crypto signals. 67.9% win rate, 1.42% drawdown. Start free on Telegram.",
+      "Join 500+ traders getting AI crypto signals. Real backtest + live numbers on /live. Start free on Telegram.",
     creator: "@TrendRiderPro",
   },
   other: {
@@ -88,7 +88,7 @@ const jsonLd = {
   name: "TrendRider",
   applicationCategory: "FinanceApplication",
   description:
-    "AI-powered algorithmic crypto trading signals with 67.9% win rate. BTC, ETH, SOL, BNB, DOGE signals via Telegram.",
+    "AI-powered algorithmic crypto trading signals with documented backtest stats published on /live. BTC, ETH, SOL, BNB, DOGE signals via Telegram.",
   url: "https://trendrider.net",
   operatingSystem: "Telegram",
   offers: [

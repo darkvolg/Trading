@@ -2,7 +2,7 @@ import type { Metadata } from "next";
 
 export const metadata: Metadata = {
   title: "AI Crypto Trading Signals: How They Work in 2026",
-  description: "How AI crypto trading signals work in 2026: algorithms, on-chain data, confidence scoring, and why AI beats manual trading. Real data from 67.9% win rate.",
+  description: "How AI crypto trading signals work in 2026: algorithms, on-chain data, confidence scoring, and why AI beats manual trading. Real data from documented backtest win rate (current value on /live).",
   alternates: {
     canonical: "https://trendrider.net/blog/ai-crypto-trading-signals-how-they-work-2026",
   },
@@ -18,7 +18,7 @@ export default function Article() {
             "@context": "https://schema.org",
             "@type": "Article",
             "headline": "AI Crypto Trading Signals: How They Work in 2026",
-            "description": "How AI crypto trading signals work in 2026: algorithms, on-chain data, confidence scoring, and why AI beats manual trading. Real data from 67.9% win rate.",
+            "description": "How AI crypto trading signals work in 2026: algorithms, on-chain data, confidence scoring, and why AI beats manual trading. Real data from documented backtest win rate (current value on /live).",
             "author": {
               "@type": "Person",
               "name": "TrendRider Team",
@@ -77,7 +77,7 @@ export default function Article() {
                 "name": "Why do AI trading bots beat manual traders?",
                 "acceptedAnswer": {
                   "@type": "Answer",
-                  "text": "AI trading bots beat manual traders because they remove emotion, react faster than humans, monitor markets 24/7, and apply the same rules consistently on every trade. Manual traders hesitate during losing streaks, exit winners too early, chase FOMO entries, and skip trades after losses. AI systems execute the same high-probability setups every time. TrendRider's backtested data shows 67.9% win rate with 1.42% max drawdown over 10,000+ trades — numbers difficult to match manually."
+                  "text": "AI trading bots beat manual traders because they remove emotion, react faster than humans, monitor markets 24/7, and apply the same rules consistently on every trade. Manual traders hesitate during losing streaks, exit winners too early, chase FOMO entries, and skip trades after losses. AI systems execute the same high-probability setups every time. TrendRider's backtested data shows documented win rate with low drawdown (see /live) over thousands of simulated trades — numbers difficult to match manually."
                 }
               },
               {
@@ -93,7 +93,7 @@ export default function Article() {
                 "name": "Are AI trading signals profitable?",
                 "acceptedAnswer": {
                   "@type": "Answer",
-                  "text": "Algorithmic trading signals can be profitable when the underlying strategy has a verified backtest, transparent metrics, and proper risk management. Key profitability drivers are win rate above 55%, profit factor above 1.5, and max drawdown under 10%. TrendRider publishes backtest metrics (67.9% win rate, 2.12 profit factor, 1.42% max drawdown over Jan 2024 — Mar 2026) plus live performance updated every 5 minutes on a public dashboard at trendrider.net/live."
+                  "text": "Algorithmic trading signals can be profitable when the underlying strategy has a verified backtest, transparent metrics, and proper risk management. Key profitability drivers are win rate above 55%, profit factor above 1.5, and max drawdown under 10%. TrendRider publishes backtest metrics (documented backtest stats published on /live with each strategy version over Jan 2024 — Mar 2026) plus live performance updated every 5 minutes on a public dashboard at trendrider.net/live."
                 }
               },
               {
@@ -121,7 +121,7 @@ export default function Article() {
 
         <div className="space-y-6 text-muted leading-relaxed">
           <p>Five years ago, &ldquo;AI trading&rdquo; mostly meant marketing hype stapled onto a simple RSI script. In 2026, real AI crypto trading signals are doing something meaningfully different: continuously scoring thousands of potential setups across dozens of pairs, weighing technical, on-chain, and sentiment data, and only firing when the evidence is overwhelming. The result is measurably better than manual trading, and the data to prove it is finally public.</p>
-          <p>This guide explains exactly how AI crypto signals work under the hood — what data they ingest, how confidence scoring filters noise, why AI-powered systems outperform emotional human traders, and what that looks like in practice with a real 67.9% win rate system running on BTC, ETH, SOL, BNB, and DOGE.</p>
+          <p>This guide explains exactly how AI crypto signals work under the hood — what data they ingest, how confidence scoring filters noise, why AI-powered systems outperform emotional human traders, and what that looks like in practice with a real documented backtest win rate (current value on /live) system running on BTC, ETH, SOL, BNB, and DOGE.</p>
 
           <h2 className="text-xl font-semibold text-foreground mt-8 mb-3">What Exactly Is an AI Crypto Trading Signal?</h2>
           <p>An AI crypto trading signal is a complete, machine-generated trade plan: pair, direction, entry, stop loss, take profits, leverage, and a confidence score. Unlike discretionary analyst calls, AI signals are produced by rules-based machine logic that runs identically every candle, on every pair, without sleep or emotion.</p>
@@ -185,7 +185,7 @@ export default function Article() {
           <p>Humans unconsciously shift criteria. &ldquo;I&apos;ll wait for RSI to confirm... well, close enough... actually MACD looks great so let&apos;s go.&rdquo; AI applies identical logic on trade #1 and trade #10,000. Consistency is what produces measurable edge.</p>
 
           <h3 className="text-lg font-semibold text-foreground mt-6 mb-2">4. Verifiable Backtests</h3>
-          <p>Because AI rules are code, they can be backtested against years of historical data. TrendRider&apos;s strategy has 10,000+ simulated trades with these verified metrics: 67.9% win rate, 2.12 profit factor, 1.42% maximum drawdown, 3.45 SQN score. Manual trading offers no such proof. See <a href="/blog/backtesting-crypto-strategies-guide" className="text-primary hover:underline">backtesting crypto strategies</a> for more context.</p>
+          <p>Because AI rules are code, they can be backtested against years of historical data. TrendRider&apos;s strategy has thousands of simulated trades with these verified metrics: documented backtest stats published on /live. Manual trading offers no such proof. See <a href="/blog/backtesting-crypto-strategies-guide" className="text-primary hover:underline">backtesting crypto strategies</a> for more context.</p>
 
           <h2 className="text-xl font-semibold text-foreground mt-8 mb-3">Real Example: A TrendRider AI Signal Walkthrough</h2>
           <p>Here&apos;s what an AI signal looks like in practice, drawn from the <a href="/blog/best-crypto-trading-strategies-2026" className="text-primary hover:underline">best crypto trading strategies</a> we publish publicly. This is a real TrendRider output format:</p>
@@ -216,7 +216,7 @@ export default function Article() {
           <p>Running an AI on 50 random alts looks impressive but produces garbage signals. Focus outperforms breadth.</p>
 
           <h2 className="text-xl font-semibold text-foreground mt-8 mb-3">Transparency: The Public /live Dashboard</h2>
-          <p>Every AI claim needs proof. TrendRider publishes every historical signal in a public /live dashboard: entry price, exit price, confidence score, P&amp;L, timestamps. Anyone can audit the 67.9% win rate independently.</p>
+          <p>Every AI claim needs proof. TrendRider publishes every historical signal in a public /live dashboard: entry price, exit price, confidence score, P&amp;L, timestamps. Anyone can audit the documented backtest win rate (current value on /live) independently.</p>
           <p>This level of transparency is rare. Most &ldquo;AI signal&rdquo; channels delete losing trades from history or only screenshot winners. If a provider won&apos;t show you their full trade log, the AI claim is marketing, not reality.</p>
 
           <h2 className="text-xl font-semibold text-foreground mt-8 mb-3">Auto-Executing AI Signals with Cornix</h2>
@@ -231,7 +231,7 @@ export default function Article() {
             <li><strong className="text-foreground">Overfitting risk</strong> — too many parameters fit historical noise rather than real edge</li>
             <li><strong className="text-foreground">Execution slippage</strong> — backtested returns assume perfect fills; live fills are worse</li>
           </ul>
-          <p>Quality AI systems build in safeguards: walk-forward validation, Monte Carlo simulation, and conservative position sizing. TrendRider&apos;s 1.42% max drawdown reflects aggressive drawdown control, not just signal quality.</p>
+          <p>Quality AI systems build in safeguards: walk-forward validation, Monte Carlo simulation, and conservative position sizing. TrendRider&apos;s low max drawdown (see /live) reflects aggressive drawdown control, not just signal quality.</p>
 
           <h2 className="text-xl font-semibold text-foreground mt-8 mb-3">How to Start With AI Crypto Signals</h2>
           <ol className="list-decimal pl-6 space-y-2">
@@ -243,7 +243,7 @@ export default function Article() {
           </ol>
 
           <div className="mt-10 p-6 rounded-2xl border border-primary/20 bg-primary/5 text-center">
-            <p className="text-foreground font-medium mb-3">Free AI signals — 67.9% win rate, 12-point confidence scoring, fully transparent Google Sheet</p>
+            <p className="text-foreground font-medium mb-3">Free AI signals — documented backtest win rate (current value on /live), confidence scoring (1-10 scale) scoring, fully transparent Google Sheet</p>
             <a href="https://t.me/TrendRiderSignals" className="inline-block px-6 py-3 rounded-xl font-semibold text-sm" style={{ background: "linear-gradient(135deg, #00D4AA, #00B894)", color: "#0D1117" }}>
               Join TrendRider on Telegram &rarr;
             </a>

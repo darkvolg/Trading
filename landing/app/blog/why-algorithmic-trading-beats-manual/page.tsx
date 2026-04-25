@@ -2,7 +2,7 @@ import type { Metadata } from "next";
 
 export const metadata: Metadata = {
   title: "Algorithmic vs Manual Trading: 5 Reasons Bots Win",
-  description: "Data proves it: algo trading hits 67.9% win rate vs 45% manual. See 5 evidence-backed reasons bots outperform humans — and how to start automating.",
+  description: "Data proves it: algo trading hits documented backtest win rate (current value on /live) vs 45% manual. See 5 evidence-backed reasons bots outperform humans — and how to start automating.",
   alternates: {
     canonical: "https://trendrider.net/blog/why-algorithmic-trading-beats-manual",
   },
@@ -18,7 +18,7 @@ export default function Article() {
             "@context": "https://schema.org",
             "@type": "Article",
             "headline": "Algorithmic vs Manual Trading: 5 Reasons Bots Win",
-            "description": "Data proves it: algo trading hits 67.9% win rate vs 45% manual. See 5 evidence-backed reasons bots outperform humans — and how to start automating.",
+            "description": "Data proves it: algo trading hits documented backtest win rate (current value on /live) vs 45% manual. See 5 evidence-backed reasons bots outperform humans — and how to start automating.",
             "author": {
               "@type": "Person",
               "name": "TrendRider Team",
@@ -52,7 +52,7 @@ export default function Article() {
             "itemListElement": [
               { "@type": "ListItem", "position": 1, "name": "Home", "item": "https://trendrider.net" },
               { "@type": "ListItem", "position": 2, "name": "Blog", "item": "https://trendrider.net/blog" },
-              { "@type": "ListItem", "position": 3, "name": "Algo vs Manual Trading: Why Bots Win (67.9% WR)" }
+              { "@type": "ListItem", "position": 3, "name": "Algo vs Manual Trading: Why Bots Win " }
             ]
           })
         }}
@@ -80,7 +80,7 @@ export default function Article() {
           </ul>
 
           <h2 className="text-xl font-semibold text-foreground mt-8 mb-3">The Algorithmic Advantage</h2>
-          <p>An algorithm doesn&apos;t feel fear. It doesn&apos;t get greedy. It executes the same strategy with the same precision whether the market is up 20% or down 30%. This consistency is what produces a 67.9% win rate over hundreds of trades — see the full playbook in our <a href="/blog/best-crypto-trading-strategies-2026" className="text-primary hover:underline">67.9% win rate trading strategies</a>.</p>
+          <p>An algorithm doesn&apos;t feel fear. It doesn&apos;t get greedy. It executes the same strategy with the same precision whether the market is up 20% or down 30%. This consistency is what produces a documented backtest win rate (current value on /live) over hundreds of trades — see the full playbook in our <a href="/blog/best-crypto-trading-strategies-2026" className="text-primary hover:underline">best crypto trading strategies</a>.</p>
           <p>TrendRider&apos;s algorithm analyzes 15+ technical indicators across 4 timeframes (5m, 15m, 1h, 4h), cross-references on-chain data (Fear &amp; Greed Index, funding rates, open interest), and generates signals only when multiple confirmation criteria align.</p>
 
           <h2 className="text-xl font-semibold text-foreground mt-8 mb-3">Real Numbers, Real Transparency</h2>

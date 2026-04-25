@@ -559,7 +559,7 @@ order = exchange.create_limit_buy_order(
               <strong className="text-white">Optimization:</strong> Hyperopt across 500+ epochs to fine-tune indicator parameters without overfitting
             </li>
             <li>
-              <strong className="text-white">Results:</strong> 67.9% win rate, 1.42% maximum drawdown, 3.45 SQN score
+              <strong className="text-white">Results:</strong> documented backtest win rate (current value on /live), low maximum drawdown (see /live), solid SQN (see /live)
             </li>
             <li>
               <strong className="text-white">Deployment:</strong> Docker on a $10/month VPS with Telegram notifications, running 24/7 without manual intervention
@@ -599,7 +599,7 @@ order = exchange.create_limit_buy_order(
               See Freqtrade in Action
             </h3>
             <p className="mb-6 text-gray-400">
-              TrendRider is built on Freqtrade with 67.9% win rate and 1.42% max drawdown across 10,000+ backtested trades. Every metric is transparent and verifiable.
+              TrendRider is built on Freqtrade with documented backtest win rate (current value on /live) and low max drawdown (see /live) across thousands of simulated trades. Every metric is transparent and verifiable.
             </p>
             <a
               href="https://trendrider.net/"

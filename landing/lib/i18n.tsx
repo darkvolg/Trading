@@ -17,10 +17,10 @@ export const T = {
     tagline: "AI-Powered Signals.",
     taglineHighlight: "Verified Results.",
     heroDesc: (
-      <>AI-powered crypto trading signals with a{" "}
-      <span className="text-primary font-semibold">67.9% backtested win rate</span> and{" "}
-      <span className="text-primary font-semibold">1.42% max drawdown</span>.
-      Multi-timeframe analysis across 13 USDT-perp pairs incl. BTC, ETH, SOL.</>
+      <>Open-source crypto trading strategy on Freqtrade —{" "}
+      <span className="text-primary font-semibold">hyperopt-tuned</span>,{" "}
+      <span className="text-primary font-semibold">walk-forward validated</span>,{" "}
+      paper-trading live. 13 USDT-perp pairs incl. BTC, ETH, SOL. Real numbers on /live.</>
     ),
     winRate: "Win Rate",
     profitFactor: "Profit Factor",
@@ -90,7 +90,7 @@ export const T = {
     simSharpe: "Sharpe Ratio",
     simNetProfit: "Net Profit",
     simCapital: "Capital",
-    simDisclaimer: "Simulated results based on backtest from January 2024 to March 2026. Past performance does not guarantee future results. Trading cryptocurrencies involves significant risk.",
+    simDisclaimer: "Numbers above are illustrative — for the real-time, actual stats from the running bot, see /live (updates every 5 min directly from the bot's database). Past performance does not guarantee future results. Trading cryptocurrencies involves significant risk.",
 
     // how it works
     howTag: "Process",
@@ -121,7 +121,7 @@ export const T = {
     feat4Title: "Real-Time Public Track Record",
     feat4Desc: "Live dashboard shows every trade as it happens — entry, exit, P&L. Updated every 5 minutes from the bot's SQLite database. No edits possible.",
     feat5Title: "Hyperopt-Tuned Risk",
-    feat5Desc: "Stoploss optimized via Sharpe-loss hyperopt (currently -3.8%). 110-day backtest max DD 2.77%. Forward-tested on 2 periods to rule out overfitting.",
+    feat5Desc: "Stoploss + ROI ladder + trailing stop optimized via Freqtrade hyperopt. Walk-forward validated on a held-out period to rule out overfitting. Current values and latest backtest stats on /live.",
     feat6Title: "Real-Time Telegram Alerts",
     feat6Desc: "Every trade open/close pings Telegram with full context: pair, direction, entry, SL, target, confidence score, market regime. Free channel for delayed signals.",
 
@@ -163,11 +163,11 @@ export const T = {
     faq2Q: "How are signals generated?",
     faq2A: "Each candle, the strategy checks 8+ indicators per pair. Each indicator scores 0-2 points (bear/neutral/bull), summing to a 0-10 confidence score. Trades only execute when confidence ≥6 in bear regime or ≥5 in ranging/bull. Exits via custom_exit ladder (early_loss_cut at 2h/4h/8h/16h) + ROI ladder + trailing stop, all hyperopt-tuned.",
     faq3Q: "What's the track record?",
-    faq3A: "Live (since April 1, 2026): 98 trades, +$11.87 (+2.37%), 53% WR — see /live for real-time data. Backtest 110 days: +$36.47 (+7.29%), 37.4% WR, 2.77% max DD. Forward-tested on 2 non-overlapping periods to rule out overfitting. All numbers verifiable: live data updates every 5 min from bot's database, backtest reproducible via open-source code.",
+    faq3A: "Paper-trading since April 1, 2026. Real-time stats — trades, P&L, win rate, drawdown — all live on /live, updated every 5 min directly from the bot's database (no editing possible). Latest backtest results also published on /live with each strategy version. Backtest is reproducible: clone the open-source repo and re-run yourself.",
     faq4Q: "How do I run it?",
     faq4A: "The strategy is open-source. Clone the GitHub repo, install Freqtrade (free), point it at your Bybit account, paste your API keys, and run. Full setup guide on /blog/freqtrade-setup-tutorial-beginners-2026 (under 1 hour). Or wait for our Pro Pack which will bundle pre-tuned config + monthly hyperopt updates.",
     faq5Q: "Is it safe?",
-    faq5A: "Strict risk management: hyperopt-tuned stoploss (currently -3.8%), 8 protections (cooldown, stoploss-guard, max-drawdown), max-open-trades cap. Paper-trading since April 1, 2026 — no real money at risk yet. Past performance does not guarantee future results, and all trading involves risk of loss.",
+    faq5A: "Strict risk management: hyperopt-tuned stoploss, 8 protections (cooldown, stoploss-guard, max-drawdown), max-open-trades cap. Current stoploss value and protection settings are visible in the open-source strategy code. Paper-trading since April 1, 2026 — no real money at risk yet. Past performance does not guarantee future results, and all trading involves risk of loss.",
 
     // transparency
     transparencyTag: "Transparency",
@@ -248,16 +248,16 @@ export const T = {
     compCol3: "TrendRider",
     compRow1: ["Emotion Control", "Hard — fear & greed", "Eliminated — algorithmic rules"],
     compRow2: ["Analysis Time", "2-4 hours/day", "Fully automated 24/7"],
-    compRow3: ["Risk Management", "Inconsistent", "Hyperopt-tuned SL (currently 3.8%)"],
+    compRow3: ["Risk Management", "Inconsistent", "Hyperopt-tuned SL (see /live)"],
     compRow4: ["Track Record", "Rarely public", "Live dashboard + open code"],
-    compRow5: ["Win Rate", "~45-55%", "67.9% backtest / 53% live (25d)"],
-    compRow6: ["Drawdown", "Often 15-30%+", "1.42% backtest / TBD live"],
+    compRow5: ["Win Rate", "~45-55%", "Live stats on /live (paper-trading)"],
+    compRow6: ["Drawdown", "Often 15-30%+", "Low single-digit (see /live)"],
 
     // extra testimonials — replaced with verifiable claims
-    testimonial4: "Backtested over 110 days (Jan-Apr 2026): +$36.47 / +7.29% on $500. WR 37.4%, max DD 2.77%. Forward-tested on both halves to rule out overfitting.",
+    testimonial4: "Backtest stats (profit, win rate, drawdown) published on /live with each strategy version. Walk-forward validation on a held-out period prevents curve-fitting before deploy.",
     testimonial4Author: "Backtest Methodology",
-    testimonial4Role: "Hyperopt + walk-forward validation",
-    testimonial5: "Hyperopt found these params with Sharpe-loss optimization. Validated on 2 non-overlapping periods to avoid curve-fitting. Process is documented in commits.",
+    testimonial4Role: "Walk-forward validation",
+    testimonial5: "Hyperopt parameters re-tuned periodically with fresh data and walk-forward validation. Every parameter change is committed to GitHub — process is fully traceable.",
     testimonial5Author: "Optimization Process",
     testimonial5Role: "github commit history",
 
@@ -332,10 +332,10 @@ export const T = {
     tagline: "AI-Powered сигналы.",
     taglineHighlight: "Проверенные результаты.",
     heroDesc: (
-      <>Крипто-сигналы на основе ИИ с{" "}
-      <span className="text-primary font-semibold">бэктест-винрейтом 67.9%</span> и{" "}
-      <span className="text-primary font-semibold">просадкой 1.42%</span>.
-      Анализ 13 USDT-perp пар, включая BTC, ETH, SOL.</>
+      <>Open-source крипто-стратегия на Freqtrade —{" "}
+      <span className="text-primary font-semibold">hyperopt-настроенная</span>,{" "}
+      <span className="text-primary font-semibold">walk-forward валидированная</span>,{" "}
+      paper-trading в реальном времени. 13 USDT-perp пар, включая BTC, ETH, SOL. Реальные цифры на /live.</>
     ),
     winRate: "Винрейт",
     profitFactor: "Профит-фактор",
@@ -404,7 +404,7 @@ export const T = {
     simSharpe: "Коэфф. Шарпа",
     simNetProfit: "Чистая прибыль",
     simCapital: "Капитал",
-    simDisclaimer: "Результаты симуляции на основе бэктеста с января 2024 по март 2026. Прошлые результаты не гарантируют будущую доходность. Торговля криптовалютами связана со значительным риском.",
+    simDisclaimer: "Цифры выше — иллюстративные. Реальная статистика работающего бота — на /live (обновляется каждые 5 мин прямо из БД бота). Прошлые результаты не гарантируют будущую доходность. Торговля криптовалютами связана со значительным риском.",
 
     howTag: "Процесс",
     howTitle: "Как это работает",
@@ -432,7 +432,7 @@ export const T = {
     feat4Title: "Live трек-рекорд в реальном времени",
     feat4Desc: "Live дашборд показывает каждую сделку прямо сейчас — вход, выход, P&L. Обновляется каждые 5 минут из БД бота. Редактирование невозможно.",
     feat5Title: "Hyperopt-настроенный риск",
-    feat5Desc: "Стоп-лосс оптимизирован через Sharpe-loss hyperopt (сейчас -3.8%). Бэктест на 110 днях: макс. просадка 2.77%. Forward-test на 2 периодах исключил overfitting.",
+    feat5Desc: "Стоп-лосс + ROI ladder + trailing stop оптимизированы через Freqtrade hyperopt. Walk-forward валидация на отдельном периоде исключает overfitting. Текущие значения и свежие бэктест-цифры — на /live.",
     feat6Title: "Telegram-уведомления в реальном времени",
     feat6Desc: "Каждое открытие/закрытие сделки отправляет в Telegram полный контекст: пара, направление, вход, SL, цель, confidence, режим рынка. Бесплатный канал с задержкой.",
 
@@ -469,11 +469,11 @@ export const T = {
     faq2Q: "Как генерируются сигналы?",
     faq2A: "Наш алгоритм объединяет 15+ технических индикаторов (RSI, MACD, Bollinger Bands, пересечения EMA и др.), мультитаймфрейм анализ (5м, 15м, 1ч, 4ч) и метрики on-chain (Fear & Greed Index, funding rates, open interest) для определения высоковероятных сетапов.",
     faq3Q: "Какой трек-рекорд?",
-    faq3A: "Live (с 1 апреля 2026): 98 трейдов, +$11.87 (+2.37%), 53% WR — смотри /live для real-time данных. Бэктест 110 дней: +$36.47 (+7.29%), WR 37.4%, макс. просадка 2.77%. Forward-test на 2 непересекающихся периодах исключил overfitting. Все цифры проверяемые: live данные обновляются каждые 5 мин из БД бота, бэктест воспроизводим через open-source код.",
+    faq3A: "Paper-trading с 1 апреля 2026. Real-time статистика — трейды, P&L, винрейт, просадка — всё на /live, обновление каждые 5 мин прямо из БД бота (редактирование невозможно). Свежие бэктест-результаты также публикуются на /live для каждой версии стратегии. Бэктест воспроизводим: клонируй open-source репо и прогони сам.",
     faq4Q: "Как настроить авто-трейд?",
     faq4A: "Стратегия open-source. Клонируй GitHub-репо, поставь Freqtrade (бесплатно), укажи свои Bybit API-ключи и запусти. Полный гайд на /blog/freqtrade-setup-tutorial-beginners-2026 (меньше часа). Или дождись Pro Pack — там будет настроенный конфиг + ежемесячные обновления через hyperopt.",
     faq5Q: "Безопасно ли это?",
-    faq5A: "Жёсткий риск-менеджмент: hyperopt-настроенный стоп-лосс (сейчас -3.8%), 8 protections (cooldown, stoploss-guard, max-drawdown), лимит на одновременные сделки. Paper-trading с 1 апреля 2026 — реальные деньги пока не задействованы. Прошлые результаты не гарантируют будущих, торговля связана с риском убытков.",
+    faq5A: "Жёсткий риск-менеджмент: hyperopt-настроенный стоп-лосс, 8 protections (cooldown, stoploss-guard, max-drawdown), лимит на одновременные сделки. Текущее значение стоп-лосса и настройки protections видны в open-source коде стратегии. Paper-trading с 1 апреля 2026 — реальные деньги пока не задействованы. Прошлые результаты не гарантируют будущих, торговля связана с риском убытков.",
 
     // transparency
     transparencyTag: "Прозрачность",
@@ -553,16 +553,16 @@ export const T = {
     compCol3: "TrendRider",
     compRow1: ["Контроль эмоций", "Сложно — страх и жадность", "Исключены — алгоритм по правилам"],
     compRow2: ["Время анализа", "2-4 часа/день", "Полностью автоматизирован 24/7"],
-    compRow3: ["Риск-менеджмент", "Нестабильный", "Hyperopt-настроенный SL (сейчас 3.8%)"],
+    compRow3: ["Риск-менеджмент", "Нестабильный", "Hyperopt-настроенный SL (см. /live)"],
     compRow4: ["Трек-рекорд", "Редко публичный", "Live дашборд + открытый код"],
-    compRow5: ["Винрейт", "~45-55%", "67.9% бэктест / 53% live (25д)"],
-    compRow6: ["Просадка", "Часто 15-30%+", "1.42% бэктест / TBD live"],
+    compRow5: ["Винрейт", "~45-55%", "Live статистика на /live (paper-trading)"],
+    compRow6: ["Просадка", "Часто 15-30%+", "Низкий single-digit (см. /live)"],
 
     // extra testimonials — заменены на проверяемые факты
-    testimonial4: "Бэктест на 110 днях (янв-апр 2026): +$36.47 / +7.29% на $500. Винрейт 37.4%, макс. просадка 2.77%. Forward-test на двух половинах исключил overfitting.",
+    testimonial4: "Бэктест-статистика (прибыль, винрейт, просадка) публикуется на /live для каждой версии стратегии. Walk-forward валидация на отдельном периоде исключает curve-fitting перед деплоем.",
     testimonial4Author: "Методология бэктеста",
-    testimonial4Role: "Hyperopt + walk-forward валидация",
-    testimonial5: "Hyperopt подобрал параметры через Sharpe-loss оптимизацию. Проверены на 2 непересекающихся периодах — нет curve-fitting. Процесс задокументирован в коммитах.",
+    testimonial4Role: "Walk-forward валидация",
+    testimonial5: "Hyperopt-параметры периодически переоптимизируются на свежих данных с walk-forward валидацией. Каждое изменение параметров коммитится на GitHub — процесс полностью прослеживаем.",
     testimonial5Author: "Процесс оптимизации",
     testimonial5Role: "история коммитов GitHub",
 

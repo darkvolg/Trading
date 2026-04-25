@@ -3,7 +3,7 @@ import Link from "next/link";
 
 export const metadata: Metadata = {
   title: "Crypto Trading Blog — Strategies & Guides | TrendRider",
-  description: "Proven crypto trading strategies, risk management guides & bot comparisons. Data-backed insights from a 67.9% win rate system. Updated for 2026.",
+  description: "Proven crypto trading strategies, risk management guides & bot comparisons. Data-backed insights from a documented system (see /live for current stats). Updated for 2026.",
   alternates: {
     canonical: "https://trendrider.net/blog",
   },
@@ -45,7 +45,7 @@ const posts = [
   {
     slug: "ai-crypto-trading-signals-how-they-work-2026",
     title: "AI Crypto Trading Signals: How They Work in 2026",
-    excerpt: "Deep dive into how AI crypto trading signals work: technical indicators, on-chain data, sentiment analysis, and 12-point confidence scoring. Real data from 10,000+ backtested trades with 67.9% win rate across BTC, ETH, SOL, BNB, DOGE.",
+    excerpt: "Deep dive into how AI crypto trading signals work: technical indicators, on-chain data, sentiment analysis, and confidence scoring (1-10 scale). Real data from thousands of simulated trades with documented win rate across BTC, ETH, SOL, BNB, DOGE (see /live).",
     date: "April 5, 2026",
     readTime: "12 min read",
     tag: "AI Trading",
@@ -109,7 +109,7 @@ const posts = [
   {
     slug: "how-to-backtest-crypto-trading-strategy-2026",
     title: "How to Backtest a Crypto Trading Strategy: Complete Guide 2026",
-    excerpt: "Learn how to backtest crypto trading strategies step by step. Covers data selection, walk-forward analysis, overfitting prevention, and interpreting results with real examples from 10,000+ trades.",
+    excerpt: "Learn how to backtest crypto trading strategies step by step. Covers data selection, walk-forward analysis, overfitting prevention, and interpreting results with real examples from thousands of simulated trades.",
     date: "April 2, 2026",
     readTime: "12 min read",
     tag: "Education",
@@ -124,7 +124,7 @@ const posts = [
   },
   {
     slug: "freqtrade-setup-tutorial-beginners-2026",
-    title: "Freqtrade Tutorial 2026: Complete Setup Guide [67.9% Win Rate Strategy]",
+    title: "Freqtrade Tutorial 2026: Complete Setup Guide",
     excerpt: "Step-by-step guide to setting up Freqtrade with Bybit. From installation to live trading in under 1 hour. Includes a complete RSI+EMA strategy template.",
     date: "April 2, 2026",
     readTime: "12 min read",
@@ -141,7 +141,7 @@ const posts = [
   {
     slug: "crypto-trading-bot-vs-copy-trading-2026",
     title: "Crypto Trading Bot vs Copy Trading: Which Earns More in 2026?",
-    excerpt: "We compared trading bots vs copy trading across 10,000+ trades. Bots hit 67.9% win rate vs 40-55% for copy traders. Full breakdown with costs, control, transparency & real performance data.",
+    excerpt: "We compared trading bots vs copy trading across thousands of simulated trades. Bots hit a high documented win rate vs 40-55% for copy traders. Full breakdown with costs, control, transparency & real performance data (see /live).",
     date: "April 2, 2026",
     readTime: "9 min read",
     tag: "Comparison",
@@ -149,7 +149,7 @@ const posts = [
   {
     slug: "crypto-trading-risk-management-complete-guide-2026",
     title: "Crypto Trading Risk Management: The Complete 2026 Guide",
-    excerpt: "Master crypto risk management with position sizing, stop-loss placement, portfolio allocation, drawdown control, and trading psychology. Real data from a system with 1.42% max drawdown and 67.9% win rate.",
+    excerpt: "Master crypto risk management with position sizing, stop-loss placement, portfolio allocation, drawdown control, and trading psychology. Real data from a system with low max drawdown and documented win rate (see /live).",
     date: "April 1, 2026",
     readTime: "12 min read",
     tag: "Risk Management",
@@ -165,7 +165,7 @@ const posts = [
   {
     slug: "multi-indicator-scoring-system-crypto",
     title: "Multi-Indicator Scoring Systems: How to Combine RSI, MACD & Bollinger Bands",
-    excerpt: "Learn how to build a multi-indicator scoring system that combines RSI, MACD, Bollinger Bands, and ADX into a single confidence score. Real data: 67.9% win rate vs ~40% with single indicators.",
+    excerpt: "Learn how to build a multi-indicator scoring system that combines RSI, MACD, Bollinger Bands, and ADX into a single confidence score. Real data: documented win rate vs ~40% with single indicators (see /live).",
     date: "April 1, 2026",
     readTime: "9 min read",
     tag: "Strategy",
@@ -181,7 +181,7 @@ const posts = [
   {
     slug: "building-profitable-crypto-trading-system-2026",
     title: "How to Build a Profitable Crypto Trading System in 2026: A Step-by-Step Framework",
-    excerpt: "A 7-step framework from edge definition to live execution. Covers multi-indicator scoring, walk-forward backtesting, risk management, and scaling into live trading with real data: 67.9% win rate, 1.42% max DD.",
+    excerpt: "A 7-step framework from edge definition to live execution. Covers multi-indicator scoring, walk-forward backtesting, risk management, and scaling into live trading with documented backtest stats (see /live).",
     date: "April 1, 2026",
     readTime: "10 min read",
     tag: "Guide",
@@ -220,8 +220,8 @@ const posts = [
   },
   {
     slug: "what-is-drawdown-crypto-trading",
-    title: "What Is Drawdown in Crypto Trading? How We Keep Ours at 1.42%",
-    excerpt: "Max drawdown matters more than profit. Learn why professional traders obsess over drawdown control and the techniques TrendRider uses to maintain just 1.42%.",
+    title: "What Is Drawdown in Crypto Trading? How We Keep Ours Low",
+    excerpt: "Max drawdown matters more than profit. Learn why professional traders obsess over drawdown control and the techniques TrendRider uses to keep it low (see /live).",
     date: "March 21, 2026",
     readTime: "5 min read",
     tag: "Risk Management",
@@ -237,14 +237,14 @@ const posts = [
   {
     slug: "understanding-win-rate-and-profit-factor",
     title: "Understanding Win Rate & Profit Factor: What Really Matters",
-    excerpt: "A 67.9% win rate means nothing without context. Learn how profit factor, drawdown, and SQN score work together to measure true performance.",
+    excerpt: "A high win rate means nothing without context. Learn how profit factor, drawdown, and SQN score work together to measure true performance.",
     date: "March 15, 2026",
     readTime: "4 min read",
     tag: "Education",
   },
   {
     slug: "risk-management-6-percent-stop-loss",
-    title: "The 6% Stop-Loss Rule: How We Keep Drawdown at 1.42%",
+    title: "The 6% Stop-Loss Rule: How We Keep Drawdown Low",
     excerpt: "Most traders blow accounts because of poor risk management. Here's the exact framework TrendRider uses to protect capital on every trade.",
     date: "March 10, 2026",
     readTime: "6 min read",
@@ -253,7 +253,7 @@ const posts = [
   {
     slug: "what-is-sqn-score-system-quality-number",
     title: "What Is SQN Score? Understanding System Quality Number in Trading",
-    excerpt: "SQN measures how good your trading system really is. Learn what scores mean and how TrendRider achieves a 3.45 SQN.",
+    excerpt: "SQN measures how good your trading system really is. Learn what scores mean and how TrendRider achieves a solid SQN (see /live).",
     date: "March 22, 2026",
     readTime: "5 min read",
     tag: "Education",

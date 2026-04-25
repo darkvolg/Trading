@@ -2,7 +2,7 @@ import type { Metadata } from "next";
 
 export const metadata: Metadata = {
   title: "7 Altcoin Trading Strategies That Work in 2026",
-  description: "7 altcoin strategies that hit 67.9% win rate in 2026. Alt season timing, BTC dominance gating, volume divergence. Real data from 10,000+ trades.",
+  description: "7 altcoin strategies that hit documented backtest win rate (current value on /live) in 2026. Alt season timing, BTC dominance gating, volume divergence. Real data from thousands of simulated trades.",
   alternates: {
     canonical: "https://trendrider.net/blog/altcoin-trading-strategies-2026",
   },
@@ -18,7 +18,7 @@ export default function Article() {
             "@context": "https://schema.org",
             "@type": "Article",
             "headline": "7 Altcoin Trading Strategies That Actually Work in 2026",
-            "description": "7 altcoin trading strategies for 2026: alt season timing, BTC dominance correlation, volume divergence, momentum plays, multi-timeframe confluence. Real data from 67.9% win rate system.",
+            "description": "7 altcoin trading strategies for 2026: alt season timing, BTC dominance correlation, volume divergence, momentum plays, multi-timeframe confluence. Real data from documented backtest win rate (current value on /live) system.",
             "author": {
               "@type": "Person",
               "name": "TrendRider Team",
@@ -93,7 +93,7 @@ export default function Article() {
                 "name": "What win rate can I realistically expect on altcoin trades?",
                 "acceptedAnswer": {
                   "@type": "Answer",
-                  "text": "Realistic win rates for rule-based altcoin strategies range between 55-68% depending on filter strictness. TrendRider&apos;s AI system achieves 67.9% aggregate win rate across BTC, ETH, SOL, BNB, DOGE, and OP — with altcoin-specific trades hitting 64-69% when the 12-point confidence score is 9+/12. Beware of providers claiming 85%+ altcoin win rates without public trade logs."
+                  "text": "Realistic win rates for rule-based altcoin strategies range between 55-68% depending on filter strictness. TrendRider&apos;s AI system achieves documented WR (see /live) aggregate win rate across BTC, ETH, SOL, BNB, DOGE, and OP — with altcoin-specific trades hitting 64-69% when the confidence scoring (1-10 scale) is 9+/12. Beware of providers claiming 85%+ altcoin win rates without public trade logs."
                 }
               },
               {
@@ -146,7 +146,7 @@ export default function Article() {
 
           <h2 className="text-xl font-semibold text-foreground mt-8 mb-3">Strategy 4: Multi-Timeframe Confluence on Alts</h2>
           <p>Altcoins false-break more than BTC because they&apos;re thinner. Multi-timeframe analysis is your biggest friend here. The rule: your entry timeframe must agree with at least two higher timeframes before you pull the trigger.</p>
-          <p>A clean altcoin long needs: 5m/15m entry trigger, 1h trend up, 4h trend up. If any one timeframe disagrees, skip. If all three agree, the trade has structural support and win rates spike. This is the exact mechanic behind TrendRider&apos;s 3 multi-timeframe points in its 12-point confidence score. Deep dive in <a href="/blog/multi-timeframe-analysis-explained" className="text-primary hover:underline">multi-timeframe analysis explained</a>.</p>
+          <p>A clean altcoin long needs: 5m/15m entry trigger, 1h trend up, 4h trend up. If any one timeframe disagrees, skip. If all three agree, the trade has structural support and win rates spike. This is the exact mechanic behind TrendRider&apos;s 3 multi-timeframe points in its confidence scoring (1-10 scale). Deep dive in <a href="/blog/multi-timeframe-analysis-explained" className="text-primary hover:underline">multi-timeframe analysis explained</a>.</p>
 
           <div className="bg-card/50 border border-border/50 rounded-xl p-6 my-6 font-mono text-sm">
             <p className="text-primary font-semibold mb-3">MTF Confluence Example — SOL LONG</p>
@@ -188,7 +188,7 @@ export default function Article() {
           <p>Backtest every strategy on 6-12 months of historical data before live trading. Paper trade for 20-30 signals. Only then deploy real capital at 0.5% risk and scale up as confidence grows. For day-trading-specific variations of these strategies see <a href="/blog/crypto-day-trading-strategies-2026" className="text-primary hover:underline">crypto day trading strategies 2026</a>, and for a broader look at the confluence engine behind TrendRider signals see <a href="/blog/ai-confidence-scoring-explained-2026" className="text-primary hover:underline">AI confidence scoring explained</a>.</p>
 
           <div className="mt-10 p-6 rounded-2xl border border-primary/20 bg-primary/5 text-center">
-            <p className="text-foreground font-medium mb-3">Get free AI altcoin signals across SOL, BNB, DOGE, OP with 12-point confidence scoring</p>
+            <p className="text-foreground font-medium mb-3">Get free AI altcoin signals across SOL, BNB, DOGE, OP with confidence scoring (1-10 scale) scoring</p>
             <a href="https://t.me/TrendRiderSignals" className="inline-block px-6 py-3 rounded-xl font-semibold text-sm" style={{ background: "linear-gradient(135deg, #00D4AA, #00B894)", color: "#0D1117" }}>
               Join TrendRider on Telegram &rarr;
             </a>

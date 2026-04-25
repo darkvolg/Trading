@@ -27,10 +27,11 @@ const PERIODS = ["allTime", "12m", "6m", "3m"] as const;
 type Period = (typeof PERIODS)[number];
 
 const PERIOD_DATA: Record<Period, PeriodData> = {
-  allTime: { roi: 14.49, winRate: 67.9, maxDD: 1.42, sqn: 3.45, trades: 112, pf: 2.12 },
-  "12m": { roi: 9.8, winRate: 69.2, maxDD: 1.18, sqn: 3.21, trades: 78, pf: 2.31 },
-  "6m": { roi: 5.1, winRate: 71.4, maxDD: 0.95, sqn: 2.87, trades: 42, pf: 2.48 },
-  "3m": { roi: 2.3, winRate: 68.5, maxDD: 0.82, sqn: 2.15, trades: 19, pf: 1.95 },
+  // Numbers below are illustrative; verified backtest + live stats are published on /live
+  allTime: { roi: 14.49, winRate: 53.0, maxDD: 4.5, sqn: 2.1, trades: 112, pf: 1.6 },
+  "12m": { roi: 9.8, winRate: 54.0, maxDD: 4.0, sqn: 2.0, trades: 78, pf: 1.55 },
+  "6m": { roi: 5.1, winRate: 55.0, maxDD: 3.5, sqn: 1.95, trades: 42, pf: 1.50 },
+  "3m": { roi: 2.3, winRate: 52.0, maxDD: 3.0, sqn: 1.85, trades: 19, pf: 1.45 },
 };
 
 const TR_POINTS = [
@@ -750,7 +751,7 @@ export function PerformanceDashboard({ t, visible, sectionRef }: PerformanceDash
 
           {/* Disclaimer */}
           <p className="text-center text-xs text-muted/60 mt-4 max-w-lg mx-auto leading-relaxed">
-            {t.perfCrashDisclaimer ?? "Based on backtest max drawdown of 1.42%. Actual results may vary. Past performance does not guarantee future results."}
+            {t.perfCrashDisclaimer ?? "Numbers above are illustrative. Verified backtest + live stats are published on /live. Past performance does not guarantee future results."}
           </p>
         </div>
 
@@ -794,7 +795,7 @@ export function PerformanceDashboard({ t, visible, sectionRef }: PerformanceDash
           >
             <div className="grid grid-cols-2 md:grid-cols-3 gap-4 mb-10">
               {[
-                { label: t.perfProfitFactor ?? "Profit Factor", value: "2.12", color: "#00D4AA" },
+                { label: t.perfProfitFactor ?? "Profit Factor", value: "1.6", color: "#00D4AA" },
                 { label: t.perfTotalTrades ?? "Total Trades", value: "112", color: "#E6EDF3" },
                 { label: t.perfAvgTrade ?? "Avg Trade", value: "+0.13%", color: "#00D4AA" },
                 { label: t.perfAvgDuration ?? "Avg Duration", value: "18h", color: "#E6EDF3" },

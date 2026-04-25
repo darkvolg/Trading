@@ -101,7 +101,7 @@ export default function Article() {
                 "name": "Are free crypto trading signals reliable?",
                 "acceptedAnswer": {
                   "@type": "Answer",
-                  "text": "It depends on the source. Many free signal channels are pump-and-dump schemes or have no verified track record. Look for signals backed by transparent backtest data, verifiable win rates, and consistent formatting. TrendRider provides free signals with full transparency: 67.9% verified win rate, 10,000+ backtested trades, and every historical signal available for audit."
+                  "text": "It depends on the source. Many free signal channels are pump-and-dump schemes or have no verified track record. Look for signals backed by transparent backtest data, verifiable win rates, and consistent formatting. TrendRider provides free signals with full transparency: documented WR (see /live) verified win rate, thousands of simulated trades, and every historical signal available for audit."
                 }
               }
             ]
@@ -206,7 +206,7 @@ export default function Article() {
           <p>A legitimate signal provider publishes all historical signals &mdash; winners and losers. If a channel only shows winning trades or deletes losing signals, run. TrendRider maintains a complete public record of every signal ever published, with exact entry/exit prices and timestamps.</p>
 
           <h3 className="text-lg font-semibold text-foreground mt-6 mb-2">Verified Backtest Data</h3>
-          <p>Claims like &ldquo;90% win rate&rdquo; mean nothing without verified data. Look for providers who share their <a href="/blog/backtesting-crypto-strategies-guide" className="text-primary hover:underline">backtest results</a> with specific metrics: total number of trades, win rate, profit factor, maximum drawdown, and SQN score. TrendRider&apos;s strategy has been backtested across 10,000+ trades with a verified 67.9% win rate and 1.42% maximum drawdown.</p>
+          <p>Claims like &ldquo;90% win rate&rdquo; mean nothing without verified data. Look for providers who share their <a href="/blog/backtesting-crypto-strategies-guide" className="text-primary hover:underline">backtest results</a> with specific metrics: total number of trades, win rate, profit factor, maximum drawdown, and SQN score. TrendRider&apos;s strategy has been backtested across thousands of simulated trades with a verified documented backtest win rate (current value on /live) and low maximum drawdown (see /live).</p>
 
           <h3 className="text-lg font-semibold text-foreground mt-6 mb-2">Consistent Signal Format</h3>
           <p>Professional signals follow a consistent, machine-readable format. This is important because tools like Cornix need to parse the signal automatically. Inconsistent formatting (&ldquo;buy ETH around 3400-ish&rdquo;) is a red flag that suggests manual, subjective analysis rather than a systematic approach.</p>
@@ -269,7 +269,7 @@ export default function Article() {
             <li>Reward to TP2: 3,620.00 - 3,420.50 = 199.50 points (5.8%) &mdash; R:R = 0.97:1</li>
             <li>Reward to TP3: 3,780.00 - 3,420.50 = 359.50 points (10.5%) &mdash; R:R = 1.75:1</li>
           </ul>
-          <p>The blended R:R across all three targets (with 40/30/30 scaling) is approximately 1.02:1. Combined with a 67.9% win rate, this produces a positive expected value on every trade. A common misconception is that you need a 2:1 or 3:1 R:R to be profitable &mdash; what actually matters is the <a href="/blog/understanding-win-rate-and-profit-factor" className="text-primary hover:underline">combination of win rate and profit factor</a>.</p>
+          <p>The blended R:R across all three targets (with 40/30/30 scaling) is approximately 1.02:1. Combined with a documented backtest win rate (current value on /live), this produces a positive expected value on every trade. A common misconception is that you need a 2:1 or 3:1 R:R to be profitable &mdash; what actually matters is the <a href="/blog/understanding-win-rate-and-profit-factor" className="text-primary hover:underline">combination of win rate and profit factor</a>.</p>
 
           <h2 className="text-xl font-semibold text-foreground mt-8 mb-3">Red Flags: Signals You Should Avoid</h2>
           <p>Not every signal is worth trading, even from reputable providers. Skip a signal if you see any of these warning signs:</p>
@@ -311,7 +311,7 @@ export default function Article() {
           </ol>
 
           <div className="mt-10 p-6 rounded-2xl border border-primary/20 bg-primary/5 text-center">
-            <p className="text-foreground font-medium mb-3">Get free signals with 67.9% win rate and full confidence scoring</p>
+            <p className="text-foreground font-medium mb-3">Get free signals with documented backtest win rate (current value on /live) and full confidence scoring</p>
             <a href="https://t.me/TrendRiderSignals" className="inline-block px-6 py-3 rounded-xl font-semibold text-sm" style={{ background: "linear-gradient(135deg, #00D4AA, #00B894)", color: "#0D1117" }}>
               Join TrendRider on Telegram &rarr;
             </a>

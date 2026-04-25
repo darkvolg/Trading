@@ -71,16 +71,16 @@ export default function Article() {
           <p>A signal service claiming &ldquo;90% win rate&rdquo; sounds impressive — until you realize their average win is $10 and their average loss is $100. Win rate alone is meaningless without context. Here&apos;s what you should actually look at.</p>
 
           <h2 className="text-xl font-semibold text-foreground mt-8 mb-3">Win Rate: The Starting Point</h2>
-          <p>Win rate is simply the percentage of trades that close in profit. TrendRider&apos;s 67.9% win rate means that roughly 7 out of 10 trades hit at least one take-profit target. But this number only tells part of the story.</p>
+          <p>Win rate is simply the percentage of trades that close in profit. TrendRider&apos;s documented backtest win rate (current value on /live) means that roughly 7 out of 10 trades hit at least one take-profit target. But this number only tells part of the story.</p>
 
           <h2 className="text-xl font-semibold text-foreground mt-8 mb-3">Profit Factor: The Real Metric</h2>
-          <p>Profit factor = gross profit / gross loss. A profit factor of 1.0 means you&apos;re breaking even. Anything above 2.0 is considered excellent. TrendRider&apos;s profit factor of <strong className="text-primary">2.12x</strong> means for every $1 lost, we make $2.12 in profit — a result of the <a href="/blog/best-crypto-trading-strategies-2026" className="text-primary hover:underline">67.9% win rate trading strategies</a> layered into every signal.</p>
+          <p>Profit factor = gross profit / gross loss. A profit factor of 1.0 means you&apos;re breaking even. Anything above 2.0 is considered excellent. TrendRider&apos;s profit factor (see /live) means for every $1 lost, we make more than $1 in profit — a result of the <a href="/blog/best-crypto-trading-strategies-2026" className="text-primary hover:underline">best crypto trading strategies</a> layered into every signal.</p>
 
           <h2 className="text-xl font-semibold text-foreground mt-8 mb-3">Maximum Drawdown: Risk Control</h2>
-          <p>Drawdown measures the largest peak-to-trough decline in your account. Most retail traders experience 20-40% drawdowns. TrendRider&apos;s max drawdown of <strong className="text-primary">1.42%</strong> is exceptionally low because of strict 6% stop-loss per trade and never risking more than 2% of portfolio per position.</p>
+          <p>Drawdown measures the largest peak-to-trough decline in your account. Most retail traders experience 20-40% drawdowns. TrendRider&apos;s max drawdown of <strong className="text-primary">low single-digit (see /live)</strong> is exceptionally low because of strict 6% stop-loss per trade and never risking more than 2% of portfolio per position.</p>
 
           <h2 className="text-xl font-semibold text-foreground mt-8 mb-3">SQN Score: System Quality</h2>
-          <p>The System Quality Number (SQN), developed by Van Tharp, rates trading systems on a scale. Scores above 2.5 are &ldquo;good,&rdquo; above 3.0 are &ldquo;excellent.&rdquo; TrendRider&apos;s SQN of <strong className="text-primary">3.45</strong> places it in the &ldquo;excellent&rdquo; category.</p>
+          <p>The System Quality Number (SQN), developed by Van Tharp, rates trading systems on a scale. Scores above 2.5 are &ldquo;good,&rdquo; above 3.0 are &ldquo;excellent.&rdquo; TrendRider&apos;s SQN of <strong className="text-primary">see /live</strong> places it in the &ldquo;excellent&rdquo; category.</p>
 
           <h2 className="text-xl font-semibold text-foreground mt-8 mb-3">The Complete Picture</h2>
           <div className="overflow-x-auto">
@@ -93,10 +93,10 @@ export default function Article() {
                 </tr>
               </thead>
               <tbody>
-                <tr className="border-b border-border/20"><td className="py-3">Win Rate</td><td className="text-center">45-55%</td><td className="text-center text-primary font-semibold">67.9%</td></tr>
-                <tr className="border-b border-border/20"><td className="py-3">Profit Factor</td><td className="text-center">1.0-1.5x</td><td className="text-center text-primary font-semibold">2.12x</td></tr>
-                <tr className="border-b border-border/20"><td className="py-3">Max Drawdown</td><td className="text-center">15-30%</td><td className="text-center text-primary font-semibold">1.42%</td></tr>
-                <tr><td className="py-3">SQN Score</td><td className="text-center">1.5-2.5</td><td className="text-center text-primary font-semibold">3.45</td></tr>
+                <tr className="border-b border-border/20"><td className="py-3">Win Rate</td><td className="text-center">45-55%</td><td className="text-center text-primary font-semibold">documented WR (see /live)</td></tr>
+                <tr className="border-b border-border/20"><td className="py-3">Profit Factor</td><td className="text-center">1.0-1.5x</td><td className="text-center text-primary font-semibold">see /live</td></tr>
+                <tr className="border-b border-border/20"><td className="py-3">Max Drawdown</td><td className="text-center">15-30%</td><td className="text-center text-primary font-semibold">low single-digit (see /live)</td></tr>
+                <tr><td className="py-3">SQN Score</td><td className="text-center">1.5-2.5</td><td className="text-center text-primary font-semibold">see /live</td></tr>
               </tbody>
             </table>
           </div>
@@ -118,7 +118,7 @@ export default function Article() {
             </a>
             <a href="/blog/risk-management-6-percent-stop-loss" className="p-4 rounded-xl border border-border/50 bg-card/30 hover:border-primary/30 hover:bg-card/50 transition-all">
               <span className="text-xs text-primary font-mono uppercase tracking-widest">Risk Management</span>
-              <p className="text-sm font-medium text-foreground mt-2">The 6% Stop-Loss Rule: How We Keep Drawdown at 1.42%</p>
+              <p className="text-sm font-medium text-foreground mt-2">The 6% Stop-Loss Rule: How We Keep Drawdown at low single-digit (see /live)</p>
             </a>
             <a href="/blog/position-sizing-and-risk-per-trade" className="p-4 rounded-xl border border-border/50 bg-card/30 hover:border-primary/30 hover:bg-card/50 transition-all">
               <span className="text-xs text-primary font-mono uppercase tracking-widest">Risk Management</span>

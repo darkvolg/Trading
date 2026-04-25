@@ -2,7 +2,7 @@ import type { Metadata } from "next";
 
 export const metadata: Metadata = {
   title: "How to Backtest a Crypto Trading Strategy: Complete Guide 2026 | TrendRider",
-  description: "Backtest crypto strategies the right way. Walk-forward analysis, overfitting traps to avoid, and how to read results. Real examples from 10,000+ trades.",
+  description: "Backtest crypto strategies the right way. Walk-forward analysis, overfitting traps to avoid, and how to read results. Real examples from thousands of simulated trades.",
   alternates: {
     canonical: "https://trendrider.net/blog/how-to-backtest-crypto-trading-strategy-2026",
   },
@@ -93,7 +93,7 @@ export default function Article() {
                 "name": "What win rate should I expect from a good backtest?",
                 "acceptedAnswer": {
                   "@type": "Answer",
-                  "text": "A realistic win rate for a profitable crypto strategy is 45-70%. Trend-following strategies typically have 35-50% win rates with large winners, while mean-reversion strategies can achieve 55-70% win rates with smaller individual gains. Be skeptical of any backtest showing above 80% win rate — it's likely overfit. TrendRider's system achieves 67.9% with proper walk-forward validation."
+                  "text": "A realistic win rate for a profitable crypto strategy is 45-70%. Trend-following strategies typically have 35-50% win rates with large winners, while mean-reversion strategies can achieve 55-70% win rates with smaller individual gains. Be skeptical of any backtest showing above 80% win rate — it's likely overfit. TrendRider's system achieves documented WR (see /live) with proper walk-forward validation."
                 }
               },
               {
@@ -121,7 +121,7 @@ export default function Article() {
         <div className="space-y-6 text-muted leading-relaxed">
           <p>You have a trading idea. Maybe it&apos;s an RSI reversal strategy, an EMA crossover system, or a multi-indicator scoring approach. Before you risk a single dollar, you need to answer one question: <strong className="text-foreground">does this actually work?</strong></p>
           <p>Backtesting is how you answer that question. It&apos;s the process of running your strategy against historical market data to see how it would have performed in the past. Done correctly, backtesting tells you whether your edge is real. Done poorly, it gives you false confidence that leads to real losses.</p>
-          <p>This guide covers the complete backtesting process for crypto strategies in 2026 &mdash; from selecting data and choosing tools, through avoiding the most common pitfalls, to interpreting results and deciding whether a strategy is ready for live trading. We&apos;ll use real examples from TrendRider&apos;s development process, where backtesting across <strong className="text-foreground">10,000+ trades</strong> validated a system with a 67.9% win rate and 1.42% maximum drawdown.</p>
+          <p>This guide covers the complete backtesting process for crypto strategies in 2026 &mdash; from selecting data and choosing tools, through avoiding the most common pitfalls, to interpreting results and deciding whether a strategy is ready for live trading. We&apos;ll use real examples from TrendRider&apos;s development process, where backtesting across <strong className="text-foreground">thousands of simulated trades</strong> validated a system with a documented backtest win rate (current value on /live) and low maximum drawdown (see /live).</p>
 
           {/* --- Section 1 --- */}
           <h2 className="text-xl font-semibold text-foreground mt-8 mb-3">What Is Backtesting and Why It Matters</h2>
@@ -248,7 +248,7 @@ export default function Article() {
               </tbody>
             </table>
           </div>
-          <p>TrendRider&apos;s final system scores: <strong className="text-foreground">67.9% win rate, 2.12 profit factor, 1.42% max drawdown, 3.45 SQN</strong>. These numbers weren&apos;t achieved on the first backtest &mdash; they&apos;re the result of iterative refinement over hundreds of test runs.</p>
+          <p>TrendRider&apos;s final system scores: <strong className="text-foreground">documented backtest stats published on /live with each strategy version, solid SQN</strong>. These numbers weren&apos;t achieved on the first backtest &mdash; they&apos;re the result of iterative refinement over hundreds of test runs.</p>
 
           {/* --- Section 6 --- */}
           <h2 className="text-xl font-semibold text-foreground mt-8 mb-3">Step 5: Avoid the Overfitting Trap</h2>
@@ -373,12 +373,12 @@ export default function Article() {
             <li><strong className="text-foreground">Paper trading</strong> &mdash; 4 weeks of live paper trading on Bybit. Results were within 15% of backtest metrics.</li>
             <li><strong className="text-foreground">Live deployment</strong> &mdash; Gradual capital allocation starting with 10% of target size, scaling up over 4 weeks.</li>
           </ol>
-          <p>Total development time: 3 months. Total backtest iterations: 400+. Final result: <strong className="text-foreground">67.9% win rate, 2.12 profit factor, 1.42% max drawdown, 3.45 SQN</strong>.</p>
+          <p>Total development time: 3 months. Total backtest iterations: 400+. Final result: <strong className="text-foreground">documented backtest stats published on /live with each strategy version, solid SQN</strong>.</p>
 
           {/* --- CTA --- */}
           <div className="mt-10 p-6 rounded-2xl border border-primary/20 bg-primary/5 text-center">
             <p className="text-foreground font-medium mb-2">Want to see a backtested strategy in action?</p>
-            <p className="text-sm mb-4">TrendRider&apos;s strategy was validated across 10,000+ trades with walk-forward analysis. Get free signals from our backtested system on Telegram.</p>
+            <p className="text-sm mb-4">TrendRider&apos;s strategy was validated across thousands of simulated trades with walk-forward analysis. Get free signals from our backtested system on Telegram.</p>
             <a href="https://t.me/TrendRiderFree" className="inline-block px-6 py-3 rounded-xl font-semibold text-sm" style={{ background: "linear-gradient(135deg, #00D4AA, #00B894)", color: "#0D1117" }}>
               Join @TrendRiderFree &rarr;
             </a>

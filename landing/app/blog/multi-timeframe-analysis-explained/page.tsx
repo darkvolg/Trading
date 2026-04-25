@@ -2,7 +2,7 @@ import type { Metadata } from "next";
 
 export const metadata: Metadata = {
   title: "Multi-Timeframe Analysis: Filter 80% False Signals",
-  description: "Combine 5m, 15m, 1h & 4h charts to eliminate bad trades. The exact confluence method behind 67.9% win rate — step-by-step with chart examples.",
+  description: "Combine 5m, 15m, 1h & 4h charts to eliminate bad trades. The exact confluence method behind documented backtest win rate (current value on /live) — step-by-step with chart examples.",
   alternates: {
     canonical: "https://trendrider.net/blog/multi-timeframe-analysis-explained",
   },
@@ -18,7 +18,7 @@ export default function Article() {
             "@context": "https://schema.org",
             "@type": "Article",
             "headline": "Multi-Timeframe Analysis: Filter 80% False Signals",
-            "description": "Combine 5m, 15m, 1h & 4h charts to eliminate bad trades. The exact confluence method behind 67.9% win rate — step-by-step with chart examples.",
+            "description": "Combine 5m, 15m, 1h & 4h charts to eliminate bad trades. The exact confluence method behind documented backtest win rate (current value on /live) — step-by-step with chart examples.",
             "author": {
               "@type": "Person",
               "name": "TrendRider Team",
@@ -110,7 +110,7 @@ export default function Article() {
 
           <h2 className="text-xl font-semibold text-foreground mt-8 mb-3">How TrendRider Implements MTF Analysis</h2>
           <p>TrendRider&apos;s algorithm doesn&apos;t just check one chart and fire a signal. It runs 15+ technical indicators across all four timeframes simultaneously, assigning weighted scores to each layer. A signal is only generated when the composite score crosses a threshold that represents genuine multi-timeframe alignment.</p>
-          <p>This is why TrendRider&apos;s false signal rate is dramatically lower than single-timeframe systems. Our 67.9% win rate isn&apos;t achieved by taking more trades &mdash; it&apos;s achieved by filtering out the bad ones before they ever reach your Telegram.</p>
+          <p>This is why TrendRider&apos;s false signal rate is dramatically lower than single-timeframe systems. Our documented backtest win rate (current value on /live) isn&apos;t achieved by taking more trades &mdash; it&apos;s achieved by filtering out the bad ones before they ever reach your Telegram.</p>
           <p>Additionally, the algorithm adapts its timeframe weighting based on market regime. In strong trending conditions, higher timeframes carry more weight. In choppy, ranging markets, shorter timeframes become more influential for quick mean-reversion setups.</p>
 
           <h2 className="text-xl font-semibold text-foreground mt-8 mb-3">Getting Started with MTF Analysis</h2>

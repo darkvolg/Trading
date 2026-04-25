@@ -1,8 +1,8 @@
 import type { Metadata } from "next";
 
 export const metadata: Metadata = {
-  title: "EMA Crossover Strategy Crypto 2026 — 67.9% Win Rate",
-  description: "Step-by-step EMA crossover strategy with exact entry, exit & stop-loss rules. RSI + volume filters boost win rate to 67.9%. Free bot config included.",
+  title: "EMA Crossover Strategy Crypto 2026 — Documented Win Rate",
+  description: "Step-by-step EMA crossover strategy with exact entry, exit & stop-loss rules. RSI + volume filters boost win rate to documented WR (see /live). Free bot config included.",
   alternates: {
     canonical: "https://trendrider.net/blog/ema-crossover-strategy-crypto-guide",
   },
@@ -17,8 +17,8 @@ export default function Article() {
           __html: JSON.stringify({
             "@context": "https://schema.org",
             "@type": "Article",
-            "headline": "EMA Crossover Strategy Crypto 2026 — 67.9% Win Rate",
-            "description": "Step-by-step EMA crossover strategy with exact entry, exit & stop-loss rules. RSI + volume filters boost win rate to 67.9%. Free bot config included.",
+            "headline": "EMA Crossover Strategy Crypto 2026 — Documented Win Rate",
+            "description": "Step-by-step EMA crossover strategy with exact entry, exit & stop-loss rules. RSI + volume filters boost win rate to documented WR (see /live). Free bot config included.",
             "author": {
               "@type": "Person",
               "name": "TrendRider Team",
@@ -52,7 +52,7 @@ export default function Article() {
             "itemListElement": [
               { "@type": "ListItem", "position": 1, "name": "Home", "item": "https://trendrider.net" },
               { "@type": "ListItem", "position": 2, "name": "Blog", "item": "https://trendrider.net/blog" },
-              { "@type": "ListItem", "position": 3, "name": "EMA Crossover Strategy Crypto: 67.9% Win Rate" }
+              { "@type": "ListItem", "position": 3, "name": "EMA Crossover Strategy Crypto: Documented Win Rate" }
             ]
           })
         }}
@@ -161,7 +161,7 @@ export default function Article() {
 
           <h2 className="text-xl font-semibold text-foreground mt-8 mb-3">TrendRider&apos;s Multi-Indicator Approach</h2>
           <p>TrendRider takes the EMA crossover foundation and builds a comprehensive signal system on top of it. Rather than relying on a single crossover, our algorithm combines 12 indicators across 4 timeframes to generate each signal. The EMA crossover provides the base direction, MACD confirms momentum, RSI filters overbought/oversold extremes, ADX validates trend strength, and <a href="/blog/fear-and-greed-index-crypto-trading" className="text-primary hover:underline">on-chain sentiment data</a> adds a macro context layer.</p>
-          <p>The result is a system that achieves a 67.9% win rate and 3.45 <a href="/blog/what-is-sqn-score-system-quality-number" className="text-primary hover:underline">SQN score</a> &mdash; significantly above what a standalone EMA crossover strategy can achieve. Every signal comes with precise entry, stop-loss, and take-profit levels, delivered to Telegram for manual execution or auto-trading through <a href="/blog/cornix-auto-trade-setup-guide" className="text-primary hover:underline">Cornix</a>.</p>
+          <p>The result is a system that achieves a documented backtest win rate (current value on /live) and see /live <a href="/blog/what-is-sqn-score-system-quality-number" className="text-primary hover:underline">SQN score</a> &mdash; significantly above what a standalone EMA crossover strategy can achieve. Every signal comes with precise entry, stop-loss, and take-profit levels, delivered to Telegram for manual execution or auto-trading through <a href="/blog/cornix-auto-trade-setup-guide" className="text-primary hover:underline">Cornix</a>.</p>
           <p>If you&apos;re implementing your own EMA crossover strategy, the key takeaway is this: the crossover itself is just the starting point. The real edge comes from the filters, the multi-timeframe confirmation, and the disciplined risk management that wraps around it.</p>
 
           <div className="mt-10 p-6 rounded-2xl border border-primary/20 bg-primary/5 text-center">

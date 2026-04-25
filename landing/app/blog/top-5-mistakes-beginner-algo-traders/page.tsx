@@ -319,7 +319,7 @@ export default function Article() {
           {/* --- CTA --- */}
           <div className="mt-10 p-6 rounded-2xl border border-primary/20 bg-primary/5 text-center">
             <p className="text-foreground font-medium mb-2">Skip the learning curve with a proven system</p>
-            <p className="text-sm mb-4">TrendRider&apos;s strategy avoids all 5 mistakes: walk-forward validated, fee-adjusted, risk-managed, and paper-tested across 10,000+ trades. Get free signals on Telegram.</p>
+            <p className="text-sm mb-4">TrendRider&apos;s strategy avoids all 5 mistakes: walk-forward validated, fee-adjusted, risk-managed, and paper-tested across thousands of simulated trades. Get free signals on Telegram.</p>
             <a href="https://t.me/TrendRiderFree" className="inline-block px-6 py-3 rounded-xl font-semibold text-sm" style={{ background: "linear-gradient(135deg, #00D4AA, #00B894)", color: "#0D1117" }}>
               Join @TrendRiderFree &rarr;
             </a>

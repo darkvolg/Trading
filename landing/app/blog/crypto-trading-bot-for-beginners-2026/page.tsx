@@ -85,7 +85,7 @@ export default function Article() {
                 "name": "Can I lose money with a crypto trading bot?",
                 "acceptedAnswer": {
                   "@type": "Answer",
-                  "text": "Yes, trading bots can lose money — no system guarantees profit. However, a well-configured bot with proper risk management (stop losses, position sizing, drawdown limits) will lose far less than emotional manual trading. The key is using a backtested strategy with verified performance data. TrendRider, for example, maintains a maximum drawdown of just 1.42% across 10,000+ backtested trades."
+                  "text": "Yes, trading bots can lose money — no system guarantees profit. However, a well-configured bot with proper risk management (stop losses, position sizing, drawdown limits) will lose far less than emotional manual trading. The key is using a backtested strategy with verified performance data. TrendRider, for example, maintains a maximum drawdown of just low single-digit (see /live) across thousands of simulated trades."
                 }
               },
               {
@@ -120,7 +120,7 @@ export default function Article() {
 
         <div className="space-y-6 text-muted leading-relaxed">
           <p>You&apos;ve probably heard that 80% of crypto traders lose money. And it&apos;s true &mdash; but not because trading itself is impossible. Most traders lose because they make emotional decisions: panic selling during dips, FOMO buying at the top, and overtrading during sideways markets. A crypto trading bot eliminates all of that. It follows your strategy 24/7, never gets tired, and never lets fear or greed cloud its judgment.</p>
-          <p>If you&apos;re a complete beginner wondering whether a trading bot is right for you, this guide covers everything: what bots actually do, how they work, what they cost, and how to set one up for free using Freqtrade &mdash; the same open-source framework that powers TrendRider&apos;s 67.9% win rate strategy.</p>
+          <p>If you&apos;re a complete beginner wondering whether a trading bot is right for you, this guide covers everything: what bots actually do, how they work, what they cost, and how to set one up for free using Freqtrade &mdash; the same open-source framework that powers TrendRider&apos;s documented backtest win rate (current value on /live) strategy.</p>
 
           <h2 className="text-xl font-semibold text-foreground mt-8 mb-3">What Is a Crypto Trading Bot?</h2>
           <p>A crypto trading bot is software that automatically buys and sells cryptocurrency based on predefined rules. Instead of you sitting in front of charts for 16 hours a day, the bot monitors prices, analyzes indicators, and executes trades when your conditions are met.</p>
@@ -222,7 +222,7 @@ freqtrade backtesting --strategy YourStrategy --timerange 20250101-20260401`}</c
             <li><strong className="text-foreground">Win rate</strong> &mdash; Percentage of profitable trades. Anything above 55% is decent for a beginner strategy</li>
             <li><strong className="text-foreground">Max drawdown</strong> &mdash; The largest peak-to-trough decline. Keep this under 10% for a conservative approach</li>
             <li><strong className="text-foreground">Profit factor</strong> &mdash; Total profits divided by total losses. Above 1.5 is good; above 2.0 is excellent</li>
-            <li><strong className="text-foreground">SQN (System Quality Number)</strong> &mdash; A composite score. Above 2.0 is &ldquo;Good,&rdquo; above 3.0 is &ldquo;Excellent.&rdquo; TrendRider scores 3.45</li>
+            <li><strong className="text-foreground">SQN (System Quality Number)</strong> &mdash; A composite score. Above 2.0 is &ldquo;Good,&rdquo; above 3.0 is &ldquo;Excellent.&rdquo; TrendRider scores see /live</li>
           </ul>
           <p>For a deeper dive into backtest interpretation, read our <a href="/blog/how-to-backtest-crypto-trading-strategy-2026" className="text-primary hover:underline">complete backtesting guide</a>.</p>
 
@@ -251,7 +251,7 @@ freqtrade backtesting --strategy YourStrategy --timerange 20250101-20260401`}</c
             <li><strong className="text-foreground">Stop loss</strong> &mdash; The exit point if the trade goes against you</li>
             <li><strong className="text-foreground">Confidence score</strong> &mdash; How many indicators align (out of 12)</li>
           </ul>
-          <p>You can execute these signals manually or use Cornix to auto-execute them on your Bybit account. The whole setup takes about 10 minutes, and you&apos;re trading with a strategy that has a verified 67.9% win rate and 1.42% maximum drawdown across 10,000+ backtested trades.</p>
+          <p>You can execute these signals manually or use Cornix to auto-execute them on your Bybit account. The whole setup takes about 10 minutes, and you&apos;re trading with a strategy that has a verified documented backtest win rate (current value on /live) and low maximum drawdown (see /live) across thousands of simulated trades.</p>
 
           <h2 className="text-xl font-semibold text-foreground mt-8 mb-3">Common Mistakes Beginners Make with Trading Bots</h2>
           <p>After helping hundreds of traders get started with automated trading, we see the same mistakes repeatedly. Avoid these and you&apos;re already ahead of 90% of beginners.</p>
@@ -279,7 +279,7 @@ freqtrade backtesting --strategy YourStrategy --timerange 20250101-20260401`}</c
             <li><strong className="text-foreground">Months 4&ndash;6</strong> &mdash; Refine your strategy based on live data. Gradually increase position sizes. Target: 5&ndash;10% monthly with drawdown under 5%</li>
             <li><strong className="text-foreground">After 6 months</strong> &mdash; You should have a stable system with clear metrics. A good benchmark: 55&ndash;65% win rate, profit factor above 1.5, max drawdown under 5%</li>
           </ul>
-          <p>For comparison, TrendRider&apos;s production strategy achieves a 67.9% win rate with an SQN of 3.45 and 1.42% maximum drawdown &mdash; but this is after years of development, thousands of backtest iterations, and continuous optimization across multiple market cycles. Don&apos;t expect to match that on day one.</p>
+          <p>For comparison, TrendRider&apos;s production strategy achieves a documented backtest win rate (current value on /live) with an solid SQN (see /live) and low maximum drawdown (see /live) &mdash; but this is after years of development, thousands of backtest iterations, and continuous optimization across multiple market cycles. Don&apos;t expect to match that on day one.</p>
 
           <h2 className="text-xl font-semibold text-foreground mt-8 mb-3">How Much Does a Crypto Trading Bot Cost?</h2>
           <p>Costs vary dramatically depending on your approach:</p>
@@ -311,7 +311,7 @@ freqtrade backtesting --strategy YourStrategy --timerange 20250101-20260401`}</c
           <p>Either way, you&apos;re making a smart decision. Algorithmic trading is the future of crypto &mdash; the sooner you start, the more experience you accumulate, and experience compounds just like returns.</p>
 
           <div className="mt-10 p-6 rounded-2xl border border-primary/20 bg-primary/5 text-center">
-            <p className="text-foreground font-medium mb-3">Start with free signals from a bot that wins 67.9% of trades</p>
+            <p className="text-foreground font-medium mb-3">Start with free signals from a bot that wins documented WR (see /live) of trades</p>
             <a href="https://t.me/TrendRiderSignals" className="inline-block px-6 py-3 rounded-xl font-semibold text-sm" style={{ background: "linear-gradient(135deg, #00D4AA, #00B894)", color: "#0D1117" }}>
               Join TrendRider on Telegram &rarr;
             </a>

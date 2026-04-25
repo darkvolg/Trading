@@ -101,7 +101,7 @@ export default function Article() {
                 "name": "What is a good SQN score for a crypto trading strategy?",
                 "acceptedAnswer": {
                   "@type": "Answer",
-                  "text": "According to Dr. Van Tharp's scale, an SQN between 2.0 and 2.99 is 'Good', 3.0 to 5.0 is 'Excellent', and above 5.0 is 'Superb' but should be examined for overfitting. A score below 1.6 means the system is poor. TrendRider's strategy achieves an SQN of 3.45, rated 'Excellent', validated across 10,000+ trades."
+                  "text": "According to Dr. Van Tharp's scale, an SQN between 2.0 and 2.99 is 'Good', 3.0 to 5.0 is 'Excellent', and above 5.0 is 'Superb' but should be examined for overfitting. A score below 1.6 means the system is poor. TrendRider's strategy achieves an solid SQN (see /live), rated 'Excellent', validated across thousands of simulated trades."
                 }
               }
             ]
@@ -230,15 +230,15 @@ export default function Article() {
           <p>Theory is great, but does it work in practice? Here&apos;s how we validated our own strategy against every method described above:</p>
           <div className="p-5 rounded-xl bg-card/50 border border-border/50 my-4 space-y-3">
             <div className="flex justify-between text-sm"><span>Walk-Forward Efficiency</span><span className="text-foreground font-medium">0.72 (72%)</span></div>
-            <div className="flex justify-between text-sm"><span>Out-of-Sample Win Rate</span><span className="text-foreground font-medium">67.9%</span></div>
-            <div className="flex justify-between text-sm"><span>Monte Carlo 95th %ile Max DD</span><span className="text-foreground font-medium">2.1% (vs 1.42% backtest)</span></div>
+            <div className="flex justify-between text-sm"><span>Out-of-Sample Win Rate</span><span className="text-foreground font-medium">documented WR (see /live)</span></div>
+            <div className="flex justify-between text-sm"><span>Monte Carlo 95th %ile Max DD</span><span className="text-foreground font-medium">2.1% (vs low single-digit (see /live) backtest)</span></div>
             <div className="flex justify-between text-sm"><span>Core Parameters</span><span className="text-foreground font-medium">5</span></div>
-            <div className="flex justify-between text-sm"><span>SQN Score</span><span className="text-foreground font-medium">3.45 (&ldquo;Excellent&rdquo;)</span></div>
+            <div className="flex justify-between text-sm"><span>SQN Score</span><span className="text-foreground font-medium">see /live (&ldquo;Excellent&rdquo;)</span></div>
             <div className="flex justify-between text-sm"><span>Timeframes Validated</span><span className="text-foreground font-medium">1h, 4h, Daily</span></div>
             <div className="flex justify-between text-sm"><span>Total Validated Trades</span><span className="text-foreground font-medium">10,000+</span></div>
           </div>
           <p>Our strategy uses a multi-indicator scoring system with EMA crossovers, RSI momentum, MACD trend confirmation, Bollinger Band volatility, and volume validation. With only 5 core parameters and over 10,000 backtested trades across multiple years and market conditions, the risk of overfitting is minimal.</p>
-          <p>The walk-forward efficiency of 72% means the out-of-sample performance retains nearly three-quarters of the in-sample returns &mdash; well above the 50% threshold that indicates robustness. The Monte Carlo worst-case drawdown (2.1%) is only 1.5x the backtest drawdown (1.42%), confirming stability under randomization. See how this compares to other <a href="/blog/best-crypto-trading-strategies-2026" className="text-primary hover:underline">crypto trading strategies for 2026</a>.</p>
+          <p>The walk-forward efficiency of 72% means the out-of-sample performance retains nearly three-quarters of the in-sample returns &mdash; well above the 50% threshold that indicates robustness. The Monte Carlo worst-case drawdown (2.1%) is only 1.5x the backtest drawdown (low single-digit (see /live)), confirming stability under randomization. See how this compares to other <a href="/blog/best-crypto-trading-strategies-2026" className="text-primary hover:underline">crypto trading strategies for 2026</a>.</p>
 
           <h2 className="text-2xl font-semibold text-foreground mt-12 mb-4">Pre-Live Checklist: Is Your Strategy Ready?</h2>
           <p>Before risking real capital, run through this checklist. Every item should be checked:</p>
@@ -272,11 +272,11 @@ export default function Article() {
           <p>Monte Carlo doesn&apos;t prevent overfitting directly, but it reveals strategy fragility. By randomizing trade order and applying price variations thousands of times, it shows the range of possible outcomes. If your strategy collapses under minor randomization, it&apos;s likely overfit.</p>
 
           <h3 className="text-lg font-semibold text-foreground mt-6 mb-2">What is a good SQN score for a crypto trading strategy?</h3>
-          <p>An SQN of 2.0&ndash;2.99 is &ldquo;Good,&rdquo; 3.0&ndash;5.0 is &ldquo;Excellent,&rdquo; and above 5.0 is &ldquo;Superb&rdquo; but should be examined for overfitting. Scores above 7.0 are suspicious. TrendRider achieves 3.45 (&ldquo;Excellent&rdquo;) across 10,000+ validated trades.</p>
+          <p>An SQN of 2.0&ndash;2.99 is &ldquo;Good,&rdquo; 3.0&ndash;5.0 is &ldquo;Excellent,&rdquo; and above 5.0 is &ldquo;Superb&rdquo; but should be examined for overfitting. Scores above 7.0 are suspicious. TrendRider achieves see /live (&ldquo;Excellent&rdquo;) across 10,000+ validated trades.</p>
 
           <div className="mt-10 p-6 rounded-2xl border border-primary/20 bg-primary/5 text-center">
             <p className="text-foreground font-medium mb-2">Want a strategy that passed all 7 overfitting tests?</p>
-            <p className="text-sm mb-4">TrendRider delivers 67.9% win rate with SQN 3.45 &mdash; validated on 10,000+ trades across multiple market conditions.</p>
+            <p className="text-sm mb-4">TrendRider delivers documented backtest win rate (current value on /live) with SQN see /live &mdash; validated on thousands of simulated trades across multiple market conditions.</p>
             <a href="https://t.me/TrendRiderSignals" className="inline-block px-6 py-3 rounded-xl font-semibold text-sm" style={{ background: "linear-gradient(135deg, #00D4AA, #00B894)", color: "#0D1117" }}>
               Join TrendRider on Telegram &rarr;
             </a>

@@ -2,7 +2,7 @@ import type { Metadata } from "next";
 
 export const metadata: Metadata = {
   title: "How to Build a Profitable Crypto Trading System in 2026 [Step-by-Step]",
-  description: "7-step framework to build a profitable crypto system. From edge definition to going live. Real result: 67.9% win rate, 1.42% max drawdown.",
+  description: "7-step framework to build a profitable crypto system. From edge definition to going live. Real result: documented backtest win rate (current value on /live), low max drawdown (see /live).",
   alternates: {
     canonical: "https://trendrider.net/blog/building-profitable-crypto-trading-system-2026",
   },
@@ -89,7 +89,7 @@ export default function Article() {
 
         <div className="space-y-6 text-muted leading-relaxed">
           <p>Most crypto traders lose money. That is not opinion &mdash; it is a statistical fact confirmed by every exchange that publishes trader performance data. Across perpetual futures platforms, 70&ndash;80% of retail accounts are unprofitable over any 90-day window. The traders who do make money consistently share one thing in common: they treat trading as a system, not a series of bets.</p>
-          <p>A profitable trading system is not a single indicator or a secret pattern. It is a complete framework &mdash; from edge identification to risk management to live execution &mdash; where every component is defined, tested, and measurable. In this guide, we walk through the exact 7-step process we used to build TrendRider&apos;s algorithm, which currently runs at a <strong className="text-foreground">67.9% win rate</strong>, <strong className="text-foreground">1.42% maximum drawdown</strong>, and a <strong className="text-foreground">2.12x profit factor</strong> across 10,000+ backtested trades.</p>
+          <p>A profitable trading system is not a single indicator or a secret pattern. It is a complete framework &mdash; from edge identification to risk management to live execution &mdash; where every component is defined, tested, and measurable. In this guide, we walk through the exact 7-step process we used to build TrendRider&apos;s algorithm, which currently runs at a <strong className="text-foreground">documented backtest win rate (current value on /live)</strong>, <strong className="text-foreground">low maximum drawdown (see /live)</strong>, and a <strong className="text-foreground">positive profit factor (see /live)</strong> across thousands of simulated trades.</p>
           <p>Whether you are building your first bot or refining an existing strategy, this framework gives you a repeatable path from idea to live execution.</p>
 
           {/* Step 1 */}
@@ -166,16 +166,16 @@ export default function Article() {
                 </tr>
               </thead>
               <tbody className="text-muted">
-                <tr className="border-b border-border/20"><td className="py-2 pr-4">Win Rate</td><td className="py-2 pr-4">71.2%</td><td className="py-2">67.9%</td></tr>
-                <tr className="border-b border-border/20"><td className="py-2 pr-4">Profit Factor</td><td className="py-2 pr-4">2.38x</td><td className="py-2">2.12x</td></tr>
-                <tr className="border-b border-border/20"><td className="py-2 pr-4">Max Drawdown</td><td className="py-2 pr-4">1.18%</td><td className="py-2">1.42%</td></tr>
-                <tr className="border-b border-border/20"><td className="py-2 pr-4">SQN Score</td><td className="py-2 pr-4">3.81</td><td className="py-2">3.45</td></tr>
+                <tr className="border-b border-border/20"><td className="py-2 pr-4">Win Rate</td><td className="py-2 pr-4">71.2%</td><td className="py-2">documented WR (see /live)</td></tr>
+                <tr className="border-b border-border/20"><td className="py-2 pr-4">Profit Factor</td><td className="py-2 pr-4">2.38x</td><td className="py-2">see /live</td></tr>
+                <tr className="border-b border-border/20"><td className="py-2 pr-4">Max Drawdown</td><td className="py-2 pr-4">1.18%</td><td className="py-2">low single-digit (see /live)</td></tr>
+                <tr className="border-b border-border/20"><td className="py-2 pr-4">SQN Score</td><td className="py-2 pr-4">3.81</td><td className="py-2">see /live</td></tr>
                 <tr><td className="py-2 pr-4">Total Trades</td><td className="py-2 pr-4">6,200+</td><td className="py-2">4,100+</td></tr>
               </tbody>
             </table>
           </div>
           <p>Notice the modest performance degradation between in-sample and out-of-sample &mdash; this is healthy. A system that performs identically in both is likely overfitted. A 3&ndash;5% win rate drop and a slight increase in drawdown is what you want to see. It means your edge is real, not a statistical artifact.</p>
-          <p>We use <a href="/blog/what-is-sqn-score-system-quality-number" className="text-primary hover:underline">SQN (System Quality Number)</a> as our primary quality metric. An SQN of 3.45 is rated &ldquo;Excellent&rdquo; by Van Tharp&apos;s framework &mdash; it indicates the system has a genuine, robust edge that is very unlikely to be the result of random chance.</p>
+          <p>We use <a href="/blog/what-is-sqn-score-system-quality-number" className="text-primary hover:underline">SQN (System Quality Number)</a> as our primary quality metric. An solid SQN (see /live) is rated &ldquo;Excellent&rdquo; by Van Tharp&apos;s framework &mdash; it indicates the system has a genuine, robust edge that is very unlikely to be the result of random chance.</p>
 
           {/* Step 5 */}
           <h2 className="text-xl font-semibold text-foreground mt-8 mb-3">Step 5: Set Risk Management Rules</h2>
@@ -184,11 +184,11 @@ export default function Article() {
           <ul className="list-disc pl-6 space-y-2">
             <li><strong className="text-foreground">Maximum risk per trade: 1&ndash;2% of capital</strong> &mdash; This is the <a href="/blog/position-sizing-and-risk-per-trade" className="text-primary hover:underline">position sizing rule</a> that separates professionals from gamblers. If you risk 2% per trade and hit 10 consecutive losers (unlikely but possible), you lose 18.3% of your capital. Painful, but survivable. At 10% per trade, the same losing streak wipes out 65%.</li>
             <li><strong className="text-foreground">Hard stop loss on every trade</strong> &mdash; No exceptions. TrendRider uses a <a href="/blog/risk-management-6-percent-stop-loss" className="text-primary hover:underline">6% stop loss</a> from entry, calculated dynamically based on ATR (Average True Range) to account for the pair&apos;s current volatility. In highly volatile conditions, the stop widens slightly; in calm markets, it tightens.</li>
-            <li><strong className="text-foreground">Maximum portfolio drawdown: 5&ndash;10%</strong> &mdash; If your total account drops by more than your predefined threshold, the system should reduce position sizes or halt trading entirely. This circuit breaker prevents catastrophic loss spirals. TrendRider maintains a <a href="/blog/what-is-drawdown-crypto-trading" className="text-primary hover:underline">maximum drawdown of 1.42%</a>, well within safe limits.</li>
+            <li><strong className="text-foreground">Maximum portfolio drawdown: 5&ndash;10%</strong> &mdash; If your total account drops by more than your predefined threshold, the system should reduce position sizes or halt trading entirely. This circuit breaker prevents catastrophic loss spirals. TrendRider maintains a <a href="/blog/what-is-drawdown-crypto-trading" className="text-primary hover:underline">maximum drawdown of low single-digit (see /live)</a>, well within safe limits.</li>
             <li><strong className="text-foreground">Maximum open positions: 3&ndash;5</strong> &mdash; Correlated positions multiply risk. If you are long BTC, ETH, and SOL simultaneously, a market-wide selloff hits all three. Cap the number of concurrent positions and consider correlation when managing exposure.</li>
             <li><strong className="text-foreground">Risk/reward minimum: 1.5:1</strong> &mdash; Only take trades where the expected reward is at least 1.5x the risk. This ensures that even at a 50% win rate, you are net profitable after fees.</li>
           </ul>
-          <p>The math is straightforward. With a 67.9% win rate and a 2.12x profit factor, TrendRider&apos;s expected value per trade is significantly positive. But that edge only materializes over hundreds of trades &mdash; which means surviving the inevitable losing streaks is paramount. Risk management ensures you are still in the game when the edge plays out.</p>
+          <p>The math is straightforward. With a documented backtest win rate (current value on /live) and a positive profit factor (see /live), TrendRider&apos;s expected value per trade is significantly positive. But that edge only materializes over hundreds of trades &mdash; which means surviving the inevitable losing streaks is paramount. Risk management ensures you are still in the game when the edge plays out.</p>
 
           {/* Step 6 */}
           <h2 className="text-xl font-semibold text-foreground mt-8 mb-3">Step 6: Paper Trade Before Risking Capital</h2>
@@ -237,7 +237,7 @@ export default function Article() {
           {/* Conclusion */}
           <h2 className="text-xl font-semibold text-foreground mt-8 mb-3">Putting It All Together</h2>
           <p>Building a profitable crypto trading system is not about finding a magic indicator or a secret pattern. It is an engineering discipline &mdash; define a hypothesis, build a system to test it, validate rigorously, manage risk conservatively, and iterate based on data.</p>
-          <p>The 7-step framework above is exactly how TrendRider was built. The results speak for themselves: a <strong className="text-foreground">67.9% win rate</strong>, <strong className="text-foreground">2.12x profit factor</strong>, <strong className="text-foreground">SQN of 3.45</strong>, and a <strong className="text-foreground">maximum drawdown of just 1.42%</strong> across 10,000+ backtested trades. These are not cherry-picked numbers &mdash; they are out-of-sample, walk-forward validated results.</p>
+          <p>The 7-step framework above is exactly how TrendRider was built. The results speak for themselves: a <strong className="text-foreground">documented backtest win rate (current value on /live)</strong>, <strong className="text-foreground">positive profit factor (see /live)</strong>, <strong className="text-foreground">solid SQN (see /live)</strong>, and a <strong className="text-foreground">maximum drawdown of just low single-digit (see /live)</strong> across thousands of simulated trades. These are not cherry-picked numbers &mdash; they are out-of-sample, walk-forward validated results.</p>
           <p>The most important takeaway: <strong className="text-foreground">process beats prediction</strong>. You do not need to predict the market. You need a system with a positive expected value and the discipline to execute it consistently. The edge compounds over hundreds of trades, not individual bets.</p>
           <p>If you want to see this framework in action, TrendRider publishes every signal transparently on Telegram &mdash; complete with entry price, stop loss, take profit, and the confidence score that triggered the trade. No black boxes, no hidden results.</p>
 
@@ -258,7 +258,7 @@ export default function Article() {
             </a>
             <a href="/blog/risk-management-6-percent-stop-loss" className="p-4 rounded-xl border border-border/50 bg-card/30 hover:border-primary/30 hover:bg-card/50 transition-all">
               <span className="text-xs text-primary font-mono uppercase tracking-widest">Risk Management</span>
-              <p className="text-sm font-medium text-foreground mt-2">The 6% Stop-Loss Rule: How We Keep Drawdown at 1.42%</p>
+              <p className="text-sm font-medium text-foreground mt-2">The 6% Stop-Loss Rule: How We Keep Drawdown at low single-digit (see /live)</p>
             </a>
             <a href="/blog/best-crypto-trading-strategies-2026" className="p-4 rounded-xl border border-border/50 bg-card/30 hover:border-primary/30 hover:bg-card/50 transition-all">
               <span className="text-xs text-primary font-mono uppercase tracking-widest">Strategy</span>

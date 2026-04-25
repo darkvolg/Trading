@@ -260,7 +260,7 @@ export default function Article() {
           <p>If you&apos;re still evaluating your options, start with a testnet deployment on Bybit and Binance. Run identical strategies on both for two weeks, then compare execution quality, fill rates, and net returns after fees. The data will speak for itself.</p>
 
           <div className="mt-10 p-6 rounded-2xl border border-primary/20 bg-primary/5 text-center">
-            <p className="text-foreground font-medium mb-3">Get TrendRider signals &mdash; optimized for Bybit with 67.9% win rate</p>
+            <p className="text-foreground font-medium mb-3">Get TrendRider signals &mdash; optimized for Bybit with documented backtest win rate (current value on /live)</p>
             <a href="https://t.me/TrendRiderSignals" className="inline-block px-6 py-3 rounded-xl font-semibold text-sm" style={{ background: "linear-gradient(135deg, #00D4AA, #00B894)", color: "#0D1117" }}>
               Join TrendRider on Telegram &rarr;
             </a>

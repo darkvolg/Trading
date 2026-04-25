@@ -2,7 +2,7 @@ import type { Metadata } from "next";
 
 export const metadata: Metadata = {
   title: "AI Confidence Scoring Explained: Why 10/10 Wins More",
-  description: "Learn how AI confidence scoring works in crypto signals: the 1-10 scale, what factors drive scores, and how to size positions by confidence for 67.9% win rate.",
+  description: "Learn how AI confidence scoring works in crypto signals: the 1-10 scale, what factors drive scores, and how to size positions by confidence for documented backtest win rate (current value on /live).",
   alternates: {
     canonical: "https://trendrider.net/blog/ai-confidence-scoring-explained-2026",
   },
@@ -18,7 +18,7 @@ export default function Article() {
             "@context": "https://schema.org",
             "@type": "Article",
             "headline": "AI Confidence Scoring Explained: Why 10/10 Signals Win More",
-            "description": "Learn how AI confidence scoring works in crypto signals: the 1-10 scale, what factors drive scores, and how to size positions by confidence for 67.9% win rate.",
+            "description": "Learn how AI confidence scoring works in crypto signals: the 1-10 scale, what factors drive scores, and how to size positions by confidence for documented backtest win rate (current value on /live).",
             "author": {
               "@type": "Person",
               "name": "TrendRider Team",
@@ -77,7 +77,7 @@ export default function Article() {
                 "name": "Why do higher confidence signals win more often?",
                 "acceptedAnswer": {
                   "@type": "Answer",
-                  "text": "Higher confidence signals win more because each point represents an independent confirmation. When 10 out of 12 indicators agree on trade direction, the probability that all 10 are wrong simultaneously is mathematically low. Low-confidence signals (6-7/12) represent weak consensus and historically hover around 55-62% win rate, while 10-12/12 signals post 75%+ win rates in TrendRider's backtested 10,000+ trades."
+                  "text": "Higher confidence signals win more because each point represents an independent confirmation. When 10 out of 12 indicators agree on trade direction, the probability that all 10 are wrong simultaneously is mathematically low. Low-confidence signals (6-7/12) represent weak consensus and historically hover around 55-62% win rate, while 10-12/12 signals post 75%+ win rates in TrendRider's thousands of simulated trades."
                 }
               },
               {
@@ -93,7 +93,7 @@ export default function Article() {
                 "name": "What factors drive TrendRider's confidence score?",
                 "acceptedAnswer": {
                   "@type": "Answer",
-                  "text": "TrendRider's 12-point confidence score breaks down as: 4 points for trend alignment (EMA, MACD, Supertrend, ADX), 3 points for momentum (RSI, volume, ROC), 3 points for multi-timeframe agreement (15m, 1h, 4h), and 2 points for sentiment (funding rate, Fear & Greed Index). Each indicator is independent, so a 10/12 score means 10 unrelated conditions all support the trade."
+                  "text": "TrendRider's confidence scoring (1-10 scale) breaks down as: 4 points for trend alignment (EMA, MACD, Supertrend, ADX), 3 points for momentum (RSI, volume, ROC), 3 points for multi-timeframe agreement (15m, 1h, 4h), and 2 points for sentiment (funding rate, Fear & Greed Index). Each indicator is independent, so a 10/12 score means 10 unrelated conditions all support the trade."
                 }
               },
               {
@@ -129,7 +129,7 @@ export default function Article() {
 
           <h2 className="text-xl font-semibold text-foreground mt-8 mb-3">Why Higher Scores Win More (The Math)</h2>
           <p>Here&apos;s the statistical intuition. Assume each indicator is right 60% of the time on its own. If a signal fires with just 1 indicator, its win rate is ~60%. But if 10 independent indicators all agree, the probability that all 10 happen to be wrong at once is very low — their combined signal is dramatically more reliable than any single one.</p>
-          <p>Real backtest data from TrendRider&apos;s 10,000+ trades confirms this:</p>
+          <p>Real backtest data from TrendRider&apos;s thousands of simulated trades confirms this:</p>
 
           <div className="bg-card/50 border border-border/50 rounded-xl p-6 my-6 font-mono text-sm">
             <p className="text-primary font-semibold mb-3">Win Rate by Confidence Score</p>
@@ -139,10 +139,10 @@ export default function Article() {
             <p><strong className="text-foreground">9/12:</strong> 71.8% win rate</p>
             <p><strong className="text-foreground">10/12:</strong> 76.3% win rate</p>
             <p><strong className="text-foreground">11-12/12:</strong> 81.5% win rate</p>
-            <p className="text-xs text-muted mt-3">Aggregate win rate across all published signals: 67.9%</p>
+            <p className="text-xs text-muted mt-3">Aggregate win rate across all published signals: documented WR (see /live)</p>
           </div>
 
-          <p>The pattern is monotonic: more confirming indicators → higher realized win rate. A 10/12 signal is not just &ldquo;a bit better&rdquo; than a 7/12 — it&apos;s materially more likely to hit targets. This is why confidence scoring pairs naturally with the <a href="/blog/best-crypto-trading-strategies-2026" className="text-primary hover:underline">67.9% win rate trading strategies</a> we document across the full system.</p>
+          <p>The pattern is monotonic: more confirming indicators → higher realized win rate. A 10/12 signal is not just &ldquo;a bit better&rdquo; than a 7/12 — it&apos;s materially more likely to hit targets. This is why confidence scoring pairs naturally with the <a href="/blog/best-crypto-trading-strategies-2026" className="text-primary hover:underline">best crypto trading strategies</a> we document across the full system.</p>
 
           <h2 className="text-xl font-semibold text-foreground mt-8 mb-3">TrendRider&apos;s 12-Point Scoring Breakdown</h2>
           <p>Here&apos;s exactly what TrendRider&apos;s AI measures, category by category, across the 5 monitored pairs (BTC, ETH, SOL, BNB, DOGE).</p>
@@ -243,7 +243,7 @@ export default function Article() {
           <p>Monitoring aggregate confidence over a week tells you when to press aggressively vs when to play defense — something single-indicator traders can never see.</p>
 
           <div className="mt-10 p-6 rounded-2xl border border-primary/20 bg-primary/5 text-center">
-            <p className="text-foreground font-medium mb-3">Get free AI signals with full 12-point confidence breakdown on every trade</p>
+            <p className="text-foreground font-medium mb-3">Get free AI signals with full confidence scoring (1-10 scale) breakdown on every trade</p>
             <a href="https://t.me/TrendRiderSignals" className="inline-block px-6 py-3 rounded-xl font-semibold text-sm" style={{ background: "linear-gradient(135deg, #00D4AA, #00B894)", color: "#0D1117" }}>
               Join TrendRider on Telegram &rarr;
             </a>

@@ -106,7 +106,7 @@ export default function Article() {
 
           <h2 className="text-xl font-semibold text-foreground mt-8 mb-3">Understanding SQN in Backtesting</h2>
           <p>The SQN score is particularly valuable when evaluating backtested results because it penalizes inconsistency. A strategy that produces huge winners followed by huge losers will score lower than one that grinds out steady, reliable returns &mdash; even if both have the same total profit.</p>
-          <p>TrendRider&apos;s backtested SQN of 3.45 (rated &ldquo;Excellent&rdquo; on Van Tharp&apos;s scale) was achieved across 200+ trades spanning multiple market conditions. This score reflects not just profitability but the <strong className="text-foreground">consistency</strong> of that profitability &mdash; which is what actually matters when you put real money on the line.</p>
+          <p>TrendRider&apos;s backtested solid SQN (see /live) (rated &ldquo;Excellent&rdquo; on Van Tharp&apos;s scale) was achieved across 200+ trades spanning multiple market conditions. This score reflects not just profitability but the <strong className="text-foreground">consistency</strong> of that profitability &mdash; which is what actually matters when you put real money on the line.</p>
 
           <h2 className="text-xl font-semibold text-foreground mt-8 mb-3">TrendRider&apos;s Backtesting Approach</h2>
           <p>We use Freqtrade, an open-source algorithmic trading framework, to run comprehensive backtests. Here&apos;s what makes our process rigorous:</p>
@@ -117,7 +117,7 @@ export default function Article() {
             <li><strong className="text-foreground">Walk-forward validation</strong> to prevent overfitting</li>
             <li><strong className="text-foreground">Full transparency</strong> &mdash; every backtested trade is published in our public Google Sheet</li>
           </ul>
-          <p>The result: 67.9% win rate, 2.12 profit factor, 1.42% max drawdown, and an SQN of 3.45. These numbers have been validated, not manufactured.</p>
+          <p>The result: documented backtest stats published on /live with each strategy version, and an solid SQN (see /live). These numbers have been validated, not manufactured.</p>
 
           <div className="mt-10 p-6 rounded-2xl border border-primary/20 bg-primary/5 text-center">
             <p className="text-foreground font-medium mb-3">See our fully backtested results</p>

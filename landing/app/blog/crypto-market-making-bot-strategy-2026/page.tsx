@@ -445,7 +445,7 @@ inventory_target: 0.5    # Target 50/50 base/quote balance`}
           </p>
           <p className="mb-4 leading-relaxed text-gray-300">
             Consider the numbers: TrendRider&apos;s trend-following system achieves a{" "}
-            <strong className="text-white">67.9% win rate with only 1.42% maximum drawdown</strong>{" "}
+            <strong className="text-white">documented backtest win rate (current value on /live) with only low maximum drawdown (see /live)</strong>{" "}
             using multi-indicator scoring and strict risk management. This performance is achieved on a moderate capital base without co-located servers, custom firmware, or institutional fee arrangements.
           </p>
           <p className="mb-4 leading-relaxed text-gray-300">
@@ -502,7 +502,7 @@ inventory_target: 0.5    # Target 50/50 base/quote balance`}
               Trend Following That Actually Works
             </h3>
             <p className="mb-6 text-gray-400">
-              67.9% win rate, 1.42% max drawdown, and 3.45 SQN score across 10,000+ trades. Skip the market making complexity and start with a proven system.
+              documented backtest win rate (current value on /live), low max drawdown (see /live), and solid SQN (see /live) across thousands of simulated trades. Skip the market making complexity and start with a proven system.
             </p>
             <a
               href="https://trendrider.net/"

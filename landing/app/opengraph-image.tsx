@@ -105,9 +105,9 @@ export default async function Image() {
           }}
         >
           {[
-            { value: "67.9%", label: "Win Rate" },
-            { value: "2.12x", label: "Profit Factor" },
-            { value: "1.42%", label: "Max Drawdown" },
+            { value: "Live", label: "Verified Stats" },
+            { value: "Open", label: "Source Code" },
+            { value: "/live", label: "Real Numbers" },
           ].map((stat) => (
             <div
               key={stat.label}

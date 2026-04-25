@@ -2,7 +2,7 @@ import type { Metadata } from "next";
 
 export const metadata: Metadata = {
   title: "Crypto Trading Bot Profitability: Real Numbers & What to Expect [2026]",
-  description: "Are crypto bots actually profitable? Real data: 67.9% win rate, 1.42% drawdown. Honest breakdown of returns, hidden costs & when bots lose money.",
+  description: "Are crypto bots actually profitable? Real data: documented backtest win rate (current value on /live), low single-digit (see /live) drawdown. Honest breakdown of returns, hidden costs & when bots lose money.",
   alternates: {
     canonical: "https://trendrider.net/blog/crypto-trading-bot-profitability-real-numbers-2026",
   },
@@ -69,7 +69,7 @@ export default function Article() {
                 "name": "Are crypto trading bots actually profitable in 2026?",
                 "acceptedAnswer": {
                   "@type": "Answer",
-                  "text": "Yes, but with caveats. Well-designed crypto trading bots with proper risk management can be profitable. Backtested systems like TrendRider show a 67.9% win rate with 1.42% maximum drawdown. However, profitability depends on market conditions, strategy quality, and realistic expectations. Most traders who fail with bots expect unrealistic returns or skip proper backtesting."
+                  "text": "Yes, but with caveats. Well-designed crypto trading bots with proper risk management can be profitable. Backtested systems like TrendRider show a documented backtest win rate (current value on /live) with low maximum drawdown (see /live). However, profitability depends on market conditions, strategy quality, and realistic expectations. Most traders who fail with bots expect unrealistic returns or skip proper backtesting."
                 }
               },
               {
@@ -190,21 +190,21 @@ export default function Article() {
           </h2>
           <p className="mb-4 leading-relaxed text-gray-300">
             Here are verified backtest results from TrendRider&apos;s multi-indicator
-            scoring system, tested across 10,000+ trades on Bybit perpetual futures
+            scoring system, tested across thousands of simulated trades on Bybit perpetual futures
             with realistic fee assumptions (0.04% maker / 0.06% taker):
           </p>
           <ul className="mb-6 list-disc space-y-2 pl-6 text-gray-300">
             <li>
-              <strong className="text-white">Win Rate:</strong> 67.9%
+              <strong className="text-white">Win Rate:</strong> documented WR (see /live)
             </li>
             <li>
-              <strong className="text-white">Maximum Drawdown:</strong> 1.42%
+              <strong className="text-white">Maximum Drawdown:</strong> low single-digit (see /live)
             </li>
             <li>
               <strong className="text-white">Profit Factor:</strong> 2.18
             </li>
             <li>
-              <strong className="text-white">SQN Score:</strong> 3.45
+              <strong className="text-white">SQN Score:</strong> see /live
               (&quot;Excellent&quot; by Van Tharp&apos;s classification)
             </li>
             <li>
@@ -225,7 +225,7 @@ export default function Article() {
             to 7-9% in live conditions.
           </p>
           <p className="mb-4 leading-relaxed text-gray-300">
-            The 1.42% max drawdown is particularly noteworthy. Many bots show
+            The low max drawdown (see /live) is particularly noteworthy. Many bots show
             impressive returns but hide 30-50% drawdowns. Our approach prioritizes
             capital preservation through strict 6% stop-loss rules and position sizing
             that never risks more than 1-2% of the portfolio per trade.
@@ -386,7 +386,7 @@ export default function Article() {
             <li>
               <strong className="text-white">Choppy/Sideways Markets</strong> &mdash;
               Trend-following strategies get whipsawed, entering and exiting positions
-              repeatedly with small losses. A strategy with 67.9% win rate in trending
+              repeatedly with small losses. A strategy with documented backtest win rate (current value on /live) in trending
               markets may drop to 45% in sideways conditions. The solution is regime
               detection (filtering trades based on ADX, volatility, or volume).
             </li>
@@ -466,7 +466,7 @@ export default function Article() {
           </ol>
           <p className="mb-4 leading-relaxed text-gray-300">
             At TrendRider, we apply all of these methods before declaring a strategy
-            ready for live deployment. Our SQN score of 3.45 across 10,000+ trades
+            ready for live deployment. Our SQN score of see /live across thousands of simulated trades
             reflects this rigorous approach.
           </p>
 
@@ -500,7 +500,7 @@ export default function Article() {
             </li>
             <li>
               <strong className="text-white">Focus on risk management first</strong>,
-              returns second. A 67.9% win rate means nothing if one bad trade wipes out
+              returns second. A documented backtest win rate (current value on /live) means nothing if one bad trade wipes out
               your account.
             </li>
           </ul>

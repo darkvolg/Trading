@@ -184,11 +184,11 @@ export default function Article() {
             <li><strong className="text-foreground">Win rate:</strong> 59.8%</li>
             <li><strong className="text-foreground">Total trades:</strong> 2,847</li>
             <li><strong className="text-foreground">Average trade duration:</strong> 4.2 hours</li>
-            <li><strong className="text-foreground">Max drawdown:</strong> 1.42%</li>
-            <li><strong className="text-foreground">SQN score:</strong> 3.45 (&ldquo;Excellent&rdquo;)</li>
+            <li><strong className="text-foreground">Max drawdown:</strong> low single-digit (see /live)</li>
+            <li><strong className="text-foreground">SQN score:</strong> see /live (&ldquo;Excellent&rdquo;)</li>
             <li><strong className="text-foreground"><a href="/blog/understanding-win-rate-and-profit-factor" className="text-primary hover:underline">Profit factor</a>:</strong> 1.28</li>
           </ul>
-          <p>The 59.8% win rate might seem modest compared to pure mean-reversion systems, but the key metric is the combination of win rate + risk-reward ratio. With an average winner 1.5x the size of an average loser and only 1.42% maximum drawdown, the system compounds capital steadily without the stomach-churning equity swings that plague most crypto strategies.</p>
+          <p>The 59.8% win rate might seem modest compared to pure mean-reversion systems, but the key metric is the combination of win rate + risk-reward ratio. With an average winner 1.5x the size of an average loser and only low maximum drawdown (see /live), the system compounds capital steadily without the stomach-churning equity swings that plague most crypto strategies.</p>
           <p>These results were achieved across <a href="/blog/best-crypto-trading-pairs-for-bots-2026" className="text-primary hover:underline">multiple trading pairs</a> on Bybit, covering both trending and ranging market regimes. The DCA component specifically improved the average entry price by 1.8% compared to single-entry versions of the same strategy.</p>
 
           <h2 className="text-xl font-semibold text-foreground mt-8 mb-3">Getting Started: From Zero to DCA Bot in 30 Minutes</h2>
@@ -213,7 +213,7 @@ export default function Article() {
           <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
             <a href="/blog/best-crypto-trading-strategies-2026" className="p-4 rounded-xl border border-border/50 bg-card/30 hover:border-primary/30 hover:bg-card/50 transition-all">
               <span className="text-xs text-primary font-mono uppercase tracking-widest">Strategy</span>
-              <p className="text-sm font-medium text-foreground mt-2">7 Best Crypto Trading Strategies for 2026 (67.9% Win Rate)</p>
+              <p className="text-sm font-medium text-foreground mt-2">7 Best Crypto Trading Strategies for 2026 (Documented Win Rate)</p>
             </a>
             <a href="/blog/crypto-trading-risk-management-complete-guide-2026" className="p-4 rounded-xl border border-border/50 bg-card/30 hover:border-primary/30 hover:bg-card/50 transition-all">
               <span className="text-xs text-primary font-mono uppercase tracking-widest">Risk Management</span>

@@ -313,7 +313,7 @@ export default function Article() {
             <li><strong className="text-foreground">Dynamic exit logic</strong> &mdash; Freqtrade&apos;s custom stoploss function lets you implement trailing stops, time-based exits, and multi-target profit taking &mdash; exactly what swing trading needs</li>
             <li><strong className="text-foreground">Backtesting</strong> &mdash; Before risking real money, <a href="/blog/backtesting-crypto-strategies-guide" className="text-primary hover:underline">backtest each strategy</a> over 90+ days of data. Look for consistent equity curves, not one-off wins. Target a profit factor above 1.5 and maximum drawdown under 8%</li>
           </ul>
-          <p>TrendRider&apos;s VZIKStrategy uses a combination of EMA pullback (Strategy #1) and multi-indicator confluence to generate swing signals on the 4H timeframe. The bot monitors 10 pairs simultaneously, entering when the setup aligns with the daily trend. This multi-strategy, multi-pair approach generates 15&ndash;25 swing trades per month with a 67.9% win rate.</p>
+          <p>TrendRider&apos;s VZIKStrategy uses a combination of EMA pullback (Strategy #1) and multi-indicator confluence to generate swing signals on the 4H timeframe. The bot monitors 10 pairs simultaneously, entering when the setup aligns with the daily trend. This multi-strategy, multi-pair approach generates 15&ndash;25 swing trades per month with a documented backtest win rate (current value on /live).</p>
 
           <h2 className="text-xl font-semibold text-foreground mt-8 mb-3">5 Common Swing Trading Mistakes</h2>
           <ul className="list-disc pl-6 space-y-2">
@@ -336,7 +336,7 @@ export default function Article() {
           <p>If you want to skip the manual approach and automate these setups, TrendRider delivers swing trading signals to Telegram with exact entries, stops, and targets. Or set up your own <a href="/blog/freqtrade-setup-tutorial-beginners-2026" className="text-primary hover:underline">Freqtrade bot</a> using the strategy rules above.</p>
 
           <div className="mt-10 p-6 rounded-2xl border border-primary/20 bg-primary/5 text-center">
-            <p className="text-foreground font-medium mb-3">Get automated swing trading signals with 67.9% win rate</p>
+            <p className="text-foreground font-medium mb-3">Get automated swing trading signals with documented backtest win rate (current value on /live)</p>
             <a href="https://t.me/TrendRiderSignals" className="inline-block px-6 py-3 rounded-xl font-semibold text-sm" style={{ background: "linear-gradient(135deg, #00D4AA, #00B894)", color: "#0D1117" }}>
               Join TrendRider on Telegram &rarr;
             </a>

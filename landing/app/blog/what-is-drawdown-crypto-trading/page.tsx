@@ -52,7 +52,7 @@ export default function Article() {
             "itemListElement": [
               { "@type": "ListItem", "position": 1, "name": "Home", "item": "https://trendrider.net" },
               { "@type": "ListItem", "position": 2, "name": "Blog", "item": "https://trendrider.net/blog" },
-              { "@type": "ListItem", "position": 3, "name": "Crypto Drawdown Explained: How We Keep It at 1.42%" }
+              { "@type": "ListItem", "position": 3, "name": "Crypto Drawdown Explained: How We Keep It at low single-digit (see /live)" }
             ]
           })
         }}
@@ -69,7 +69,7 @@ export default function Article() {
                 "name": "What is a good max drawdown for crypto trading?",
                 "acceptedAnswer": {
                   "@type": "Answer",
-                  "text": "A good max drawdown for crypto trading is under 10%, which is the threshold most prop trading firms require. Professional algorithmic systems aim for under 5%. TrendRider maintains a max drawdown of just 1.42%, providing over 7x safety margin against typical prop firm limits."
+                  "text": "A good max drawdown for crypto trading is under 10%, which is the threshold most prop trading firms require. Professional algorithmic systems aim for under 5%. TrendRider maintains a max drawdown of just low single-digit (see /live), providing over 7x safety margin against typical prop firm limits."
                 }
               },
               {
@@ -93,7 +93,7 @@ export default function Article() {
                 "name": "How to reduce drawdown in a crypto portfolio?",
                 "acceptedAnswer": {
                   "@type": "Answer",
-                  "text": "Reduce drawdown by implementing fixed stop-losses on every trade (e.g., 6%), limiting risk to 1-2% of capital per trade, using multi-timeframe confirmation to filter false signals, and adding regime detection to reduce trading during uncertain markets. These combined techniques keep TrendRider's drawdown at 1.42%."
+                  "text": "Reduce drawdown by implementing fixed stop-losses on every trade (e.g., 6%), limiting risk to 1-2% of capital per trade, using multi-timeframe confirmation to filter false signals, and adding regime detection to reduce trading during uncertain markets. These combined techniques keep TrendRider's drawdown at low single-digit (see /live)."
                 }
               },
               {
@@ -116,7 +116,7 @@ export default function Article() {
           <span className="text-xs text-muted">March 21, 2026</span>
           <span className="text-xs text-muted">&bull; 5 min read</span>
         </div>
-        <h1 className="text-3xl md:text-4xl font-bold mb-8 tracking-tight">What Is Drawdown in Crypto Trading? How We Keep Ours at 1.42%</h1>
+        <h1 className="text-3xl md:text-4xl font-bold mb-8 tracking-tight">What Is Drawdown in Crypto Trading? How We Keep Ours at low single-digit (see /live)</h1>
 
         <div className="space-y-6 text-muted leading-relaxed">
           <p>Ask most crypto traders what matters most, and they&apos;ll say profit. Ask a professional fund manager the same question, and the answer is almost always <strong className="text-foreground">drawdown</strong>. Maximum drawdown is the metric that separates sustainable trading systems from ticking time bombs &mdash; and understanding it is essential for anyone serious about long-term profitability.</p>
@@ -166,8 +166,8 @@ export default function Article() {
             <li><strong className="text-foreground">Correlated positions</strong> &mdash; Having 5 long positions on altcoins is essentially one big bet on crypto going up. When the market drops, everything drops together.</li>
           </ul>
 
-          <h2 className="text-xl font-semibold text-foreground mt-8 mb-3">How TrendRider Maintains 1.42% Max Drawdown</h2>
-          <p>Our maximum drawdown of 1.42% is not accidental. It&apos;s the result of multiple layers of risk management working together:</p>
+          <h2 className="text-xl font-semibold text-foreground mt-8 mb-3">How TrendRider Maintains low single-digit (see /live) Max Drawdown</h2>
+          <p>Our maximum drawdown of low single-digit (see /live) is not accidental. It&apos;s the result of multiple layers of risk management working together:</p>
           <ul className="list-disc pl-6 space-y-2">
             <li><strong className="text-foreground">Fixed 6% stop-loss on every trade</strong> &mdash; No exceptions, no manual overrides. The algorithm sets the stop-loss at entry and never moves it further from the entry price. This caps the maximum loss per trade at a known, bounded amount.</li>
             <li><strong className="text-foreground">Conservative position sizing</strong> &mdash; We risk a maximum of 1&ndash;2% of total capital per trade. Even a string of 5 losing trades only produces a 5&ndash;10% account decline &mdash; well within recovery range.</li>
@@ -175,11 +175,11 @@ export default function Article() {
             <li><strong className="text-foreground">Regime-aware trading</strong> &mdash; The algorithm detects whether the market is trending or ranging and adjusts signal sensitivity accordingly. In uncertain conditions, it reduces trading frequency rather than forcing trades.</li>
             <li><strong className="text-foreground">On-chain sentiment filters</strong> &mdash; Fear &amp; Greed Index, funding rates, and open interest data provide a macro overlay that prevents entering trades during extreme market conditions where reversals are likely.</li>
           </ul>
-          <p>The combination of these layers means that even during our worst losing streak in backtesting, the account only declined 1.42% from its peak before recovering. For context, many prop trading firms require traders to stay below 10% drawdown &mdash; our system operates at roughly one-seventh of that threshold.</p>
+          <p>The combination of these layers means that even during our worst losing streak in backtesting, the account only declined low single-digit (see /live) from its peak before recovering. For context, many prop trading firms require traders to stay below 10% drawdown &mdash; our system operates at roughly one-seventh of that threshold.</p>
 
           <h2 className="text-xl font-semibold text-foreground mt-8 mb-3">Drawdown and Prop Trading</h2>
           <p>If you&apos;re considering prop trading (trading with a firm&apos;s capital), drawdown is the single most important metric. Firms like HyroTrader, FTMO, and MyForexFunds all impose strict maximum drawdown limits &mdash; typically 5&ndash;10%. Exceed the limit, and you lose access to the funded account.</p>
-          <p>TrendRider&apos;s 1.42% max drawdown gives over 7x safety margin against typical prop firm limits. This means our strategy is well-suited for funded accounts, where capital preservation is just as important as profit generation.</p>
+          <p>TrendRider&apos;s low max drawdown (see /live) gives over 7x safety margin against typical prop firm limits. This means our strategy is well-suited for funded accounts, where capital preservation is just as important as profit generation.</p>
 
           <h2 className="text-xl font-semibold text-foreground mt-8 mb-3">Key Takeaway</h2>
           <p>Profit gets the headlines, but drawdown determines survival. A strategy with low, controlled drawdown can compound reliably for years. A strategy with large drawdowns will eventually encounter a loss it cannot recover from. When evaluating any trading system &mdash; whether it&apos;s your own or a signal provider&apos;s &mdash; check the max drawdown first. Everything else is secondary.</p>
@@ -197,7 +197,7 @@ export default function Article() {
           <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
             <a href="/blog/risk-management-6-percent-stop-loss" className="p-4 rounded-xl border border-border/50 bg-card/30 hover:border-primary/30 hover:bg-card/50 transition-all">
               <span className="text-xs text-primary font-mono uppercase tracking-widest">Risk Management</span>
-              <p className="text-sm font-medium text-foreground mt-2">The 6% Stop-Loss Rule: How We Keep Drawdown at 1.42%</p>
+              <p className="text-sm font-medium text-foreground mt-2">The 6% Stop-Loss Rule: How We Keep Drawdown at low single-digit (see /live)</p>
             </a>
             <a href="/blog/position-sizing-and-risk-per-trade" className="p-4 rounded-xl border border-border/50 bg-card/30 hover:border-primary/30 hover:bg-card/50 transition-all">
               <span className="text-xs text-primary font-mono uppercase tracking-widest">Risk Management</span>

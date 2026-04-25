@@ -114,7 +114,7 @@ export default function Article() {
           <h2 className="text-xl font-semibold text-foreground mt-8 mb-3">Why Pair Selection Matters for Trading Bots</h2>
           <p>When you trade manually, you can adapt in real-time. You see a pair acting strangely and you skip it. You notice liquidity drying up and you reduce size. A bot doesn&apos;t have this discretion &mdash; it executes the same strategy on every pair in its universe, regardless of whether conditions are favorable.</p>
           <p>This means pair selection is a <em>pre-trade filter</em> that determines the quality of opportunities your bot will encounter. Include the wrong pairs, and you&apos;re sending your bot into unfavorable territory with no ability to adapt. Include the right pairs, and you&apos;re giving your bot a structural advantage before it even places a trade.</p>
-          <p>The impact is measurable. In our backtesting, the same strategy applied to our curated 15-pair universe produces a <strong className="text-foreground">67.9% win rate and 2.12 profit factor</strong>. Applied to a random selection of 15 Bybit futures pairs, the win rate drops to 52-58% and the profit factor falls below 1.5. Same strategy, dramatically different results &mdash; purely because of pair selection.</p>
+          <p>The impact is measurable. In our backtesting, the same strategy applied to our curated 15-pair universe produces a <strong className="text-foreground">documented backtest win rate (current value on /live) and positive profit factor (see /live)</strong>. Applied to a random selection of 15 Bybit futures pairs, the win rate drops to 52-58% and the profit factor falls below 1.5. Same strategy, dramatically different results &mdash; purely because of pair selection.</p>
 
           {/* --- Section 2 --- */}
           <h2 className="text-xl font-semibold text-foreground mt-8 mb-3">Factor 1: Liquidity &mdash; The Non-Negotiable Foundation</h2>
@@ -294,7 +294,7 @@ export default function Article() {
             <li><strong className="text-foreground">Max correlation within portfolio:</strong> No more than 3 pairs with &gt;0.85 correlation</li>
             <li><strong className="text-foreground">Review frequency:</strong> Quarterly, with ad-hoc removal if a pair&apos;s liquidity drops below threshold</li>
           </ul>
-          <p>Each pair was individually backtested with our <a href="/blog/multi-indicator-scoring-system-crypto" className="text-primary hover:underline">multi-indicator scoring system</a> and passed all minimum criteria. The combined portfolio produces a <strong className="text-foreground">67.9% win rate, 2.12 profit factor, and 1.42% maximum drawdown</strong> &mdash; significantly better than any individual pair in isolation.</p>
+          <p>Each pair was individually backtested with our <a href="/blog/multi-indicator-scoring-system-crypto" className="text-primary hover:underline">multi-indicator scoring system</a> and passed all minimum criteria. The combined portfolio produces a <strong className="text-foreground">documented backtest win rate (current value on /live), positive profit factor (see /live), and low maximum drawdown (see /live)</strong> &mdash; significantly better than any individual pair in isolation.</p>
           <p>This demonstrates the power of proper pair selection: the portfolio is greater than the sum of its parts because diversification across well-chosen, moderately correlated pairs smooths returns and reduces drawdowns.</p>
 
           {/* --- Section 10 --- */}

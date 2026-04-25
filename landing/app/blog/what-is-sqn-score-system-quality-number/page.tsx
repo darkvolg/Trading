@@ -2,7 +2,7 @@ import type { Metadata } from "next";
 
 export const metadata: Metadata = {
   title: "SQN Score Explained: Rate Your Trading System (2026)",
-  description: "Is your strategy excellent or garbage? SQN reveals it in seconds. Learn the formula, score ranges & why our 3.45 SQN = Excellent. Free calculator.",
+  description: "Is your strategy excellent or garbage? SQN reveals it in seconds. Learn the formula, score ranges & why our solid SQN = Excellent. Free calculator.",
   alternates: {
     canonical: "https://trendrider.net/blog/what-is-sqn-score-system-quality-number",
   },
@@ -18,7 +18,7 @@ export default function Article() {
             "@context": "https://schema.org",
             "@type": "Article",
             "headline": "SQN Score Explained: Rate Your Trading System (2026)",
-            "description": "Is your strategy excellent or garbage? SQN reveals it in seconds. Learn the formula, score ranges & why our 3.45 SQN = Excellent. Free calculator.",
+            "description": "Is your strategy excellent or garbage? SQN reveals it in seconds. Learn the formula, score ranges & why our solid SQN = Excellent. Free calculator.",
             "author": {
               "@type": "Person",
               "name": "TrendRider Team",
@@ -118,15 +118,15 @@ export default function Article() {
           </ul>
           <p>System A looks spectacular on the surface. System B looks mediocre. But System B will make you money over time, while System A will slowly bleed your account dry. SQN captures this reality in a single number &mdash; one reason we rank the <a href="/blog/best-crypto-trading-strategies-2026" className="text-primary hover:underline">top crypto trading strategies for 2026</a> by SQN, not win rate.</p>
 
-          <h2 className="text-xl font-semibold text-foreground mt-8 mb-3">How TrendRider Achieves an SQN of 3.45</h2>
+          <h2 className="text-xl font-semibold text-foreground mt-8 mb-3">How TrendRider Achieves an solid SQN (see /live)</h2>
           <p>TrendRider&apos;s algorithm is engineered for consistency above all else. Here&apos;s what contributes to our &ldquo;Excellent&rdquo; SQN rating:</p>
           <ul className="list-disc pl-6 space-y-2">
-            <li><strong className="text-foreground">Tight risk control</strong> &mdash; Every trade uses a fixed 6% stop-loss, keeping the negative R-multiples bounded. Our max drawdown is just 1.42%.</li>
+            <li><strong className="text-foreground">Tight risk control</strong> &mdash; Every trade uses a fixed 6% stop-loss, keeping the negative R-multiples bounded. Our max drawdown is just low single-digit (see /live).</li>
             <li><strong className="text-foreground">Multi-timeframe confirmation</strong> &mdash; Signals require alignment across 5m, 15m, 1h, and 4h charts, filtering out low-probability setups before they enter the pipeline.</li>
             <li><strong className="text-foreground">Regime awareness</strong> &mdash; The algorithm adjusts behavior based on market conditions (trending vs. ranging), which reduces the variance of trade outcomes.</li>
             <li><strong className="text-foreground">Sufficient sample size</strong> &mdash; With 200+ backtested trades across multiple market conditions, the &radic;N component adds statistical confidence to the score.</li>
           </ul>
-          <p>The result is a 67.9% win rate paired with a profit factor of 2.12 and consistent R-multiples &mdash; the exact profile that produces a high SQN.</p>
+          <p>The result is a documented backtest win rate (current value on /live) paired with a profit factor of see /live and consistent R-multiples &mdash; the exact profile that produces a high SQN.</p>
 
           <h2 className="text-xl font-semibold text-foreground mt-8 mb-3">How to Use SQN When Evaluating Signal Providers</h2>
           <p>Next time you evaluate a signal provider or trading system, ask these questions:</p>
@@ -139,7 +139,7 @@ export default function Article() {
           <p>If a provider won&apos;t share the data needed to calculate SQN, that alone tells you something about their confidence in their own system.</p>
 
           <div className="mt-10 p-6 rounded-2xl border border-primary/20 bg-primary/5 text-center">
-            <p className="text-foreground font-medium mb-3">See our SQN 3.45 system in action</p>
+            <p className="text-foreground font-medium mb-3">See our SQN see /live system in action</p>
             <a href="https://t.me/TrendRiderSignals" className="inline-block px-6 py-3 rounded-xl font-semibold text-sm" style={{ background: "linear-gradient(135deg, #00D4AA, #00B894)", color: "#0D1117" }}>
               Join TrendRider on Telegram &rarr;
             </a>
@@ -155,7 +155,7 @@ export default function Article() {
             </a>
             <a href="/blog/risk-management-6-percent-stop-loss" className="p-4 rounded-xl border border-border/50 bg-card/30 hover:border-primary/30 hover:bg-card/50 transition-all">
               <span className="text-xs text-primary font-mono uppercase tracking-widest">Risk Management</span>
-              <p className="text-sm font-medium text-foreground mt-2">The 6% Stop-Loss Rule: How We Keep Drawdown at 1.42%</p>
+              <p className="text-sm font-medium text-foreground mt-2">The 6% Stop-Loss Rule: How We Keep Drawdown at low single-digit (see /live)</p>
             </a>
             <a href="/blog/why-algorithmic-trading-beats-manual" className="p-4 rounded-xl border border-border/50 bg-card/30 hover:border-primary/30 hover:bg-card/50 transition-all">
               <span className="text-xs text-primary font-mono uppercase tracking-widest">Strategy</span>

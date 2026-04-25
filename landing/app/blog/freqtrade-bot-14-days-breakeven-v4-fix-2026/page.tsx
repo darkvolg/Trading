@@ -258,11 +258,11 @@ TOTAL                  47       -$0.49`}</code></pre>
               <li><strong className="text-foreground">Balance:</strong> $506.35 (from $500)</li>
               <li><strong className="text-foreground">P&amp;L:</strong> +$6.35 (+1.27%)</li>
               <li><strong className="text-foreground">Win rate:</strong> 64.81% (35W / 19L / 54 closed)</li>
-              <li><strong className="text-foreground">Max drawdown during the run:</strong> 1.42%</li>
+              <li><strong className="text-foreground">Max drawdown during the run:</strong> low single-digit (see /live)</li>
               <li><strong className="text-foreground">Open positions:</strong> 0</li>
             </ul>
             <p>
-              Annualized that&apos;s roughly 33% &mdash; not the &quot;double your account in a week&quot; pornography you see on YouTube, but it&apos;s an honest, reproducible, wide-stop strategy with a 1.42% drawdown. I&apos;d rather have that than 300% with a 40% drawdown.
+              Annualized that&apos;s roughly 33% &mdash; not the &quot;double your account in a week&quot; pornography you see on YouTube, but it&apos;s an honest, reproducible, wide-stop strategy with a low single-digit (see /live) drawdown. I&apos;d rather have that than 300% with a 40% drawdown.
             </p>
             <p>
               The <a href="/live" className="text-primary hover:underline">trendrider.net/live</a> page reads the SQLite every 60 seconds and shows everything &mdash; winners, losers, exit reasons, equity curve, pair breakdown. If a losing trade happens, it will appear there within a minute.

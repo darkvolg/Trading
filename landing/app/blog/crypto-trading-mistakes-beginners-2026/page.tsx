@@ -187,7 +187,7 @@ export default function Article() {
               className="text-cyan-400 underline decoration-cyan-400/30 hover:text-cyan-300"
             >
               read our comparison of fixed vs trailing vs ATR-based stop-losses
-            </a>. TrendRider uses a 6% stop-loss with ATR-based trailing, which keeps maximum drawdown at just 1.42%.
+            </a>. TrendRider uses a 6% stop-loss with ATR-based trailing, which keeps maximum drawdown at just low single-digit (see /live).
           </p>
 
           {/* Mistake 3 */}
@@ -204,7 +204,7 @@ export default function Article() {
             <strong className="text-white">Typical cost:</strong> At 0.1% round-trip fees and 20 trades/day, a $10,000 account pays $200/month in fees alone &mdash; $2,400/year just to break even before any profitable trades.
           </p>
           <p className="mb-4 leading-relaxed text-gray-300">
-            <strong className="text-white">How to fix it:</strong> Set a maximum number of trades per day (3&ndash;5 is ideal for beginners). Only trade setups that meet your pre-defined criteria. Quality over quantity. TrendRider typically executes 2&ndash;4 trades per day across 16 pairs, focusing on high-probability setups with a 67.9% win rate.
+            <strong className="text-white">How to fix it:</strong> Set a maximum number of trades per day (3&ndash;5 is ideal for beginners). Only trade setups that meet your pre-defined criteria. Quality over quantity. TrendRider typically executes 2&ndash;4 trades per day across 16 pairs, focusing on high-probability setups with a documented backtest win rate (current value on /live).
           </p>
 
           {/* Mistake 4 */}
@@ -360,7 +360,7 @@ Example: 100 trades/month x 12 x $500 x 0.075% x 2 = $900/year`}
               href="/blog/how-to-backtest-crypto-trading-strategy-2026"
               className="text-cyan-400 underline decoration-cyan-400/30 hover:text-cyan-300"
             >
-              see our backtesting guide with real examples from 10,000+ trades
+              see our backtesting guide with real examples from thousands of simulated trades
             </a>.
           </p>
 
@@ -492,7 +492,7 @@ If the trade hits stop-loss, you lose $200 (2% of $10,000)`}
               Stop Making Expensive Mistakes
             </h3>
             <p className="mb-6 text-gray-400">
-              TrendRider eliminates all 10 mistakes with algorithmic precision: 67.9% win rate, 1.42% max drawdown, automated risk management on every trade. See the data for yourself.
+              TrendRider eliminates all 10 mistakes with algorithmic precision: documented backtest win rate (current value on /live), low max drawdown (see /live), automated risk management on every trade. See the data for yourself.
             </p>
             <a
               href="https://trendrider.net/"

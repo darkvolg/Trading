@@ -31,11 +31,12 @@ const CHART_FONT = "system-ui, sans-serif";
 const PLOT_W = CHART_W - CHART_PAD.left - CHART_PAD.right;
 const PLOT_H = CHART_H - CHART_PAD.top - CHART_PAD.bottom;
 
+// Numbers below are illustrative. Verified backtest + live stats are published on /live.
 const METRICS = [
-  { key: "simWinRate" as const, value: 67.9, suffix: "%", icon: "target" },
-  { key: "simProfitFactor" as const, value: 2.12, suffix: "x", icon: "trending" },
-  { key: "simMaxDD" as const, value: 1.42, suffix: "%", icon: "shield" },
-  { key: "simSharpe" as const, value: 3.45, suffix: "", icon: "chart" },
+  { key: "simWinRate" as const, value: 53, suffix: "%", icon: "target" },
+  { key: "simProfitFactor" as const, value: 1.6, suffix: "x", icon: "trending" },
+  { key: "simMaxDD" as const, value: 4.5, suffix: "%", icon: "shield" },
+  { key: "simSharpe" as const, value: 2.1, suffix: "", icon: "chart" },
 ];
 
 const GREEN = "#00D4AA";
@@ -203,10 +204,10 @@ export function SimulatedPerformance({ t, visible, sectionRef }: SimulatedPerfor
   }, [capital]);
 
   /* ── Animated metrics ── */
-  const animWinRate = useAnimatedValue(67.9, visible);
-  const animPF = useAnimatedValue(2.12, visible);
-  const animDD = useAnimatedValue(1.42, visible);
-  const animSharpe = useAnimatedValue(3.45, visible);
+  const animWinRate = useAnimatedValue(53, visible);
+  const animPF = useAnimatedValue(1.6, visible);
+  const animDD = useAnimatedValue(4.5, visible);
+  const animSharpe = useAnimatedValue(2.1, visible);
   const animatedMetrics = [animWinRate, animPF, animDD, animSharpe];
 
   return (

@@ -2,7 +2,7 @@ import type { Metadata } from "next";
 
 export const metadata: Metadata = {
   title: "Advanced Crypto Trading Strategies 2026 [Pro Traders]",
-  description: "6 advanced crypto strategies pros use in 2026: regime detection, funding rate arbitrage, delta-neutral setups. Backtested on 10,000+ trades.",
+  description: "6 advanced crypto strategies pros use in 2026: regime detection, funding rate arbitrage, delta-neutral setups. Backtested on thousands of simulated trades.",
   alternates: {
     canonical: "https://trendrider.net/blog/advanced-crypto-trading-strategies-2026",
   },
@@ -69,7 +69,7 @@ export default function Article() {
                 "name": "What separates advanced crypto trading strategies from beginner approaches?",
                 "acceptedAnswer": {
                   "@type": "Answer",
-                  "text": "Advanced strategies layer multiple edges: regime detection (knowing whether to apply trend or mean-reversion logic), multi-indicator confluence scoring, dynamic position sizing based on volatility and confidence, and portfolio-level risk management. Beginners typically run one strategy at fixed size regardless of market context. TrendRider&apos;s AI implements these layers via a 12-point confidence score that delivers 67.9% win rate with just 1.42% max drawdown."
+                  "text": "Advanced strategies layer multiple edges: regime detection (knowing whether to apply trend or mean-reversion logic), multi-indicator confluence scoring, dynamic position sizing based on volatility and confidence, and portfolio-level risk management. Beginners typically run one strategy at fixed size regardless of market context. TrendRider&apos;s AI implements these layers via a confidence scoring (1-10 scale) that delivers documented backtest win rate (current value on /live) with just low max drawdown (see /live)."
                 }
               },
               {
@@ -121,7 +121,7 @@ export default function Article() {
 
         <div className="space-y-6 text-muted leading-relaxed">
           <p>This guide isn&apos;t for beginners. If you&apos;re still figuring out what a stop-loss is, bookmark it for later. What follows is the advanced playbook — the techniques professional desks and quant traders use to extract edge from crypto markets in 2026 when every retail strategy has been arbitraged into dust.</p>
-          <p>We&apos;ll walk through 8 advanced techniques: market regime detection, multi-indicator confluence scoring, funding rate arbitrage, delta-neutral setups, portfolio heat management, dynamic position sizing by volatility, statistical edge validation, and execution microstructure. These are the same layers stacked inside TrendRider&apos;s 12-point AI confidence score — which is how the system hits 67.9% win rate at just 1.42% max drawdown across 10,000+ backtested trades on BTC, ETH, SOL, BNB, DOGE, and OP.</p>
+          <p>We&apos;ll walk through 8 advanced techniques: market regime detection, multi-indicator confluence scoring, funding rate arbitrage, delta-neutral setups, portfolio heat management, dynamic position sizing by volatility, statistical edge validation, and execution microstructure. These are the same layers stacked inside TrendRider&apos;s 12-point AI confidence score — which is how the system hits documented backtest win rate (current value on /live) at just low max drawdown (see /live) across thousands of simulated trades on BTC, ETH, SOL, BNB, DOGE, and OP.</p>
 
           <h2 className="text-xl font-semibold text-foreground mt-8 mb-3">Technique 1: Market Regime Detection</h2>
           <p>The single biggest edge in crypto is knowing <em>which game you&apos;re playing</em>. Trend-following strategies lose money in chop. Mean-reversion strategies get destroyed in trends. The advanced move is to classify the current regime before picking a strategy.</p>
@@ -191,7 +191,7 @@ export default function Article() {
             <li>Statistical validation ensures edge is real before go-live (Technique 8)</li>
             <li>Funding arb / delta-neutral adds uncorrelated return stream (Techniques 3, 4)</li>
           </ul>
-          <p>Each layer independently adds 10-30% to risk-adjusted returns. Stacked, they produce the kind of profile most retail traders assume is impossible: 67.9% win rate at 1.42% max drawdown. That&apos;s not magic. That&apos;s 6 stacked edges with disciplined execution.</p>
+          <p>Each layer independently adds 10-30% to risk-adjusted returns. Stacked, they produce the kind of profile most retail traders assume is impossible: high win rate at low drawdown (see /live). That&apos;s not magic. That&apos;s 6 stacked edges with disciplined execution.</p>
 
           <div className="mt-10 p-6 rounded-2xl border border-primary/20 bg-primary/5 text-center">
             <p className="text-foreground font-medium mb-3">See these advanced techniques live on BTC, ETH, SOL, BNB, DOGE, OP with 12-point AI confidence scoring</p>

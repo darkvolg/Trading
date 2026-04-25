@@ -125,7 +125,7 @@ export default function Article() {
             <li><strong className="text-foreground">Portfolio heat limit</strong> — TrendRider tracks the total risk across all open positions. If combined exposure exceeds a threshold, new signals are held until existing trades close.</li>
             <li><strong className="text-foreground">Confidence-adjusted sizing</strong> — Higher confidence signals receive slightly larger allocations (up to 2%), while lower confidence signals are sized down to 1-1.5%. This tilts capital toward the highest-probability setups.</li>
           </ul>
-          <p>The result is a maximum drawdown of just <strong className="text-primary">1.42%</strong> across all tracked trades — proof that disciplined sizing works alongside the <a href="/blog/best-crypto-trading-strategies-2026" className="text-primary hover:underline">profitable crypto trading strategies</a> TrendRider deploys.</p>
+          <p>The result is a maximum drawdown of just <strong className="text-primary">low single-digit (see /live)</strong> across all tracked trades — proof that disciplined sizing works alongside the <a href="/blog/best-crypto-trading-strategies-2026" className="text-primary hover:underline">profitable crypto trading strategies</a> TrendRider deploys.</p>
 
           <h2 className="text-xl font-semibold text-foreground mt-8 mb-3">Quick Reference: Position Sizing by Account Size</h2>
           <div className="overflow-x-auto">
@@ -164,7 +164,7 @@ export default function Article() {
           <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
             <a href="/blog/risk-management-6-percent-stop-loss" className="p-4 rounded-xl border border-border/50 bg-card/30 hover:border-primary/30 hover:bg-card/50 transition-all">
               <span className="text-xs text-primary font-mono uppercase tracking-widest">Risk Management</span>
-              <p className="text-sm font-medium text-foreground mt-2">The 6% Stop-Loss Rule: How We Keep Drawdown at 1.42%</p>
+              <p className="text-sm font-medium text-foreground mt-2">The 6% Stop-Loss Rule: How We Keep Drawdown at low single-digit (see /live)</p>
             </a>
             <a href="/blog/understanding-win-rate-and-profit-factor" className="p-4 rounded-xl border border-border/50 bg-card/30 hover:border-primary/30 hover:bg-card/50 transition-all">
               <span className="text-xs text-primary font-mono uppercase tracking-widest">Education</span>

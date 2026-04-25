@@ -213,10 +213,9 @@ export default function Home() {
           </p>
 
           {/* Animated social proof counters */}
-          <div className={`reveal reveal-delay-1 ${socialProofSection.visible ? "visible" : ""} grid grid-cols-2 md:grid-cols-4 gap-6 mb-12`}>
+          <div className={`reveal reveal-delay-1 ${socialProofSection.visible ? "visible" : ""} grid grid-cols-3 gap-6 mb-12`}>
             {[
               { target: 150, decimals: 0, suffix: "+", label: t.socialTrades },
-              { target: 67.9, decimals: 1, suffix: "%", label: t.socialWinRate },
               { target: 99.9, decimals: 1, suffix: "%", label: t.socialUptime },
               { target: 200, decimals: 0, suffix: "+", label: t.socialSignals },
             ].map((stat) => (

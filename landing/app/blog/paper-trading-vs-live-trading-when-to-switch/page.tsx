@@ -114,7 +114,7 @@ export default function Article() {
 
           <h2 className="text-xl font-semibold text-foreground mt-8 mb-3">TrendRider&apos;s Honest Approach to Paper Trading</h2>
           <p>TrendRider is transparent about its track record. The system went through an extensive paper-trading and backtesting phase before any signals were published. Every signal since launch is logged in a public spreadsheet with exact entries, exits, and P&amp;L — no cherry-picking, no hidden losses.</p>
-          <p>The current stats — <strong className="text-primary">67.9% win rate</strong>, <strong className="text-primary">2.12x profit factor</strong>, <strong className="text-primary">1.42% max drawdown</strong> — are based on real, tracked signals. We encourage every subscriber to paper-trade alongside TrendRider for their first 2-4 weeks before committing real capital. There is no rush. The signals will keep coming.</p>
+          <p>The current stats — <strong className="text-primary">documented backtest win rate (current value on /live)</strong>, <strong className="text-primary">positive profit factor (see /live)</strong>, <strong className="text-primary">low max drawdown (see /live)</strong> — are based on real, tracked signals. We encourage every subscriber to paper-trade alongside TrendRider for their first 2-4 weeks before committing real capital. There is no rush. The signals will keep coming.</p>
 
           <h2 className="text-xl font-semibold text-foreground mt-8 mb-3">Red Flags That You&apos;re Not Ready</h2>
           <ul className="list-disc pl-6 space-y-2">
@@ -141,7 +141,7 @@ export default function Article() {
           <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
             <a href="/blog/risk-management-6-percent-stop-loss" className="p-4 rounded-xl border border-border/50 bg-card/30 hover:border-primary/30 hover:bg-card/50 transition-all">
               <span className="text-xs text-primary font-mono uppercase tracking-widest">Risk Management</span>
-              <p className="text-sm font-medium text-foreground mt-2">The 6% Stop-Loss Rule: How We Keep Drawdown at 1.42%</p>
+              <p className="text-sm font-medium text-foreground mt-2">The 6% Stop-Loss Rule: How We Keep Drawdown at low single-digit (see /live)</p>
             </a>
             <a href="/blog/position-sizing-and-risk-per-trade" className="p-4 rounded-xl border border-border/50 bg-card/30 hover:border-primary/30 hover:bg-card/50 transition-all">
               <span className="text-xs text-primary font-mono uppercase tracking-widest">Risk Management</span>
