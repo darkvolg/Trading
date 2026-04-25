@@ -11,7 +11,7 @@ type Props = {
 
 export function EmailCaptureInline({
   heading = "Get the sample backtest report",
-  subheading = "Drop your email and I'll send you the first 3 pages of the Pro Pack's BACKTEST-REPORT.md — per-pair breakdown, V3 vs V4 exit-reason table, and the drawdown profile. Free, no spam. Unsubscribe any time.",
+  subheading = "Drop your email and I'll send you the first 3 pages of the Pro Pack's BACKTEST-REPORT.md — per-pair breakdown, exit-reason table, and the drawdown profile. Free, no spam. Unsubscribe any time.",
   ctaLabel = "Send me the sample",
   tag = "pro-pack-preview",
 }: Props) {

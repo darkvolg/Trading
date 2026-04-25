@@ -371,13 +371,13 @@ class TrendRiderStrategy(IStrategy):
             ["enter_long", "enter_tag"]
         ] = (1, "ema_crossover")
 
-        # === LONG 5: Bollinger Band Bounce (V4: tightened vol 0.3→0.7, added ADX>18) ===
+        # === LONG 5: Bollinger Band Bounce ===
         conditions_bb = [
             dataframe["close"] <= dataframe["bb_lower"] * 1.005,           # close within 0.5% of BB lower
             dataframe["close"] > dataframe["open"],                         # bullish candle (bounce)
             dataframe[rsi] < 45,
-            dataframe["volume_ratio"] > 0.7,                                # V4: was 0.3, filter weak bounces
-            dataframe["adx"] > 18,                                          # V4: trend strength filter
+            dataframe["volume_ratio"] > 0.7,                                # filter weak bounces
+            dataframe["adx"] > 18,                                          # trend strength filter
             dataframe["volume"] > 0,
             dataframe["btc_rsi_1h"] > 35,
             dataframe["fng_value"] >= 25,
@@ -442,7 +442,7 @@ class TrendRiderStrategy(IStrategy):
             ["exit_long", "exit_tag"]
         ] = (1, "trend_broken")
 
-        # EXIT 4 (V4): Trend early warning — RSI overbought reversal near EMA200
+        # EXIT 4: Trend early warning — RSI overbought reversal near EMA200
         # Catches trend exhaustion before price breaks support, saving avg -3% vs trend_broken
         dataframe.loc[
             (dataframe["close"] < dataframe["ema_200"] * 0.995) &  # within 0.5% of breaking
@@ -603,10 +603,10 @@ class TrendRiderStrategy(IStrategy):
 
     def custom_exit(self, pair: str, trade, current_time: datetime,
                     current_rate: float, current_profit: float, **kwargs):
-        """V4 cascading early exit — stop bleeding before 24h timeout.
+        """Cascading early exit — stop bleeding before 24h timeout.
 
-        Real dry-run data (51 trades): time_exit_24h cost -$13.01 across 9 trades,
-        avg -2.85% loss after holding full 24h. Cascade catches losers earlier:
+        Dry-run data showed time_exit_24h was the worst exit (avg -2.85% loss
+        after holding full 24h). Cascade catches losers earlier:
         - 2h: cut if -1.5% (already broken thesis)
         - 4h: cut if red (no recovery momentum)
         - 8h: cut if not at +0.5% (dead trade)
