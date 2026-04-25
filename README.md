@@ -1,10 +1,18 @@
-# TrendRider — Open-Source Crypto Trading Strategy
+<p align="center">
+  <a href="https://trendrider.net">
+    <img src=".github/banner.svg" alt="TrendRider — Open-source crypto trading strategy" width="100%"/>
+  </a>
+</p>
 
-[![Strategy](https://img.shields.io/badge/strategy-v2.13.0-00D4AA)](https://github.com/darkvolg/Trading/blob/master/FreqtradeBot/user_data/strategies/TrendRiderStrategy_public.py)
-[![Built on](https://img.shields.io/badge/built_on-Freqtrade-blue)](https://github.com/freqtrade/freqtrade)
-[![Backtest](https://img.shields.io/badge/backtest_110d-%2B7.29%25-success)](https://trendrider.net/live)
-[![Live](https://img.shields.io/badge/live-paper--trading-yellow)](https://trendrider.net/live)
-[![License](https://img.shields.io/badge/license-GPL--3.0-blue)](#license)
+<p align="center">
+  <a href="https://github.com/darkvolg/Trading/blob/master/FreqtradeBot/user_data/strategies/TrendRiderStrategy_public.py"><img src="https://img.shields.io/badge/strategy-v2.13.0-00D4AA?style=flat-square" alt="Strategy v2.13.0"/></a>
+  <a href="https://github.com/freqtrade/freqtrade"><img src="https://img.shields.io/badge/built_on-Freqtrade-blue?style=flat-square" alt="Built on Freqtrade"/></a>
+  <a href="https://trendrider.net/live"><img src="https://img.shields.io/badge/backtest_110d-%2B7.29%25-success?style=flat-square" alt="Backtest +7.29%"/></a>
+  <a href="https://trendrider.net/live"><img src="https://img.shields.io/badge/live-paper--trading-yellow?style=flat-square" alt="Live paper-trading"/></a>
+  <a href="#license"><img src="https://img.shields.io/badge/license-GPL--3.0-blue?style=flat-square" alt="GPL-3.0"/></a>
+</p>
+
+# TrendRider — Open-Source Crypto Trading Strategy
 
 A multi-indicator confluence strategy for [Freqtrade](https://github.com/freqtrade/freqtrade), running on Bybit USDT-perpetual futures. **Code is open. Numbers are public. Failures are documented.**
 
