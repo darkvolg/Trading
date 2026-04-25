@@ -4,7 +4,7 @@ import { useEffect, useRef, useState, useCallback } from "react";
 
 /* ──────────────────────────── imports from extracted modules ──────────────────────────── */
 
-import { TELEGRAM_URL, SHEETS_URL } from "@/lib/constants";
+import { TELEGRAM_URL } from "@/lib/constants";
 import { T } from "@/lib/i18n";
 import type { Locale } from "@/lib/i18n";
 import { getSteps, getFeatures, getFaqItems } from "@/lib/data";
@@ -433,9 +433,7 @@ export default function Home() {
           <div className="grid md:grid-cols-3 gap-6 mb-10">
             {/* Public Trade Log */}
             <a
-              href={SHEETS_URL}
-              target="_blank"
-              rel="noopener noreferrer"
+              href="/live"
               className="transparency-card group p-6 rounded-2xl border border-primary/20 bg-primary/[0.03] hover:bg-primary/[0.06] hover:border-primary/40"
             >
               <div className="w-12 h-12 rounded-xl bg-primary/10 flex items-center justify-center text-primary mb-4 group-hover:scale-110 transition-transform">
@@ -565,9 +563,7 @@ export default function Home() {
               {t.getStarted}
             </a>
             <a
-              href={SHEETS_URL}
-              target="_blank"
-              rel="noopener noreferrer"
+              href="/live"
               className="btn-press flex items-center gap-2 px-6 py-4 text-muted hover:text-foreground transition-colors text-sm font-medium"
             >
               {t.viewAllResults}

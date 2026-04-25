@@ -2,7 +2,7 @@
 
 import type { RefObject } from "react";
 import type { TStrings, Locale } from "@/lib/i18n";
-import { TELEGRAM_URL, SHEETS_URL, BYBIT_AFFILIATE_URL } from "@/lib/constants";
+import { TELEGRAM_URL, BYBIT_AFFILIATE_URL } from "@/lib/constants";
 import { LanguageToggle } from "@/components/ui";
 import { CandlestickChart } from "./CandlestickChart";
 import { Particles } from "./Particles";
@@ -110,21 +110,29 @@ export function HeroSection({ t, locale, setLocale, parallaxRef }: HeroSectionPr
           {t.heroDesc}
         </p>
 
-        {/* Quick stats row */}
+        {/* Quick stats row — BACKTEST numbers, with link to live */}
         <div
-          className="flex items-center justify-center gap-4 sm:gap-6 md:gap-10 mb-10 text-sm"
+          className="flex flex-col items-center mb-10"
           style={{ animation: "fadeInUp 0.7s 0.6s cubic-bezier(0.16, 1, 0.3, 1) both" }}
         >
-          {[
-            { v: "67.9%", l: t.winRate },
-            { v: "2.12x", l: t.profitFactor },
-            { v: "1.42%", l: t.maxDD },
-          ].map(stat => (
-            <div key={stat.l} className="text-center min-w-0">
-              <div className="font-mono font-bold text-lg sm:text-xl text-primary">{stat.v}</div>
-              <div className="text-muted text-[10px] sm:text-xs uppercase tracking-wider mt-0.5">{stat.l}</div>
-            </div>
-          ))}
+          <div className="inline-flex items-center gap-1.5 px-2.5 py-0.5 mb-3 rounded-full border border-muted/30 text-[10px] font-mono uppercase tracking-widest text-muted">
+            {t.backtestLabel}
+          </div>
+          <div className="flex items-center justify-center gap-4 sm:gap-6 md:gap-10 text-sm">
+            {[
+              { v: "67.9%", l: t.winRate },
+              { v: "2.12x", l: t.profitFactor },
+              { v: "1.42%", l: t.maxDD },
+            ].map(stat => (
+              <div key={stat.l} className="text-center min-w-0">
+                <div className="font-mono font-bold text-lg sm:text-xl text-primary">{stat.v}</div>
+                <div className="text-muted text-[10px] sm:text-xs uppercase tracking-wider mt-0.5">{stat.l}</div>
+              </div>
+            ))}
+          </div>
+          <a href="/live" className="mt-3 text-xs text-primary/80 hover:text-primary transition-colors underline-offset-4 hover:underline">
+            {t.seeLivePerformance}
+          </a>
         </div>
 
         <div

@@ -103,7 +103,7 @@ export default function Article() {
 
           <div className="mt-10 p-6 rounded-2xl border border-primary/20 bg-primary/5 text-center">
             <p className="text-foreground font-medium mb-3">See all our trades — fully transparent</p>
-            <a href="https://docs.google.com/spreadsheets/d/1ZWRJ0PcBSk910MZv426PrleriBnInykr3OebWXJPm-g" className="inline-block px-6 py-3 rounded-xl font-semibold text-sm" style={{ background: "linear-gradient(135deg, #00D4AA, #00B894)", color: "#0D1117" }}>
+            <a href="/live" className="inline-block px-6 py-3 rounded-xl font-semibold text-sm" style={{ background: "linear-gradient(135deg, #00D4AA, #00B894)", color: "#0D1117" }}>
               View Live Results &rarr;
             </a>
           </div>

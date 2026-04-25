@@ -12,15 +12,15 @@ export const T = {
     viewLiveResults: "View Live Results",
 
     // hero
-    liveSince: "Live since March 2026",
-    paperVerified: "Paper-trading verified",
+    liveSince: "Paper-trading since April 2026",
+    paperVerified: "Open-source strategy",
     tagline: "AI-Powered Signals.",
     taglineHighlight: "Verified Results.",
     heroDesc: (
       <>AI-powered crypto trading signals with a{" "}
-      <span className="text-primary font-semibold">67.9% win rate</span> and{" "}
+      <span className="text-primary font-semibold">67.9% backtested win rate</span> and{" "}
       <span className="text-primary font-semibold">1.42% max drawdown</span>.
-      Multi-timeframe analysis across BTC, ETH, SOL, BNB, and DOGE.</>
+      Multi-timeframe analysis across 13 USDT-perp pairs incl. BTC, ETH, SOL.</>
     ),
     winRate: "Win Rate",
     profitFactor: "Profit Factor",
@@ -28,6 +28,8 @@ export const T = {
     publicTrack: "Public track record",
     algoTrading: "AI-powered trading",
     openSource: "Open-source strategy",
+    backtestLabel: "Backtest — Jan 2024 to Mar 2026",
+    seeLivePerformance: "See live performance →",
 
     // metrics section
     metricsTag: "Performance",
@@ -74,7 +76,7 @@ export const T = {
     perfConsistency: "Consistency",
     perfRiskMgmt: "Risk Management",
     perfAvgBot: "Average Bot",
-    perfDisclaimer: "Based on backtest results from January 2024 to March 2026. 5 pairs: BTC, ETH, SOL, BNB, DOGE. Past performance does not guarantee future results. Trading involves risk.",
+    perfDisclaimer: "Based on backtest results from January 2024 to March 2026 across 13 USDT-perp pairs (BTC, ETH, SOL + 10 alts). Past performance does not guarantee future results. Trading involves risk.",
 
     // simulated performance (investment simulator)
     simTag: "Simulator",
@@ -98,8 +100,8 @@ export const T = {
     step1Desc: "Join our channel and start receiving AI-powered signals in real-time.",
     step2Title: "Auto-Trade via Cornix",
     step2Desc: "Connect Cornix bot for hands-free execution on Bybit, Binance, or OKX.",
-    step3Title: "Track in Google Sheets",
-    step3Desc: "Every trade is logged publicly. Full transparency, verifiable results.",
+    step3Title: "Track on /live dashboard",
+    step3Desc: "Every trade is logged in real-time on our public dashboard. Updates every 5 minutes from the bot's database.",
 
     // signal preview
     previewTag: "Preview",
@@ -177,7 +179,7 @@ export const T = {
     transparencyGithubDesc: "Full Freqtrade strategy code available for review.",
     transparencyPaper: "Paper-Trading Phase",
     transparencyPaperDesc: "Honestly in paper-trading since March 2026. No fake live claims.",
-    verifyYourself: "Verify on Google Sheets",
+    verifyYourself: "Verify on /live dashboard",
 
     // security badges
     securityTag: "Security & Trust",
@@ -188,7 +190,7 @@ export const T = {
     secBadge3: "Paper-Verified",
     secBadge3Desc: "Honest paper-trading phase. No fake live trading claims.",
     secBadge4: "Public Track Record",
-    secBadge4Desc: "Every trade logged in real-time on public Google Sheets.",
+    secBadge4Desc: "Every trade logged in real-time on our public /live dashboard.",
 
     // dashboard mockup (5.3)
     dashboardTag: "Live Dashboard",
@@ -325,21 +327,23 @@ export const T = {
     joinTelegramChannel: "Подписаться на Telegram",
     viewLiveResults: "Смотреть результаты",
 
-    liveSince: "Работает с марта 2026",
-    paperVerified: "Paper-trading подтверждён",
+    liveSince: "Paper-trading с апреля 2026",
+    paperVerified: "Open-source стратегия",
     tagline: "AI-Powered сигналы.",
     taglineHighlight: "Проверенные результаты.",
     heroDesc: (
       <>Крипто-сигналы на основе ИИ с{" "}
-      <span className="text-primary font-semibold">винрейтом 67.9%</span> и{" "}
+      <span className="text-primary font-semibold">бэктест-винрейтом 67.9%</span> и{" "}
       <span className="text-primary font-semibold">просадкой 1.42%</span>.
-      Мультитаймфрейм анализ BTC, ETH, SOL, BNB и DOGE.</>
+      Анализ 13 USDT-perp пар, включая BTC, ETH, SOL.</>
     ),
     winRate: "Винрейт",
     profitFactor: "Профит-фактор",
     maxDD: "Макс. просадка",
     publicTrack: "Публичный трек-рекорд",
     algoTrading: "AI-Powered трейдинг",
+    backtestLabel: "Бэктест — янв 2024 — март 2026",
+    seeLivePerformance: "Live результаты →",
     openSource: "Открытая стратегия",
 
     metricsTag: "Результаты",
@@ -386,7 +390,7 @@ export const T = {
     perfConsistency: "Стабильность",
     perfRiskMgmt: "Управление рисками",
     perfAvgBot: "Средний бот",
-    perfDisclaimer: "На основе бэктеста с января 2024 по март 2026. 5 пар: BTC, ETH, SOL, BNB, DOGE. Прошлые результаты не гарантируют будущую доходность. Торговля связана с риском.",
+    perfDisclaimer: "На основе бэктеста с января 2024 по март 2026 на 13 USDT-perp парах (BTC, ETH, SOL + 10 альтов). Прошлые результаты не гарантируют будущую доходность. Торговля связана с риском.",
 
     // simulated performance (investment simulator)
     simTag: "Симулятор",
@@ -409,8 +413,8 @@ export const T = {
     step1Desc: "Присоединяйтесь к каналу и получайте сигналы в реальном времени.",
     step2Title: "Авто-трейд через Cornix",
     step2Desc: "Подключите Cornix для автоматического исполнения на Bybit, Binance или OKX.",
-    step3Title: "Отслеживайте в Google Sheets",
-    step3Desc: "Каждая сделка записывается публично. Полная прозрачность и проверяемость.",
+    step3Title: "Смотрите /live дашборд",
+    step3Desc: "Каждая сделка публично логируется в реальном времени. Обновляется каждые 5 минут прямо из БД бота.",
 
     previewTag: "Превью",
     previewTitle: "Что вы получите",
@@ -481,7 +485,7 @@ export const T = {
     transparencyGithubDesc: "Полный код стратегии Freqtrade доступен для анализа.",
     transparencyPaper: "Фаза paper-trading",
     transparencyPaperDesc: "Честно в paper-trading с марта 2026. Без фейковых заявлений о live.",
-    verifyYourself: "Проверить в Google Sheets",
+    verifyYourself: "Проверить на /live",
 
     // security badges
     securityTag: "Безопасность и доверие",
@@ -492,7 +496,7 @@ export const T = {
     secBadge3: "Paper-verified",
     secBadge3Desc: "Честная фаза paper-trading. Без фейковых заявлений о live торговле.",
     secBadge4: "Публичный трек-рекорд",
-    secBadge4Desc: "Каждая сделка записывается в реальном времени в Google Sheets.",
+    secBadge4Desc: "Каждая сделка записывается в реальном времени на нашем /live дашборде.",
 
     // dashboard mockup (5.3)
     dashboardTag: "Дашборд",

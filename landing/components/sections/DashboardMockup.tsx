@@ -1,9 +1,6 @@
 import { MOCK_TRADES } from "@/lib/data";
 import type { TStrings } from "@/lib/i18n";
 
-const SHEETS_URL =
-  "https://docs.google.com/spreadsheets/d/1ZWRJ0PcBSk910MZv426PrleriBnInykr3OebWXJPm-g";
-
 export function DashboardMockup({ t, visible }: { t: TStrings; visible: boolean }) {
   return (
     <div className={`reveal reveal-delay-2 ${visible ? "visible" : ""}`}>
@@ -65,9 +62,7 @@ export function DashboardMockup({ t, visible }: { t: TStrings; visible: boolean 
         {/* Footer link */}
         <div className="px-4 py-3 bg-background/50 border-t border-border/30 flex justify-center">
           <a
-            href={SHEETS_URL}
-            target="_blank"
-            rel="noopener noreferrer"
+            href="/live"
             className="text-xs text-primary hover:underline underline-offset-4 font-medium inline-flex items-center gap-1.5"
           >
             {t.dashboardViewFull}
