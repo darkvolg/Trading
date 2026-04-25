@@ -218,20 +218,20 @@ export default function Article() {
           </ul>
 
           <h2 className="text-xl font-semibold text-foreground mt-8 mb-3">How Transparency Proves the Score Is Real</h2>
-          <p>Any signal channel can display a confidence number. What separates TrendRider is that every historical signal — including the score at publish time and the realized outcome — lives in a public Google Sheet. You can verify the win-rate-by-confidence table above yourself.</p>
-          <p>This matters. If a provider&apos;s confidence scores don&apos;t correlate with outcomes, the score is marketing paint, not a real filter. TrendRider&apos;s correlation between score and win rate is nearly monotonic across 10,000+ trades — that&apos;s the signature of a genuinely predictive system.</p>
+          <p>Any signal channel can display a confidence number. What separates TrendRider is that every historical signal — including the score at publish time and the realized outcome — lives on a public dashboard at <a href="/live" className="text-primary hover:underline">/live</a>, updated every 5 minutes from the bot&apos;s database. You can verify the win-rate-by-confidence table above yourself.</p>
+          <p>This matters. If a provider&apos;s confidence scores don&apos;t correlate with outcomes, the score is marketing paint, not a real filter. TrendRider rejects every entry below threshold (5 in ranging market, 6 in bear) — you can read the rejection rule in the open-source strategy code.</p>
 
-          <h2 className="text-xl font-semibold text-foreground mt-8 mb-3">Auto-Sizing by Confidence With Cornix</h2>
-          <p>Cornix supports confidence-based sizing natively. When you connect TrendRider signals, Cornix can read the score field and apply size multipliers automatically. Config example:</p>
+          <h2 className="text-xl font-semibold text-foreground mt-8 mb-3">Auto-Sizing by Confidence (Strategy-Level)</h2>
+          <p>Position sizing by confidence is built into the open-source strategy itself, not a third-party tool. The strategy uses a fixed stake amount per trade (configurable in <code className="text-xs bg-card px-2 py-0.5 rounded font-mono">config.json</code>) — but you can extend it to scale by confidence. Suggested approach:</p>
 
           <div className="bg-card/50 border border-border/50 rounded-xl p-6 my-6 font-mono text-sm">
-            <p><strong className="text-foreground">Cornix multipliers:</strong></p>
-            <p>Score 6-7: 0.5x base size</p>
-            <p>Score 8-9: 1.0x base size</p>
-            <p>Score 10+: 1.5x base size</p>
+            <p><strong className="text-foreground">Stake multipliers (in custom_stake_amount):</strong></p>
+            <p>Score 5-6: 0.5x base stake</p>
+            <p>Score 7-8: 1.0x base stake</p>
+            <p>Score 9-10: 1.5x base stake</p>
           </div>
 
-          <p>Set your base position to 2% risk and Cornix handles the scaling. Hands-free, consistent, no emotional overrides. Full setup walkthrough is in the <a href="/blog/cornix-auto-trade-setup-guide" className="text-primary hover:underline">Cornix auto-trade setup guide</a>.</p>
+          <p>Set your base stake to 2% of equity and the strategy handles the scaling. Hands-free, consistent, no emotional overrides. The full <a href="https://github.com/darkvolg/Trading" className="text-primary hover:underline">strategy source</a> is on GitHub if you want to fork and add this.</p>
 
           <h2 className="text-xl font-semibold text-foreground mt-8 mb-3">Confidence Scoring as Market Regime Indicator</h2>
           <p>Here&apos;s a bonus use case most traders miss: confidence scores reveal market regime in real time.</p>

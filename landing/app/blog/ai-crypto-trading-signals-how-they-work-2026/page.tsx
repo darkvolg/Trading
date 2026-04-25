@@ -93,7 +93,7 @@ export default function Article() {
                 "name": "Are AI trading signals profitable?",
                 "acceptedAnswer": {
                   "@type": "Answer",
-                  "text": "AI trading signals can be profitable when the underlying strategy has a verified backtest, transparent metrics, and proper risk management. Key profitability drivers are win rate above 55%, profit factor above 1.5, and max drawdown under 10%. TrendRider publishes a 67.9% win rate, 2.12 profit factor, and 1.42% max drawdown with a public Google Sheet tracking every historical signal for full transparency."
+                  "text": "Algorithmic trading signals can be profitable when the underlying strategy has a verified backtest, transparent metrics, and proper risk management. Key profitability drivers are win rate above 55%, profit factor above 1.5, and max drawdown under 10%. TrendRider publishes backtest metrics (67.9% win rate, 2.12 profit factor, 1.42% max drawdown over Jan 2024 — Mar 2026) plus live performance updated every 5 minutes on a public dashboard at trendrider.net/live."
                 }
               },
               {
@@ -101,7 +101,7 @@ export default function Article() {
                 "name": "Can I auto-execute AI signals on Bybit?",
                 "acceptedAnswer": {
                   "@type": "Answer",
-                  "text": "Yes. Cornix is the standard tool for auto-executing Telegram AI signals on Bybit, Binance, and OKX. It reads the signal message, places the entry order, and configures stop loss and take profit automatically — usually under 2 seconds. TrendRider signals follow Cornix's standard format so setup takes about 10 minutes."
+                  "text": "Yes. The TrendRider strategy itself is built on Freqtrade, an open-source crypto trading bot. You clone the GitHub repo, install Freqtrade (free), connect your Bybit API keys, and the bot auto-executes trades directly — no third-party tool needed. Setup takes under one hour for a beginner. Full guide at trendrider.net/blog/freqtrade-setup-tutorial-beginners-2026."
                 }
               }
             ]
@@ -215,8 +215,8 @@ export default function Article() {
           </ul>
           <p>Running an AI on 50 random alts looks impressive but produces garbage signals. Focus outperforms breadth.</p>
 
-          <h2 className="text-xl font-semibold text-foreground mt-8 mb-3">Transparency: The Public Google Sheet</h2>
-          <p>Every AI claim needs proof. TrendRider publishes every historical signal in a public Google Sheet: entry price, exit price, confidence score, P&amp;L, timestamps. Anyone can audit the 67.9% win rate independently.</p>
+          <h2 className="text-xl font-semibold text-foreground mt-8 mb-3">Transparency: The Public /live Dashboard</h2>
+          <p>Every AI claim needs proof. TrendRider publishes every historical signal in a public /live dashboard: entry price, exit price, confidence score, P&amp;L, timestamps. Anyone can audit the 67.9% win rate independently.</p>
           <p>This level of transparency is rare. Most &ldquo;AI signal&rdquo; channels delete losing trades from history or only screenshot winners. If a provider won&apos;t show you their full trade log, the AI claim is marketing, not reality.</p>
 
           <h2 className="text-xl font-semibold text-foreground mt-8 mb-3">Auto-Executing AI Signals with Cornix</h2>
@@ -236,7 +236,7 @@ export default function Article() {
           <h2 className="text-xl font-semibold text-foreground mt-8 mb-3">How to Start With AI Crypto Signals</h2>
           <ol className="list-decimal pl-6 space-y-2">
             <li><strong className="text-foreground">Join a transparent channel.</strong> TrendRider&apos;s free Telegram channel is the easy entry point.</li>
-            <li><strong className="text-foreground">Observe 1 week.</strong> Don&apos;t trade. Watch how confidence scores correlate with outcomes in the public Google Sheet.</li>
+            <li><strong className="text-foreground">Observe 1 week.</strong> Don&apos;t trade. Watch how confidence scores correlate with outcomes in the public /live dashboard.</li>
             <li><strong className="text-foreground">Paper trade with Cornix.</strong> Free paper mode for 2 weeks validates your risk settings.</li>
             <li><strong className="text-foreground">Go live small.</strong> Start at 2% per trade, 3x leverage. Scale only after 30+ live trades.</li>
             <li><strong className="text-foreground">Journal every trade.</strong> Confidence score vs outcome reveals which setups favor your execution.</li>
