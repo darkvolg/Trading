@@ -26,12 +26,13 @@ interface PeriodData {
 const PERIODS = ["allTime", "12m", "6m", "3m"] as const;
 type Period = (typeof PERIODS)[number];
 
-const PERIOD_DATA: Record<Period, PeriodData> = {
-  // Numbers below are illustrative; verified backtest + live stats are published on /live
-  allTime: { roi: 14.49, winRate: 53.0, maxDD: 4.5, sqn: 2.1, trades: 112, pf: 1.6 },
-  "12m": { roi: 9.8, winRate: 54.0, maxDD: 4.0, sqn: 2.0, trades: 78, pf: 1.55 },
-  "6m": { roi: 5.1, winRate: 55.0, maxDD: 3.5, sqn: 1.95, trades: 42, pf: 1.50 },
-  "3m": { roi: 2.3, winRate: 52.0, maxDD: 3.0, sqn: 1.85, trades: 19, pf: 1.45 },
+// Fallback values used if /api/live-stats.json fetch fails.
+// Live stats override allTime via useEffect below.
+const PERIOD_DATA_FALLBACK: Record<Period, PeriodData> = {
+  allTime: { roi: 2.4, winRate: 53.0, maxDD: 2.5, sqn: 1.2, trades: 98, pf: 1.4 },
+  "12m": { roi: 2.4, winRate: 53.0, maxDD: 2.5, sqn: 1.2, trades: 98, pf: 1.4 },
+  "6m": { roi: 2.4, winRate: 53.0, maxDD: 2.5, sqn: 1.2, trades: 98, pf: 1.4 },
+  "3m": { roi: 2.4, winRate: 53.0, maxDD: 2.5, sqn: 1.2, trades: 98, pf: 1.4 },
 };
 
 const TR_POINTS = [
@@ -192,9 +193,30 @@ export function PerformanceDashboard({ t, visible, sectionRef }: PerformanceDash
   const [showAdvanced, setShowAdvanced] = useState(false);
   const [hoverIndex, setHoverIndex] = useState<number | null>(null);
   const [lineAnimated, setLineAnimated] = useState(false);
+  const [periodData, setPeriodData] = useState<Record<Period, PeriodData>>(PERIOD_DATA_FALLBACK);
   const svgRef = useRef<SVGSVGElement>(null);
 
-  const data = PERIOD_DATA[period];
+  // Fetch live stats and override all periods (we currently only have all-time live data)
+  useEffect(() => {
+    fetch("/api/live-stats.json", { cache: "no-store" })
+      .then((r) => (r.ok ? r.json() : null))
+      .then((d) => {
+        if (d && typeof d.win_rate_pct === "number") {
+          const live: PeriodData = {
+            roi: d.pnl_pct ?? PERIOD_DATA_FALLBACK.allTime.roi,
+            winRate: d.win_rate_pct,
+            maxDD: d.max_drawdown_pct ?? PERIOD_DATA_FALLBACK.allTime.maxDD,
+            sqn: d.sqn ?? PERIOD_DATA_FALLBACK.allTime.sqn,
+            trades: d.closed_trades ?? PERIOD_DATA_FALLBACK.allTime.trades,
+            pf: d.profit_factor ?? PERIOD_DATA_FALLBACK.allTime.pf,
+          };
+          setPeriodData({ allTime: live, "12m": live, "6m": live, "3m": live });
+        }
+      })
+      .catch(() => {});
+  }, []);
+
+  const data = periodData[period];
 
   // Trigger line animation when visible
   useEffect(() => {

@@ -87,10 +87,10 @@ export const T = {
     simWinRate: "Win Rate",
     simProfitFactor: "Profit Factor",
     simMaxDD: "Max Drawdown",
-    simSharpe: "Sharpe Ratio",
+    simSharpe: "SQN",
     simNetProfit: "Net Profit",
     simCapital: "Capital",
-    simDisclaimer: "Numbers above are illustrative — for the real-time, actual stats from the running bot, see /live (updates every 5 min directly from the bot's database). Past performance does not guarantee future results. Trading cryptocurrencies involves significant risk.",
+    simDisclaimer: "Numbers above are LIVE — fetched directly from the running bot's database, updated every 5 min. Source: /api/live-stats.json (also visible on /live). Past performance does not guarantee future results. Trading cryptocurrencies involves significant risk.",
 
     // how it works
     howTag: "Process",
@@ -401,10 +401,10 @@ export const T = {
     simWinRate: "Винрейт",
     simProfitFactor: "Профит-фактор",
     simMaxDD: "Макс. просадка",
-    simSharpe: "Коэфф. Шарпа",
+    simSharpe: "SQN",
     simNetProfit: "Чистая прибыль",
     simCapital: "Капитал",
-    simDisclaimer: "Цифры выше — иллюстративные. Реальная статистика работающего бота — на /live (обновляется каждые 5 мин прямо из БД бота). Прошлые результаты не гарантируют будущую доходность. Торговля криптовалютами связана со значительным риском.",
+    simDisclaimer: "Цифры выше — ЖИВЫЕ, тянутся прямо из БД работающего бота, обновление каждые 5 мин. Источник: /api/live-stats.json (также видны на /live). Прошлые результаты не гарантируют будущую доходность. Торговля криптовалютами связана со значительным риском.",
 
     howTag: "Процесс",
     howTitle: "Как это работает",

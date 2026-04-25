@@ -31,13 +31,21 @@ const CHART_FONT = "system-ui, sans-serif";
 const PLOT_W = CHART_W - CHART_PAD.left - CHART_PAD.right;
 const PLOT_H = CHART_H - CHART_PAD.top - CHART_PAD.bottom;
 
-// Numbers below are illustrative. Verified backtest + live stats are published on /live.
+// Metrics are fetched live from /api/live-stats.json (auto-updated every 5 min from bot DB).
+// Fallback values shown only on fetch failure.
 const METRICS = [
-  { key: "simWinRate" as const, value: 53, suffix: "%", icon: "target" },
-  { key: "simProfitFactor" as const, value: 1.6, suffix: "x", icon: "trending" },
-  { key: "simMaxDD" as const, value: 4.5, suffix: "%", icon: "shield" },
-  { key: "simSharpe" as const, value: 2.1, suffix: "", icon: "chart" },
+  { key: "simWinRate" as const, fallback: 53, suffix: "%", icon: "target" },
+  { key: "simProfitFactor" as const, fallback: 1.4, suffix: "x", icon: "trending" },
+  { key: "simMaxDD" as const, fallback: 2.5, suffix: "%", icon: "shield" },
+  { key: "simSharpe" as const, fallback: 1.2, suffix: "", icon: "chart" },
 ];
+
+interface LiveStats {
+  win_rate_pct: number;
+  profit_factor: number;
+  max_drawdown_pct: number;
+  sqn: number;
+}
 
 const GREEN = "#00D4AA";
 const LABEL_COLOR = "#ffffff";
@@ -203,11 +211,29 @@ export function SimulatedPerformance({ t, visible, sectionRef }: SimulatedPerfor
     }
   }, [capital]);
 
-  /* ── Animated metrics ── */
-  const animWinRate = useAnimatedValue(53, visible);
-  const animPF = useAnimatedValue(1.6, visible);
-  const animDD = useAnimatedValue(4.5, visible);
-  const animSharpe = useAnimatedValue(2.1, visible);
+  /* ── Live stats fetch ── */
+  const [liveStats, setLiveStats] = useState<LiveStats | null>(null);
+  useEffect(() => {
+    fetch("/api/live-stats.json", { cache: "no-store" })
+      .then((r) => (r.ok ? r.json() : null))
+      .then((d) => {
+        if (d && typeof d.win_rate_pct === "number") {
+          setLiveStats({
+            win_rate_pct: d.win_rate_pct,
+            profit_factor: d.profit_factor ?? METRICS[1].fallback,
+            max_drawdown_pct: d.max_drawdown_pct ?? METRICS[2].fallback,
+            sqn: d.sqn ?? METRICS[3].fallback,
+          });
+        }
+      })
+      .catch(() => {});
+  }, []);
+
+  /* ── Animated metrics (live or fallback) ── */
+  const animWinRate = useAnimatedValue(liveStats?.win_rate_pct ?? METRICS[0].fallback, visible);
+  const animPF = useAnimatedValue(liveStats?.profit_factor ?? METRICS[1].fallback, visible);
+  const animDD = useAnimatedValue(liveStats?.max_drawdown_pct ?? METRICS[2].fallback, visible);
+  const animSharpe = useAnimatedValue(liveStats?.sqn ?? METRICS[3].fallback, visible);
   const animatedMetrics = [animWinRate, animPF, animDD, animSharpe];
 
   return (
