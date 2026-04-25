@@ -176,6 +176,10 @@ export default function Home() {
           { label: t.navPricing, ref: pricingSection.ref },
           { label: t.navFaq, ref: faqSection.ref },
         ]}
+        pageLinks={[
+          { label: t.navLive, href: "/live" },
+        ]}
+        githubUrl="https://github.com/darkvolg/Trading"
       />
 
       {/* Floating CTA */}
