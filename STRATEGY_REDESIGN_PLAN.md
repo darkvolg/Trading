@@ -97,5 +97,23 @@ A is a cheap-but-low-confidence spike on the same alpha source. B is genuinely d
 | Date | Task | Outcome | Commit |
 |------|------|---------|--------|
 | 2026-05-01 | Action plan created (A/B/C) | Pending direction confirmation | 8e9acf6 |
-| 2026-05-01 | Re-evaluated; added Direction D (Donchian); user picked D | D chosen | (this commit) |
-| 2026-05-01 | Branch `redesign/donchian-daily` + skeleton `DonchianBreakoutStrategy.py` | Phase 1 setup partial | (this commit) |
+| 2026-05-01 | Re-evaluated; added Direction D (Donchian); user picked D | D chosen | 671f031 |
+| 2026-05-01 | Branch `redesign/donchian-daily` + skeleton | Phase 1 setup | fc20a00 |
+| 2026-05-01 | v1: full Donchian + ATR Chandelier + ATR sizing (no regime) | -13.59% / Sharpe -0.58 / MaxDD 13.64% over 836d (market -24.45%). Fail 0/3 vs baseline. | (next commit) |
+| 2026-05-01 | v2: + BTC SMA(200) regime filter | -7.43% / Sharpe -0.30 / MaxDD 7.43% over 836d. Improved but still fail 0/3. | (next commit) |
+| 2026-05-01 | Diagnosed: 12 of 14 alts had only 114d of 1d data; downloaded 5y history (2021→2026, ~1900 rows/pair) | data infrastructure ready | (next commit) |
+| 2026-05-01 | v2 on full 5y data | -54.33% / Sharpe -1.50 / MaxDD 54.33% / 13.4% WR (market -52%) | (next commit) |
+| 2026-05-01 | v2 on isolated bull period 2023-10 → 2024-05 (market +149%) | **-11.1% / 5.4% WR / 35 losses of 37 trades** — concept-impossible loss. **Bug in code** confirmed. | (next commit) |
+
+## Open bug hypotheses (next session — debug v2 BEFORE adding more logic)
+
+The 2023-10 → 2024-05 result (+149% market, -11% strategy, 5.4% WR) is mathematically inconsistent with a working Donchian breakout: a bull rally should produce many big winners trailing through ATR Chandelier. 95% loss rate during a +149% rally is a code bug, not a strategy property.
+
+Top suspects, in order:
+
+1. **`custom_stoploss` returns wrong unit.** Code clamps offset with `max(offset, self.stoploss + 0.001)` — when Chandelier wants stop at e.g. -17% from current rate, it gets bounded to -9.9% instead, which converts the Chandelier into a vanilla trailing-9.9% stop. Vanilla 9.9% trail on alts gets hit in normal volatility almost immediately after entry. **Fix:** lower `self.stoploss` to e.g. `-0.50` so the Chandelier offset isn't clamped, OR drop the clamp entirely.
+2. **`trade.max_rate` not updated daily in backtest mode.** If max_rate stays at entry price, Chandelier trail = entry - 3×ATR ≈ -15% below entry, which trips the -10% hard floor every time on first daily candle volatility.
+3. **Volume filter dies after BTC regime merge.** After merging BTC bull-regime onto the dataframe, the merge may drop rows or introduce NaN in `volume_mean`, silently disabling all good entries; the few that fire are on stale/wrong data.
+4. **Wrong ATR scale or sizing math.** Verify by logging `dataframe[['close','atr','atr_pct=atr/close']].tail(20)` once. Should be 2-8% range for crypto daily; if it's 50%+, ATR is in wrong units.
+
+**Action for next session:** add print statements in `populate_indicators` and `custom_stoploss`, run a 30-day backtest with `--logfile debug.log`, inspect actual values. Catch the unit/clamp bug before any new feature work.
