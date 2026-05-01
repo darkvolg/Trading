@@ -50,6 +50,32 @@ type Stats = {
   equity_curve: EquityPoint[];
 };
 
+type BacktestStats = {
+  generated_at: string;
+  baseline_file: string;
+  strategy_name: string;
+  backtest_start: string;
+  backtest_end: string;
+  backtest_days: number;
+  starting_balance: number;
+  final_balance: number;
+  total_return_pct: number;
+  total_return_abs: number;
+  total_trades: number;
+  wins: number;
+  losses: number;
+  win_rate_pct: number;
+  profit_factor: number;
+  sharpe: number;
+  sortino: number;
+  calmar: number;
+  cagr_pct: number;
+  max_drawdown_pct: number;
+  max_drawdown_abs: number;
+  market_change_pct: number;
+  equity_curve: EquityPoint[];
+};
+
 function Sparkline({ data, width = 600, height = 160 }: { data: EquityPoint[]; width?: number; height?: number }) {
   if (data.length < 2) return <div className="text-slate-500 text-sm">Not enough data yet</div>;
   const values = data.map((d) => d.balance);
@@ -105,6 +131,7 @@ function fmtRelative(iso: string) {
 
 export default function LivePage() {
   const [stats, setStats] = useState<Stats | null>(null);
+  const [backtest, setBacktest] = useState<BacktestStats | null>(null);
   const [err, setErr] = useState<string | null>(null);
   const [loading, setLoading] = useState(true);
 
@@ -127,7 +154,18 @@ export default function LivePage() {
         }
       }
     };
+    const loadBacktest = async () => {
+      try {
+        const res = await fetch(`/api/backtest-stats.json?t=${Date.now()}`, { cache: "no-store" });
+        if (!res.ok) return;
+        const data = (await res.json()) as BacktestStats;
+        if (!cancelled) setBacktest(data);
+      } catch {
+        // silent: backtest block hides itself if fetch fails
+      }
+    };
     load();
+    loadBacktest();
     const id = setInterval(load, 60_000);
     return () => {
       cancelled = true;
@@ -215,6 +253,55 @@ export default function LivePage() {
           <h2 className="text-sm uppercase tracking-wider text-slate-500 mb-4">Equity Curve</h2>
           <Sparkline data={stats.equity_curve} />
         </section>
+
+        {backtest && (
+          <section className="bg-slate-900 border border-slate-800 rounded-lg p-5 mb-8">
+            <div className="flex items-center justify-between flex-wrap gap-2 mb-4">
+              <h2 className="text-sm uppercase tracking-wider text-slate-500">
+                Historical Backtest ({backtest.backtest_days}d)
+              </h2>
+              <div className="text-xs text-slate-500 font-mono">
+                {backtest.backtest_start?.slice(0, 10)} → {backtest.backtest_end?.slice(0, 10)}
+              </div>
+            </div>
+            <div className="grid grid-cols-2 sm:grid-cols-4 gap-3 mb-5">
+              <div className="bg-slate-950 border border-slate-800 rounded-lg p-4">
+                <div className="text-xs uppercase tracking-wider text-slate-500">Total Return</div>
+                <div className={`mt-1 text-2xl font-mono font-bold ${backtest.total_return_pct >= 0 ? "text-emerald-400" : "text-red-400"}`}>
+                  {backtest.total_return_pct >= 0 ? "+" : ""}{backtest.total_return_pct.toFixed(2)}%
+                </div>
+                <div className="text-xs text-slate-500 mt-0.5">CAGR {backtest.cagr_pct.toFixed(2)}%</div>
+              </div>
+              <div className="bg-slate-950 border border-slate-800 rounded-lg p-4">
+                <div className="text-xs uppercase tracking-wider text-slate-500">Sharpe</div>
+                <div className="mt-1 text-2xl font-mono font-bold">{backtest.sharpe.toFixed(2)}</div>
+                <div className="text-xs text-slate-500 mt-0.5">Sortino {backtest.sortino.toFixed(2)}</div>
+              </div>
+              <div className="bg-slate-950 border border-slate-800 rounded-lg p-4">
+                <div className="text-xs uppercase tracking-wider text-slate-500">Max Drawdown</div>
+                <div className="mt-1 text-2xl font-mono font-bold text-amber-400">
+                  {backtest.max_drawdown_pct.toFixed(2)}%
+                </div>
+                <div className="text-xs text-slate-500 mt-0.5">${backtest.max_drawdown_abs.toFixed(2)}</div>
+              </div>
+              <div className="bg-slate-950 border border-slate-800 rounded-lg p-4">
+                <div className="text-xs uppercase tracking-wider text-slate-500">Trades</div>
+                <div className="mt-1 text-2xl font-mono font-bold">{backtest.total_trades}</div>
+                <div className="text-xs text-slate-500 mt-0.5">
+                  WR {backtest.win_rate_pct.toFixed(1)}% · PF {backtest.profit_factor.toFixed(2)}
+                </div>
+              </div>
+            </div>
+            <Sparkline data={backtest.equity_curve} />
+            <p className="mt-4 text-xs text-slate-500">
+              Backtested on Bybit USDT-perp with the open-source TrendRider strategy. Same code as live;
+              past performance is not a guarantee of future results. Market change over the period:{" "}
+              <span className={backtest.market_change_pct >= 0 ? "text-emerald-400" : "text-red-400"}>
+                {backtest.market_change_pct >= 0 ? "+" : ""}{backtest.market_change_pct.toFixed(2)}%
+              </span>.
+            </p>
+          </section>
+        )}
 
         <section className="grid md:grid-cols-2 gap-6 mb-8">
           <div className="bg-slate-900 border border-slate-800 rounded-lg p-5">
