@@ -108,6 +108,49 @@ A is a cheap-but-low-confidence spike on the same alpha source. B is genuinely d
 | 2026-05-01 | **Sanity check — TrendRiderStrategy v6A on the same bull period 2024-01 → 2024-05 (market +37%)** | **−1.89% / WR 26.6%.** V6A also fails to capture bull markets. Confirms V6A is a *chop-feeder*, not a trend-rider — it edge-grinds in sideways/bear, stagnates or loses in bulls. | (next commit) |
 | 2026-05-01 | Trade-by-trade analysis of v3 — found max-to-close giveback 15-25% (e.g. ETH max +30% → close +9.6%); P/L ratio 0.74; mathematical EV = -9.7% per trade | diagnosis: entries on rally tops, immediate pullback | (next commit) |
 | 2026-05-01 | v3 with `atr_multiplier = 2.0` (tighter Chandelier) | -14.69% / WR 11.1% — **WORSE**. Tightening exits doesn't fix the entry-timing problem. Reverted to 3.0. | (next commit) |
+| 2026-05-01 | **SuperTrend strategy** (1d, period 10, multiplier 3.0) — entries on trend-direction flips, not on price breakouts | First redesign that passes the conceptual sanity test. See SuperTrend results below. | 6b35115 |
+| 2026-05-01 | Bybit affiliate CTAs deployed to /live + 2 high-impression blog posts (utm-tagged for attribution) | Production: `bybit.com/invite?ref=0GDX5JR` now wired in `live_header`, `blog_exchange`, `blog_setup` placements | b5cb2d0 |
+
+## SuperTrend results — first redesign that beats V6A on absolute return
+
+Same whitelist (14 alts), 1d timeframe, max 8 open trades, default $50 stake.
+
+| Window | Days | Market | Return | Sharpe | Sortino | MaxDD | PF | WR |
+|---|---|---|---|---|---|---|---|---|
+| Bull (2023-10 → 2024-05) | 213 | +149% | **+67.91%** | 0.85 | 8.75 | **1.46%** | 11.2 | **68.8%** |
+| V6A baseline (2024-01 → 2026-04) | 837 | -20.6% | **+10.98%** | 0.06 | 0.32 | 24.23% | 1.12 | 27.4% |
+| Full 5y (2021-01 → 2026-04) | 1915 | -46.5% | **+80.68%** | 0.18 | 0.99 | 16.88% | 1.52 | 34.1% |
+
+**vs V6A on the 837d baseline window:**
+- V6A: +4.99% / Sharpe 0.69 / MaxDD 4.78%
+- SuperTrend: +10.98% / Sharpe 0.06 / MaxDD 24.23%
+- Total return: 2.2× higher. Sharpe and MaxDD: worse.
+
+This is the asymmetry we predicted in the "Critical realisation" section:
+V6A is the **chop-feeder** (high Sharpe, low DD, modest return in
+sideways/bear) and SuperTrend is the **trend-rider** (high absolute
+return, lower Sharpe, deeper DD, big upside in sustained trends).
+A 2-of-3 strict gate on a single mixed-regime window can't fairly
+compare these two — they fish in different waters. The honest path
+forward is the regime-switched ensemble (Direction C from the original
+A/B/C/D plan), now feasible with both legs proven:
+
+  - **Chop leg = V6A** (already shipped, +4.99% over 836d, low DD)
+  - **Trend leg = SuperTrend** (this session, +80% over 5y, accepts higher DD)
+  - **Regime classifier**: BTC > 200d SMA + BTC ADX threshold → enable
+    SuperTrend. Else → V6A only. (Detection via informative_pairs.)
+
+NEXT-SESSION ACTIONS:
+1. Walk-forward OOS validation of SuperTrend (4 non-overlapping windows,
+   confirm no period-specific overfit).
+2. Build the regime classifier as a separate strategy file
+   `EnsembleStrategy.py` that delegates to V6A or SuperTrend based on
+   BTC regime.
+3. 7-day Senko dry-run of SuperTrend (or Ensemble) on a parallel config
+   (separate sqlite, separate Telegram chat). Promote to live ONLY if the
+   dry-run profile matches the backtest within reasonable variance.
+
+
 
 ## Final verdict on Donchian (Direction D) — concept-level mismatch with crypto alts
 
