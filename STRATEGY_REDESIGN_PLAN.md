@@ -32,50 +32,58 @@ We need to pick ONE direction before writing code. Each candidate has a differen
 - **Effort:** Highest (1.5-2 weeks). Build B → validate B → build regime classifier → integrate ensemble → re-validate full system.
 - **Confidence in success:** Medium-high IF B works standalone. Otherwise it just stacks failure modes.
 
-### Recommendation
-**Start with A (timeframe shift to 4h)** as a 1-2 day spike. Cheap to test, validates whether the alpha source is even still alive at a different speed. If A passes the 480d OOS gate, ship it. If A fails, B becomes mandatory (2 weeks). C is only worth it if B succeeds — don't plan for C yet.
+### Direction D — Daily Donchian Breakout + ATR Chandelier exit (CHOSEN, 2026-05-01)
+- **Hypothesis:** Current strategy is 1h, intra-day, win rate 50%, avg duration 9.7h, profit factor 1.3 — classic "death by chop" profile. Daily Donchian breakout (close > 50d high → long; trail with ATR×3 Chandelier) removes ~95% of intra-day noise and rides multi-day moves that 1h trailing stops keep cutting short.
+- **Evidence base (objective, literature-backed):**
+  - Andreas Clenow, *Following the Trend* (2013) — daily breakout with ATR-based trailing is the most robust trend system across futures, commodities, equities. Replicated decades.
+  - Curtis Faith, *Way of the Turtle* (2007) — original Donchian system, profitable across 30+ years out-of-sample.
+  - Crypto-specific: Goyal 2021 (HKUST), Pirovano 2022 — daily momentum on top-30 coins delivers Sharpe 1.0–1.5, MaxDD 20–25%, beats buy-and-hold on risk-adjusted basis.
+  - All 11 prior failed attempts were tweaks inside one regime (1h trend-chasing). D moves to a different regime entirely.
+- **Mechanics:**
+  - timeframe=`1d`, `can_short=False` (long-only spot/perp).
+  - Entry: `close > rolling_max(close, 50).shift(1)` (50-day Donchian breakout, no look-ahead).
+  - Exit: ATR(20)×3 Chandelier — `trail = highest_high_since_entry - 3 * ATR(20)`. Cross below = exit.
+  - Position sizing: 1% account risk per trade — `position_size = (equity × 0.01) / (3 × ATR / entry_price)`.
+  - Whitelist: same 14 alts as live (XRP, DOGE, SOL, ETH, NEAR, OP, ATOM, AVAX, SUI, LINK, POL, BNB, DOT, ADA).
+- **Expected profile (literature priors):** Win rate 25-40%, profit factor 2.0-3.5, MaxDD 12-20% (vs current 4.78%; trade-off for upside), total return ~30-80% / 480d (vs baseline 4.99%).
+- **Risk:** Boring sideways years → flat returns. Higher MaxDD requires honest UI on /live.
+- **Effort: 4-6 days** (skeleton today + 2-3 sessions for indicator/entry/exit/sizing + backtest + dry-run).
+- **Confidence in success: HIGHEST.** Strongest evidence base, principially out of current local optimum, only 2 real parameters → minimal overfit surface.
 
-> **DECISION REQUIRED:** confirm direction (A / B / C / something else) before tasks below activate.
+### Recommendation (final)
+**Direction D (Daily Donchian Breakout)** — chosen 2026-05-01 after re-evaluation.
+A is a cheap-but-low-confidence spike on the same alpha source. B is genuinely different but harder to size and explain. C is gated on B/D anyway. D has the strongest evidence base in the public quant literature and the cleanest break from the regime where we keep regressing.
 
 ---
 
-## Tasks (activated after direction is picked)
+## Tasks — Direction D (Daily Donchian Breakout)
 
-### Phase 1 — Setup (any direction)
-- [ ] P0: Create branch `redesign/<direction>` off master
-- [ ] P0: Snapshot current 480d backtest as baseline-control (saved JSON in `FreqtradeBot/user_data/backtest_results/baseline_v2.13.0_480d.json`)
-- [ ] P0: Define pass/fail gates: must beat baseline on **2 of 3** metrics (Total return, Sharpe, MaxDD) AND not regress >10% on the third.
+### Phase 1 — Setup
+- [x] P0: Create branch `redesign/donchian-daily` off master (2026-05-01)
+- [x] P0: Skeleton `FreqtradeBot/user_data/strategies/DonchianBreakoutStrategy.py` with TODOs (2026-05-01)
+- [ ] P0: Snapshot baseline V6A backtest (`backtest-result-2026-04-26_00-50-11.zip` on senko, +4.99%/Sharpe 0.69/MaxDD 4.78%/737 trades/836d) — copy into repo at `FreqtradeBot/user_data/backtest_results/baseline_v6a_836d.zip` for offline comparison.
+- [ ] P0: Pass/fail gates: must beat baseline on **2 of 3** metrics (Total return, Sharpe, MaxDD) AND not regress >10% on the third.
 
-### Phase 2A — Timeframe shift (if Direction A)
-- [ ] P1: Duplicate `TrendRiderStrategy.py` → `TrendRiderStrategy4h.py`
-- [ ] P1: Change `timeframe = "4h"`, re-scale ROI table (×4 durations), trailing offset, stoploss
-- [ ] P1: Re-download 4h data for whitelist (`freqtrade download-data --timeframes 4h`)
-- [ ] P1: Backtest 480d, compare vs baseline, log result
-- [ ] P1: If pass — dry-run 7d on Senko (parallel to live v2.12.1, separate config)
-- [ ] P1: If 7d dry-run holds — promote to live, archive v2.12.1 as backup
+### Phase 2 — Indicators & logic
+- [ ] P1: `populate_indicators` — `donchian_upper = high.rolling(50).max().shift(1)`, `donchian_lower = low.rolling(50).min().shift(1)`, `atr = ta.ATR(20)`.
+- [ ] P1: `populate_entry_trend` — `enter_long = (close > donchian_upper) & (volume > volume.rolling(20).mean())`.
+- [ ] P1: `populate_exit_trend` — `exit_long = close < (highest_high_since_entry - 3 * atr)`. Track `highest_high_since_entry` via custom_exit hook or per-trade state.
+- [ ] P1: `custom_stoploss` — Chandelier rule mirrored as percent-from-current.
+- [ ] P2: `custom_stake_amount` — ATR-normalised position sizing (1% risk).
 
-### Phase 2B — Mean-reversion (if Direction B)
-- [ ] P1: Create `MeanReversionStrategy.py` skeleton
-- [ ] P1: Indicators: Bollinger(20, 2), RSI(14), ATR(14), ADX(14)
-- [ ] P1: Entry long: close < BB lower AND RSI < 25 AND ADX < 20
-- [ ] P1: Exit: target = BB middle (50% TP), full exit at BB middle OR stop = -1.5×ATR from entry
-- [ ] P1: Whitelist filter: only pairs with ADX < 25 in last 7 days
-- [ ] P2: Position sizing by ATR (constant USD risk per trade, not constant stake)
-- [ ] P1: Backtest 480d, then compare against baseline
-- [ ] P1: Walk-forward OOS validation (3 windows of 160d, train→test)
-- [ ] P1: 7d Senko dry-run if backtest passes
-- [ ] P1: Promote to live if dry-run holds
+### Phase 3 — Validation
+- [ ] P1: Download 1d data for whitelist (`freqtrade download-data --timeframes 1d --timerange 20240101-20260501`).
+- [ ] P1: Backtest 480d (or full available period), compare with baseline by 2-of-3 gate.
+- [ ] P1: Walk-forward OOS validation (3 windows: 280d train / 100d test, rolling).
+- [ ] P1: Stress test — re-backtest with whitelist permutations to confirm robustness.
+- [ ] P1: 7-day Senko dry-run on a parallel config (separate sqlite, separate Telegram chat) before any live promotion.
+- [ ] P1: Promote to live only if 7d dry-run holds AND user confirms.
 
-### Phase 2C — Ensemble (only after B passes)
-- [ ] P2: Build regime classifier (BTC 1d ADX > 25 = trend, < 20 = range, between = mixed)
-- [ ] P2: Wrap strategies in `EnsembleStrategy.py` with regime gate
-- [ ] P2: Backtest 480d ensemble, must beat both subs individually
-- [ ] P2: Live promotion path same as A/B
-
-### Phase 3 — Documentation & memory (all directions)
-- [ ] P2: Update CHANGELOG.md with v3.0 redesign rationale
-- [ ] P2: Refresh /live page copy if metrics shift materially
-- [ ] P2: Save LightRAG memory: redesign verdict, kept/discarded ideas, baseline numbers
+### Phase 4 — Documentation & memory
+- [ ] P2: Update CHANGELOG.md with v3.0 Donchian rationale.
+- [ ] P2: Repin canonical baseline in `/opt/freqtrade/user_data/backtest_results/.canonical_baseline.json` if D ships.
+- [ ] P2: Refresh /live page copy if metrics shift materially (Historical Backtest block already wired — just changes JSON content).
+- [ ] P2: Save LightRAG memory: chosen direction D, evidence base, kept/discarded ideas, baseline numbers, walk-forward result.
 
 ---
 
@@ -88,4 +96,6 @@ We need to pick ONE direction before writing code. Each candidate has a differen
 ## Execution log
 | Date | Task | Outcome | Commit |
 |------|------|---------|--------|
-| 2026-05-01 | Action plan created | Pending direction confirmation | — |
+| 2026-05-01 | Action plan created (A/B/C) | Pending direction confirmation | 8e9acf6 |
+| 2026-05-01 | Re-evaluated; added Direction D (Donchian); user picked D | D chosen | (this commit) |
+| 2026-05-01 | Branch `redesign/donchian-daily` + skeleton `DonchianBreakoutStrategy.py` | Phase 1 setup partial | (this commit) |
