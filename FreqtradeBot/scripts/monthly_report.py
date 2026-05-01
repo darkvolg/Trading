@@ -95,7 +95,7 @@ def query_trades(db_path: str, start: datetime, end: datetime) -> list[dict]:
         cur = conn.cursor()
         cur.execute(
             """
-            SELECT pair, profit_ratio, close_profit_abs, close_date,
+            SELECT pair, close_profit AS profit_ratio, close_profit_abs, close_date,
                    open_date, stake_amount, exit_reason
             FROM trades
             WHERE is_open = 0 AND close_date >= ? AND close_date < ?
