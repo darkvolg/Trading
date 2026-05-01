@@ -44,3 +44,4 @@ FreqtradeBot/user_data/strategy_card_*.png
 landing/node_modules/
 landing/.next/
 landing/out/
+FreqtradeBot/config_supertrend.json

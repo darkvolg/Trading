@@ -1,0 +1,108 @@
+{
+    "trading_mode": "futures",
+    "margin_mode": "isolated",
+    "max_open_trades": 8,
+    "stake_currency": "USDT",
+    "stake_amount": 50,
+    "tradable_balance_ratio": 0.99,
+    "fiat_display_currency": "USD",
+    "dry_run": true,
+    "dry_run_wallet": 500,
+    "cancel_open_orders_on_exit": true,
+    "timeframe": "1h",
+    "exchange": {
+        "name": "bybit",
+        "key": "",
+        "secret": "",
+        "ccxt_sync_config": {
+            "enableRateLimit": true
+        },
+        "ccxt_async_config": {
+            "enableRateLimit": true
+        },
+        "pair_whitelist": [
+            "BTC/USDT:USDT",
+            "ETH/USDT:USDT",
+            "SOL/USDT:USDT",
+            "DOGE/USDT:USDT",
+            "XRP/USDT:USDT",
+            "ADA/USDT:USDT",
+            "AVAX/USDT:USDT",
+            "DOT/USDT:USDT",
+            "POL/USDT:USDT",
+            "NEAR/USDT:USDT",
+            "ATOM/USDT:USDT",
+            "SUI/USDT:USDT",
+            "OP/USDT:USDT"
+        ],
+        "pair_blacklist": []
+    },
+    "entry_pricing": {
+        "price_side": "other",
+        "use_order_book": true,
+        "order_book_top": 1,
+        "price_last_balance": 0.0,
+        "check_depth_of_market": {
+            "enabled": false,
+            "bids_to_ask_delta": 1
+        }
+    },
+    "exit_pricing": {
+        "price_side": "other",
+        "use_order_book": true,
+        "order_book_top": 1
+    },
+    "order_types": {
+        "entry": "limit",
+        "exit": "limit",
+        "emergency_exit": "market",
+        "force_entry": "market",
+        "force_exit": "market",
+        "stoploss": "market",
+        "stoploss_on_exchange": true,
+        "stoploss_on_exchange_interval": 60
+    },
+    "pairlists": [
+        {
+            "method": "StaticPairList"
+        }
+    ],
+    "telegram": {
+        "enabled": false,
+        "token": "",
+        "chat_id": "",
+        "notification_settings": {
+            "status": "on",
+            "warning": "on",
+            "startup": "on",
+            "entry": "on",
+            "exit": "on",
+            "entry_cancel": "on",
+            "exit_cancel": "on",
+            "entry_fill": "on",
+            "exit_fill": "on",
+            "protection_trigger": "on",
+            "protection_trigger_global": "on",
+            "show_candle": "off"
+        }
+    },
+    "api_server": {
+        "enabled": true,
+        "listen_ip_address": "127.0.0.1",
+        "listen_port": 8082,
+        "verbosity": "error",
+        "enable_openapi": false,
+        "jwt_secret_key": "CHANGE_ME",
+        "ws_token": "CHANGE_ME",
+        "CORS_origins": [],
+        "username": "supertrend_admin",
+        "password": "CHANGE_ME"
+    },
+    "bot_name": "TrendRiderSupertrend_DryRun",
+    "initial_state": "running",
+    "force_entry_enable": false,
+    "internals": {
+        "process_throttle_secs": 5
+    },
+    "db_url": "sqlite:////opt/freqtrade/tradesv3.dryrun.supertrend.sqlite"
+}

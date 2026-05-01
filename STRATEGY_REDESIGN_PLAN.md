@@ -110,6 +110,8 @@ A is a cheap-but-low-confidence spike on the same alpha source. B is genuinely d
 | 2026-05-01 | v3 with `atr_multiplier = 2.0` (tighter Chandelier) | -14.69% / WR 11.1% — **WORSE**. Tightening exits doesn't fix the entry-timing problem. Reverted to 3.0. | (next commit) |
 | 2026-05-01 | **SuperTrend strategy** (1d, period 10, multiplier 3.0) — entries on trend-direction flips, not on price breakouts | First redesign that passes the conceptual sanity test. See SuperTrend results below. | 6b35115 |
 | 2026-05-01 | Bybit affiliate CTAs deployed to /live + 2 high-impression blog posts (utm-tagged for attribution) | Production: `bybit.com/invite?ref=0GDX5JR` now wired in `live_header`, `blog_exchange`, `blog_setup` placements | b5cb2d0 |
+| 2026-05-01 | Walk-forward OOS validation: SuperTrend on 4 non-overlapping windows | 3/4 positive (-0.88, +14.84, +40.22, +45.00). Stability confirmed across regimes. | (next commit) |
+| 2026-05-01 | Parallel Senko dry-run started: `freqtrade-supertrend.service` (systemd) running alongside V6A on separate sqlite (port 8082, separate db) | Live data collection begins. Decision date 2026-05-15 (14d window). | (next commit) |
 
 ## SuperTrend results — first redesign that beats V6A on absolute return
 
@@ -141,14 +143,25 @@ A/B/C/D plan), now feasible with both legs proven:
     SuperTrend. Else → V6A only. (Detection via informative_pairs.)
 
 NEXT-SESSION ACTIONS:
-1. Walk-forward OOS validation of SuperTrend (4 non-overlapping windows,
-   confirm no period-specific overfit).
-2. Build the regime classifier as a separate strategy file
-   `EnsembleStrategy.py` that delegates to V6A or SuperTrend based on
-   BTC regime.
-3. 7-day Senko dry-run of SuperTrend (or Ensemble) on a parallel config
-   (separate sqlite, separate Telegram chat). Promote to live ONLY if the
-   dry-run profile matches the backtest within reasonable variance.
+1. ~~Walk-forward OOS validation of SuperTrend~~ ✅ DONE 2026-05-01.
+   3/4 windows positive, no period-specific overfit:
+   - 2021-01 → 2022-04 (market +12%): -0.88% (only loser; whipsaw 2021)
+   - 2022-04 → 2023-07 (market -58%): +14.84% (catches bear via trailing exits)
+   - 2023-07 → 2024-10 (market +103%): +40.22%
+   - 2024-10 → 2026-04 (market -31%): +45.00%
+2. ~~7-day Senko parallel dry-run~~ ✅ STARTED 2026-05-01 12:35 MSK.
+   `freqtrade-supertrend.service` running on senko alongside production V6A.
+   - Separate sqlite: `/opt/freqtrade/tradesv3.dryrun.supertrend.sqlite`
+   - Separate API port: 8082 (V6A on 8081)
+   - Same whitelist, same dry_run_wallet $500
+   - **Decision date 2026-05-15** (14-day window).
+3. **Build EnsembleStrategy.py** — V6A + SuperTrend gated by BTC regime
+   classifier (BTC > 200d SMA → SuperTrend active; else V6A only).
+   Deferred until after the dry-run window so we have real-side-by-side
+   data to inform the regime cutoffs.
+4. **2026-05-15 decision**: if SuperTrend dry-run matches backtest profile
+   within reasonable variance AND beats V6A in the same window, promote
+   either SuperTrend solo or Ensemble to live. Else iterate.
 
 
 
