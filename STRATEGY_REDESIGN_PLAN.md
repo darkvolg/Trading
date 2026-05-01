@@ -104,8 +104,34 @@ A is a cheap-but-low-confidence spike on the same alpha source. B is genuinely d
 | 2026-05-01 | Diagnosed: 12 of 14 alts had only 114d of 1d data; downloaded 5y history (2021→2026, ~1900 rows/pair) | data infrastructure ready | (next commit) |
 | 2026-05-01 | v2 on full 5y data | -54.33% / Sharpe -1.50 / MaxDD 54.33% / 13.4% WR (market -52%) | (next commit) |
 | 2026-05-01 | v2 on isolated bull period 2023-10 → 2024-05 (market +149%) | **-11.1% / 5.4% WR / 35 losses of 37 trades** — concept-impossible loss. **Bug in code** confirmed. | (next commit) |
+| 2026-05-01 | v3: removed `custom_stoploss` clamp; widened hard floor `stoploss = -0.50` | -11.31% / WR 14.8% on bull (vs v2 -11.1% / WR 5.4%). WR improved, total ≈ same. **Clamp was a bug, but not the dominant one.** | (next commit) |
+| 2026-05-01 | **Sanity check — TrendRiderStrategy v6A on the same bull period 2024-01 → 2024-05 (market +37%)** | **−1.89% / WR 26.6%.** V6A also fails to capture bull markets. Confirms V6A is a *chop-feeder*, not a trend-rider — it edge-grinds in sideways/bear, stagnates or loses in bulls. | (next commit) |
 
-## Open bug hypotheses (next session — debug v2 BEFORE adding more logic)
+## Critical realisation — V6A's profile is the opposite of what we assumed
+
+The V6A baseline is +4.99% / Sharpe 0.69 / MaxDD 4.78% over 836 days, of
+which the market itself dropped −24%. We've been treating V6A as a strategy
+to beat with a "real trend-following system". But the bull-period sanity
+check shows V6A actually *loses* in bulls. So:
+
+  - V6A makes its money in **chop** and during **mild downside / sideways**
+    by harvesting hourly micro-bounces. It's a mean-reversion / chop-feeder
+    in disguise, not a trend follower.
+  - During strong bull rallies (+37% market in 4 months), V6A produces −1.89%.
+  - During strong bear (−24% over 28 months), V6A produces +4.99%.
+
+This means a Donchian/trend redesign is *complementary*, not a replacement.
+The honest combined system would be a **regime-switched ensemble**:
+
+  - V6A active during chop / mild markets (most of the time on alts).
+  - Donchian (or any trend system) active only during sustained bulls.
+
+Single-strategy v3 redesign cannot be "objectively better" than V6A on a
+mixed-regime backtest — they fish in different waters. A direct replacement
+would *lose* the chop-edge V6A has and would have to make up for it during
+bulls, which is a much harder game.
+
+## Open bug hypotheses (next session)
 
 The 2023-10 → 2024-05 result (+149% market, -11% strategy, 5.4% WR) is mathematically inconsistent with a working Donchian breakout: a bull rally should produce many big winners trailing through ATR Chandelier. 95% loss rate during a +149% rally is a code bug, not a strategy property.
 

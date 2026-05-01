@@ -46,8 +46,13 @@ class DonchianBreakoutStrategy(IStrategy):
     exit_profit_only = False
     use_custom_stoploss = True
 
-    # Hard floor; real exit is Chandelier in custom_stoploss.
-    stoploss = -0.10
+    # Wide hard floor so the Chandelier offset is never clamped tighter than
+    # 3×ATR. Real per-trade dollar risk is bounded by ATR-normalised position
+    # sizing in custom_stake_amount (1% account risk), not by this percentage.
+    # Crypto daily ATR is often 10-15% of price → 3×ATR ≈ 30-45% trail width;
+    # a -10% hard floor would convert the Chandelier into a regular 10% trail
+    # and chop every trade out on normal pullbacks.
+    stoploss = -0.50
     trailing_stop = False
 
     # Disable static ROI ladder; exits are signal/Chandelier driven.
@@ -150,13 +155,17 @@ class DonchianBreakoutStrategy(IStrategy):
         trail_price = max_rate - self.atr_multiplier * last_atr
         if trail_price <= 0:
             return None
-        # Convert to relative-to-current offset.
+        # Convert to relative-to-current offset (Freqtrade convention:
+        # negative number = stop X% below current_rate).
         offset = (trail_price - current_rate) / current_rate
         if offset >= 0:
             # Trail price is above current → exit immediately.
             return -0.0001
-        # Bound by the strategy hard floor so we never widen past -10%.
-        return max(offset, self.stoploss + 0.001)
+        # Do NOT clamp here — clamping turned the Chandelier into a vanilla
+        # 9.9% trail in v2 and produced a 5.4% win-rate on a +149% bull
+        # rally. Position sizing (1% account risk) bounds dollar loss; the
+        # -50% strategy hard floor is the ultimate backstop.
+        return offset
 
     def custom_stake_amount(
         self,
