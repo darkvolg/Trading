@@ -64,6 +64,13 @@ class DonchianBreakoutStrategy(IStrategy):
     # --- Tunables ---
     donchian_period: int = 50
     atr_period: int = 20
+    # 3.0 stays. Tested 2.0 hoping to cut max-to-close giveback (some trades
+    # gave back 20% of profit before stopping out). Result: WR dropped from
+    # 14.8% → 11.1% and total return worsened (-11.3% → -14.7%). Tighter
+    # exits just convert wins into smaller wins or losses without fixing the
+    # entry-timing problem — many breakout entries land on rally tops that
+    # immediately pull back. That's a concept problem with breakout entries
+    # on crypto alts, not a parameter problem.
     atr_multiplier: float = 3.0
     volume_lookback: int = 20
     risk_per_trade: float = 0.01  # 1% account risk

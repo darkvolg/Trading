@@ -106,6 +106,27 @@ A is a cheap-but-low-confidence spike on the same alpha source. B is genuinely d
 | 2026-05-01 | v2 on isolated bull period 2023-10 → 2024-05 (market +149%) | **-11.1% / 5.4% WR / 35 losses of 37 trades** — concept-impossible loss. **Bug in code** confirmed. | (next commit) |
 | 2026-05-01 | v3: removed `custom_stoploss` clamp; widened hard floor `stoploss = -0.50` | -11.31% / WR 14.8% on bull (vs v2 -11.1% / WR 5.4%). WR improved, total ≈ same. **Clamp was a bug, but not the dominant one.** | (next commit) |
 | 2026-05-01 | **Sanity check — TrendRiderStrategy v6A on the same bull period 2024-01 → 2024-05 (market +37%)** | **−1.89% / WR 26.6%.** V6A also fails to capture bull markets. Confirms V6A is a *chop-feeder*, not a trend-rider — it edge-grinds in sideways/bear, stagnates or loses in bulls. | (next commit) |
+| 2026-05-01 | Trade-by-trade analysis of v3 — found max-to-close giveback 15-25% (e.g. ETH max +30% → close +9.6%); P/L ratio 0.74; mathematical EV = -9.7% per trade | diagnosis: entries on rally tops, immediate pullback | (next commit) |
+| 2026-05-01 | v3 with `atr_multiplier = 2.0` (tighter Chandelier) | -14.69% / WR 11.1% — **WORSE**. Tightening exits doesn't fix the entry-timing problem. Reverted to 3.0. | (next commit) |
+
+## Final verdict on Donchian (Direction D) — concept-level mismatch with crypto alts
+
+After 4 versions (v1, v2 with regime, v3 with clamp fix and -50% floor,
+v3-tight with 2×ATR), and a trade-by-trade post-mortem, the conclusion is
+that **Donchian breakout entries on crypto alts buy the rally top**. ~85% of
+breakouts produce immediate pullback that either trips the Chandelier (15-25%
+giveback) or stalls. The mismatch is at concept level, not parameter level:
+
+  - Tighter Chandelier (2×ATR): WR drops, total return worsens.
+  - Looser Chandelier: same total return, more giveback per trade.
+  - BTC regime gate: helps in bear, doesn't help in bull rallies.
+
+This isn't refutation of trend-following on crypto in general — it's
+refutation of *breakout entries* on this specific 14-alt whitelist over the
+tested windows. Trend systems that enter on **pullbacks** to a rising
+moving-average (SuperTrend, MA-cross + retracement, channel-midline buy)
+might still work and remain on the menu for future sessions. Donchian
+breakout itself is parked.
 
 ## Critical realisation — V6A's profile is the opposite of what we assumed
 
