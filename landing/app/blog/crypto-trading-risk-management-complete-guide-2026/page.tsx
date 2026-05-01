@@ -1,8 +1,8 @@
 import type { Metadata } from "next";
 
 export const metadata: Metadata = {
-  title: "Crypto Risk Management 2026: Keep Drawdown Under 2%",
-  description: "Keep drawdown under 2% like the pros. Position sizing, stop-loss placement & portfolio rules from a system with low max DD (see /live). Free calculator.",
+  title: "Crypto Risk Management 2026: 6 Rules to Keep Drawdown Under 5%",
+  description: "How to size positions, place stops & control drawdown — the exact rules a live algo uses (max DD 4.8% on /live). Free risk calculator + portfolio template.",
   alternates: {
     canonical: "https://trendrider.net/blog/crypto-trading-risk-management-complete-guide-2026",
   },

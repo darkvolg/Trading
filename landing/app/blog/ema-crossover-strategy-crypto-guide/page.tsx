@@ -1,8 +1,8 @@
 import type { Metadata } from "next";
 
 export const metadata: Metadata = {
-  title: "EMA Crossover Strategy Crypto 2026 — Documented Win Rate",
-  description: "Step-by-step EMA crossover strategy with exact entry, exit & stop-loss rules. RSI + volume filters boost win rate to documented WR (see /live). Free bot config included.",
+  title: "EMA Crossover Strategy Crypto 2026: 50% Win Rate Live Proof",
+  description: "Exact entry, exit & stop-loss rules for EMA crossover. RSI + volume filters lifted live win rate to 50% — proof at /live (open P&L). Free Freqtrade config attached.",
   alternates: {
     canonical: "https://trendrider.net/blog/ema-crossover-strategy-crypto-guide",
   },
