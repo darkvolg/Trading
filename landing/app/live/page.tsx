@@ -208,18 +208,32 @@ export default function LivePage() {
           <p className="mt-2 text-slate-400 text-sm">
             {stats.strategy} · {stats.mode} · raw data from sqlite, no marketing filter
           </p>
-          <a
-            href="https://github.com/darkvolg/trendrider-strategy"
-            target="_blank"
-            rel="noopener"
-            className="mt-4 inline-flex items-center gap-2 px-3 py-1.5 rounded-md bg-slate-900 border border-slate-700 hover:border-emerald-500/50 hover:bg-slate-800 text-sm text-slate-200 transition-colors"
-          >
-            <svg viewBox="0 0 16 16" width="16" height="16" fill="currentColor" aria-hidden="true">
-              <path d="M8 .25a.75.75 0 0 1 .673.418l1.882 3.815 4.21.612a.75.75 0 0 1 .416 1.279l-3.046 2.97.719 4.192a.75.75 0 0 1-1.088.791L8 12.347l-3.766 1.98a.75.75 0 0 1-1.088-.79l.72-4.194L.818 6.374a.75.75 0 0 1 .416-1.28l4.21-.611L7.327.668A.75.75 0 0 1 8 .25Z" />
-            </svg>
-            <span className="font-medium">Star the strategy on GitHub</span>
-            <span className="text-slate-500">— open-source, MIT</span>
-          </a>
+          <div className="mt-4 flex flex-wrap items-center gap-2">
+            <a
+              href="https://github.com/darkvolg/trendrider-strategy"
+              target="_blank"
+              rel="noopener"
+              className="inline-flex items-center gap-2 px-3 py-1.5 rounded-md bg-slate-900 border border-slate-700 hover:border-emerald-500/50 hover:bg-slate-800 text-sm text-slate-200 transition-colors"
+            >
+              <svg viewBox="0 0 16 16" width="16" height="16" fill="currentColor" aria-hidden="true">
+                <path d="M8 .25a.75.75 0 0 1 .673.418l1.882 3.815 4.21.612a.75.75 0 0 1 .416 1.279l-3.046 2.97.719 4.192a.75.75 0 0 1-1.088.791L8 12.347l-3.766 1.98a.75.75 0 0 1-1.088-.79l.72-4.194L.818 6.374a.75.75 0 0 1 .416-1.28l4.21-.611L7.327.668A.75.75 0 0 1 8 .25Z" />
+              </svg>
+              <span className="font-medium">Star on GitHub</span>
+              <span className="text-slate-500">— MIT</span>
+            </a>
+            <a
+              href="https://www.bybit.com/invite?ref=0GDX5JR&utm_source=trendrider&utm_medium=live_header"
+              target="_blank"
+              rel="noopener nofollow"
+              className="inline-flex items-center gap-2 px-3 py-1.5 rounded-md bg-slate-900 border border-slate-700 hover:border-[#F7A600]/50 hover:bg-slate-800 text-sm text-slate-200 transition-colors"
+            >
+              <svg viewBox="0 0 24 24" width="16" height="16" fill="currentColor" aria-hidden="true" className="text-[#F7A600]">
+                <path d="M14.4 6.2v8.48h-1.79V6.2zM4.92 17.8V9.32h3.6c1.87 0 2.9 1.05 2.9 2.4 0 .87-.41 1.49-.94 1.83.74.34 1.27.97 1.27 2.05 0 1.49-1.05 2.2-2.92 2.2zm1.79-7.04v1.86h1.65c.74 0 1.27-.34 1.27-.94s-.53-.92-1.27-.92zm0 5.6h1.79c.94 0 1.47-.34 1.47-.97s-.53-.95-1.47-.95H6.71zm9.71-7.04h1.79v6.86h3.79v1.62h-5.58z"/>
+              </svg>
+              <span className="font-medium">Run the bot yourself on Bybit</span>
+              <span className="text-slate-500">— same exchange we use</span>
+            </a>
+          </div>
         </header>
 
         <section className="grid grid-cols-2 sm:grid-cols-4 gap-3 mb-8">

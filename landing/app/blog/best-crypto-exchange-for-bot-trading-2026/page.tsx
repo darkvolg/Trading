@@ -259,11 +259,21 @@ export default function Article() {
           <p>For algorithmic traders using Freqtrade in 2026, <strong className="text-foreground">Bybit offers the best combination of low fees, reliable APIs, deep liquidity, and seamless bot integration</strong>. It&apos;s the exchange TrendRider trusts with real capital &mdash; and the one we recommend for serious bot operators.</p>
           <p>If you&apos;re still evaluating your options, start with a testnet deployment on Bybit and Binance. Run identical strategies on both for two weeks, then compare execution quality, fill rates, and net returns after fees. The data will speak for itself.</p>
 
-          <div className="mt-10 p-6 rounded-2xl border border-primary/20 bg-primary/5 text-center">
-            <p className="text-foreground font-medium mb-3">Get TrendRider signals &mdash; optimized for Bybit with documented backtest win rate (current value on /live)</p>
-            <a href="https://t.me/TrendRiderSignals" className="inline-block px-6 py-3 rounded-xl font-semibold text-sm" style={{ background: "linear-gradient(135deg, #00D4AA, #00B894)", color: "#0D1117" }}>
-              Join TrendRider on Telegram &rarr;
-            </a>
+          <div className="mt-10 grid gap-4 sm:grid-cols-2">
+            <div className="p-6 rounded-2xl border border-[#F7A600]/30 bg-[#F7A600]/5">
+              <p className="text-foreground font-medium mb-1">No Bybit account yet?</p>
+              <p className="text-muted text-sm mb-4">Register through our partner link &mdash; same exchange the live bot runs on. Fee discount + welcome bonus on signup.</p>
+              <a href="https://www.bybit.com/invite?ref=0GDX5JR&utm_source=trendrider&utm_medium=blog_exchange" target="_blank" rel="noopener nofollow sponsored" className="inline-block px-6 py-3 rounded-xl font-semibold text-sm" style={{ background: "linear-gradient(135deg, #F7A600, #FF9500)", color: "#0D1117" }}>
+                Open Bybit account &rarr;
+              </a>
+            </div>
+            <div className="p-6 rounded-2xl border border-primary/20 bg-primary/5">
+              <p className="text-foreground font-medium mb-1">Already on Bybit?</p>
+              <p className="text-muted text-sm mb-4">Get TrendRider signals &mdash; same strategy as <a href="/live" className="text-primary hover:underline">/live</a>, free Telegram channel, documented stats.</p>
+              <a href="https://t.me/TrendRiderSignals" className="inline-block px-6 py-3 rounded-xl font-semibold text-sm" style={{ background: "linear-gradient(135deg, #00D4AA, #00B894)", color: "#0D1117" }}>
+                Join TrendRider on Telegram &rarr;
+              </a>
+            </div>
           </div>
         </div>
 

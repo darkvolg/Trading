@@ -196,6 +196,7 @@ export default function Article() {
           <h3 className="text-lg font-medium text-foreground mt-6 mb-2">Generating Bybit API Keys</h3>
           <p>To connect Freqtrade to Bybit:</p>
           <ol className="list-decimal pl-6 space-y-2">
+            <li>If you don&apos;t have a Bybit account yet, <a href="https://www.bybit.com/invite?ref=0GDX5JR&utm_source=trendrider&utm_medium=blog_setup" target="_blank" rel="noopener nofollow sponsored" className="text-primary hover:underline">register here</a> &mdash; same exchange the live bot at <a href="/live" className="text-primary hover:underline">/live</a> runs on. Fee discount + welcome bonus on signup.</li>
             <li>Log into Bybit and go to <strong className="text-foreground">Account &amp; Security &rarr; API Management</strong></li>
             <li>Click <strong className="text-foreground">Create New Key</strong>, select &ldquo;System-generated API Keys&rdquo;</li>
             <li>Name it &ldquo;Freqtrade Bot&rdquo; and set permissions: <strong className="text-foreground">Read + Trade</strong> (never enable Withdraw)</li>
