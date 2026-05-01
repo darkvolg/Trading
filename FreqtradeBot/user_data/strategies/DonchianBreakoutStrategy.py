@@ -1,21 +1,37 @@
 # pylint: disable=missing-module-docstring,unused-argument,attribute-defined-outside-init
 """
-Daily Donchian Breakout — TrendRider v3 candidate (skeleton).
+Daily Donchian Breakout — TrendRider v3 candidate.
 
 Inspired by Curtis Faith ("Way of the Turtle", 2007) and Andreas Clenow
-("Following the Trend", 2013). Designed to leave the 1h local optimum the
-old TrendRider strategy has been stuck in: 11 attempts (5 hyperopt configs +
-6 structural mods) all regressed on 480d OOS. This strategy moves to a
-daily timeframe and holds for weeks, with only two real parameters
-(Donchian period, ATR multiplier) to keep overfitting risk minimal.
+("Following the Trend", 2013). Designed to leave the 1h local optimum that
+TrendRiderStrategy has been stuck in. Two real parameters (Donchian period,
+ATR multiplier) keep overfitting risk minimal.
 
-Phase 1 — skeleton only. Indicator/entry/exit/sizing logic is filled in
-in subsequent sessions per STRATEGY_REDESIGN_PLAN.md.
+Mechanics:
+  - timeframe = 1d
+  - long-only
+  - Regime filter: BTC/USDT:USDT close > 200-day SMA. No entries while BTC
+                   is below its 200d SMA (bear regime). Standard Clenow
+                   practice; v1 without this filter lost -13.59% over a
+                   bear period because trend-following long-only into a
+                   declining altcoin market is a known failure mode.
+  - Entry: close > 50-day Donchian upper band (shifted 1 to avoid look-ahead)
+           AND volume > 20-day mean volume (filter dead breakouts)
+  - Exit: ATR(20) × 3 Chandelier — trail = max_rate_since_entry - 3 * ATR.
+  - Position sizing: 1% account risk per trade — stake = (equity × 0.01)
+                     / (3 × ATR / entry_price). Implemented in
+                     custom_stake_amount.
+  - Stoploss: hard floor at -10% to bound worst case; real exit is the
+              Chandelier trail in custom_stoploss.
+
+NOT touching `TrendRiderStrategy.py` — that one stays frozen at v2.12.1.
 """
 
 from datetime import datetime
 from typing import Optional
 
+import talib.abstract as ta
+from freqtrade.persistence import Trade
 from freqtrade.strategy import IStrategy
 from pandas import DataFrame
 
@@ -30,48 +46,158 @@ class DonchianBreakoutStrategy(IStrategy):
     exit_profit_only = False
     use_custom_stoploss = True
 
-    # 10% hard floor — real exit is the ATR Chandelier in custom_stoploss.
+    # Hard floor; real exit is Chandelier in custom_stoploss.
     stoploss = -0.10
     trailing_stop = False
 
-    # Disable Freqtrade's static ROI ladder; exits are signal-driven.
+    # Disable static ROI ladder; exits are signal/Chandelier driven.
     minimal_roi = {"0": 100}
 
-    startup_candle_count: int = 60  # need 50d Donchian + ATR(20) warmup
+    # 50d Donchian + 20d ATR + 20d volume mean → 50 + slack
+    startup_candle_count: int = 60
 
-    # --- Phase 2 TODO -------------------------------------------------------
-    # populate_indicators:
-    #   donchian_upper = high.rolling(50).max().shift(1)
-    #   donchian_lower = low.rolling(50).min().shift(1)
-    #   atr            = ta.ATR(dataframe, timeperiod=20)
-    #   highest_high   = high.cummax() (per-trade, computed in custom_exit)
-    #
-    # populate_entry_trend:
-    #   long when close > donchian_upper (breakout) AND volume > rolling mean
-    #
-    # populate_exit_trend:
-    #   exit when close < (highest_high_since_entry - 3 * atr)  (Chandelier)
-    #
-    # custom_stoploss:
-    #   mirror the Chandelier rule so Freqtrade closes on stop-loss tick
-    #
-    # position sizing (custom_stake_amount):
-    #   stake = (equity * 0.01) / (3 * atr / entry_price)
-    #   1% account risk per trade, ATR-normalised.
-    # ------------------------------------------------------------------------
+    # --- Tunables ---
+    donchian_period: int = 50
+    atr_period: int = 20
+    atr_multiplier: float = 3.0
+    volume_lookback: int = 20
+    risk_per_trade: float = 0.01  # 1% account risk
+    regime_pair: str = "BTC/USDT:USDT"
+    regime_sma_period: int = 200
+
+    def informative_pairs(self):
+        """Pull BTC daily data for the regime filter regardless of whitelist."""
+        return [(self.regime_pair, self.timeframe)]
 
     def populate_indicators(self, dataframe: DataFrame, metadata: dict) -> DataFrame:
+        """Donchian channel, ATR, volume mean, BTC regime filter."""
+        # Donchian upper/lower bands (yesterday's, no look-ahead).
+        dataframe["donchian_upper"] = (
+            dataframe["high"].rolling(self.donchian_period).max().shift(1)
+        )
+        dataframe["donchian_lower"] = (
+            dataframe["low"].rolling(self.donchian_period).min().shift(1)
+        )
+        # ATR for Chandelier exit + position sizing.
+        dataframe["atr"] = ta.ATR(dataframe, timeperiod=self.atr_period)
+        # Volume filter — kill dead breakouts.
+        dataframe["volume_mean"] = (
+            dataframe["volume"].rolling(self.volume_lookback).mean()
+        )
+        # BTC regime: long-only when BTC > BTC.SMA(200). Merged on date.
+        try:
+            btc = self.dp.get_pair_dataframe(
+                pair=self.regime_pair, timeframe=self.timeframe
+            )
+            if btc is not None and not btc.empty:
+                btc = btc[["date", "close"]].copy()
+                btc["btc_sma"] = btc["close"].rolling(self.regime_sma_period).mean()
+                btc["btc_regime_bull"] = (btc["close"] > btc["btc_sma"]).astype(int)
+                btc = btc[["date", "btc_regime_bull"]]
+                dataframe = dataframe.merge(btc, on="date", how="left")
+                dataframe["btc_regime_bull"] = (
+                    dataframe["btc_regime_bull"].fillna(0).astype(int)
+                )
+            else:
+                dataframe["btc_regime_bull"] = 0
+        except Exception:
+            dataframe["btc_regime_bull"] = 0
         return dataframe
 
     def populate_entry_trend(self, dataframe: DataFrame, metadata: dict) -> DataFrame:
-        dataframe["enter_long"] = 0
+        """Long when today's close prints a new 50d high on above-average volume,
+        AND BTC is in a bull regime (close > 200d SMA)."""
+        cond_breakout = dataframe["close"] > dataframe["donchian_upper"]
+        cond_volume = dataframe["volume"] > dataframe["volume_mean"]
+        cond_atr_valid = dataframe["atr"] > 0  # avoid divide-by-zero in sizing
+        cond_regime = dataframe["btc_regime_bull"] == 1
+        dataframe.loc[
+            cond_breakout & cond_volume & cond_atr_valid & cond_regime,
+            ["enter_long", "enter_tag"],
+        ] = (1, "donchian_breakout_bull")
         return dataframe
 
     def populate_exit_trend(self, dataframe: DataFrame, metadata: dict) -> DataFrame:
+        """No discrete exit signal — Chandelier trail handles it."""
         dataframe["exit_long"] = 0
         return dataframe
 
-    def custom_stoploss(self, pair: str, trade, current_time: datetime,
-                        current_rate: float, current_profit: float,
-                        **kwargs) -> Optional[float]:
-        return None
+    def custom_stoploss(
+        self,
+        pair: str,
+        trade: Trade,
+        current_time: datetime,
+        current_rate: float,
+        current_profit: float,
+        **kwargs,
+    ) -> Optional[float]:
+        """ATR×3 Chandelier trailing stop.
+
+        trail_price = max_rate_since_entry - atr_multiplier * ATR
+        Returned value is the stop expressed as a relative offset from
+        current_rate (Freqtrade convention: -0.05 = stop 5% below current).
+        """
+        try:
+            dataframe, _ = self.dp.get_analyzed_dataframe(pair, self.timeframe)
+        except Exception:
+            return None
+        if dataframe is None or dataframe.empty:
+            return None
+        last_atr = float(dataframe["atr"].iloc[-1] or 0)
+        if last_atr <= 0 or current_rate <= 0:
+            return None
+        max_rate = float(trade.max_rate or trade.open_rate)
+        trail_price = max_rate - self.atr_multiplier * last_atr
+        if trail_price <= 0:
+            return None
+        # Convert to relative-to-current offset.
+        offset = (trail_price - current_rate) / current_rate
+        if offset >= 0:
+            # Trail price is above current → exit immediately.
+            return -0.0001
+        # Bound by the strategy hard floor so we never widen past -10%.
+        return max(offset, self.stoploss + 0.001)
+
+    def custom_stake_amount(
+        self,
+        pair: str,
+        current_time: datetime,
+        current_rate: float,
+        proposed_stake: float,
+        min_stake: Optional[float],
+        max_stake: float,
+        leverage: float,
+        entry_tag: Optional[str],
+        side: str,
+        **kwargs,
+    ) -> float:
+        """ATR-normalised position sizing — 1% account risk per trade.
+
+        stake = (wallet × risk_per_trade) / (atr_multiplier × ATR / entry_price)
+
+        Falls back to the proposed Freqtrade default stake if data isn't
+        available yet (first candles, missing ATR).
+        """
+        try:
+            dataframe, _ = self.dp.get_analyzed_dataframe(pair, self.timeframe)
+        except Exception:
+            return proposed_stake
+        if dataframe is None or dataframe.empty:
+            return proposed_stake
+        last_atr = float(dataframe["atr"].iloc[-1] or 0)
+        if last_atr <= 0 or current_rate <= 0:
+            return proposed_stake
+        try:
+            wallet_total = float(self.wallets.get_total_stake_amount())
+        except Exception:
+            wallet_total = proposed_stake / max(self.risk_per_trade, 1e-6)
+        risk_per_unit = self.atr_multiplier * last_atr / current_rate
+        if risk_per_unit <= 0:
+            return proposed_stake
+        target_stake = (wallet_total * self.risk_per_trade) / risk_per_unit
+        # Honor Freqtrade min/max stake bounds.
+        if min_stake is not None and target_stake < min_stake:
+            target_stake = min_stake
+        if max_stake and target_stake > max_stake:
+            target_stake = max_stake
+        return float(target_stake)
