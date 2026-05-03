@@ -49,7 +49,7 @@ def resolve_baseline_zip() -> Path:
                 return BACKTEST_DIR / zip_name
         except Exception as e:
             print(f"[ERROR] Cannot parse {LAST_RESULT}: {e}", file=sys.stderr)
-    print(f"[ERROR] No baseline pointer and no last_result. Aborting.", file=sys.stderr)
+    print("[ERROR] No baseline pointer and no last_result. Aborting.", file=sys.stderr)
     sys.exit(1)
 
 

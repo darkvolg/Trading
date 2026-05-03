@@ -238,11 +238,18 @@ class TestFetchRunningStats:
     """Test running stats query."""
 
     def test_stats_with_trades(self, tmp_path):
+        # Use a recent close_date so the 30-day window in fetch_running_stats
+        # always captures these fixtures regardless of when CI runs.
+        from datetime import datetime, timedelta, timezone
+
+        recent = (datetime.now(timezone.utc) - timedelta(days=1)).strftime(
+            "%Y-%m-%d %H:%M:%S"
+        )
         db = tmp_path / "trades.sqlite"
         _create_test_db(db, [
-            {**SAMPLE_WINNING_TRADE, "id": 1, "close_profit": 0.03},
-            {**SAMPLE_LOSING_TRADE, "id": 2, "close_profit": -0.02},
-            {**SAMPLE_WINNING_TRADE, "id": 3, "close_profit": 0.05},
+            {**SAMPLE_WINNING_TRADE, "id": 1, "close_profit": 0.03, "close_date": recent},
+            {**SAMPLE_LOSING_TRADE, "id": 2, "close_profit": -0.02, "close_date": recent},
+            {**SAMPLE_WINNING_TRADE, "id": 3, "close_profit": 0.05, "close_date": recent},
         ])
         stats = trade_result_poster.fetch_running_stats(db)
         assert stats["wins"] == 2
