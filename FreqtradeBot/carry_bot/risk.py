@@ -39,13 +39,22 @@ class RiskVerdict:
         return cls(False, [], [])
 
 
+# Distance from liquidation below which we sound the alarm. With 1x leverage
+# and delta-neutral spot collateral via UTA, liquidation distance should be
+# very large (>50%). If it drops below this, something is structurally wrong
+# (e.g. Bybit migrated us off UTA, or someone moved spot collateral out).
+LIQUIDATION_ALARM_DISTANCE_PCT = 0.10  # 10%
+
+
 class RiskGate:
     def __init__(self, kill_switch_path: str,
                  stale_force_close_hours: int = 24,
-                 daily_loss_alarm_pct: float = 0.01):
+                 daily_loss_alarm_pct: float = 0.01,
+                 liq_alarm_distance_pct: float = LIQUIDATION_ALARM_DISTANCE_PCT):
         self.kill_switch_path = kill_switch_path
         self.stale_hours = stale_force_close_hours
         self.daily_loss_alarm_pct = daily_loss_alarm_pct
+        self.liq_alarm_distance_pct = liq_alarm_distance_pct
 
     def check_kill_switch(self) -> bool:
         return os.path.exists(self.kill_switch_path)
@@ -72,6 +81,35 @@ class RiskGate:
                 force.append(p.base)
         return force
 
+    def check_liquidation_distance(self, exchange_positions: dict) -> list[str]:
+        """Inspect each open perp position. Return list of "ALARM: BASE x.x%"
+        messages for positions whose mark→liquidation distance is below
+        threshold.
+
+        With 1x leverage + UTA spot collateral the distance should be >50%
+        in normal conditions; alarm fires if a position is somehow at higher
+        effective leverage (config drift, collateral movement, etc).
+        """
+        alarms = []
+        for base, p in exchange_positions.items():
+            mark = p.get("mark_price") or p.get("entry") or 0
+            liq = p.get("liquidation_price") or 0
+            if mark <= 0 or liq <= 0:
+                continue
+            # For shorts: liquidation is ABOVE entry. Distance = (liq - mark)/mark.
+            # For longs:  liquidation is BELOW entry. Distance = (mark - liq)/mark.
+            if p.get("side") == "short":
+                dist_pct = (liq - mark) / mark
+            else:
+                dist_pct = (mark - liq) / mark
+            if 0 < dist_pct < self.liq_alarm_distance_pct:
+                alarms.append(
+                    f"liquidation-alarm: {base} {p.get('side')} mark={mark:.4f} "
+                    f"liq={liq:.4f} distance={dist_pct*100:.2f}% "
+                    f"(threshold {self.liq_alarm_distance_pct*100:.0f}%)"
+                )
+        return alarms
+
     def check_daily_pnl(self, capital_quote: float,
                         realized_24h: float, unrealized: float) -> str | None:
         total = realized_24h + unrealized
@@ -90,7 +128,8 @@ class RiskGate:
     def evaluate(self, positions: Iterable, last_rates: dict,
                  now_ms: int, capital_quote: float = 0.0,
                  realized_24h: float = 0.0,
-                 unrealized: float = 0.0) -> RiskVerdict:
+                 unrealized: float = 0.0,
+                 exchange_positions: dict | None = None) -> RiskVerdict:
         v = RiskVerdict.empty()
         if self.check_kill_switch():
             v.pause_new_entries = True
@@ -104,6 +143,11 @@ class RiskGate:
         v.force_close_pairs.extend(
             self.check_stale_force_close(positions, now_ms, last_rates)
         )
+
+        if exchange_positions:
+            v.alarm_messages.extend(
+                self.check_liquidation_distance(exchange_positions)
+            )
 
         msg = self.check_daily_pnl(capital_quote, realized_24h, unrealized)
         if msg:

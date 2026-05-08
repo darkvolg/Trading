@@ -24,6 +24,13 @@ class FakeExchange:
         self.rates = rates
         self.opened: list[str] = []
         self.closed: list[str] = []
+        self.has_credentials = False  # Tests don't go through reconcile path
+
+    def fetch_open_positions(self):
+        return {}
+
+    def rebalance_pair(self, base, spot_qty, perp_qty):
+        return None  # No drift in these tests
 
     def fetch_funding_rate(self, base: str) -> float:
         return self.rates[base]

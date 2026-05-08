@@ -61,6 +61,11 @@ class TickReport:
     fees_paid: float
     skipped_reasons: dict          # {base: reason} for entries blocked
     alarms: list[str]
+    rebalances: list[str] = None   # bases that were rebalanced
+
+    def __post_init__(self):
+        if self.rebalances is None:
+            self.rebalances = []
 
 
 class Scheduler:
@@ -100,13 +105,20 @@ class Scheduler:
         funding_accrued = self._accrue_funding(rates, now_ms)
         report.funding_accrued = funding_accrued
 
-        # 4. Risk evaluation
+        # 4. Risk evaluation (incl. liquidation distance + reconciliation)
         open_positions = self.store.list_open()
         last_rates_map = {b: r for b, r in rates.items()}
+        exchange_positions = self._fetch_exchange_positions()
+        self._reconcile(open_positions, exchange_positions, report)
         risk_verdict = self.risk.evaluate(
             open_positions, last_rates_map, now_ms,
+            exchange_positions=exchange_positions,
         )
         report.alarms.extend(risk_verdict.alarm_messages)
+
+        # 4b. Delta-rebalance any drifted positions BEFORE we make new entries.
+        if not dry_run_signals_only:
+            self._rebalance_drift(open_positions, report)
 
         # 5. Closes (exit-verdict OR risk-forced)
         force_close = set(risk_verdict.force_close_pairs)
@@ -250,3 +262,84 @@ class Scheduler:
         # For now, return a sensible default; real impl should fetch
         # available balance and divide by free-slot count.
         return 100.0  # $100 testnet default
+
+    # ---------- Risk integration ----------
+
+    def _fetch_exchange_positions(self) -> dict:
+        """Pull current perp positions from exchange. Empty dict if no creds
+        or call fails — risk monitor degrades gracefully."""
+        if not self.exchange.has_credentials:
+            return {}
+        try:
+            return self.exchange.fetch_open_positions()
+        except Exception as e:
+            logger.warning("fetch_open_positions failed: %s; risk monitor degraded", e)
+            return {}
+
+    def _reconcile(self, local_positions, exchange_positions: dict,
+                   report) -> None:
+        """Compare local position book to exchange-reported state.
+
+        Mismatches we care about:
+            - In local book but not on exchange  → exchange closed it (liquidation? manual?)
+            - On exchange but not in local book  → manual position bypassing the bot
+            - Qty mismatch >5%                   → drift since last rebalance
+        Logs alarms; does not auto-correct (humans decide).
+        """
+        local_bases = {p.base for p in local_positions}
+        ex_bases = set(exchange_positions.keys())
+
+        for base in local_bases - ex_bases:
+            report.alarms.append(
+                f"reconcile: {base} in local book but no exchange perp position — "
+                f"exchange may have liquidated/closed it. Investigate."
+            )
+        for base in ex_bases - local_bases:
+            report.alarms.append(
+                f"reconcile: {base} perp open on exchange but not in local book — "
+                f"manual position or stale state."
+            )
+        for base in local_bases & ex_bases:
+            local_p = next(p for p in local_positions if p.base == base)
+            ex_p = exchange_positions[base]
+            ex_qty = float(ex_p.get("qty", 0) or 0)
+            if abs(ex_qty - local_p.perp_qty) / max(local_p.perp_qty, 1e-9) > 0.05:
+                report.alarms.append(
+                    f"reconcile: {base} perp qty drift — local={local_p.perp_qty} "
+                    f"exchange={ex_qty} (>5%). Investigate."
+                )
+
+    def _rebalance_drift(self, positions, report) -> None:
+        """For each open position whose delta drift exceeds the threshold,
+        place a corrective trade to re-equalise spot and perp legs."""
+        threshold = self.cfg.delta_drift_pct
+        for p in positions:
+            if p.delta_drift_pct < threshold:
+                continue
+            try:
+                fill = self.exchange.rebalance_pair(p.base, p.spot_qty, p.perp_qty)
+                if fill is None:
+                    continue
+                # Update position with new qtys + accumulated rebalance fee
+                if p.spot_qty > p.perp_qty:
+                    new_perp = p.perp_qty + fill.qty
+                    new_spot = p.spot_qty
+                else:
+                    new_perp = p.perp_qty
+                    new_spot = p.spot_qty + fill.qty
+                self.store.update_qtys(
+                    p.base, new_spot, new_perp,
+                    rebalance_fee=fill.fee_quote,
+                    ts_ms=int(time.time() * 1000),
+                )
+                report.rebalances.append(p.base)
+                report.fees_paid += fill.fee_quote
+                logger.info(
+                    "rebalanced %s: spot=%.6f→%.6f perp=%.6f→%.6f fee=%.4f",
+                    p.base, p.spot_qty, new_spot, p.perp_qty, new_perp,
+                    fill.fee_quote,
+                )
+            except Exception as e:
+                report.alarms.append(
+                    f"rebalance {p.base} failed: {e}. Drift {p.delta_drift_pct*100:.2f}%."
+                )

@@ -10,7 +10,9 @@ NOT a generic exchange abstraction — specific to Bybit USDT pairs and
 the cash-and-carry use case.
 """
 from __future__ import annotations
+import functools
 import logging
+import random
 import time
 from dataclasses import dataclass
 
@@ -21,6 +23,46 @@ def _ccxt():
     """Lazy import so dataclass consumers don't need ccxt installed."""
     import ccxt as _c
     return _c
+
+
+def _is_rate_limit(exc: Exception) -> bool:
+    """Heuristic: ccxt RateLimitExceeded or HTTP 429 in message."""
+    name = type(exc).__name__
+    return "RateLimit" in name or "429" in str(exc)
+
+
+def _is_network(exc: Exception) -> bool:
+    name = type(exc).__name__
+    return any(k in name for k in ("NetworkError", "RequestTimeout", "ExchangeNotAvailable"))
+
+
+def with_retry(retries: int = 3, base_delay: float = 0.5, max_delay: float = 8.0):
+    """Decorator: retry on network / rate-limit errors with jittered backoff.
+
+    Does NOT retry on order placement endpoints — caller decides idempotency.
+    Used internally for read-only ops (fetch_*).
+    """
+    def deco(fn):
+        @functools.wraps(fn)
+        def wrap(*args, **kwargs):
+            for attempt in range(retries + 1):
+                try:
+                    return fn(*args, **kwargs)
+                except Exception as e:
+                    if attempt == retries:
+                        raise
+                    if not (_is_rate_limit(e) or _is_network(e)):
+                        raise
+                    delay = min(max_delay, base_delay * (2 ** attempt))
+                    delay += random.uniform(0, delay * 0.25)
+                    logger.warning(
+                        "%s attempt %d/%d failed (%s: %s); retrying in %.2fs",
+                        fn.__name__, attempt + 1, retries + 1,
+                        type(e).__name__, e, delay,
+                    )
+                    time.sleep(delay)
+        return wrap
+    return deco
 
 
 def spot_symbol(base: str) -> str:
@@ -75,6 +117,7 @@ class BybitClient:
 
     # ---------- Public ----------
 
+    @with_retry()
     def fetch_funding_rate(self, base: str) -> float:
         """Latest funding rate for the perp."""
         sym = perp_symbol(base)
@@ -84,6 +127,7 @@ class BybitClient:
             raise RuntimeError(f"no fundingRate in response for {sym}: {info}")
         return float(rate)
 
+    @with_retry()
     def fetch_funding_history(self, base: str, since_ms: int | None = None,
                               limit: int = 200) -> list[dict]:
         """Recent funding history. Returns list of {timestamp, rate}."""
@@ -94,6 +138,7 @@ class BybitClient:
             for r in rows
         ]
 
+    @with_retry()
     def fetch_basis_bp(self, base: str) -> float:
         """(perp - spot) / spot in basis points. Negative = perp discount."""
         spot = self._client.fetch_ticker(spot_symbol(base))
@@ -104,14 +149,29 @@ class BybitClient:
             raise RuntimeError(f"missing price: spot={spot_px} perp={perp_px}")
         return (perp_px - spot_px) / spot_px * 10000
 
+    @with_retry()
+    def fetch_perp_price(self, base: str) -> float:
+        t = self._client.fetch_ticker(perp_symbol(base))
+        px = t.get("last") or t.get("close")
+        if not px:
+            raise RuntimeError(f"missing perp price for {base}")
+        return float(px)
+
     # ---------- Private (require keys + IP whitelist) ----------
 
     def fetch_spot_balance(self, asset: str) -> float:
         bal = self._client.fetch_balance({"type": "spot"})
         return float(bal.get(asset, {}).get("free", 0) or 0)
 
+    @with_retry()
     def fetch_perp_position(self, base: str) -> dict | None:
-        """Current open perp position, or None."""
+        """Current open perp position, or None.
+
+        Includes liquidation_price for risk monitor — it's the level where
+        the perp leg would be force-closed by Bybit. Distance to it must
+        stay large; with 1x leverage and spot collateral via UTA it's
+        normally far below entry, but we monitor regardless.
+        """
         sym = perp_symbol(base)
         positions = self._client.fetch_positions([sym])
         for p in positions:
@@ -123,8 +183,30 @@ class BybitClient:
                     "entry": float(p.get("entryPrice", 0) or 0),
                     "leverage": float(p.get("leverage", 1) or 1),
                     "unrealized_pnl": float(p.get("unrealizedPnl", 0) or 0),
+                    "liquidation_price": float(p.get("liquidationPrice", 0) or 0),
+                    "mark_price": float(p.get("markPrice", 0) or 0),
                 }
         return None
+
+    @with_retry()
+    def fetch_open_positions(self) -> dict[str, dict]:
+        """All open perp positions keyed by base symbol. Used by reconcile."""
+        positions = self._client.fetch_positions()
+        out = {}
+        for p in positions:
+            sym = p.get("symbol", "")
+            qty = float(p.get("contracts", 0) or 0)
+            if qty == 0:
+                continue
+            base = sym.split("/")[0]
+            out[base] = {
+                "side": p.get("side"),
+                "qty": qty,
+                "entry": float(p.get("entryPrice", 0) or 0),
+                "liquidation_price": float(p.get("liquidationPrice", 0) or 0),
+                "mark_price": float(p.get("markPrice", 0) or 0),
+            }
+        return out
 
     def set_leverage(self, base: str, leverage: int) -> None:
         sym = perp_symbol(base)
@@ -186,6 +268,34 @@ class BybitClient:
             base_amount=qty, market="perp",
         )
         return spot_fill, perp_fill
+
+    def rebalance_pair(self, base: str, spot_qty: float,
+                       perp_qty: float) -> FillResult | None:
+        """Re-equalise spot and perp legs after delta drift.
+
+        If spot_qty > perp_qty: increase perp short (sell more perp).
+        If perp_qty > spot_qty: increase spot long (buy more spot).
+        Returns the FillResult of the corrective trade, or None if drift
+        below precision.
+        """
+        if not self.has_credentials:
+            raise RuntimeError("rebalance_pair needs credentials")
+
+        delta = spot_qty - perp_qty
+        if abs(delta) < 1e-9:
+            return None
+
+        if delta > 0:
+            # Spot heavier than perp → grow short perp
+            return self._market_order(
+                symbol=perp_symbol(base), side="sell",
+                base_amount=delta, market="perp",
+            )
+        # Perp heavier than spot → buy more spot
+        return self._market_order(
+            symbol=spot_symbol(base), side="buy",
+            base_amount=abs(delta), market="spot",
+        )
 
     # ---------- Internals ----------
 
