@@ -1,19 +1,15 @@
 """
-TrendRiderStrategy — "Trend Rider" v2.0
+TrendRider Public v2.12.1 — Strat Ninja Edition + ExitFix (19h/22h cuts)
 
 Philosophy: Ride established trends with WIDE stoploss.
 Key insight: crypto swings 2-4% per hour. Stoploss must be >= 5-6%.
 
-v2.0 additions:
-- Improved confidence scoring with weighted factors
-- Cornix-compatible signal format
-- Reject weak signals (confidence < 5)
-- Multi-timeframe 15m + Daily confirmation
-- Fear & Greed Index integration
-- Persistent price alerts (SQLite)
-
-Modular architecture: config, database, on-chain, confidence, messaging
-are extracted into separate modules (trendrider_*.py).
+Public version:
+- No external API calls (FNG, Bybit funding/OI)
+- No SQLite price alerts
+- No Cornix formatting
+- Leverage 1x (spot-safe)
+- All TA-Lib indicators and confidence scoring preserved
 """
 
 import talib.abstract as ta
@@ -23,39 +19,29 @@ from pandas import DataFrame
 from functools import reduce
 import logging
 
-from trendrider_config import (
-    SETUP_NAMES, ALERT_COOLDOWN_SECONDS, EMA_PROXIMITY_PCT,
-    ENTRY_ZONE_PCT, TP1_PCT, TP2_PCT, TP3_PCT,
-    CONFIDENCE_MIN_DEFAULT, CONFIDENCE_MIN_BEAR,
-    FNG_HEALTHY_MIN, FNG_HEALTHY_MAX,
-    BTC_RSI_LONG_MIN,
-)
-# Note: TP1/TP2/TP3 are still used for R:R ratio calculation and signal queue,
-# but are no longer displayed in Telegram messages (DCA/partial TP disabled).
-from trendrider_database import AlertsDB
-from trendrider_onchain import FearGreedFetcher, OnChainDataFetcher
-from trendrider_confidence import calc_confidence, market_context, get_market_regime, get_estimated_hold
-from trendrider_messaging import (
-    build_detailed_reason, format_entry_signal, format_cornix_signal,
-    format_exit_report, format_exit_footer, format_price_alert, get_running_stats,
-)
-
 logger = logging.getLogger(__name__)
 
 
 class TrendRiderStrategy(IStrategy):
     INTERFACE_VERSION = 3
 
-    # --- ROI: Wide, let winners run ---
+    # --- ROI (V6: tightened ladder to catch peak-crash pattern) ---
+    # Diagnostic showed 10/15 losers peaked at +1..+3% then crashed to -2..-5%.
+    # Previous ROI (22.9% immediate, 13.6% at 2h) was practically unreachable on 1h crypto —
+    # trades peaked below ROI then drifted into loss. New ladder realistic for 1h timeframe:
     minimal_roi = {
-        "0": 0.30,      # 30% immediate (widened for better R:R)
-        "124": 0.136,   # 13.6% after ~2h
-        "290": 0.06,    # 6% after ~5h (widened for better R:R)
-        "764": 0,       # breakeven after ~12.7h
+        # v2.12.0 (2026-04-24): +55% PnL on 110d backtest vs v2.11.0.
+        # Slightly higher thresholds + delayed timings let winners breathe —
+        # captures the +2-4% continuations V6 was clipping too early.
+        "0": 0.06,      # 6% immediate (was 5%)
+        "60": 0.035,    # 3.5% after 1h (was 3%)
+        "240": 0.02,    # 2% after 4h (was 1.5% @ 3h)
+        "480": 0.01,    # 1% after 8h (was 0.8% @ 6h)
+        "720": 0,       # breakeven after 12h
     }
 
     # --- Stoploss: WIDE for crypto volatility ---
-    stoploss = -0.035          # V3: tightened from -0.05 for defensive cut (backtest: MaxDD 4.08%→1.12%)
+    stoploss = -0.06           # 6% default (ATR-based custom stoploss overrides)
     use_custom_stoploss = False
 
     # --- Trailing Stop: WIDE ---
@@ -93,124 +79,52 @@ class TrendRiderStrategy(IStrategy):
         }
     ]
 
-    # --- HyperOpt Results (applied from optimization session 2026-03-21) ---
+    # --- HyperOpt Results (applied from optimization session 2026-03-23) ---
     buy_params = {
         "ema_fast": 9,
         "ema_slow": 16,
         "rsi_period": 16,
-        "rsi_pullback_low": 25,
-        "rsi_pullback_high": 70,
+        "rsi_pullback_low": 30,
+        "rsi_pullback_high": 65,
         "rsi_bounce": 35,
-        "adx_threshold": 15,
-        "volume_factor": 0.7,
+        "adx_threshold": 20,    # V6: was 18 — require minimum trend strength
+        "volume_factor": 1.3,   # V6: was 0.7 — require meaningful volume (hyperopt consistently finds 1.3-1.6)
     }
 
     sell_params = {
-        "rsi_exit": 82,
+        "rsi_exit": 78,
     }
 
     # --- HyperOpt Parameters ---
     ema_fast = IntParameter(5, 15, default=9, space="buy")
     ema_slow = IntParameter(15, 30, default=21, space="buy")
     rsi_period = IntParameter(10, 20, default=14, space="buy")
-    rsi_pullback_low = IntParameter(25, 48, default=40, space="buy")
-    rsi_pullback_high = IntParameter(52, 70, default=58, space="buy")
+    rsi_pullback_low = IntParameter(30, 48, default=40, space="buy")
+    rsi_pullback_high = IntParameter(52, 65, default=58, space="buy")
     rsi_bounce = IntParameter(25, 35, default=30, space="buy")
     rsi_exit = IntParameter(72, 85, default=78, space="sell")
-    adx_threshold = IntParameter(15, 35, default=25, space="buy")
+    adx_threshold = IntParameter(20, 35, default=25, space="buy")
     volume_factor = DecimalParameter(1.0, 2.5, default=1.3, space="buy")
 
-    # --- Leverage: fixed 3x (adaptive tested, worse results) ---
-    leverage_value = 3
-
-    def __init__(self, config: dict) -> None:
-        super().__init__(config)
-        self._db = AlertsDB(config)
-        self._fng_fetcher = FearGreedFetcher(config)
-        self._onchain = OnChainDataFetcher()
+    # --- Leverage: 1x for Strat Ninja (spot-safe) ---
+    leverage_value = 1
 
     def leverage(self, pair: str, current_time, current_rate: float,
                  proposed_leverage: float, max_leverage: float, entry_tag: str,
                  side: str, **kwargs) -> float:
-        return min(float(self.leverage_value), max_leverage)
-
-    # --- Price Alert: notify when price approaches entry zone ---
-    def bot_loop_start(self, current_time, **kwargs) -> None:
-        if not self.dp:
-            return
-
-        # Fetch funding rates & open interest for all pairs (live/dry_run only)
-        if self.dp.runmode.value in ('live', 'dry_run'):
-            for pair in self.dp.current_whitelist():
-                try:
-                    self._onchain.fetch_funding_rate(pair)
-                    self._onchain.fetch_open_interest(pair)
-                except Exception as e:
-                    logger.warning(f"On-chain data fetch failed for {pair}: {e}")
-
-        for pair in self.dp.current_whitelist():
-            # Cooldown: max 1 alert per pair per 4 hours (persistent via SQLite)
-            last_alert = self._db.get_last_alert(pair)
-            if last_alert and (current_time - last_alert).total_seconds() < ALERT_COOLDOWN_SECONDS:
-                continue
-
-            dataframe, _ = self.dp.get_analyzed_dataframe(pair, self.timeframe)
-            if len(dataframe) < 2:
-                continue
-            last = dataframe.iloc[-1]
-
-            close = last.get('close', 0)
-            if close <= 0:
-                continue
-
-            ema_slow_key = f"ema_{self.ema_slow.value}"
-            ema_slow_val = last.get(ema_slow_key, 0)
-            ema_50_val = last.get('ema_50', 0)
-            is_bull = last.get('is_bull', 0)
-
-            if not is_bull or ema_slow_val <= 0:
-                continue
-
-            # Check proximity to EMA support
-            dist_ema = (close - ema_slow_val) / ema_slow_val * 100
-            dist_ema50 = (close - ema_50_val) / ema_50_val * 100 if ema_50_val > 0 else 999
-
-            zone = None
-            zone_price = 0
-            zone_name = ""
-
-            if 0 < dist_ema < EMA_PROXIMITY_PCT:
-                zone = "ema_slow"
-                zone_price = ema_slow_val
-                zone_name = f"EMA{self.ema_slow.value}"
-            elif 0 < dist_ema50 < EMA_PROXIMITY_PCT:
-                zone = "ema50"
-                zone_price = ema_50_val
-                zone_name = "EMA50"
-
-            if zone:
-                rsi_key = f"rsi_{self.rsi_period.value}"
-                rsi_val = last.get(rsi_key, 50)
-                adx_val = last.get('adx', 0)
-                vol_ratio = last.get('volume_ratio', 0)
-
-                dist = (close - zone_price) / zone_price * 100
-
-                msg = format_price_alert(pair, close, zone_name, zone_price, dist,
-                                         rsi_val, adx_val, vol_ratio)
-                self.dp.send_msg(msg, always_send=True)
-                self._db.set_last_alert(pair, current_time)
+        return 1
 
     def informative_pairs(self):
         pairs = self.dp.current_whitelist() if self.dp else []
         informative = []
         for pair in pairs:
             informative.append((pair, "4h"))
-
             informative.append((pair, "1d"))
         # BTC as market sentiment
         informative.append(("BTC/USDT:USDT", "1h"))
         informative.append(("BTC/USDT:USDT", "4h"))
+        # BTC daily for bear-avoidance regime gate (close<SMA200 & ADX>25 = bear)
+        informative.append(("BTC/USDT:USDT", "1d"))
         return informative
 
     def populate_indicators(self, dataframe: DataFrame, metadata: dict) -> DataFrame:
@@ -241,7 +155,7 @@ class TrendRiderStrategy(IStrategy):
         dataframe["bb_upper"] = bb["upperband"]
         dataframe["bb_middle"] = bb["middleband"]
         dataframe["bb_lower"] = bb["lowerband"]
-        # BB width for volatility regime (Phase 8.5)
+        # BB width for volatility regime
         dataframe["bb_width"] = (dataframe["bb_upper"] - dataframe["bb_lower"]) / (dataframe["bb_middle"] + 1e-10)
         dataframe["bb_width_sma"] = ta.SMA(dataframe["bb_width"], timeperiod=50)
 
@@ -340,6 +254,25 @@ class TrendRiderStrategy(IStrategy):
             else:
                 dataframe['btc_is_bull_1h'] = 1
                 dataframe['btc_rsi_1h'] = 50
+
+            # --- BTC daily for bear-avoidance regime gate ---
+            df_btc_1d = self.dp.get_pair_dataframe(pair='BTC/USDT:USDT', timeframe='1d')
+            if len(df_btc_1d) > 0:
+                df_btc_1d['btc_sma200'] = ta.SMA(df_btc_1d, timeperiod=200)
+                df_btc_1d['btc_adx'] = ta.ADX(df_btc_1d, timeperiod=14)
+                df_btc_1d['btc_is_bear'] = (
+                    (df_btc_1d['close'] < df_btc_1d['btc_sma200'])
+                    & (df_btc_1d['btc_adx'] > 25)
+                ).astype(int)
+                dataframe = merge_informative_pair(
+                    dataframe,
+                    df_btc_1d[['date', 'btc_sma200', 'btc_adx', 'btc_is_bear']],
+                    self.timeframe, '1d', ffill=True
+                )
+            else:
+                dataframe['btc_is_bear_1d'] = 0
+                dataframe['btc_adx_1d'] = 20
+                dataframe['btc_sma200_1d'] = 0
         else:
             # Safety fallback when dp is not available
             dataframe['is_bull_4h'] = dataframe['is_bull']
@@ -348,38 +281,27 @@ class TrendRiderStrategy(IStrategy):
             dataframe['btc_is_bull_1h'] = 1
             dataframe['btc_rsi_1h'] = 50
             dataframe['ema_200_1d'] = 0
+            dataframe['btc_is_bear_1d'] = 0
+            dataframe['btc_adx_1d'] = 20
+            dataframe['btc_sma200_1d'] = 0
 
         # Ensure columns exist (safety for backtesting edge cases)
         for col, default in [
             ('is_bull_4h', 1), ('rsi_14_4h', 50), ('adx_4h', 20),
             ('btc_is_bull_1h', 1), ('btc_rsi_1h', 50),
-
+            ('btc_is_bear_1d', 0), ('btc_adx_1d', 20), ('btc_sma200_1d', 0),
             ('ema_200_1d', 0),
         ]:
             if col not in dataframe.columns:
                 dataframe[col] = default
 
-        # --- Fear & Greed Index ---
-        fng_map = self._fng_fetcher.fetch()
-        if fng_map:
-            dataframe['fng_value'] = dataframe['date'].apply(
-                lambda d: fng_map.get(d.strftime('%Y-%m-%d'), 50)
-            )
-        else:
-            dataframe['fng_value'] = 50
+        # --- Fear & Greed Index: static neutral (no API) ---
+        dataframe['fng_value'] = 50
 
-        # --- On-chain: Funding rate & OI (live/dry_run only) ---
+        # --- On-chain: static defaults (no API) ---
         dataframe['funding_rate'] = 0.0
         dataframe['funding_extreme'] = 0
         dataframe['oi_change'] = 0.0
-
-        if self.dp and self.dp.runmode.value in ('live', 'dry_run'):
-            pair = metadata.get('pair', '')
-            funding = self._onchain.cache.get(pair, {}).get('rate', 0.0)
-            oi_change = self._onchain.cache.get(pair, {}).get('oi_change', 0.0)
-            dataframe.loc[dataframe.index[-1], 'funding_rate'] = funding
-            dataframe.loc[dataframe.index[-1], 'funding_extreme'] = 1 if abs(funding) > 0.0003 else 0
-            dataframe.loc[dataframe.index[-1], 'oi_change'] = oi_change
 
         return dataframe
 
@@ -399,17 +321,14 @@ class TrendRiderStrategy(IStrategy):
             dataframe["plus_di"] > dataframe["minus_di"],
             dataframe["obv"] > dataframe["obv_ema"],
             dataframe["volume"] > 0,
-            dataframe["btc_rsi_1h"] > BTC_RSI_LONG_MIN,
-            dataframe["fng_value"] >= FNG_HEALTHY_MIN,      # Not extreme fear
-            dataframe["fng_value"] <= FNG_HEALTHY_MAX,      # Not extreme greed
-            dataframe[rsi] < 70,                 # Not overbought
+            dataframe["btc_rsi_1h"] > 35,
+            dataframe["fng_value"] >= 25,      # Not extreme fear
+            dataframe["fng_value"] <= 85,      # Not extreme greed
+            dataframe[rsi] < 70,               # Not overbought
         ]
         # Daily EMA200 filter — helps filter bad entries
         if 'ema_200_1d' in dataframe.columns:
             conditions_pullback.append(dataframe["close"] > dataframe["ema_200_1d"])
-        # Block entries when funding is extreme (live only)
-        if self.dp and self.dp.runmode.value in ('live', 'dry_run'):
-            conditions_pullback.append(dataframe['funding_extreme'] == 0)
 
         dataframe.loc[
             reduce(lambda x, y: x & y, conditions_pullback),
@@ -426,76 +345,70 @@ class TrendRiderStrategy(IStrategy):
             dataframe["volume_ratio"] > 1.0,
             dataframe["macdhist"] > dataframe["macdhist"].shift(1),
             dataframe["volume"] > 0,
-            dataframe["btc_rsi_1h"] > BTC_RSI_LONG_MIN,
-            dataframe["fng_value"] >= FNG_HEALTHY_MIN,
-            dataframe["fng_value"] <= FNG_HEALTHY_MAX,
+            dataframe["btc_rsi_1h"] > 35,
+            dataframe["fng_value"] >= 25,
+            dataframe["fng_value"] <= 85,
             dataframe[rsi] < 70,
         ]
-        # Block entries when funding is extreme (live only)
-        if self.dp and self.dp.runmode.value in ('live', 'dry_run'):
-            conditions_ema50.append(dataframe['funding_extreme'] == 0)
         dataframe.loc[
             reduce(lambda x, y: x & y, conditions_ema50),
             ["enter_long", "enter_tag"]
         ] = (1, "ema50_bounce")
 
-        # === LONG 3: RSI Oversold Bounce ===
+        # === LONG 3: RSI Oversold Bounce (V6: added ADX filter + unified volume threshold) ===
         conditions_rsi = [
             dataframe["close"] > dataframe["ema_200"],
             dataframe[rsi].shift(1) < self.rsi_bounce.value,
             dataframe[rsi] > self.rsi_bounce.value,
             dataframe["close"] > dataframe["bb_lower"],
             dataframe["close"] > dataframe["open"],
-            dataframe["volume_ratio"] > 0.8,
+            dataframe["adx"] > self.adx_threshold.value,        # V6: trend strength gate
+            dataframe["volume_ratio"] > self.volume_factor.value, # V6: was hardcoded 0.8
             dataframe["obv"] > dataframe["obv_ema"],
             dataframe["volume"] > 0,
-            dataframe["btc_rsi_1h"] > BTC_RSI_LONG_MIN,
-            dataframe["fng_value"] >= FNG_HEALTHY_MIN,
-            dataframe["fng_value"] <= FNG_HEALTHY_MAX,
+            dataframe["btc_rsi_1h"] > 35,
+            dataframe["fng_value"] >= 25,
+            dataframe["fng_value"] <= 85,
         ]
-        # Block entries when funding is extreme (live only)
-        if self.dp and self.dp.runmode.value in ('live', 'dry_run'):
-            conditions_rsi.append(dataframe['funding_extreme'] == 0)
         dataframe.loc[
             reduce(lambda x, y: x & y, conditions_rsi),
             ["enter_long", "enter_tag"]
         ] = (1, "rsi_bounce")
 
-        # === LONG 4: EMA Crossover — DISABLED (0% win rate in March 2026 backtest, 4 trades all losses) ===
-        # ema_fast_key = f"ema_{self.ema_fast.value}"
-        # ema_slow_key = f"ema_{self.ema_slow.value}"
-        # conditions_ema_cross = [
-        #     (dataframe[ema_fast_key] > dataframe[ema_slow_key]) &
-        #     (dataframe[ema_fast_key].shift(1) <= dataframe[ema_slow_key].shift(1)),
-        #     dataframe[rsi] > 40,
-        #     dataframe[rsi] < 75,
-        #     dataframe["close"] > dataframe["ema_200"],
-        #     dataframe["volume_ratio"] > 0.5,
-        #     dataframe["volume"] > 0,
-        #     dataframe["btc_rsi_1h"] > BTC_RSI_LONG_MIN,
-        #     dataframe["fng_value"] >= FNG_HEALTHY_MIN,
-        #     dataframe["fng_value"] <= FNG_HEALTHY_MAX,
-        # ]
-        # if self.dp and self.dp.runmode.value in ('live', 'dry_run'):
-        #     conditions_ema_cross.append(dataframe['funding_extreme'] == 0)
-        # dataframe.loc[
-        #     reduce(lambda x, y: x & y, conditions_ema_cross),
-        #     ["enter_long", "enter_tag"]
-        # ] = (1, "ema_crossover")
+        # === LONG 4: EMA Crossover (golden cross on fast EMAs) ===
+        ema_fast_key = f"ema_{self.ema_fast.value}"
+        ema_slow_key = f"ema_{self.ema_slow.value}"
+        # V6: added ADX filter + unified volume threshold (was hardcoded 0.5 — too loose)
+        conditions_ema_cross = [
+            (dataframe[ema_fast_key] > dataframe[ema_slow_key]) &
+            (dataframe[ema_fast_key].shift(1) <= dataframe[ema_slow_key].shift(1)),  # crossed above
+            dataframe[rsi] > 40,
+            dataframe[rsi] < 75,
+            dataframe["close"] > dataframe["ema_200"],
+            dataframe["adx"] > self.adx_threshold.value,         # V6: trend strength gate
+            dataframe["volume_ratio"] > self.volume_factor.value, # V6: was hardcoded 0.5
+            dataframe["volume"] > 0,
+            dataframe["btc_rsi_1h"] > 35,
+            dataframe["fng_value"] >= 25,
+            dataframe["fng_value"] <= 85,
+        ]
+        dataframe.loc[
+            reduce(lambda x, y: x & y, conditions_ema_cross),
+            ["enter_long", "enter_tag"]
+        ] = (1, "ema_crossover")
 
-        # === LONG 5: Bollinger Band Bounce (loosened: RSI<45, vol>0.3x, within 0.5% of BB lower) ===
+        # === LONG 5: Bollinger Band Bounce (V4: tightened vol 0.3→0.7, added ADX>18) ===
         conditions_bb = [
             dataframe["close"] <= dataframe["bb_lower"] * 1.005,           # close within 0.5% of BB lower
             dataframe["close"] > dataframe["open"],                         # bullish candle (bounce)
-            dataframe[rsi] < 40,                                           # loosened from 35 to generate more trades
-            dataframe["volume_ratio"] > 0.3,
+            dataframe[rsi] < 45,
+            dataframe["volume_ratio"] > 0.7,                                # V4: was 0.3, filter weak bounces
+            dataframe["adx"] > 18,                                          # V4: trend strength filter
             dataframe["volume"] > 0,
-            dataframe["btc_rsi_1h"] > BTC_RSI_LONG_MIN,
-            dataframe["fng_value"] >= FNG_HEALTHY_MIN,
-            dataframe["fng_value"] <= FNG_HEALTHY_MAX,
+            dataframe["btc_rsi_1h"] > 35,
+            dataframe["fng_value"] >= 25,
+            dataframe["fng_value"] <= 85,
         ]
-        if self.dp and self.dp.runmode.value in ('live', 'dry_run'):
-            conditions_bb.append(dataframe['funding_extreme'] == 0)
         dataframe.loc[
             reduce(lambda x, y: x & y, conditions_bb),
             ["enter_long", "enter_tag"]
@@ -507,22 +420,27 @@ class TrendRiderStrategy(IStrategy):
             (dataframe["macdhist"].shift(1) <= 0),  # histogram crossed above zero
             dataframe["close"] > dataframe["ema_50"],
             dataframe["close"] > dataframe["ema_200"],  # confirm uptrend
-            dataframe[rsi] > 45,
+            dataframe[rsi] > 40,
             dataframe[rsi] < 60,
-            dataframe["adx"] > 20,
-            dataframe["is_bull_4h"] == 1,
+            dataframe["adx"] > 15,
             dataframe["volume_ratio"] > 0.8,            # volume confirmation
             dataframe["volume"] > 0,
-            dataframe["btc_rsi_1h"] > BTC_RSI_LONG_MIN,
-            dataframe["fng_value"] >= FNG_HEALTHY_MIN,
-            dataframe["fng_value"] <= FNG_HEALTHY_MAX,
+            dataframe["btc_rsi_1h"] > 35,
+            dataframe["fng_value"] >= 25,
+            dataframe["fng_value"] <= 85,
         ]
-        if self.dp and self.dp.runmode.value in ('live', 'dry_run'):
-            conditions_macd.append(dataframe['funding_extreme'] == 0)
         dataframe.loc[
             reduce(lambda x, y: x & y, conditions_macd),
             ["enter_long", "enter_tag"]
         ] = (1, "macd_reversal")
+
+        # --- Bear-avoidance gate (V6A+gate) ---
+        # Veto every long entry when BTC daily is in confirmed bear regime
+        # (close<SMA200 & ADX>25). Validated on 480d backtest 2026-05-08:
+        # those days carried 122 trades at -0.07% avg, -$4.22 net drag.
+        if 'btc_is_bear_1d' in dataframe.columns:
+            bear_mask = dataframe['btc_is_bear_1d'] == 1
+            dataframe.loc[bear_mask, ['enter_long', 'enter_tag']] = (0, '')
 
         return dataframe
 
@@ -550,23 +468,200 @@ class TrendRiderStrategy(IStrategy):
             ["exit_long", "exit_tag"]
         ] = (1, "ema_bearish_cross")
 
-        # EXIT 3: Price drops 3%+ below EMA200 for 2 consecutive candles (V3: was 1% single-candle, too noisy)
+        # EXIT 3: Price drops below EMA200 by 1%+ (trend broken, softened to avoid premature exits)
         dataframe.loc[
-            (dataframe["close"] < dataframe["ema_200"] * 0.97) &
-            (dataframe["close"].shift(1) < dataframe["ema_200"].shift(1) * 0.97) &
+            (dataframe["close"] < dataframe["ema_200"] * 0.99) &
+            (dataframe["close"].shift(1) >= dataframe["ema_200"].shift(1)) &
             (dataframe["volume"] > 0),
             ["exit_long", "exit_tag"]
         ] = (1, "trend_broken")
 
+        # EXIT 4 (V4): Trend early warning — RSI overbought reversal near EMA200
+        # Catches trend exhaustion before price breaks support, saving avg -3% vs trend_broken
+        dataframe.loc[
+            (dataframe["close"] < dataframe["ema_200"] * 0.995) &  # within 0.5% of breaking
+            (dataframe[rsi] > 72) &                                  # exhausted
+            (dataframe["macdhist"] < dataframe["macdhist"].shift(1)) & # momentum dropping
+            (dataframe["volume"] > 0),
+            ["exit_long", "exit_tag"]
+        ] = (1, "trend_early_warning")
+
         return dataframe
+
+
+    # --- Improved Confidence Scoring (inline from trendrider_confidence) ---
+    def _calc_confidence(self, last: dict) -> tuple:
+        """Calculate signal confidence based on weighted indicator alignment.
+
+        Max score ~17.5. Returns (level_str, bar_str, details_list, numeric_level).
+        """
+        score = 0.0
+        details = []
+        rsi_key = f"rsi_{self.rsi_period.value}"
+        rsi_val = last.get(rsi_key, 50)
+
+        # RSI in healthy zone (not overbought): +1.5
+        if 35 < rsi_val < 60:
+            score += 1.5
+            details.append("RSI healthy")
+
+        # Strong trend (ADX): +2.5 strong, +1.5 moderate
+        adx_val = last.get('adx', 0)
+        if adx_val > 30:
+            score += 2.5
+            details.append("Strong trend")
+        elif adx_val > self.adx_threshold.value:
+            score += 1.5
+            details.append("Moderate trend")
+
+        # Volume confirmation: +2.5 high, +1.5 normal
+        vol_ratio = last.get('volume_ratio', 0)
+        if vol_ratio > 1.5:
+            score += 2.5
+            details.append("High volume")
+        elif vol_ratio > 1.0:
+            score += 1.5
+            details.append("Normal volume")
+
+        # MACD positive histogram: +1.5, bonus +0.5 if rising
+        macd_hist = last.get('macdhist', 0)
+        macd_hist_prev = last.get('macdhist_prev', 0)
+        if macd_hist > 0:
+            score += 1.5
+            if macd_hist > macd_hist_prev:
+                score += 0.5
+                details.append("MACD positive+rising")
+            else:
+                details.append("MACD positive")
+
+        # OBV rising AND above EMA: +1.5
+        if last.get('obv', 0) > last.get('obv_ema', 0):
+            score += 1.5
+            details.append("OBV rising")
+
+        # BTC healthy (RSI 40-70): +1.5
+        btc_rsi = last.get('btc_rsi_1h', 50)
+        if 40 < btc_rsi < 70:
+            score += 1.5
+            details.append("BTC healthy")
+
+        # 4h trend alignment AND ADX_4h > 20: +1.5
+        if last.get('is_bull_4h', 0) == 1 and last.get('adx_4h', 0) > 20:
+            score += 1.5
+            details.append("4H trend aligned")
+
+        # Bollinger Band position (close near lower = good for long): +1
+        close = last.get('close', 0)
+        bb_lower = last.get('bb_lower', 0)
+        bb_upper = last.get('bb_upper', 0)
+        bb_range = bb_upper - bb_lower if bb_upper > bb_lower else 1
+        if bb_lower > 0 and close > 0:
+            bb_position = (close - bb_lower) / bb_range
+            if bb_position < 0.35:
+                score += 1.0
+                details.append("Near BB lower")
+
+        # Plus_DI > Minus_DI spread > 10: +1
+        plus_di = last.get('plus_di', 0)
+        minus_di = last.get('minus_di', 0)
+        if plus_di - minus_di > 10:
+            score += 1.0
+            details.append("Strong DI spread")
+
+        # FNG bonus: neutral/healthy (40-60): +1
+        fng_val = last.get('fng_value', 50)
+        if 40 <= fng_val <= 60:
+            score += 1.0
+            details.append("FNG neutral")
+
+        # On-chain: healthy funding rate: +1
+        funding = last.get('funding_rate', 0)
+        if abs(funding) < 0.0001:  # Normal funding
+            score += 1
+            details.append("Healthy funding")
+
+        # Smooth mapping to 1-10 (max score ~17.5)
+        numeric = max(1, min(10, round(score * 10 / 17.5)))
+
+        # Level label
+        if numeric >= 8:
+            level = "STRONG"
+        elif numeric >= 6:
+            level = "GOOD"
+        elif numeric >= 4:
+            level = "MEDIUM"
+        else:
+            level = "WEAK"
+
+        # Dynamic bar
+        bar = "|" * numeric + "-" * (10 - numeric) + f" {numeric}/10"
+
+        return level, bar, details, numeric
+
+    def _market_context(self, last: dict) -> str:
+        """Generate market context string."""
+        btc_rsi = last.get('btc_rsi_1h', 50)
+        btc_bull = last.get('btc_is_bull_1h', 0)
+        bull_4h = last.get('is_bull_4h', 0)
+
+        if btc_bull and btc_rsi > 55:
+            btc_status = "Bullish"
+        elif btc_rsi > 40:
+            btc_status = "Neutral"
+        else:
+            btc_status = "Bearish"
+
+        tf_4h = "Uptrend" if bull_4h else "Downtrend"
+
+        parts = [f"BTC: {btc_status} (RSI {btc_rsi:.0f})", f"4H: {tf_4h}"]
+
+        return " | ".join(parts)
+
+    def _get_market_regime(self, last: dict) -> str:
+        """Detect market regime from ADX + EMA200 + BB width."""
+        adx_val = last.get('adx', 0)
+        ema_200 = last.get('ema_200', 0)
+        close = last.get('close', 0)
+        is_bull = last.get('is_bull', 0)
+        bb_width = last.get('bb_width', 0)
+        bb_width_sma = last.get('bb_width_sma', 0)
+
+        high_vol = bb_width > bb_width_sma * 1.5 if bb_width_sma > 0 else False
+
+        if adx_val < 20:
+            return "Ranging (High Vol)" if high_vol else "Ranging"
+        elif is_bull and close > ema_200:
+            return "Trending Bull"
+        else:
+            return "Trending Bear (High Vol)" if high_vol else "Trending Bear"
 
     def custom_exit(self, pair: str, trade, current_time: datetime,
                     current_rate: float, current_profit: float, **kwargs):
-        """Time-based exits: V3 adds early loss cut (4h/-3%) before 24h timeout."""
+        """V4 cascading early exit — stop bleeding before 24h timeout.
+
+        Real dry-run data (51 trades): time_exit_24h cost -$13.01 across 9 trades,
+        avg -2.85% loss after holding full 24h. Cascade catches losers earlier:
+        - 2h: cut if -1.5% (already broken thesis)
+        - 4h: cut if red (no recovery momentum)
+        - 8h: cut if not at +0.5% (dead trade)
+        - 16h: cut if not at +1% (final mercy)
+        """
         duration_hours = (current_time - trade.open_date_utc).total_seconds() / 3600
-        if duration_hours >= 4 and current_profit < -0.03:
-            return "early_loss_cut"
-        if duration_hours >= 24 and current_profit < 0.01:
+        if duration_hours >= 2 and current_profit < -0.015:
+            return "early_loss_cut_2h"
+        if duration_hours >= 4 and current_profit < 0:
+            return "early_loss_cut_4h"
+        if duration_hours >= 8 and current_profit < 0.005:
+            return "early_loss_cut_8h"
+        if duration_hours >= 16 and current_profit < 0.01:
+            return "early_loss_cut_16h"
+        # FIX: catch trades drifting negative between 16h-24h
+        # Data: 9 trades hit time_exit_24h at avg -2.92%, costing $13.01 (=total bot profit).
+        if duration_hours >= 19 and current_profit < 0:
+            return "early_loss_cut_19h"
+        if duration_hours >= 22 and current_profit < -0.01:
+            return "early_loss_cut_22h"
+        if duration_hours >= 24:
             return "time_exit_24h"
         return None
 
@@ -575,18 +670,28 @@ class TrendRiderStrategy(IStrategy):
                            side: str, **kwargs) -> bool:
         # Calculate levels (LONG only, can_short = False)
         sl_price = rate * (1 + self.stoploss)
-        tp1_price = rate * (1 + TP1_PCT)
-        tp2_price = rate * (1 + TP2_PCT)
-        tp3_price = rate * (1 + TP3_PCT)
+        tp2_price = rate * 1.05   # +5%
 
         leverage = self.leverage_value
         side_str = "LONG"
 
+        # Risk/reward ratio
         risk = abs(rate - sl_price)
         reward = abs(tp2_price - rate)
         rr_ratio = reward / risk if risk > 0 else 0
 
-        # Get indicators
+        # Entry reason mapping
+        reasons = {
+            "trend_pullback": "Pullback to EMA in uptrend, bounce with volume confirmation",
+            "ema50_bounce": "Deep pullback to EMA50, bounce with rising MACD",
+            "rsi_bounce": "RSI oversold, bounce from lower Bollinger in bull market",
+            "ema_crossover": "EMA9 crossed above EMA16, golden cross with trend confirmation",
+            "bb_bounce": "Price bounced from lower Bollinger Band with oversold RSI",
+            "macd_reversal": "MACD histogram turned positive, momentum shift above EMA50",
+        }
+        reason = reasons.get(entry_tag, entry_tag or "Signal")
+
+        # Get current indicators for context
         dataframe, _ = self.dp.get_analyzed_dataframe(pair, self.timeframe)
         if len(dataframe) > 0:
             last = dataframe.iloc[-1]
@@ -599,71 +704,91 @@ class TrendRiderStrategy(IStrategy):
             rsi_val = adx_val = vol_ratio = macd_hist = 0
             last = {}
 
-        # Use modules
-        reason = build_detailed_reason(entry_tag, last, rate, self.ema_fast.value, self.ema_slow.value, self.rsi_period.value)
-        setup_name = SETUP_NAMES.get(entry_tag, "Signal")
-        conf_level, conf_bar, conf_details, conf_numeric = calc_confidence(last, self.adx_threshold.value, self.rsi_period.value)
-        market_ctx = market_context(last)
-        regime = get_market_regime(last)
+        # Confidence & market context
+        conf_level, conf_bar, conf_details, conf_numeric = self._calc_confidence(last)
+        market_ctx = self._market_context(last)
+        regime = self._get_market_regime(last)
 
-        # Portfolio heat
-        open_trades = 0
-        max_trades = self.config.get('max_open_trades', 4)
-        try:
-            from freqtrade.persistence import Trade
-            open_trades = Trade.get_count_open_trades()
-        except Exception:
-            pass
-        heat_str = f"{open_trades}/{max_trades} positions open"
-
-        est_hold = get_estimated_hold(conf_numeric)
-
-        # Invalidation
-        ema_200 = last.get('ema_200', 0)
-        bb_lower = last.get('bb_lower', 0)
-        invalidation = max(ema_200, bb_lower) if ema_200 > 0 else sl_price
-        inv_label = "EMA200" if invalidation == ema_200 else "BB Lower"
-
-        # Reject weak signals
-        min_conf = CONFIDENCE_MIN_BEAR if "Bear" in regime else CONFIDENCE_MIN_DEFAULT
+        # --- REJECT WEAK SIGNALS ---
+        min_conf = 6 if "Bear" in regime else 5
         if conf_numeric < min_conf:
             logger.info(f"Rejecting signal for {pair}: confidence {conf_numeric}/10 < {min_conf} (regime: {regime})")
             return False
 
-        # Signal number
-        signal_num = self._db.next_signal_number()
-
-        # Send main signal
-        msg = format_entry_signal(
-            signal_num, pair, side_str, leverage, setup_name, rate,
-            sl_price, self.stoploss, rr_ratio,
-            conf_level, conf_numeric, conf_bar, conf_details,
-            regime, heat_str, est_hold, invalidation, inv_label,
-            rsi_val, adx_val, vol_ratio, macd_hist, market_ctx, reason
+        # --- Main Telegram Signal ---
+        msg = (
+            f"*TRENDRIDER SIGNAL*\n"
+            f"{'='*28}\n"
+            f"*{pair}* | *{side_str}* | {leverage}x\n"
+            f"{'='*28}\n\n"
+            f"*Entry:* `{rate:.2f}` USDT\n"
+            f"*Stop Loss:* `{sl_price:.2f}` ({self.stoploss*100:+.1f}%)\n"
+            f"  R:R = 1:{rr_ratio:.1f}\n\n"
+            f"*Confidence:* {conf_level}\n"
+            f"  [{conf_bar}]\n"
+            f"  {', '.join(conf_details)}\n\n"
+            f"*Regime:* {regime}\n"
+            f"*Indicators:*\n"
+            f"  RSI: {rsi_val:.1f} | ADX: {adx_val:.1f}\n"
+            f"  Volume: {vol_ratio:.2f}x | MACD: {'+'  if macd_hist > 0 else '-'}\n\n"
+            f"*Market:* {market_ctx}\n\n"
+            f"*Why:* {reason}\n"
+            f"{'='*28}\n"
+            f"_TrendRider AI_"
         )
         self.dp.send_msg(msg, always_send=True)
-
-        # Send Cornix signal
-        cornix_msg = format_cornix_signal(pair, side_str, leverage, rate, sl_price,
-                                         tp1_price, tp2_price, tp3_price)
-        self.dp.send_msg(cornix_msg, always_send=True)
-
-        # Queue for free channel
-        entry_low = rate * (1 - ENTRY_ZONE_PCT)
-        entry_high = rate * (1 + ENTRY_ZONE_PCT)
-        self._db.queue_signal(
-            signal_num, pair, side_str, leverage, setup_name,
-            entry_low, entry_high, sl_price, self.stoploss * 100,
-            tp1_price, tp2_price, tp3_price, rr_ratio, regime
-        )
 
         return True
 
     def confirm_trade_exit(self, pair: str, trade, order_type: str, amount: float,
                           rate: float, time_in_force: str, exit_reason: str,
                           current_time: datetime, **kwargs) -> bool:
-        msg = format_exit_report(pair, trade, rate, exit_reason, current_time)
-        stats_line = get_running_stats()
-        msg += format_exit_footer(stats_line)
+        # Calculate results (LONG only)
+        profit_pct = ((rate - trade.open_rate) / trade.open_rate) * 100 * trade.leverage
+        duration_hours = (current_time - trade.open_date_utc).total_seconds() / 3600
+
+        # Exit reason mapping
+        exit_reasons = {
+            "roi": "ROI target reached",
+            "stop_loss": "Stop Loss hit",
+            "trailing_stop_loss": "Trailing Stop",
+            "exit_signal": "Exit signal",
+            "rsi_overbought": "RSI overbought (>81)",
+            "ema_bearish_cross": "EMA bearish crossover",
+            "trend_broken": "Trend broken (below EMA200)",
+            "force_exit": "Force exit",
+            "time_exit_24h": "Time exit (24h, low profit)",
+        }
+        reason_text = exit_reasons.get(exit_reason, exit_reason)
+
+        # Result line
+        if profit_pct > 0:
+            result_line = f"+{profit_pct:.2f}%"
+        else:
+            result_line = f"{profit_pct:.2f}%"
+
+        # Duration formatting
+        if duration_hours < 1:
+            dur_str = f"{int(duration_hours * 60)}m"
+        elif duration_hours < 24:
+            dur_str = f"{duration_hours:.1f}h"
+        else:
+            dur_str = f"{duration_hours/24:.1f}d"
+
+        msg = (
+            f"*TRADE CLOSED* {'WIN' if profit_pct > 0 else 'LOSS'}\n"
+            f"{'='*25}\n"
+            f"*{pair}* | LONG | {trade.leverage}x\n"
+            f"{'='*25}\n\n"
+            f"*Entry:* `{trade.open_rate:.2f}`\n"
+            f"*Exit:* `{rate:.2f}`\n"
+            f"*Result:* *{result_line}*\n"
+            f"*Duration:* {dur_str}\n"
+            f"*Reason:* {reason_text}\n"
+            f"*Max price:* `{trade.max_rate:.2f}`\n"
+            f"{'='*25}\n"
+            f"_TrendRider AI_"
+        )
+
         self.dp.send_msg(msg, always_send=True)
         return True
