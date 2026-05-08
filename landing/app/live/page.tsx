@@ -203,10 +203,10 @@ export default function LivePage() {
             </div>
           </div>
           <h1 className="mt-4 text-3xl sm:text-4xl font-bold tracking-tight">
-            Live Bot Stats <span className="text-amber-400" title="Paused — see notice below">●</span>
+            Live Bot Stats <span className="text-emerald-400">●</span>
           </h1>
           <p className="mt-2 text-slate-400 text-sm">
-            {stats.strategy} · {stats.mode} · paused · raw data from sqlite, no marketing filter
+            {stats.strategy} · {stats.mode} · raw data from sqlite, no marketing filter
           </p>
           <div className="mt-4 flex flex-wrap items-center gap-2">
             <a
@@ -236,26 +236,28 @@ export default function LivePage() {
           </div>
         </header>
 
-        <section className="mb-8 rounded-lg border border-amber-500/40 bg-amber-500/10 p-5">
+        <section className="mb-8 rounded-lg border border-sky-500/40 bg-sky-500/10 p-5">
           <div className="flex items-start gap-3">
-            <div className="text-2xl leading-none" aria-hidden="true">⏸</div>
+            <div className="text-2xl leading-none" aria-hidden="true">↻</div>
             <div className="flex-1">
-              <h2 className="text-amber-300 font-semibold text-base">Paused for strategy redesign</h2>
-              <p className="mt-1 text-sm text-amber-100/80">
-                I've stopped new entries on May 8. The current 1h trend-strategy is at a math ceiling
-                — 6 modifications and 5 hyperopt configs all regressed on out-of-sample data, and the
-                last 14 days of paper-trading hit a 16.7% win-rate. That's a regime change, not a fix
-                in any single parameter.
+              <h2 className="text-sky-300 font-semibold text-base">Update: pause was premature — entries resumed</h2>
+              <p className="mt-1 text-sm text-sky-100/80">
+                Earlier today I paused the bot citing a 14-day win-rate slump to 16.7%. Then I ran
+                the apples-to-apples 480-day backtest on the exact same period: V6A returned +4.89%
+                with a 4.79% max-drawdown — statistically identical to the 836-day baseline
+                (+4.99% / 4.78%). Translation: the 14-day slump (n=36) was within the strategy's
+                historical variance, not a regime break.
               </p>
-              <p className="mt-2 text-sm text-amber-100/80">
-                Next: a 4h-trend variant + a mean-reversion arm running as an ensemble — two
-                uncorrelated edges instead of one fragile one. ~1–2 weeks of work; I'll write it up
-                publicly and the dashboard will resume once the redesign passes walk-forward OOS.
+              <p className="mt-2 text-sm text-sky-100/80">
+                A second-candidate strategy (SuperTrend, daily timeframe, pure trend-follower) was
+                also tested on the same 480 days and lost 34% — confirming that in the current
+                bear-leaning market only the chop-feeder logic V6A uses is profitable. The honest
+                long-term plan is still a regime-gated ensemble (V6A in chop, a trend arm in
+                bulls), but pausing the working arm to wait for the unbuilt one was the wrong call.
               </p>
-              <p className="mt-2 text-xs text-amber-100/60">
-                Numbers below are historical (132 trades, 43.9% win-rate, +$5.57 net). The bot is
-                alive but blocked from opening positions. Build-in-public means this kind of pause
-                ships too.
+              <p className="mt-2 text-xs text-sky-100/60">
+                Build-in-public means shipping the analysis that overrides yesterday's panic too,
+                not just the panic. Bot is back to max_open_trades=8.
               </p>
             </div>
           </div>
