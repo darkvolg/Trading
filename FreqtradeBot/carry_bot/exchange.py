@@ -14,9 +14,13 @@ import logging
 import time
 from dataclasses import dataclass
 
-import ccxt
-
 logger = logging.getLogger(__name__)
+
+
+def _ccxt():
+    """Lazy import so dataclass consumers don't need ccxt installed."""
+    import ccxt as _c
+    return _c
 
 
 def spot_symbol(base: str) -> str:
@@ -52,8 +56,9 @@ class BybitClient:
         # ccxt directly. self._client retains the credentials internally.
         self._client = self._build_client(api_key, api_secret)
 
-    def _build_client(self, key: str, sec: str) -> ccxt.bybit:
-        c = ccxt.bybit({
+    def _build_client(self, key: str, sec: str):
+        ccxt_mod = _ccxt()
+        c = ccxt_mod.bybit({
             "apiKey": key,
             "secret": sec,
             "enableRateLimit": True,
@@ -125,9 +130,10 @@ class BybitClient:
         sym = perp_symbol(base)
         try:
             self._client.set_leverage(leverage, sym)
-        except ccxt.ExchangeError as e:
+        except Exception as e:
             # Bybit raises if leverage is already set to the requested value;
-            # treat as success.
+            # treat as success. Generic catch since ccxt.ExchangeError isn't
+            # imported at module level (lazy ccxt).
             if "leverage not modified" in str(e).lower():
                 return
             raise
