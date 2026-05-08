@@ -88,7 +88,7 @@ A is a cheap-but-low-confidence spike on the same alpha source. B is genuinely d
 ---
 
 ## Hard rules (DO NOT TOUCH)
-- ❌ NO param tuning or component patches on `TrendRiderStrategy.py` — feature frozen at v2.12.1.
+- ❌ NO param tuning or component patches on `TrendRiderStrategy.py` — feature frozen at v2.12.1+gate (2026-05-08).
 - ❌ NO live promotion without 480d OOS pass + 7d dry-run.
 - ❌ NO stacking sub-strategies (Direction C) until at least one sub independently passes the gate.
 - ❌ NO hyperopt as a first-class step. Hyperopt is allowed only AS POST-validation refinement, never as the source of an entry/exit logic decision (per `feedback_strategy_local_optimum` and 5 failed hyperopt attempts in April).
@@ -112,6 +112,14 @@ A is a cheap-but-low-confidence spike on the same alpha source. B is genuinely d
 | 2026-05-01 | Bybit affiliate CTAs deployed to /live + 2 high-impression blog posts (utm-tagged for attribution) | Production: `bybit.com/invite?ref=0GDX5JR` now wired in `live_header`, `blog_exchange`, `blog_setup` placements | b5cb2d0 |
 | 2026-05-01 | Walk-forward OOS validation: SuperTrend on 4 non-overlapping windows | 3/4 positive (-0.88, +14.84, +40.22, +45.00). Stability confirmed across regimes. | (next commit) |
 | 2026-05-01 | Parallel Senko dry-run started: `freqtrade-supertrend.service` (systemd) running alongside V6A on separate sqlite (port 8082, separate db) | Live data collection begins. Decision date 2026-05-15 (14d window). | (next commit) |
+| 2026-05-08 | Audit: live V6A 30d −$3.89, 14d WR 16.7% — diagnosed regime shift, paused TrendRider; published "paused" /live banner | Premature pause based on small-sample noise | e3faa68 |
+| 2026-05-08 | Found `config_supertrend.json` had `timeframe: "1h"` overriding strategy's native `1d` → 6 days zero trades on parallel dry-run. Fixed config + .example, restarted | SuperTrend live now matches strategy intent | e2fcaaf |
+| 2026-05-08 | **Apples-to-apples backtest 480d (2025-01-15 → 2026-04-30)**: V6A baseline +4.89% / DD 4.79%, SuperTrend −34.14% / DD 34.14%. SuperTrend FAILS 3/3 gates by huge margin. | Original "SuperTrend passes baseline" claim only held on bull-period subwindow | (next commit) |
+| 2026-05-08 | Reversed pause: TrendRider un-paused, SuperTrend paused (max_open_trades=0), /live banner replaced with "pause was premature" correction | Build-in-public ships the override too | 22fed98 |
+| 2026-05-08 | **Regime overlay analysis** (entry-date classification, BTC SMA200+ADX): V6A wins +$26.79 in chop / flat in bull / −$4.22 in bear; SuperTrend loses in ALL regimes (incl. bull WR 14% / −$62) | Ensemble-with-SuperTrend thesis DEAD; V6A as chop-arm confirmed; bear-avoidance gate identified as +17%-on-paper opportunity | (next commit) |
+| 2026-05-08 | **V6A+gate built**: BTC daily SMA200 + ADX(14) → veto longs when (close<SMA200 & ADX>25). Hardcoded textbook params, no overfit surface. | Patch deployed to senko `TrendRiderStrategy_exitfix.py`, freqtrade.service restarted | 03f3350 |
+| 2026-05-08 | **Gate validation 480d (chop+bear)**: baseline +4.89% / DD 4.79% → gate +5.20% / DD 3.95% / 332 trades (vs 446) | +6% return, **−18% DD**, 26% fewer trades, +50% per-trade alpha. PASS. | 03f3350 |
+| 2026-05-08 | **Gate OOS 379d (bull, market +136%)**: baseline −1.87% / DD 4.50% → gate −1.37% / DD 3.84% | +27% rel improvement, −15% DD. Gate monotonically improves both regimes. PASS. | 03f3350 |
 
 ## SuperTrend results — first redesign that beats V6A on absolute return
 
