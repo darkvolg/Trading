@@ -128,8 +128,50 @@ Cleanest separation of concerns, deepest liquidity, lowest infra surface, valida
 - Live testnet 1 week: zero hedging errors > 1% delta sustained
 - Live $100 cap 14d: realized APR within 50% of backtest expected (some path-dependence is fine)
 
+## Phase 2.5.1 architecture decisions — RESOLVED 2026-05-08
+
+Audit run via `bybit_account_audit.py` (public API) and senko env inspection.
+
+### 1. Account architecture: dedicated Bybit sub-account
+- Current Bybit API key (in /etc/freqtrade.env on senko) is V6A dry-run config; key has IP whitelist that does NOT include senko, so it has never made signed calls. Never used in production.
+- For CnC: create dedicated sub-account with its own key. Separation of concerns: a margin call on V6A's perp won't liquidate CnC's positions.
+- Sub-account also lets us measure CnC PnL cleanly (its own balance, fees, history).
+
+### 2. Margin mode: UTA (Unified Trading Account)
+- Bybit's recommended default for combined-strategy accounts.
+- Single margin pool across spot+perp. Spot inventory automatically counts as collateral for perp short, simplifying capital efficiency.
+- Confirm at sub-account creation; Bybit migrated most accounts to UTA in 2024.
+
+### 3. Framework: custom Python service (NOT freqtrade)
+- Freqtrade is perp-only by design; spot integration is partial and not built for delta-neutral simultaneity.
+- CnC needs atomic spot+perp pair operations on every entry/exit.
+- Keeps V6A's freqtrade process untouched (isolation, no regression risk).
+- Stack: `ccxt` for exchange abstraction + ~500-800 lines of custom strategy/execution/risk logic. Manageable in 4-6 weeks.
+
+### 4. Whitelist coverage — confirmed
+All 13 alts in V6A whitelist (BTC ETH SOL DOGE XRP ADA AVAX DOT POL NEAR ATOM SUI LINK OP BNB) exist on **both spot AND perp** on Bybit. No pair-level exclusions needed.
+
+### 5. Basis economics — conservative-bias confirmed
+Current snapshot (2026-05-08) on top 8 alts: spot–perp basis ranges −5 to −8 bp (perp trades cheaper than spot). My backtests used perp-price-as-spot proxy. Real spot is slightly above perp, meaning real entry cost is a few bp higher than backtest assumed. 6 bp drag vs 42 bp/cycle full-fee model = negligible. Backtest verdict stands.
+
+### 6. Repo structure
+`FreqtradeBot/carry_bot/` — new module, independent of `strategies/`. Layout sketch:
+```
+carry_bot/
+  __init__.py
+  config.py             # pair list, params, slot count, env vars
+  exchange.py           # ccxt wrapper, rate-limited, sub-account auth
+  funding_signal.py     # fetch + persistence rules
+  positions.py          # delta-neutral pair manager (spot+perp atomic ops)
+  risk.py               # liquidation watch, kill switch, daily reconcile
+  scheduler.py          # 8h ticks, slot rotation
+  main.py               # entrypoint
+  tests/
+```
+
 ## Open questions for next session
-1. Bybit unified margin vs cross margin vs isolated — which gives best capital efficiency for spot+perp combo?
-2. Funding history fetch: freqtrade cache (already have 4y) vs Bybit API direct (needed for live)
-3. Delta-rebalance threshold — empirically, how much drift accumulates per day on liquid alts?
-4. Pair-scoring window — last 3 periods (24h) vs last 9 periods (3 days)?
+1. Bybit sub-account creation (manual via UI, or API-driven?) — likely UI for first time
+2. Bybit testnet account: do we already have testnet keys, or create fresh?
+3. Funding rate live fetch: REST vs WebSocket — REST is simpler, ~50 requests/8h is fine
+4. Delta-rebalance threshold — pick after 1 week of testnet observation
+5. Pair-scoring window — start with last 3 periods (24h), tune if needed
