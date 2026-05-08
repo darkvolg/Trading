@@ -9,7 +9,7 @@
     "dry_run": true,
     "dry_run_wallet": 500,
     "cancel_open_orders_on_exit": true,
-    "timeframe": "1h",
+    "timeframe": "1d",
     "exchange": {
         "name": "bybit",
         "key": "",
