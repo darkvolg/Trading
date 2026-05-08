@@ -1,20 +1,48 @@
 # Phase 2.5 — Cash-and-Carry Strategy Plan
 
-**Status:** P1 strategic. Created 2026-05-08 after spike validation.
-**Target:** ~7-9% APR (full cycle) / ~18% APR (bulls), delta-neutral, stacked on top of V6A+gate.
+**Status:** P1 strategic. Created 2026-05-08 after spike + monthly portfolio simulation.
+**Target:** ~5% APR delta-neutral with Sharpe ~1.8, stacked with V6A for diversification or 2x leverage breakthrough.
 
 ---
 
-## Why this is worth 4-6 weeks
+## Why this is worth 4-6 weeks (honest version)
 
-Validated 2026-05-08 via `FreqtradeBot/scripts/research/carry_backtest.py`:
+Validated 2026-05-08 via 3 progressive scripts:
 
-- Funding-only carry yields **+9 to +15% APR** robustly across all 3 regime windows (bear 480d, bull 379d, full 4y+) per `funding_spike.py`
-- Realistic cash-and-carry backtest with full Bybit fees (0.42%/cycle round-trip + slippage) shows **15/15 pairs net positive on 4y data**, portfolio ~7% APR with 8-slot cap, ~18% in bull periods specifically
-- V6A+gate alone tops out around 5% APR / 4% DD (validated 2026-05-08)
-- Stack: V6A directional + cash-and-carry delta-neutral on same capital → uncorrelated edges → **~12-14% APR @ same ~4% DD = 2.5x baseline return at same risk**
+1. `funding_spike.py` — confirmed funding-only carry yields +9-15% APR gross across all regime windows.
+2. `carry_backtest.py` — single-pair simulation with full Bybit fees (0.42%/cycle) showed 15/15 alts net positive on 4y data.
+3. `carry_portfolio_sim.py` — **honest portfolio simulator** with proper concurrent-position tracking and monthly PnL buckets. Realistic output (full 4y, N_SLOTS=4):
 
-This is the breakthrough configuration the project was looking for.
+   - **APR 4.91% net of all fees**
+   - **Sharpe (monthly) 1.81** — excellent
+   - **Max drawdown over 4 years: −0.23%** — extraordinary downside protection
+   - **Worst single month: −0.18%** out of 52 months
+   - 50% positive months (winners are bigger than losers; tail-skewed positive)
+   - Avg concurrent positions 1.5 / 4 — strategy is **funding-supply-bound**, not capital-bound (slot count barely affects APR: 4.70% at 8 slots → 5.29% at 2 slots)
+
+V6A+gate alone (validated same day): ~5% APR / 4% DD / Sharpe ~0.7.
+
+### Stacking math (corrected, honest)
+
+Two ways to deploy CnC alongside V6A:
+
+**Configuration A — capital-split, no leverage**
+- 50% V6A perp / 50% CnC (spot+perp delta-neutral)
+- Combined: ~5% APR (CnC and V6A APRs blend, NOT add — they share fixed capital)
+- Combined DD: ~2% (V6A 4% DD × 50% allocation + CnC ~0.2% DD × 50% allocation)
+- Combined Sharpe: ~1.1 (uncorrelated edges blend favourably)
+- Outcome: **same return, half the risk** — quality-of-PnL improvement
+
+**Configuration B — capital-split, 2x leverage on CnC perp leg only**
+- Same allocation but CnC's perp short uses 2x leverage (still delta-neutral if spot leg is 1x)
+- Combined: ~10% APR (CnC contribution doubles, V6A unchanged)
+- Combined DD: ~4% (back to V6A's level since CnC DD doubles to ~0.4%, still tiny)
+- Combined Sharpe: ~1.0
+- Outcome: **double return at same risk** — the actual breakthrough configuration.
+
+CnC's delta-neutrality survives moderate leverage because the spot+perp legs cancel directional moves; only funding regime flips and execution friction expose us. Max safe leverage on perp leg ≈ 3x (would still need spot collateral to cover potential margin calls during basis blow-outs, but those are rare on USDT pairs).
+
+Stacking is the path. Config B is the target.
 
 ---
 

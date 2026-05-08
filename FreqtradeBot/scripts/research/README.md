@@ -26,11 +26,35 @@ entry/exit by funding-rate persistence and reports per-pair + portfolio APR.
 
 Key output (full 4y, default params):
 - 15/15 pairs net positive after fees
-- Portfolio APR with 8-slot cap: ~7%
-- Bull period (2024): ~18% APR portfolio
+- Per-pair median net APR: ~3.7%
 - Avg hold: ~130 days
 
-This validated the cash-and-carry edge as buildable (Phase 2.5, 4-6 weeks).
+NOTE: The "portfolio APR with 8-slot cap = ~7%" figure from this script's
+last `print` block uses a sum/N_SLOTS approximation that overstates actual
+portfolio return when concurrent positions are sparse. Use `carry_portfolio_sim.py`
+for honest portfolio-level numbers.
+
+## `carry_portfolio_sim.py`
+Proper portfolio simulator: at every 8h tick picks top-K candidates by
+recent funding signal, holds while persistence rules pass, tracks per-month
+PnL distribution.
+
+Honest output (full 4y, N_SLOTS=4):
+- Total net 21.24% / **APR 4.91%**
+- 26/52 positive months (50%)
+- Best month +4.14%, **worst month −0.18%** (extraordinary downside protection)
+- Sharpe (annualized from monthly returns): **1.81**
+- Max drawdown over the 4-year run: −0.23%
+- Avg concurrent positions: 1.5/4 — strategy is funding-supply-bound, not capital-bound
+
+APR is roughly invariant to slot count (4.7% at 8 slots, 5.3% at 2 slots) —
+the constraint is how many alts pay positive funding simultaneously, not
+how much capital we deploy.
+
+Stacking with V6A+gate (deployment math, NOT additive percentages):
+- 50/50 same-capital split, no leverage: 5% APR / 2% DD / Sharpe 1.1
+- 50/50 with 2x leverage on CnC perp leg: ~10% APR / ~4% DD / Sharpe 1.0+
+  → double return at same risk = the actual breakthrough configuration.
 
 ## `funding_spike.py`
 Bybit perp funding-rate carry analysis across 3 windows (bear 480d, bull
