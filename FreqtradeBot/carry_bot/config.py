@@ -7,11 +7,19 @@ from dataclasses import dataclass, field
 import os
 
 
-# Same alts as V6A — all confirmed on both spot AND perp on Bybit (2026-05-08)
+# Same alts as V6A — all confirmed on both spot AND perp on Bybit MAINNET
+# (2026-05-08 audit). Bybit TESTNET supports only a subset; missing pairs are
+# silently skipped at fetch time — see `TESTNET_WHITELIST` below for the lean
+# set used during testnet shake-down.
 DEFAULT_WHITELIST = (
     "BTC", "ETH", "SOL", "DOGE", "XRP", "ADA", "AVAX", "DOT",
     "POL", "NEAR", "ATOM", "SUI", "LINK", "OP", "BNB",
 )
+
+# Bybit testnet has a reduced perp listing — confirmed missing 2026-05-08:
+# AVAX/USDT:USDT, ATOM/USDT:USDT. Use this list when CARRY_TESTNET=true
+# unless the user overrides via env. Keeps logs clean.
+TESTNET_WHITELIST = tuple(s for s in DEFAULT_WHITELIST if s not in {"AVAX", "ATOM"})
 
 
 @dataclass(frozen=True)
@@ -101,11 +109,15 @@ def from_env() -> CarryConfig:
             return default
         return v in ("1", "true", "yes", "y")
 
+    testnet = _get_bool("CARRY_TESTNET", True)
+    # Default whitelist depends on env: testnet has a reduced perp listing.
+    whitelist = TESTNET_WHITELIST if testnet else DEFAULT_WHITELIST
     return CarryConfig(
+        whitelist=whitelist,
         api_key=os.environ.get("CARRY_API_KEY", ""),
         api_secret=os.environ.get("CARRY_API_SECRET", ""),
         sub_account_uid=os.environ.get("CARRY_SUB_UID", ""),
-        testnet=_get_bool("CARRY_TESTNET", True),
+        testnet=testnet,
         n_slots=_get_int("CARRY_N_SLOTS", 4),
         entry_threshold=_get_float("CARRY_ENTRY_THRESHOLD", 0.0001),
         exit_threshold=_get_float("CARRY_EXIT_THRESHOLD", -0.00005),
