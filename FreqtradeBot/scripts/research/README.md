@@ -19,6 +19,19 @@ Key output (480d, entry-date classification):
 - V6A: chop +$26.79, bull +$1.87, bear −$4.22 → 100% alpha from chop
 - SuperTrend: loses in ALL regimes including bull (WR 14% in bull)
 
+## `carry_backtest.py`
+Realistic delta-neutral cash-and-carry backtest with full Bybit fee/slippage
+modelling (0.42%/cycle: spot 0.2% + perp 0.12% + slippage 0.10%). Models
+entry/exit by funding-rate persistence and reports per-pair + portfolio APR.
+
+Key output (full 4y, default params):
+- 15/15 pairs net positive after fees
+- Portfolio APR with 8-slot cap: ~7%
+- Bull period (2024): ~18% APR portfolio
+- Avg hold: ~130 days
+
+This validated the cash-and-carry edge as buildable (Phase 2.5, 4-6 weeks).
+
 ## `funding_spike.py`
 Bybit perp funding-rate carry analysis across 3 windows (bear 480d, bull
 379d, full 4y+). Tests three crude strategies: passive-long, direction-
