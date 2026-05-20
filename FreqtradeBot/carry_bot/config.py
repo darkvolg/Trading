@@ -56,6 +56,12 @@ class CarryConfig:
     # each position uses 25% of capital (split between spot and perp margin).
     position_size_pct: float = 0.25
 
+    # Used when exchange balance fetch fails OR has_credentials=False
+    # (testnet shake-down without keys). Bot will NOT open below this notional
+    # in live mode — small_capital_floor acts as hard min order size guard.
+    fallback_notional_usdt: float = 100.0
+    small_capital_floor_usdt: float = 25.0
+
     # --- Operational ---
     # Loop cadence. Funding ticks 3x/day on Bybit (00:00, 08:00, 16:00 UTC).
     # Wake just after each tick to make decisions.

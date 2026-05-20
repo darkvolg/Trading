@@ -164,6 +164,23 @@ class BybitClient:
         return float(bal.get(asset, {}).get("free", 0) or 0)
 
     @with_retry()
+    def fetch_unified_usdt(self) -> float:
+        """Free USDT available in unified margin (UTA) account.
+
+        Used by scheduler to size new positions as a fraction of capital.
+        On non-UTA fallback to spot wallet free USDT.
+        """
+        try:
+            bal = self._client.fetch_balance()
+            usdt = bal.get("USDT") or {}
+            free = usdt.get("free")
+            if free is not None:
+                return float(free)
+        except Exception as e:
+            logger.warning("fetch_unified_usdt unified failed (%s); trying spot", e)
+        return self.fetch_spot_balance("USDT")
+
+    @with_retry()
     def fetch_perp_position(self, base: str) -> dict | None:
         """Current open perp position, or None.
 

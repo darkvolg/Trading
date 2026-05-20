@@ -130,6 +130,9 @@ class RecordingExchange:
         self.closed = []
         self.rebalanced = []
 
+    def fetch_unified_usdt(self):
+        return 400.0
+
     def fetch_funding_rate(self, base):
         return self.rates[base]
 

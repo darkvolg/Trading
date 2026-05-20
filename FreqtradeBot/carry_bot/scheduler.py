@@ -212,8 +212,15 @@ class Scheduler:
         return cands
 
     def _open_pair(self, base: str, now_ms: int) -> tuple[bool, float]:
+        # Idempotency guard: never double-open. Catches crash-after-fill /
+        # restart-replay where signal state is stale but DB has the position.
+        if self.store.get(base) is not None:
+            logger.warning("open_pair %s: position already in DB; skipping", base)
+            return False, 0.0
         try:
             notional = self._notional_per_slot()
+            if notional <= 0:
+                return False, 0.0
             spot_fill, perp_fill = self.exchange.open_carry_pair(
                 base, notional, leverage=self.cfg.perp_leverage,
             )
@@ -257,11 +264,34 @@ class Scheduler:
             return False, 0.0
 
     def _notional_per_slot(self) -> float:
-        """USDT notional to deploy per new position. Placeholder: read from
-        exchange wallet balance × position_size_pct in production."""
-        # For now, return a sensible default; real impl should fetch
-        # available balance and divide by free-slot count.
-        return 100.0  # $100 testnet default
+        """USDT notional to deploy per new position.
+
+        Live path: fetch free USDT, multiply by cfg.position_size_pct.
+        Fallback: cfg.fallback_notional_usdt (testnet / no creds).
+        Refuses to open if computed notional below cfg.small_capital_floor_usdt
+        (avoids dust orders that get rejected by Bybit min-notional rules).
+        """
+        # Test fakes or no-creds clients: skip balance fetch
+        if not getattr(self.exchange, "has_credentials", False):
+            return self.cfg.fallback_notional_usdt
+        try:
+            free_usdt = self.exchange.fetch_unified_usdt()
+        except Exception as e:
+            logger.warning(
+                "balance fetch failed (%s); falling back to %.2f",
+                e, self.cfg.fallback_notional_usdt,
+            )
+            return self.cfg.fallback_notional_usdt
+        notional = free_usdt * self.cfg.position_size_pct
+        if notional < self.cfg.small_capital_floor_usdt:
+            logger.warning(
+                "notional %.2f below floor %.2f (free=%.2f, pct=%.2f); "
+                "refusing to open",
+                notional, self.cfg.small_capital_floor_usdt,
+                free_usdt, self.cfg.position_size_pct,
+            )
+            return 0.0
+        return notional
 
     # ---------- Risk integration ----------
 

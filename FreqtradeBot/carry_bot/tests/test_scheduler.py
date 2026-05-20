@@ -26,6 +26,9 @@ class FakeExchange:
         self.closed: list[str] = []
         self.has_credentials = False  # Tests don't go through reconcile path
 
+    def fetch_unified_usdt(self):
+        return 400.0  # Test default; matches old hardcoded notional × n_slots
+
     def fetch_open_positions(self):
         return {}
 

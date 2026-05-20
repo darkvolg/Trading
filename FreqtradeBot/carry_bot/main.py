@@ -14,6 +14,7 @@ Production cron entry (one per 8h, 5min after funding):
 from __future__ import annotations
 import argparse
 import logging
+import os
 import sys
 import time
 
@@ -26,10 +27,17 @@ from .scheduler import Scheduler
 
 
 def setup_logging(log_path: str | None, verbose: bool) -> None:
+    """Configure root logger.
+
+    stdout-only by default. Cron / systemd handles file redirection — adding
+    a FileHandler here would double-write every line (one via Python, one via
+    shell redirect). log_path retained for explicit standalone runs where no
+    external redirect exists; opt-in via CARRY_LOG_TO_FILE=true env.
+    """
     level = logging.DEBUG if verbose else logging.INFO
     fmt = "%(asctime)s [%(levelname)s] %(name)s: %(message)s"
     handlers: list[logging.Handler] = [logging.StreamHandler(sys.stdout)]
-    if log_path:
+    if log_path and os.environ.get("CARRY_LOG_TO_FILE", "").lower() in ("1", "true", "yes"):
         try:
             handlers.append(logging.FileHandler(log_path))
         except (OSError, PermissionError) as e:
@@ -99,7 +107,9 @@ def main(argv: list[str] | None = None) -> int:
     ap.add_argument("--testnet", action="store_true",
                     help="force testnet mode (overrides env)")
     ap.add_argument("--mainnet", action="store_true",
-                    help="force mainnet mode (overrides env)")
+                    help="force mainnet mode (overrides env, requires --confirm-mainnet)")
+    ap.add_argument("--confirm-mainnet", action="store_true",
+                    help="explicit confirmation required to run on mainnet")
     ap.add_argument("-v", "--verbose", action="store_true")
     args = ap.parse_args(argv)
 
@@ -108,6 +118,26 @@ def main(argv: list[str] | None = None) -> int:
     if args.testnet or args.mainnet:
         from dataclasses import replace
         cfg = replace(cfg, testnet=args.testnet)
+
+    # Mainnet safety gates — must trip BOTH:
+    #   (a) explicit --confirm-mainnet on the command line
+    #   (b) non-empty api_key + api_secret in env
+    # Catches: typo of --testnet vs --mainnet, empty .env, key rotation drift.
+    if not cfg.testnet:
+        if not args.confirm_mainnet:
+            print(
+                "REFUSED: mainnet mode requires --confirm-mainnet. "
+                "Re-run with --testnet or add the confirm flag.",
+                file=sys.stderr,
+            )
+            return 2
+        if not cfg.api_key or not cfg.api_secret:
+            print(
+                "REFUSED: mainnet mode requires CARRY_API_KEY + CARRY_API_SECRET env vars. "
+                "Both must be non-empty.",
+                file=sys.stderr,
+            )
+            return 2
 
     setup_logging(cfg.log_path, args.verbose)
     log = logging.getLogger("main")
