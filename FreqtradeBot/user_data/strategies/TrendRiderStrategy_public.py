@@ -22,7 +22,7 @@ import logging
 logger = logging.getLogger(__name__)
 
 
-class TrendRiderStrategy(IStrategy):
+class TrendRiderStrategyPublic(IStrategy):
     INTERFACE_VERSION = 3
 
     # --- ROI (V6: tightened ladder to catch peak-crash pattern) ---

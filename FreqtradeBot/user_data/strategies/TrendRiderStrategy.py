@@ -1,5 +1,5 @@
 """
-TrendRider Public v2.12.1 — Strat Ninja Edition + ExitFix (19h/22h cuts)
+TrendRider v2.15.0 — V6A + ExitFix (19h/22h) + Bear Gate (logged, dup-class fix)
 
 Philosophy: Ride established trends with WIDE stoploss.
 Key insight: crypto swings 2-4% per hour. Stoploss must be >= 5-6%.
@@ -270,6 +270,7 @@ class TrendRiderStrategy(IStrategy):
                     self.timeframe, '1d', ffill=True
                 )
             else:
+                logger.warning('Bear gate: BTC/USDT:USDT 1d dataframe empty — gate inactive')
                 dataframe['btc_is_bear_1d'] = 0
                 dataframe['btc_adx_1d'] = 20
                 dataframe['btc_sma200_1d'] = 0
@@ -440,7 +441,11 @@ class TrendRiderStrategy(IStrategy):
         # those days carried 122 trades at -0.07% avg, -$4.22 net drag.
         if 'btc_is_bear_1d' in dataframe.columns:
             bear_mask = dataframe['btc_is_bear_1d'] == 1
+            if len(dataframe) and bear_mask.iloc[-1] and dataframe['enter_long'].iloc[-1] == 1:
+                logger.info(f"Bear gate VETO {metadata['pair']}: BTC<SMA200 & ADX>25 — long entry blocked")
             dataframe.loc[bear_mask, ['enter_long', 'enter_tag']] = (0, '')
+        else:
+            logger.warning('Bear gate: btc_is_bear_1d column missing — gate INACTIVE this cycle')
 
         return dataframe
 
