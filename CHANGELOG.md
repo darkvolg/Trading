@@ -8,6 +8,55 @@ Format: `Added` / `Changed` / `Fixed` / `Deprecated` / `Removed` / `Backtest` / 
 
 ---
 
+## [v2.15.0] — 2026-07-06
+
+### Fixed
+- **CRITICAL: bear-avoidance gate never loaded in live.** `TrendRiderStrategy_public.py`
+  defined the same class name `TrendRiderStrategy` as the gated strategy file, and
+  freqtrade's resolver loaded the ungated copy. The gate (deployed 2026-05-08) never
+  ran: 64 long entries opened during confirmed BTC bear regime (Jun 3 – Jul 6),
+  −$10.40 avoidable loss. Public copy's class renamed to `TrendRiderStrategyPublic`.
+- Gate is no longer silent: logs `Bear gate VETO {pair}` on every blocked entry and
+  warns when BTC 1d data is missing (previously a silent no-op — root cause of the
+  bug going unnoticed for 2 months).
+- `export_live_stats.py` now reads the strategy version from the running strategy file.
+
+### Why
+Live WR collapsed 50% → 17% (Apr → Jul) while BTC fell −25% from the May top.
+Diagnosis showed the long-only bot was entering bull traps through the entire bear
+leg with the regime gate inactive.
+
+### Backtest
+- 2026-01-01 → 2026-07-07 (through the bear market), AND-gate (close<SMA200 & ADX>25):
+  139 trades, +$25.34 (+5.07%), PF 1.73, Sortino 5.98, max underwater 1.53%.
+- SMA200-only gate variant rejected: 0 trades in 6 months (BTC below SMA200 all year —
+  blocks the profitable April window too).
+
+### Deploy
+- Senko, restart verified: `Using resolved strategy TrendRiderStrategy from
+  '.../TrendRiderStrategy_exitfix.py'`; gate vetoed BTC/ETH/DOGE longs on first tick.
+- Mode: dry-run, 1h timeframe, 13 USDT-perp pairs.
+
+### Lesson
+Freqtrade resolves strategies by **class name** scanning every `.py` in `strategies/` —
+two files with the same class = roulette. After every deploy, verify:
+`journalctl -u freqtrade | grep "Using resolved strategy"`. Risk features must log
+their own activation.
+
+---
+
+## [v2.14.0] — 2026-05-20
+
+### Added
+- **carry_bot** (funding-carry, delta-neutral): P0 safety gates before any live capital —
+  capital-aware position sizing (was hardcoded $100), idempotent open, explicit
+  `--confirm-mainnet` gate, log dedup. 42/42 tests pass.
+
+### Deploy
+- Senko, Bybit testnet. Verified clean tick; mainnet gates refusing without the flag.
+
+---
+
 ## [v2.12.1] — 2026-04-27
 
 ### Fixed
