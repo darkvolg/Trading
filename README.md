@@ -10,6 +10,7 @@
   <a href="https://trendrider.net/live"><img src="https://img.shields.io/badge/stats-trendrider.net%2Flive-success?style=flat-square" alt="Live stats"/></a>
   <a href="https://trendrider.net/live"><img src="https://img.shields.io/badge/mode-paper--trading-yellow?style=flat-square" alt="Paper-trading"/></a>
   <a href="#license"><img src="https://img.shields.io/badge/license-GPL--3.0-blue?style=flat-square" alt="GPL-3.0"/></a>
+  <a href="https://t.me/GennadyYakubovsky"><img src="https://img.shields.io/badge/🤝_available-for_hire-orange?style=flat-square" alt="Available for hire"/></a>
 </p>
 
 # TrendRider — Open-Source Crypto Trading Strategy
@@ -17,6 +18,8 @@
 A multi-indicator confluence strategy for [Freqtrade](https://github.com/freqtrade/freqtrade), running on Bybit USDT-perpetual futures. **Code is open. Numbers are public. Failures are documented.**
 
 🔗 **Live dashboard** → [trendrider.net/live](https://trendrider.net/live) (updates every 5 minutes from the bot's database)
+
+💼 **Need a custom trading bot, backtest, or exchange integration?** I build these for clients — Freqtrade setup, strategy backtesting, Telegram bots, exchange APIs. Contact: [@GennadyYakubovsky](https://t.me/GennadyYakubovsky)
 
 ---
 

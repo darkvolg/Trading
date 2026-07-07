@@ -55,6 +55,7 @@ export function Footer({ t }: { t: TStrings }) {
             <ul className="space-y-2.5">
               <li><a href="mailto:support@trendrider.net" className="text-muted text-sm hover:text-primary transition-colors">support@trendrider.net</a></li>
               <li><a href={TELEGRAM_URL} target="_blank" rel="noopener noreferrer" className="text-muted text-sm hover:text-primary transition-colors">@TrendRiderSupport</a></li>
+              <li><a href="https://t.me/GennadyYakubovsky" target="_blank" rel="noopener noreferrer" className="text-sm text-primary hover:underline font-medium">{t.hireMe} →</a></li>
             </ul>
           </div>
         </div>
