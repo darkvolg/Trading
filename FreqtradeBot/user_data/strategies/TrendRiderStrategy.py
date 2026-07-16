@@ -1,5 +1,5 @@
 """
-TrendRider v2.15.0 — V6A + ExitFix (19h/22h) + Bear Gate (logged, dup-class fix)
+TrendRider v2.16.0 — Bear Gate ADX>18 (was 25): cuts weak-trend chop, PF 1.67->4.11
 
 Philosophy: Ride established trends with WIDE stoploss.
 Key insight: crypto swings 2-4% per hour. Stoploss must be >= 5-6%.
@@ -262,7 +262,7 @@ class TrendRiderStrategy(IStrategy):
                 df_btc_1d['btc_adx'] = ta.ADX(df_btc_1d, timeperiod=14)
                 df_btc_1d['btc_is_bear'] = (
                     (df_btc_1d['close'] < df_btc_1d['btc_sma200'])
-                    & (df_btc_1d['btc_adx'] > 25)
+                    & (df_btc_1d['btc_adx'] > 18)
                 ).astype(int)
                 dataframe = merge_informative_pair(
                     dataframe,
@@ -442,7 +442,7 @@ class TrendRiderStrategy(IStrategy):
         if 'btc_is_bear_1d' in dataframe.columns:
             bear_mask = dataframe['btc_is_bear_1d'] == 1
             if len(dataframe) and bear_mask.iloc[-1] and dataframe['enter_long'].iloc[-1] == 1:
-                logger.info(f"Bear gate VETO {metadata['pair']}: BTC<SMA200 & ADX>25 — long entry blocked")
+                logger.info(f"Bear gate VETO {metadata['pair']}: BTC<SMA200 & ADX>18 — long entry blocked")
             dataframe.loc[bear_mask, ['enter_long', 'enter_tag']] = (0, '')
         else:
             logger.warning('Bear gate: btc_is_bear_1d column missing — gate INACTIVE this cycle')

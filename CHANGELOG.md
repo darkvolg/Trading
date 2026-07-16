@@ -8,6 +8,35 @@ Format: `Added` / `Changed` / `Fixed` / `Deprecated` / `Removed` / `Backtest` / 
 
 ---
 
+## [v2.16.0] — 2026-07-16
+
+### Changed
+- **Bear-gate ADX threshold 25 → 18.** The gate blocks long entries when BTC daily
+  `close < SMA200 AND ADX > threshold`. At 25 it only caught *strong* bear trends and
+  let the bot trade weak-trend chop below SMA200 — exactly where live lost money after
+  the gate reopened on Jul 13 (9 trades, 11% WR, −$2.44). Lowering to 18 keeps the bot
+  out of that chop.
+
+### Backtest (2026-01-01 → 2026-07-16, fresh data)
+| Gate | Trades | Profit | PF | MaxDD |
+|---|---|---|---|---|
+| ADX>25 (old) | 143 | +$24.49 (4.90%) | 1.67 | 1.53% |
+| **ADX>18 (new)** | **56** | **+$24.12 (4.82%)** | **4.11** | **0.32%** |
+| ADX>20 | 74 | +$19.91 | 2.35 | 1.18% |
+| ADX>15 | 29 | +$19.11 | 10.71 | 0.22% |
+
+ADX>18 keeps 98% of the profit while cutting trade count in half, lifting profit factor
+1.67→4.11 and dropping max drawdown 1.53%→0.32%. July-chop sub-test: old gate −$0.85
+(PF 0.54), ADX>18 makes **0 trades** (sits out). This is a risk-gate widening, not
+entry-parameter tuning — profit is flat, quality/drawdown improve.
+
+### Deploy
+- Senko, restart verified: resolver loads `TrendRiderStrategy_exitfix.py`, new PID clean,
+  gate now logs `BTC<SMA200 & ADX>18`. Backup: `.bak_adx18_*`.
+- Mode: dry-run, 1h timeframe, 13 USDT-perp pairs.
+
+---
+
 ## [v2.15.0] — 2026-07-06
 
 ### Fixed
