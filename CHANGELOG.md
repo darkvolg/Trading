@@ -8,6 +8,28 @@ Format: `Added` / `Changed` / `Fixed` / `Deprecated` / `Removed` / `Backtest` / 
 
 ---
 
+## [v2.17.0] — 2026-09-28
+
+### Removed
+- **`bb_bounce` entry signal disabled.** Net loser both in backtest (315 trades, −$36.30,
+  WR 28.9%) and live since Jul 15 (64 trades, −$8.21). Its rows are now cleared instead of
+  tagged, so later signals (MACD reversal etc.) can still enter on the same candle.
+
+### Backtest (2025-01-01 → 2026-09-27, 12 pairs — XRP excluded: no leverage tiers)
+| Variant | Trades | Profit | PF | MaxDD | 2025 | 2026 |
+|---|---|---|---|---|---|---|
+| v2.16.0 (prod) | 935 | −$26.50 | 0.92 | 15.55% | −$59.67 | +$33.17 |
+| **v2.17.0 (no bb_bounce)** | **628** | **+$12.26** | **1.05** | **6.34%** | **−$24.21** | **+$36.47** |
+| Profit lock at +1% MFE | 996 | −$246.81 | — | — | worse | worse |
+| Lock + no bb_bounce | — | ≈ −$200 | — | — | worse | worse |
+
+Pre-declared acceptance rule: deploy only if better in *both* halves. Only no-bb_bounce
+passed. The profit-lock idea (move stop to +0.3% once +1% reached) was rejected — it cuts
+winners on normal pullbacks. Note: over 21 months the strategy is still near breakeven
+(PF 1.05); this removes a leak, it does not make the bot consistently profitable.
+
+---
+
 ## [v2.16.0] — 2026-07-16
 
 ### Changed

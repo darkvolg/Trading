@@ -410,10 +410,14 @@ class TrendRiderStrategy(IStrategy):
             dataframe["fng_value"] >= 25,
             dataframe["fng_value"] <= 85,
         ]
+        # v2.17.0: bb_bounce disabled — net loser on backtest 2025-01..2026-09
+        # (315 trades, -$36) and live (64 trades, -$8). Removing it: -$26.5 -> +$12.3,
+        # MaxDD 15.6% -> 6.3%, improved in both 2025 and 2026 halves.
+        # Its rows are cleared (not tagged) so later signals (MACD etc.) can still enter.
         dataframe.loc[
             reduce(lambda x, y: x & y, conditions_bb),
             ["enter_long", "enter_tag"]
-        ] = (1, "bb_bounce")
+        ] = (0, "")
 
         # === LONG 6: MACD Histogram Reversal (tightened: RSI 40-60, EMA200 filter, volume 0.8x) ===
         conditions_macd = [
