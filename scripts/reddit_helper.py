@@ -22,7 +22,7 @@ import urllib.request
 import urllib.error
 import os
 
-COMPOSIO_API_KEY = os.environ.get("COMPOSIO_API_KEY", "ck_pXu5W1IzK03__DGxggUc")
+COMPOSIO_API_KEY = os.environ.get("COMPOSIO_API_KEY", "")
 MCP_URL = "https://connect.composio.dev/mcp"
 
 
